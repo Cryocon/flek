@@ -13,16 +13,25 @@ void print_children(Fl_Group* o) {
   }
 }
 
+Fl_App_Window* application_window;
+
+void new_dockable(Fl_Widget* w, void* d) {
+  Fl_Dockable_Window* dockable_window = new Fl_Dockable_Window(0, 0, 200, 30, "Dockable Window");
+  new Fl_Button(0, 0, 75, 30, "Newer");
+  application_window->add_dockable(dockable_window);
+}
+
 void main() {
   // Create an application window.
-  Fl_App_Window* application_window = new Fl_App_Window(200, 200, "Application Window");
+  application_window = new Fl_App_Window(200, 200, "Application Window");
 
   // Make it resizable.
   application_window->resizable(application_window);
 
   // Add a button to the application window.
   // This actually adds the button to the "contents" child window.
-  new Fl_Button(10, 10, 100, 30, "Hello World");
+  Fl_Button* b = new Fl_Button(10, 10, 100, 30, "New Dockable");
+  b->callback(new_dockable);
 
   // We are done adding widgets to the application window.
   application_window->end();

@@ -89,6 +89,20 @@ void Fl_App_Window::add (Fl_Widget *w) {
 }
 
 void Fl_App_Window::add_dockable (Fl_Dockable_Window *W, int pos) {
+  // Is this window already in the list?
+  for(int i=0; i < dockable_windows_size; i++)
+    if(W == dockable_windows[i])
+      return;
+
+  // Is there room left in the list?
+  if(dockable_windows_size >= dockable_windows_capacity)
+    // Oops, out of space.
+    // TODO: maybe should provide some sort of feedback here.  :-)  bdl
+    return;
+
+  // Add it to the list.
+  dockable_windows[dockable_windows_size++] = W;
+
   Fl_Dockable_Window::current = W;
   Fl_Dockable_Window::current->hide();
   _pack->insert(*W, pos);
@@ -105,14 +119,6 @@ void Fl_App_Window::add_dockable (Fl_Dockable_Window *W, int pos) {
     Fl_Dockable_Window::current->show ();
     redraw();
   }
-
-  // Is it already in the list?
-  for(int i=0; i < dockable_windows_size; i++)
-    if(W == dockable_windows[i])
-      return;
-
-  // Add it to the list.
-  dockable_windows[dockable_windows_size++] = W;
 
   // FLTK BUG???  calling redraw() should call draw(), right??  
   // Not always so we need to pack things here..

@@ -1,6 +1,6 @@
 /* -*-C++-*- 
 
-   "$Id: Fl_App_Window.H,v 1.13 2000/05/12 03:01:46 brad Exp $"
+   "$Id: Fl_App_Window.H,v 1.14 2000/05/12 14:01:36 brad Exp $"
    
    Copyright 1999-2000 by the Flek development team.
    
@@ -54,7 +54,8 @@ private:
    * Hack Alert: This list is implemented as a simple fixed size array,
    * currently sized at 64 elements.
    */
-  Fl_Dockable_Window* dockable_windows[64];
+  static const int dockable_windows_capacity = 32;
+  Fl_Dockable_Window* dockable_windows[dockable_windows_capacity];
   int dockable_windows_size;
 
   void create_app_window(int w, int h, const char* l);
