@@ -68,12 +68,13 @@ int FSocket_Posix::open(int listen_queue_size) {
   hostname[p - address] = '\0';
   
   create_file = 0; 
+
   union { 
     sockaddr    sock;
     sockaddr_in sock_inet;
-    char        name[MAX_HOST_NAME];
+    //char        name[MAX_HOST_NAME];
   } u;
-  int sa_len;
+  int sa_length;
   
   if (domain == sock_local_domain) { 
     u.sock.sa_family = AF_UNIX;
@@ -81,7 +82,7 @@ int FSocket_Posix::open(int listen_queue_size) {
     assert(strlen(unix_socket_dir) + strlen(address) 
 	   < MAX_HOST_NAME - offsetof(sockaddr,sa_data)); 
     
-    sa_len = offsetof(sockaddr,sa_data) + 
+    sa_length = offsetof(sockaddr,sa_data) + 
       sprintf(u.sock.sa_data,"%s%s", unix_socket_dir, address);
     
     unlink(u.sock.sa_data); // remove file if existed
@@ -90,13 +91,13 @@ int FSocket_Posix::open(int listen_queue_size) {
     u.sock_inet.sin_family= AF_INET;
     u.sock_inet.sin_addr.s_addr = htonl(INADDR_ANY);
     u.sock_inet.sin_port = htons(port);
-    sa_len = sizeof(sockaddr_in);	
+    sa_length = sizeof(sockaddr_in);	
   } 
   if ((fd = socket(u.sock.sa_family, SOCK_STREAM, 0)) < 0) { 
     errcode = errno;
     return 0;
   }
-  if (bind(fd, &u.sock, sa_len) < 0) {
+  if (bind(fd, &u.sock, sa_length) < 0) {
     errcode = errno;
     ::close(fd);
     return 0;
@@ -214,7 +215,7 @@ int FSocket_Posix::connect(int max_attempts, time_t timeout) {
     char        name[MAX_HOST_NAME];
   } u;
   
-  int sa_len;
+  int sa_length;
   
   if (domain == sock_local_domain || (domain == sock_any_domain && 
 				      strcmp(hostname, "localhost") == 0)) {
@@ -224,7 +225,7 @@ int FSocket_Posix::connect(int max_attempts, time_t timeout) {
     assert(strlen(unix_socket_dir) + strlen(address) 
 	   < MAX_HOST_NAME - offsetof(sockaddr,sa_data)); 
     
-    sa_len = offsetof(sockaddr,sa_data) +
+    sa_length = offsetof(sockaddr,sa_data) +
       sprintf(u.sock.sa_data, "%s%s", unix_socket_dir, address);
   } else { 
     u.sock_inet.sin_family = AF_INET;  
@@ -240,7 +241,7 @@ int FSocket_Posix::connect(int max_attempts, time_t timeout) {
       memcpy(&u.sock_inet.sin_addr,hp->h_addr,sizeof u.sock_inet.sin_addr);
     }
     u.sock_inet.sin_port = htons(port);
-    sa_len = sizeof(u.sock_inet);
+    sa_length = sizeof(u.sock_inet);
   }
   while (1) {
     if ((fd = socket(u.sock.sa_family, SOCK_STREAM, 0)) < 0) { 
@@ -248,7 +249,7 @@ int FSocket_Posix::connect(int max_attempts, time_t timeout) {
       return 0;
     }
     do { 
-      rc = ::connect(fd, &u.sock, sa_len);
+      rc = ::connect(fd, &u.sock, sa_length);
     } while (rc < 0 && errno == EINTR);
     
     if (rc < 0) { 
