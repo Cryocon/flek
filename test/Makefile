@@ -46,7 +46,7 @@ testedit: testedit.cxx
 	$(CXX) $(UICOMPILE) $@.cxx $(UILINK) -o $@
 
 fxml: fxml.cxx
-	$(CXX) $(UICOMPILE) $@.cxx $(UILINK) -o $@
+	$(CXX) `../flek-config --use-xml --cxxflags` -g3 $@.cxx `../flek-config --use-xml --ldflags` -o $@
 
 clean:
 	rm -f core *.o toggle_tree dockable_group bitmaps filedialog \

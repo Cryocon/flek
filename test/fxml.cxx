@@ -1,9 +1,9 @@
 #include <Flek/FXml.H>
 #include <string.h>
 
-void main ()
-{
-  FXmlDocument doc = FXmlDocument::parse_file ("FXml.xml");
+void main () {
+  
+  FXmlDocument doc = FXmlDocument::parse_file ("fxml.xml");
   FXmlNode node = doc.children ();
 
   if (doc.valid ())
@@ -29,5 +29,4 @@ void main ()
 	}
       node = node.next ();
     }
-
 }

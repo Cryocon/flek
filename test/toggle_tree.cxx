@@ -4,8 +4,6 @@
 #include <FL/Fl.H>
 
 #include <Flek/Fl_Toggle_Tree.H>
-#include <Flek/folder_small.xpm>
-#include <Flek/file_small.xpm>
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -178,8 +176,8 @@ main() {
   int w[3] = {150, 200, 0};
   tree.column_widths(w);
 
-  folderSmall = new Fl_Pixmap(folder_small);
-  fileSmall = new Fl_Pixmap(file_small);
+  folderSmall = new Fl_Pixmap (tt_folder_small_xpm);
+  fileSmall = new Fl_Pixmap (tt_file_small_xpm);
 
   Fl_Toggle_Node* node;
 
