@@ -10,11 +10,12 @@
  Description	- Directory Dialog Class
 */
 
-#include <FL/Fl_File_Dialog.H>
 #include <FL/Fl_Box.H>
 #include <FL/Fl_Pixmap.H>
 #include <FL/Fl_Button.H>
 #include <FL/fl_draw.H>
+
+#include <Flek/Fl_File_Dialog.H>
 
 Fl_Menu menuSort[] = {
  {"Alpha"        , 97,  0, 0, 0, 0, 3, 14, 0},
@@ -311,11 +312,11 @@ void input_file_error_cb(Fl_Dir *fld,void *v)
 ////browser pressed 
 Fl_File_Dialog::Fl_File_Dialog(int X, int Y, const char* L,char *patternpath ,int flags,  int sortType, int filterType)
   : Fl_Group(X, Y, 461, 299, L),
+    browser_file(X+7, Y+35, 448, 196),
+    input_file(X+6, Y+232, 449, 40, "", patternpath, sortType, filterType), 
     choice_sort(X+34, Y+6, 108, 25, "Sort"),
     choice_filter(X+182, Y+6, 108, 25, "Filter"), 
     choice_pattern(X+342, Y+5, 108, 25, "Pattern"), 
-    browser_file(X+7, Y+35, 448, 196),
-    input_file(X+6, Y+232, 449, 40, "", patternpath, sortType, filterType), 
     info_box(X+7, Y+274, 446, 20, "label") 
  {
   box(FL_THIN_DOWN_FRAME);                    //group border

@@ -35,7 +35,8 @@ slider features are:
 #include <FL/Fl_Value_Input.H>
 #include <FL/Fl_Value_Output.H>
 #include <FL/Fl_Window.H>
-#include <FL/Fl_NSlider.H>
+
+#include <Flek/Fl_NSlider.H>
 
 Fl_NSlider     *dhoz    = (Fl_NSlider *)0;
 Fl_Value_Output *dcurrent= (Fl_Value_Output *)0;

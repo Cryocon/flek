@@ -11,9 +11,10 @@
                 each pixmap will draw UP/DOWN/HILIGHT 
 */
 #include <FL/Fl.H>
-#include <FL/Fl_Pix_Button.H>
 #include <FL/fl_draw.H>
 #include <math.h>
+
+#include <Flek/Fl_Pix_Button.H>
 
 ////constructor
 Fl_Pix_Button::Fl_Pix_Button(int x,int y,int w,int h,const char *l,Fl_Pixmap* bUp,Fl_Pixmap* bDown,Fl_Pixmap* bHilight)

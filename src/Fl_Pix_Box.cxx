@@ -12,8 +12,9 @@
 */ 
 
 #include <FL/Fl.H>
-#include <FL/Fl_Pix_Box.H>
 #include <FL/fl_draw.H>
+
+#include <Flek/Fl_Pix_Box.H>
 
 ////constructor
 Fl_Pix_Box::Fl_Pix_Box(int x,int y,int w,int h,const char *l,Fl_Pixmap* bUp)

@@ -2,9 +2,10 @@
 
 #include <FL/Fl.H>
 #include <FL/Fl_Box.H>
-#include <FL/Fl_Input_File.H>
-#include <FL/Fl_File_Dialog.H>
 #include <FL/fl_ask.H>
+
+#include <Flek/Fl_Input_File.H>
+#include <Flek/Fl_File_Dialog.H>
 
 Fl_Button *exit_button=(Fl_Button *)0;
 Fl_Input_File  *file_input =(Fl_Input_File *)0;

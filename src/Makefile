@@ -7,7 +7,14 @@ CPPFILES = \
 	Fl_Toggle_Node_Base.cxx \
 	Fl_Toggle_Node.cxx \
 	Fl_Toggle_Tree_Base.cxx \
-	Fl_Toggle_Tree.cxx
+	Fl_Toggle_Tree.cxx \
+	Fl_Dir.cxx \
+	Fl_File_Dialog.cxx \
+	Fl_Frametab.cxx \
+	Fl_Input_File.cxx \
+	Fl_NSlider.cxx \
+	Fl_Pix_Box.cxx \
+	Fl_Pix_Button.cxx
 	
 
 CFILES = 

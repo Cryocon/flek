@@ -1,4 +1,4 @@
-// Fl_Check_Button.H
+// Fl_Pix_Button.H
 
 // For back compatability, a Fl_Light_Button with a diamond down_box()
 // and a red color.

@@ -9,7 +9,9 @@
  * provided "as is" without express or implied warranty.
    Description Directory management Class implementation
 */
-#include <FL/Fl_Dir.H>
+
+#include <Flek/Fl_Dir.H>
+
 char *fl_dir_messages[]=
 {
   "Sorry - No files match with selected Filter",

@@ -14,7 +14,7 @@
                  in directory managment,in includes the Fl_Dir class to manage directories
 */
 
-#include <FL/Fl_Input_File.H>
+#include <Flek/Fl_Input_File.H>
 
 #define FL_DIR_USERSTART 4      //index to start (0-13) of "quickfix" user directories
 #define FL_DIR_USEREND  13      //number of end index for "quickfix" user directories
@@ -206,7 +206,7 @@ void Fl_Input_File::stripTopBtn(int buttonPressed)
     }
    char dirValue[FL_MAX_PATH+FL_MAX_FILENAME];
    strcpy(dirValue, value());
-   dirValue[i] = NULL;
+   dirValue[i] = 0; 
    okEntry = cd(dirValue);
 }
 

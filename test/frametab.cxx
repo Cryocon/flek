@@ -12,7 +12,8 @@
 #include <FL/Fl_Scroll.H>
 #include <FL/Fl_Window.H>
 #include <FL/Fl_Pack.H>
-#include <FL/Fl_Frametab.H>
+
+#include <Flek/Fl_Frametab.H>
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -53,9 +54,9 @@ void cb_add(Fl_Widget *, void *v)
              fto->labelsize(9);
 	}
         fto->type(toggle_type);
-      {Fl_Button* o = new Fl_Button(20, 130, 200, 30, "testButton");}
-      {Fl_Input* o = new Fl_Input(120, 60, 100, 30, "input: 1"); }
-      {Fl_Input* o = new Fl_Input(120, 95, 100, 30, "input: 2"); } 
+      {Fl_Button* o = new Fl_Button (20, 130, 200, 30, "testButton");}
+      {Fl_Input* o = new Fl_Input (120, 60, 100, 30, "input: 1"); }
+      {Fl_Input* o = new Fl_Input (120, 95, 100, 30, "input: 2"); } 
       fto->end(); 
       fto->close();  
   pko->end();

@@ -11,9 +11,11 @@
                   each pixmap will draw UP/DOWN/HILIGHT 
 */
 #include <FL/fl_draw.H>
-#include <FL/Fl_Frametab.H>
 #include <FL/Fl_Pixmap.H>
-//bitmaps for V2-Curtis99
+
+#include <Flek/Fl_Frametab.H>
+
+////bitmaps for V2-Curtis99
 static unsigned char *image_HozUp[] = {
 (unsigned char *)"36 8 -5 1",
 (unsigned char *)" \306qs\"\316\313\316#10c$ce\316%\377\377\377",

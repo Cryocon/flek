@@ -19,8 +19,9 @@
 #include <FL/Fl_Menu_Button.H>
 #include <FL/Fl_Window.H>
 #include <FL/Fl_Choice.H>
-#include <FL/Fl_Dir.H>
-#include <FL/Fl_Input_File.H>
+
+#include <Flek/Fl_Dir.H>
+#include <Flek/Fl_Input_File.H>
 
 class Fl_File_Dialog : public Fl_Group {
 public:

@@ -1,5 +1,5 @@
 //
-// "$Id: Fl_Pack_Fu.cxx,v 1.1 2000/01/25 19:40:52 jamespalmer Exp $"
+// "$Id: Fl_Pack_Fu.cxx,v 1.2 2000/01/27 18:18:11 jamespalmer Exp $"
 //
 // Packing widget for the Fast Light Tool Kit (FLTK).
 //
@@ -30,6 +30,7 @@
 
 #include <FL/Fl.H>
 #include <FL/fl_draw.H>
+
 #include <Flek/Fl_Pack_Fu.H>
 
 Fl_Pack_Fu::Fl_Pack_Fu (int x,int y,int w ,int h, const char *l)

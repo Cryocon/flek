@@ -10,10 +10,11 @@
 #include <FL/Fl_Return_Button.H>
 #include <FL/Fl_Menu_Button.H>
 #include <FL/Fl_Window.H>
-#include <FL/Fl_Pix_Button.H>
-#include <FL/Fl_Pix_Box.H>
 #include <stdio.h>
 #include <stdlib.h>
+
+#include <Flek/Fl_Pix_Button.H>
+#include <Flek/Fl_Pix_Box.H>
 
 #include "bitmaps.cxx"
 
