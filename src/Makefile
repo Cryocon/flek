@@ -33,11 +33,11 @@ H_FLEK_CORE = \
 	types.H \
 	export.h     
 
-CPP_FLEK_XML = \
-	FXml.cxx \
+#CPP_FLEK_XML = \
+#	FXml.cxx \
 
-H_FLEK_XML = \
-	FXml.H
+#H_FLEK_XML = \
+#	FXml.H
 
 CPP_FLEK_JPEG = \
 	FJPEG.cxx \
@@ -118,10 +118,10 @@ ifdef GL_LIB
 	INSTALL += flek-gl-install
 endif
 
-ifdef XML_LIB
-	ALL += flek-xml
-	INSTALL += flek-xml-install
-endif
+#ifdef XML_LIB
+#	ALL += flek-xml
+#	INSTALL += flek-xml-install
+#endif
 
 all: $(ALL)
 

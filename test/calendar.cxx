@@ -1,5 +1,5 @@
 /*
-  "$Id: calendar.cxx,v 1.3 2000/09/29 21:49:35 clip Exp $"
+  "$Id: calendar.cxx,v 1.4 2001/05/13 23:22:53 jamespalmer Exp $"
   
   This program tests Fl_Calendar.
 
@@ -35,7 +35,7 @@
 {
   Fl_Window window (300, 370);
   
-  Fl_Calendar *calendar = new Fl_Calendar (10, 10, window.w()-20, window.h()-20);
+  Fl_Agenda_Calendar *calendar = new Fl_Agenda_Calendar (10, 10, window.w()-20, window.h()-20);
   window.resizable (calendar);
 
   window.end ();
@@ -74,7 +74,7 @@ int main (int argc, char **argv) {
   Fl_Date_Input *dinput4 = new Fl_Date_Input (20, 140, 150, 22);
   dinput4->format(4);
   
-  Fl_Calendar *c = new Fl_Calendar (200, 20);
+  Fl_Agenda_Calendar *c = new Fl_Agenda_Calendar (200, 20);
   w->resizable (c);
   c->callback ( (Fl_Callback*)calendar_cb);
   c->end();

@@ -1,3 +1,9 @@
+2001-05-12  James Dean Palmer <james@tiger-marmalade.com>
+
+        - Added --disable-gl option to configure.
+	- Cleaned up Fltk detection in configure.
+	- Incorporated Agenda changes to Calendar.
+
 2000-05-22  James Dean Palmer <james@tiger-marmalade.com>
 
         - Fl_Toggle_Tree_Base::clear() wasn't clearing everything.  Fix by Troy.

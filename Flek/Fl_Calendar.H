@@ -1,6 +1,6 @@
 /* -*-C++-*- 
 
-   "$Id: Fl_Calendar.H,v 1.12 2001/04/12 22:56:13 jamespalmer Exp $"
+   "$Id: Fl_Calendar.H,v 1.13 2001/05/13 23:22:53 jamespalmer Exp $"
    
    Copyright 1999-2000 by the Flek development team.
    
@@ -28,6 +28,7 @@
 
 #include <FL/Fl_Group.H>
 #include <FL/Fl_Button.H>
+#include <FL/Fl_Box.H>
 #include <FL/Fl_Repeat_Button.H>
 #include <FL/Fl_Input.H>
 
@@ -37,13 +38,6 @@
 #define	DOE_MAX		3652059		/* December 31, 9999 */
 #define	YEAR_MIN	1
 #define	YEAR_MAX	9999
-
-#ifndef FL_LOOK_CLASSIC
-#define FL_LOOK_CLASSIC 0
-#endif
-#ifndef FL_LOOK_MODERN
-#define FL_LOOK_MODERN 1
-#endif
 
 /** @package libflek_ui
  * Fl_Calendar_Base is a widget that allows a user to select a date
@@ -94,7 +88,7 @@ class Fl_Calendar : public Fl_Calendar_Base
    * The constructor for an empty Fl_Calendar.
    */
   Fl_Calendar (int x, int y, int w = (7*20), int h = (8*20), 
-  		    const char *l = 0, int title_height = -1, int look = FL_LOOK_CLASSIC);
+  		    const char *l = 0);
 
   void previous_month ();
   void next_month ();
@@ -125,15 +119,29 @@ class Fl_Calendar : public Fl_Calendar_Base
  protected:
   
   Fl_Button * weekdays[7];
-  Fl_Button * caption;
+  Fl_Box * caption;
   Fl_Repeat_Button * nxt_month;
   Fl_Repeat_Button * prv_month;
   Fl_Repeat_Button * nxt_year;
   Fl_Repeat_Button * prv_year;
   
- private:
-  int look;
+};
 
+/**
+ * Fl_Agenda_Calendar is a subclass of Fl_Calendar.  This widget has a
+ * slightly different user interface used for Agenda PDA.
+ * <p><img src="Fl_Agenda_Calendar.png">
+ */
+class Fl_Agenda_Calendar : public Fl_Calendar
+{
+
+ public:
+  
+  /**
+   * The constructor for an empty Fl_Agenda_Calendar.
+   */
+  Fl_Agenda_Calendar (int x, int y, int w = (7*20), int h = (8*20), 
+		      const char *l = 0, int title_height = -1);
 };
 
 /**
