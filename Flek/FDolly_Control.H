@@ -1,6 +1,6 @@
 /* -*-C++-*- 
 
-   "$Id: FDolly_Control.H,v 1.1 2000/04/13 14:10:02 jamespalmer Exp $"
+   "$Id: FDolly_Control.H,v 1.2 2000/04/13 14:56:04 jamespalmer Exp $"
    
    Copyright 1999-2000 by the Flek development team.
    
@@ -55,7 +55,7 @@ public:
    * Default constructor
    */
   FDolly_Control (double sf=1.0)
-    : mNow(), Dragging(false), vNow(), vDown(), dNow(), dDown(),
+    : mNow(), Dragging(false), vNow(0), vDown(0), dNow(0), dDown(0),
       scale_factor(sf)
   {}
   

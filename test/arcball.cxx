@@ -2,12 +2,13 @@
 #include <Flek/Fl_Gl_Arcball_Window.H>
 //#include "Grid.hh"
 #include <fstream.h>
+#include <GL/glu.h>
 
 class Arcball : public Fl_Gl_Arcball_Window 
 {
   protected :
 
-     GLUquadric * quadric;
+     GLUquadricObj * quadric;
   //Grid grid;
      
   public :

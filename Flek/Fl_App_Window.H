@@ -1,6 +1,6 @@
 /* -*-C++-*- 
 
-   "$Id: Fl_App_Window.H,v 1.6 2000/04/13 13:56:28 jamespalmer Exp $"
+   "$Id: Fl_App_Window.H,v 1.7 2000/04/13 14:56:04 jamespalmer Exp $"
    
    Copyright 1999-2000 by the Flek development team.
    
@@ -28,9 +28,9 @@
 
 #include <FL/Fl_Widget.H>
 #include <FL/Fl_Window.H>
+#include <FL/Fl_Pack.H>
 
 #include <Flek/Fl_Dockable_Group.H>
-#include <Flek/Fl_Pack_Fu.H>
 
 /** @package libflek_ui
  * Fl_App_Window is a window that can have Fl_Dockable_Groups 
@@ -68,13 +68,13 @@ public:
   void show ();
   void begin () { Fl_Group::current (contents); }
   void end () { Fl_Group::current ((Fl_Group*) parent ()); }
-  Fl_Pack_Fu *tpack () {return pack; }
+  Fl_Pack *tpack () {return pack; }
   
  protected:
   virtual FL_EXPORT void draw ();
   virtual FL_EXPORT void flush ();
   
-  Fl_Pack_Fu    *pack;
+  Fl_Pack    *pack;
   Fl_Window    *contents;
 };
 
