@@ -1,6 +1,6 @@
 James Dean Palmer <james@tiger-marmalade.com>
   (Library Maintainer)
-  fDom*, Fl_App_Window, Fl_Dockable_Group, Fl_Calendar, Fl_Pack_Fu
+  fDom*, Fl_App_Window, Fl_Dockable_Window, Fl_Calendar, Fl_Pack_Fu
 
 Vinod Srinivasan <vinod@viz.tamu.edu>
   Wrote classes that the following were adapted from:
@@ -11,6 +11,9 @@ Larry Charlton <lcharlto@mail.coin.missouri.edu>
 
 Maarten De Boer <maarten@>
   Fl_Toggle_Tree
+ 
+Bradley D. LaRonde <brad@ltc.com>
+  Fl_Dockable_Window and other fixes.
  
 Jason Ertel <jertel@simulation.com> 
   Fl_Better_Window::get_window_borders
