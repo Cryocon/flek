@@ -1,6 +1,6 @@
 /* -*-c++-*- 
 
-   "$Id: gl.h,v 1.6 2000/03/05 16:16:35 jamespalmer Exp $"
+   "$Id: gl.h,v 1.7 2000/04/07 19:40:20 jamespalmer Exp $"
    
    Copyright 1999-2000 by the Flek development team.
    
@@ -206,16 +206,25 @@ inline void glTranslate (const double &x, const double &y=0, const double &z=0)
   glTranslated (x, y, z);
 }
 
+/**
+ * glRotate rotates the current transformation matrix by an angle a about an axis v.
+ */
 inline void glRotate (const double &a, const fVector3 &v)
 {
   glRotated (a, v[0], v[1], v[2]);
 }
 
+/**
+ * glRotate rotates the current transformation matrix by an angle a about an axis (x, y, z).
+ */
 inline void glRotate (const double &a, const double &x, const double &y, const double &z)
 {
   glRotated (a, x, y, z);
 }
 
+/**
+ * This function loads an image for texturing in OpenGL.
+ */
 inline void glTexImage2D (fImage* img, GLenum target=GL_TEXTURE_2D, GLint level=0)
 {
   glTexImage2D (target,

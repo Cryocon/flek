@@ -1,6 +1,6 @@
 /* -*-C++-*- 
 
-   "$Id: fPNM.h,v 1.3 2000/03/04 01:39:00 jamespalmer Exp $"
+   "$Id: fPNM.h,v 1.4 2000/04/07 19:40:20 jamespalmer Exp $"
    
    Copyright 1999-2000 by the Flek development team.
    
@@ -28,7 +28,7 @@
 
 #include <Flek/fImage.h>
 
-/** @package libflek_core
+/** @package libflek_image
  * The fPNM class provides static methods that read, write and test PNM images.
  * fPNM supports PBM (Portable Bitmap - ASCII (P1) and RAW (P4)), 
  * PGM (Portable Graymap - ASCII (P2) and RAW (P5)), and

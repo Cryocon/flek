@@ -13,22 +13,23 @@ typedef unsigned char * ucharPtr;
 #define INT_MULT(a,b,t)  ((t) = (a) * (b) + 0x80, ((((t) >> 8) + (t)) >> 8))
 #define INT_BLEND(a,b,alpha,tmp)  (INT_MULT((a)-(b), alpha, tmp) + (b))
 
-void pixelsOver (const unsigned char* dest,
-		 const unsigned char* src,
-		 int opacity,
-		 int length)
+fImage::fImage ()
 {
-  int a;
-  register long t1;
-  int end = dest+4*w;
-  for (; dest<end; dest+=4, src+=4)
-    {
-      a = INT_MULT(src[3], opacity, t1);
-      dest[0] = INT_BLEND(dest[0], src[0], a, t1);
-      dest[1] = INT_BLEND(dest[0], src[0], a, t1);
-      dest[2] = INT_BLEND(dest[0], src[0], a, t1);
-      dest[3] = 255; //dest[3]+src[i+3];
-    }
+  Data = 0;
+  W = 0;
+  H = 0;
+}
+
+fImage::fImage (int w, int h)
+{
+  W = w;
+  H = h;
+  Data = new uchar [W*H*4];
+}
+
+fImage::~fImage ()
+{
+  if (Data) delete [] Data;
 }
 
 /*
@@ -37,264 +38,303 @@ void pixelsOver (const unsigned char* dest,
  * and then work on the copy.
  */
 
-fImage* normal (fImage *A, fImage *B, int xo, int yo, float value)
+void composite (unsigned char* dest,
+		const unsigned char* src,
+		int opacity,
+		int length)
 {
-  uchar *Apixel;
-  uchar *Bpixel;
-  
-  fImage::iterator Ai;
-  fImage::iterator Bi;
-  
-  int xi = max (xo, 0); // Initial position.
+  int a;
+  register long t1;
+  unsigned char* end = dest + 4*length;
+  for (; dest<end; dest+=4, src+=4)
+    {
+      a = INT_MULT(src[3], opacity, t1);
+      dest[0] = INT_BLEND(src[0], dest[0], a, t1);
+      dest[1] = INT_BLEND(src[1], dest[1], a, t1);
+      dest[2] = INT_BLEND(src[2], dest[2], a, t1);
+      dest[3] = 255;
+    }
+}
+
+fImage* composite (fImage *A, fImage *B, int xo, int yo, float value)
+{
+  int xi = max (xo, 0);
   int yi = max (yo, 0);    
-  int xf = min (max (xo + B->width (), 0), A->width ()); // Final position.
+  int xf = min (max (xo + B->width (), 0), A->width ());
   int yf = min (max (yo + B->height (), 0), A->height ());
-  int col;    
 
   for (int row=yi; row < yf; row++)
-    pixelOver ( (*A)(xi, row), (*B)(xi-xo, row-yo), (int)(value*255), xf-xi );
-  /*
-	{
-      for (Ai = (*A)(xi, row), Bi = (*B)(xi-xo, row-yo), col=xi; col < xf; Ai++, Bi++, col++)
-	{
-	  Apixel = *Ai;
-	  Bpixel = *Bi;
-	  float alpha = Bpixel[3] / 255.;
-	  Apixel[0] = clampUpper (Apixel[0] + (int)(value*alpha*Bpixel[0]), 255);
-	  Apixel[1] = clampUpper (Apixel[1] + (int)(value*alpha*Bpixel[1]), 255);
-	  Apixel[2] = clampUpper (Apixel[2] + (int)(value*alpha*Bpixel[2]), 255);
-	  Apixel[3] = clampUpper (Apixel[3] + (int)(value*alpha*Apixel[3]), 255);
-	}
-    }
-   */
+    composite ( *(*A)(xi, row), *(*B)(xi-xo, row-yo), (int)(value*255), xf-xi );
   return A;
+}
+
+void add (unsigned char* dest,
+	  const unsigned char* src,
+	  int opacity,
+	  int length)
+{
+  int a;
+  register long t1;
+  unsigned char* end = dest + 4*length;
+  for (; dest<end; dest+=4, src+=4)
+    {
+      a = INT_MULT(src[3], opacity, t1);
+      dest[0] = INT_BLEND(clampUpper(src[0]+dest[0], 255), dest[0], a, t1);
+      dest[1] = INT_BLEND(clampUpper(src[1]+dest[1], 255), dest[1], a, t1);
+      dest[2] = INT_BLEND(clampUpper(src[2]+dest[2], 255), dest[2], a, t1);
+      dest[3] = 255;
+    }
 }
 
 fImage* add (fImage *A, fImage *B, int xo, int yo, float value)
 {
-  uchar *Apixel;
-  uchar *Bpixel;
-  
-  fImage::iterator Ai;
-  fImage::iterator Bi;
-  
-  int xi = max (xo, 0); // Initial position.
+  int xi = max (xo, 0);
   int yi = max (yo, 0);    
-  int xf = min (max (xo + B->width (), 0), A->width ()); // Final position.
+  int xf = min (max (xo + B->width (), 0), A->width ());
   int yf = min (max (yo + B->height (), 0), A->height ());
-  int col;    
 
   for (int row=yi; row < yf; row++)
-    {
-      for (Ai = (*A)(xi, row), Bi = (*B)(xi-xo, row-yo), col=xi; col < xf; Ai++, Bi++, col++)
-	{
-	  Apixel = *Ai;
-	  Bpixel = *Bi;
-	  float m = Bpixel[3] / 255.;
-	  Apixel[0] = clampUpper (Apixel[0] + (int)(value*m*Bpixel[0]), 255);
-	  Apixel[1] = clampUpper (Apixel[1] + (int)(value*m*Bpixel[1]), 255);
-	  Apixel[2] = clampUpper (Apixel[2] + (int)(value*m*Bpixel[2]), 255);
-	  Apixel[3] = clampUpper (Apixel[3] + (int)(value*m*Apixel[3]), 255);
-	}
-    }
+    add ( *(*A)(xi, row), *(*B)(xi-xo, row-yo), (int)(value*255), xf-xi );
   return A;
+}
+
+void subtract (unsigned char* dest,
+	       const unsigned char* src,
+	       int opacity,
+	       int length)
+{
+  int a;
+  register long t1;
+  unsigned char* end = dest + 4*length;
+  for (; dest<end; dest+=4, src+=4)
+    {
+      a = INT_MULT(src[3], opacity, t1);
+      dest[0] = INT_BLEND(clampLower(dest[0]-src[0], 0), dest[0], a, t1);
+      dest[1] = INT_BLEND(clampLower(dest[1]-src[1], 0), dest[1], a, t1);
+      dest[2] = INT_BLEND(clampLower(dest[2]-src[2], 0), dest[2], a, t1);
+      dest[3] = 255;
+    }
 }
 
 fImage* subtract (fImage *A, fImage *B, int xo, int yo, float value)
 {
-  uchar *Apixel;
-  uchar *Bpixel;
-  
-  fImage::iterator Ai;
-  fImage::iterator Bi;
-  
-  int xi = max (xo, 0); // Initial position.
+  int xi = max (xo, 0);
   int yi = max (yo, 0);    
-  int xf = min (max (xo + B->width (), 0), A->width ()); // Final position.
+  int xf = min (max (xo + B->width (), 0), A->width ());
   int yf = min (max (yo + B->height (), 0), A->height ());
-  int col;    
 
   for (int row=yi; row < yf; row++)
-    {
-      for (Ai = (*A)(xi, row), Bi = (*B)(xi-xo, row-yo), col=xi; col < xf; Ai++, Bi++, col++)
-	{
-	  Apixel = *Ai;
-	  Bpixel = *Bi;
-	  float m = Bpixel[3] / 255.;
-	  Apixel[0] = clampLower (Apixel[0] - (int)(value*m*Bpixel[0]), 0);
-	  Apixel[1] = clampLower (Apixel[1] - (int)(value*m*Bpixel[1]), 0);
-	  Apixel[2] = clampLower (Apixel[2] - (int)(value*m*Bpixel[2]), 0);
-	  Apixel[3] = clampUpper (Apixel[3] + (int)(value*m*Apixel[3]), 255);
-	}
-    }
+    subtract ( *(*A)(xi, row), *(*B)(xi-xo, row-yo), (int)(value*255), xf-xi );
   return A;
+}
+
+void difference (unsigned char* dest,
+		 const unsigned char* src,
+		 int opacity,
+		 int length)
+{
+  int a;
+  register long t1;
+  unsigned char* end = dest + 4*length;
+  for (; dest<end; dest+=4, src+=4)
+    {
+      a = INT_MULT(src[3], opacity, t1);
+      dest[0] = INT_BLEND(max(dest[0],src[0]) - min(dest[0],src[0]), dest[0], a, t1);
+      dest[1] = INT_BLEND(max(dest[1],src[1]) - min(dest[1],src[1]), dest[1], a, t1);
+      dest[2] = INT_BLEND(max(dest[2],src[2]) - min(dest[2],src[2]), dest[2], a, t1);
+      dest[3] = 255;
+    }
 }
 
 fImage* difference (fImage *A, fImage *B, int xo, int yo, float value)
 {
-  uchar *Apixel;
-  uchar *Bpixel;
-  
-  fImage::iterator Ai;
-  fImage::iterator Bi;
-  
-  int xi = max (xo, 0); // Initial position.
+  int xi = max (xo, 0);
   int yi = max (yo, 0);    
-  int xf = min (max (xo + B->width (), 0), A->width ()); // Final position.
+  int xf = min (max (xo + B->width (), 0), A->width ());
   int yf = min (max (yo + B->height (), 0), A->height ());
-  int col;    
 
   for (int row=yi; row < yf; row++)
-    {
-      for (Ai = (*A)(xi, row), Bi = (*B)(xi-xo, row-yo), col=xi; col < xf; Ai++, Bi++, col++)
-	{
-	  Apixel = *Ai;
-	  Bpixel = *Bi;
-	  float m = (float)Bpixel[3] / 255.0;
-	  Apixel[0] = max ((int)Apixel[0], (int)Bpixel[0]) - min ((int)Apixel[0], (int)Bpixel[0]);
-	  Apixel[1] = max ((int)Apixel[1], (int)Bpixel[1]) - min ((int)Apixel[1], (int)Bpixel[1]);
-	  Apixel[2] = max ((int)Apixel[2], (int)Bpixel[2]) - min ((int)Apixel[2], (int)Bpixel[2]);
-	  Apixel[3] = clampUpper (Apixel[3] + (int)(value*m*Apixel[3]), 255);
-	}
-    }
+    difference ( *(*A)(xi, row), *(*B)(xi-xo, row-yo), (int)(value*255), xf-xi );
   return A;
+}
+
+void lightenOnly (unsigned char* dest,
+		  const unsigned char* src,
+		  int opacity,
+		  int length)
+{
+  int a;
+  register long t1;
+  unsigned char* end = dest + 4*length;
+  for (; dest<end; dest+=4, src+=4)
+    {
+      a = INT_MULT(src[3], opacity, t1);
+      dest[0] = INT_BLEND(max(dest[0],src[0]), dest[0], a, t1);
+      dest[1] = INT_BLEND(max(dest[1],src[1]), dest[1], a, t1);
+      dest[2] = INT_BLEND(max(dest[2],src[2]), dest[2], a, t1);
+      dest[3] = 255;
+    }
 }
 
 fImage* lightenOnly (fImage *A, fImage *B, int xo, int yo, float value)
 {
-  uchar *Apixel;
-  uchar *Bpixel;
-  
-  fImage::iterator Ai;
-  fImage::iterator Bi;
-  
-  int xi = max (xo, 0); // Initial position.
+  int xi = max (xo, 0);
   int yi = max (yo, 0);    
-  int xf = min (max (xo + B->width (), 0), A->width ()); // Final position.
+  int xf = min (max (xo + B->width (), 0), A->width ());
   int yf = min (max (yo + B->height (), 0), A->height ());
-  int col;    
 
   for (int row=yi; row < yf; row++)
-    {
-      for (Ai = (*A)(xi, row), Bi = (*B)(xi-xo, row-yo), col=xi; col < xf; Ai++, Bi++, col++)
-	{
-	  Apixel = *Ai;
-	  Bpixel = *Bi;
-	  float m = (float)Bpixel[3] / 255.0;
-	  Apixel[0] = max ((int)Apixel[0], (int)Bpixel[0]);
-	  Apixel[1] = max ((int)Apixel[1], (int)Bpixel[1]);
-	  Apixel[2] = max ((int)Apixel[2], (int)Bpixel[2]);
-	  Apixel[3] = clampUpper (Apixel[3] + (int)(value*m*Apixel[3]), 255);
-	}
-    }
+    lightenOnly ( *(*A)(xi, row), *(*B)(xi-xo, row-yo), (int)(value*255), xf-xi );
   return A;
+}
+
+void darkenOnly (unsigned char* dest,
+		 const unsigned char* src,
+		 int opacity,
+		 int length)
+{
+  int a;
+  register long t1;
+  unsigned char* end = dest + 4*length;
+  for (; dest<end; dest+=4, src+=4)
+    {
+      a = INT_MULT(src[3], opacity, t1);
+      dest[0] = INT_BLEND(min(dest[0],src[0]), dest[0], a, t1);
+      dest[1] = INT_BLEND(min(dest[1],src[1]), dest[1], a, t1);
+      dest[2] = INT_BLEND(min(dest[2],src[2]), dest[2], a, t1);
+      dest[3] = 255;
+    }
 }
 
 fImage* darkenOnly (fImage *A, fImage *B, int xo, int yo, float value)
 {
-  uchar *Apixel;
-  uchar *Bpixel;
-  
-  fImage::iterator Ai;
-  fImage::iterator Bi;
-  
-  int xi = max (xo, 0); // Initial position.
+  int xi = max (xo, 0);
   int yi = max (yo, 0);    
-  int xf = min (max (xo + B->width (), 0), A->width ()); // Final position.
+  int xf = min (max (xo + B->width (), 0), A->width ());
   int yf = min (max (yo + B->height (), 0), A->height ());
-  int col;    
-
+  
   for (int row=yi; row < yf; row++)
-    {
-      for (Ai = (*A)(xi, row), Bi = (*B)(xi-xo, row-yo), col=xi; col < xf; Ai++, Bi++, col++)
-	{
-	  Apixel = *Ai;
-	  Bpixel = *Bi;
-	  float m = (float)Bpixel[3] / 255.0;
-	  Apixel[0] = min ((int)Apixel[0], (int)Bpixel[0]);
-	  Apixel[1] = min ((int)Apixel[1], (int)Bpixel[1]);
-	  Apixel[2] = min ((int)Apixel[2], (int)Bpixel[2]);
-	  Apixel[3] = clampUpper (Apixel[3] + (int)(value*m*Apixel[3]), 255);
-	}
-    }
+    darkenOnly ( *(*A)(xi, row), *(*B)(xi-xo, row-yo), (int)(value*255), xf-xi );
   return A;
+}
+
+void divide (unsigned char* dest,
+	     const unsigned char* src,
+	     int opacity,
+	     int length)
+{
+  int a;
+  register long t1;
+  unsigned char* end = dest + 4*length;
+  for (; dest<end; dest+=4, src+=4)
+    {
+      a = INT_MULT(src[3], opacity, t1);
+      dest[0] = INT_BLEND(min((dest[0]*256)/(1+src[0]), 255), dest[0], a, t1);
+      dest[1] = INT_BLEND(min((dest[1]*256)/(1+src[1]), 255), dest[1], a, t1);
+      dest[2] = INT_BLEND(min((dest[2]*256)/(1+src[2]), 255), dest[2], a, t1);
+      dest[3] = min(dest[3], src[3]);
+    }
 }
 
 fImage* divide (fImage *A, fImage *B, int xo, int yo, float value)
 {
-  uchar *Apixel;
-  uchar *Bpixel;
-  
-  fImage::iterator Ai;
-  fImage::iterator Bi;
-  
-  int xi = max (xo, 0); // Initial position.
+  int xi = max (xo, 0);
   int yi = max (yo, 0);    
-  int xf = min (max (xo + B->width (), 0), A->width ()); // Final position.
+  int xf = min (max (xo + B->width (), 0), A->width ());
   int yf = min (max (yo + B->height (), 0), A->height ());
-  int col;    
-
+  
   for (int row=yi; row < yf; row++)
-    {
-      for (Ai = (*A)(xi, row), Bi = (*B)(xi-xo, row-yo), col=xi; col < xf; Ai++, Bi++, col++)
-	{
-	  Apixel = *Ai;
-	  Bpixel = *Bi;
-	  float m = (float)Bpixel[3] / 255.0;
-	  float t0 = (Bpixel[0]/255.);
-	  float t1 = (Bpixel[1]/255.);
-	  float t2 = (Bpixel[2]/255.);
-	  
-	  if (t0 <= 0)
-	    Apixel[0] = 255;
-	  else
-	    Apixel[0] = clampUpper ((int)(Apixel[0]/t0), 255);
-	  if (t1 <= 0)
-	    Apixel[1] = 255;
-	  else
-	    Apixel[1] = clampUpper ((int)(Apixel[1]/t1), 255);
-	  if (t2 <= 0)
-	    Apixel[2] = 255;
-	  else
-	    Apixel[2] = clampUpper ((int)(Apixel[2]/t2), 255);
-
-	  Apixel[3] = clampUpper (Apixel[3] + (int)(value*m*Apixel[3]), 255);
-	}
-    }
+    divide ( *(*A)(xi, row), *(*B)(xi-xo, row-yo), (int)(value*255), xf-xi );
   return A;
+}
+
+void multiply (unsigned char* dest,
+	       const unsigned char* src,
+	       int opacity,
+	       int length)
+{
+  int a;
+  register long t1;
+  unsigned char* end = dest + 4*length;
+  for (; dest<end; dest+=4, src+=4)
+    {
+      a = INT_MULT(src[3], opacity, t1);
+      dest[0] = INT_BLEND(INT_MULT(src[0], dest[0], t1), dest[0], a, t1);
+      dest[1] = INT_BLEND(INT_MULT(src[1], dest[1], t1), dest[1], a, t1);
+      dest[2] = INT_BLEND(INT_MULT(src[2], dest[2], t1), dest[2], a, t1);
+      dest[3] = min(dest[3], src[3]);
+    }
 }
 
 fImage* multiply (fImage *A, fImage *B, int xo, int yo, float value)
 {
-  uchar *Apixel;
-  uchar *Bpixel;
-  
-  fImage::iterator Ai;
-  fImage::iterator Bi;
-  
-  int xi = max (xo, 0); // Initial position.
-  int yi = max (yo, 0);    
-  int xf = min (max (xo + B->width (), 0), A->width ()); // Final position.
+  int xi = max (xo, 0);
+  int yi = max (yo, 0);
+  int xf = min (max (xo + B->width (), 0), A->width ());
   int yf = min (max (yo + B->height (), 0), A->height ());
-  int col;    
-
+  
   for (int row=yi; row < yf; row++)
-    {
-      for (Ai = (*A)(xi, row), Bi = (*B)(xi-xo, row-yo), col=xi; col < xf; Ai++, Bi++, col++)
-	{
-	  Apixel = *Ai;
-	  Bpixel = *Bi;
-	  float m = (float)Bpixel[3] / 255.0;
-	  float t0 = (Bpixel[0]/255.);
-	  float t1 = (Bpixel[1]/255.);
-	  float t2 = (Bpixel[2]/255.);
-	  
-	  Apixel[0] = (int)(Apixel[0]*t0);
-	  Apixel[1] = (int)(Apixel[1]*t1);
-	  Apixel[2] = (int)(Apixel[2]*t2);
+    multiply ( *(*A)(xi, row), *(*B)(xi-xo, row-yo), (int)(value*255), xf-xi );
+  return A;
+}
 
-	  Apixel[3] = clampUpper (Apixel[3] + (int)(value*m*Apixel[3]), 255);
-	}
+void screen (unsigned char* dest,
+	     const unsigned char* src,
+	     int opacity,
+	     int length)
+{
+  int a;
+  register long t1;
+  unsigned char* end = dest + 4*length;
+  for (; dest<end; dest+=4, src+=4)
+    {
+      a = INT_MULT(src[3], opacity, t1);
+      dest[0] = INT_BLEND(255-INT_MULT(255-src[0], 255-dest[0], t1), dest[0], a, t1);
+      dest[1] = INT_BLEND(255-INT_MULT(255-src[1], 255-dest[1], t1), dest[1], a, t1);
+      dest[2] = INT_BLEND(255-INT_MULT(255-src[2], 255-dest[2], t1), dest[2], a, t1);
+      dest[3] = min(dest[3], src[3]);
     }
+}
+
+fImage* screen (fImage *A, fImage *B, int xo, int yo, float value)
+{
+  int xi = max (xo, 0);
+  int yi = max (yo, 0);    
+  int xf = min (max (xo + B->width (), 0), A->width ());
+  int yf = min (max (yo + B->height (), 0), A->height ());
+  
+  for (int row=yi; row < yf; row++)
+    screen ( *(*A)(xi, row), *(*B)(xi-xo, row-yo), (int)(value*255), xf-xi );
+  return A;
+}
+
+void overlay (unsigned char* dest,
+	      const unsigned char* src,
+	      int opacity,
+	      int length)
+{
+  int a;
+  register long t1;
+  unsigned char* end = dest + 4*length;
+  for (; dest<end; dest+=4, src+=4)
+    {
+      a = INT_MULT(src[3], opacity, t1);
+      dest[0] = INT_BLEND(INT_MULT(dest[0], dest[0]+INT_MULT(2*src[0],255-dest[0],t1), t1), dest[0], a, t1);
+      dest[1] = INT_BLEND(INT_MULT(dest[1], dest[0]+INT_MULT(2*src[1],255-dest[1],t1), t1), dest[1], a, t1);
+      dest[2] = INT_BLEND(INT_MULT(dest[2], dest[0]+INT_MULT(2*src[2],255-dest[2],t1), t1), dest[2], a, t1);
+
+      dest[3] = min(dest[3], src[3]);
+    }
+}
+
+fImage* overlay (fImage *A, fImage *B, int xo, int yo, float value)
+{
+  int xi = max (xo, 0);
+  int yi = max (yo, 0);    
+  int xf = min (max (xo + B->width (), 0), A->width ());
+  int yf = min (max (yo + B->height (), 0), A->height ());
+  
+  for (int row=yi; row < yf; row++)
+    overlay ( *(*A)(xi, row), *(*B)(xi-xo, row-yo), (int)(value*255), xf-xi );
   return A;
 }
