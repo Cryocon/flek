@@ -22,7 +22,7 @@ Fl_App_Window::~Fl_App_Window() {
 }
 
 void Fl_App_Window::create_app_window(int w, int h, const char* l) {
-  // Make room for the list of docable windows.
+  // Make room for the list of dockable windows.
   dockable_windows_capacity = 4;
   dockable_windows = (Fl_Dockable_Window**)malloc(
     sizeof(Fl_Dockable_Window*)*dockable_windows_capacity);
@@ -41,6 +41,10 @@ void Fl_App_Window::create_app_window(int w, int h, const char* l) {
 
   // Create the contents window.
   _contents = new Fl_Window(0, 0, w, h, "Fl_App_Window::contents");
+
+  // Contents area is the resizable for the pack group.
+  // As dockables get added and removed, contents resizes.
+  _pack->resizable(_contents);
 }
 
 int Fl_App_Window::handle(int event) {
@@ -193,7 +197,7 @@ void Fl_App_Window::resize(int X, int Y, int W, int H) {
   int dy = Y - y();
 
   _pack->resize(0, 0, _pack->w() + dw, _pack->h() + dh);
-  _contents->resize(_contents->x() + dx, _contents->y() + dy,
-  _contents->w() + dw, _contents->h() + dh);
+  // _contents->resize(_contents->x() + dx, _contents->y() + dy,
+  // _contents->w() + dw, _contents->h() + dh);
   Fl_Widget::resize(X, Y, W, H);
 }
