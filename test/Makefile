@@ -1,12 +1,12 @@
 include ../makeinclude
 
-all: ftest arcball stock_buttons dockable_group toggle_tree # frametab pixbutton slider 
-
-ftest: ftest.cxx
-	$(CXX) $(CXXFLAGS) $(FLTKINC) -I.. ftest.cxx -L../lib -lflek_ui $(LDLIBS) -lGL -lGLU -o $@
+all: arcball calendar stock_buttons dockable_group toggle_tree # frametab pixbutton slider 
 
 arcball: arcball.cxx
 	$(CXX) $(CXXFLAGS) $(FLTKINC) -I.. arcball.cxx -L../lib -lflek_ui $(LDLIBS) -lGL -lGLU -o $@
+
+calendar: calendar.cxx
+	$(CXX) $(CXXFLAGS) $(FLTKINC) -I.. calendar.cxx -L../lib -lflek_ui $(LDLIBS) -lGL -lGLU -o $@
 
 stock_buttons: stock_buttons.cxx
 	$(CXX) $(CXXFLAGS) $(FLTKINC) -I.. stock_buttons.cxx -L../lib -lflek_ui $(LDLIBS) -o $@
@@ -40,6 +40,6 @@ toggle_tree: toggle_tree.cxx
 
 clean:
 	rm -f core *.o toggle_tree dockable_group bitmaps filedialog \
-	arcball frametab pixbutton slider pixbutton packfu wtest wtest2 stock_buttons 
+	arcball calendar frametab pixbutton slider pixbutton packfu wtest wtest2 stock_buttons 
 
 install:
