@@ -10,11 +10,19 @@ Fl_Dockable_Group * Fl_Dockable_Group::current = 0;
 void Fl_Gripper::draw ()
 {
   // Draw the Gnome style gripper:
+#ifndef FLTK_2
   Fl_Color col = value() ? selection_color() : color();
   draw_box (box(), col);
+#else
+  draw_box ();
+#endif
   draw_label ();
 
+#ifndef FLTK_2
   fl_push_clip (x()+1, y()+1, w()-3, h()-3);
+#else
+  fl_clip (x()+1, y()+1, w()-3, h()-3);
+#endif
   
   for (int i=0; i<w(); i+=6)
     for (int j=0; j<h(); j+=6)
@@ -85,10 +93,11 @@ int Fl_Gripper::handle (int event)
 			&& (cx < (ew + ex))
 			&& (cy < (eh + ey)) )
 		      {
-			// Send the host window a message that we are docking with it.
+			// Send the host window a message that we want to dock with it.
+			//printf ("Fl_Dockable_Group::dock!!\n");
 			if (Fl::handle (FL_DOCK, o))
 			  {
-			    redraw ();
+			    //redraw ();
 			    if (event != FL_RELEASE) 
 			      {
 				// I want to send JUST the drag event.  Not push!
@@ -164,11 +173,13 @@ void Fl_Dockable_Group::show ()
 
 int Fl_Dockable_Group::handle (int event)
 {
+  int rval;
   switch (event)
     {
     case FL_SHOW:
+      rval = Fl_Window::handle (event);
       contents->show ();
-      break;
+      return rval;
     case FL_HIDE:
       contents->hide ();
       break;
@@ -179,6 +190,7 @@ int Fl_Dockable_Group::handle (int event)
 void Fl_Dockable_Group::undock (int x=-1, int y=-1)
 {
   docked = 0;
+  printf ("undocking..\n");
   if (parent())
     {
       Fl_Group *group = (Fl_Group *) parent ();
@@ -186,15 +198,20 @@ void Fl_Dockable_Group::undock (int x=-1, int y=-1)
       
       group->remove ((Fl_Widget *)this);
       
+      printf ("Let dock handle the event..\n");
       // Give the dock an opportunity to handle the event.
       Fl::handle (FL_UNDOCK, group->window ());
       
       group->redraw ();
       
-      if (x > -1)
+      if ((x > -1) && (y > -1))
 	position (x, y);
       
+      printf ("positioned x, y = %d,%d", x, y);
+
       size (uw (), uh ());
+
+      printf ("show me!!\n");
       show ();
     }
 }

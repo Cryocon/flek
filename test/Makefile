@@ -1,6 +1,15 @@
 include ../makeinclude
 
-all: toggle_tree dockable_group filedialog frametab pixbutton slider
+all: packfu toggle_tree dockable_group filedialog frametab pixbutton slider
+
+wtest: wtest.cxx
+	$(CXX) $(CXXFLAGS) -I.. wtest.cxx -L../lib -lflek_ui $(LDLIBS) -o $@
+
+wtest2: wtest2.cxx
+	$(CXX) $(CXXFLAGS) -I.. wtest2.cxx -L../lib -lflek_ui $(LDLIBS) -o $@
+
+packfu: packfu.cxx
+	$(CXX) $(CXXFLAGS) -I.. packfu.cxx -L../lib -lflek_ui $(LDLIBS) -o $@
 
 dockable_group: dockable_group.cxx
 	$(CXX) $(CXXFLAGS) -I.. dockable_group.cxx -L../lib -lflek_ui $(LDLIBS) -o $@

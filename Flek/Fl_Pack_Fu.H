@@ -1,6 +1,10 @@
 #ifndef FL_PACK_2_H_
 #define FL_PACK_2_H_
 
+#include <FL/Fl_Pack.H>
+#define Fl_Pack_Fu Fl_Pack
+
+/*
 #include <FL/Fl_Group.H>
 
 class Fl_Pack_Fu : public Fl_Group
@@ -21,5 +25,5 @@ public:
   void spacing (int i) { spacing_ = i; }
   uchar horizontal () const { return type(); }
 };
-
+*/
 #endif

@@ -7,7 +7,9 @@ Fl_App_Window::Fl_App_Window (int x, int y, int w, int h, const char *l = 0) :
   Fl_Window (x, y, w, h, l)
 {
   pack = new Fl_Pack_Fu (0, 0, w, h);
+  pack->type (Fl_Pack_Fu::VERTICAL);
   contents = new Fl_Window (0, 0, w, h);
+  contents->box(FL_BORDER_BOX);
   pack->add (contents);
   begin ();
 }
@@ -16,19 +18,24 @@ Fl_App_Window::Fl_App_Window (int w, int h, const char *l = 0) :
   Fl_Window (w, h, l)
 {
   pack = new Fl_Pack_Fu (0, 0, w, h);
+  pack->type (Fl_Pack_Fu::VERTICAL);
   contents = new Fl_Window (0, 0, w, h);
+  contents->box(FL_BORDER_BOX);
   pack->add (contents);
   begin ();
 }
 
 int 
 Fl_App_Window::handle (int event)
-{
+{  
   if (event == FL_UNDOCK)
     {
-      pack->pack ();
-      if ((w() != pack->w()) || (h() != pack->h()))
-	size (pack->w(), pack->h());
+      //pack->draw ();
+      //redraw();
+      //if ((w() != pack->w()) || (h() != pack->h()))
+      //size (pack->w(), pack->h());
+      //damage (FL_DAMAGE_ALL);
+      redraw ();
       return 1;
     }
   
@@ -38,6 +45,8 @@ Fl_App_Window::handle (int event)
       int dy = Fl::event_y_root ();
       int ex = x_root ();
       int ey = y_root ();
+
+      // printf ("Handling FL_DOCK event!!\n");
       
       // Check to see if we can dock along any of 
       // the pack boundaries.
@@ -61,6 +70,7 @@ Fl_App_Window::handle (int event)
 		 && (dy < (ey + FL_DOCK_DELTA + cY))    // ymax
 		 && (dy > (ey - FL_DOCK_DELTA + cY)) )  // ymin
 	    {
+	      printf ("DOCK!!!!!!!!!!!!!!!!!!!!!!!!!!!\n");
 	      add_dockable (Fl_Dockable_Group::current, i);
 	      return 1;
 	    }
@@ -91,9 +101,15 @@ void Fl_App_Window::add_dockable (Fl_Dockable_Group *W, int pos = 0)
     Fl_Dockable_Group::current->size(w(), Fl_Dockable_Group::current->h());
   
   Fl_Dockable_Group::current->show ();
-  pack->pack ();
-  if ((w() != pack->w()) || (h() != pack->h()))
-    size (pack->w(), pack->h());
+  
+  // FLTK BUG???  calling redraw() should call draw(), right??  
+  // Not always so we need to pack things here..
+  {
+    pack->draw ();
+    if ((w() != pack->w()) || (h() != pack->h()))
+      size (pack->w(), pack->h());
+    redraw ();
+  }
 }
 
 void Fl_App_Window::show ()
@@ -103,3 +119,12 @@ void Fl_App_Window::show ()
   contents->show ();
 }
 
+void 
+Fl_App_Window::draw ()
+{
+  printf ("####################################\n");
+  // if pack->w() and pack->h() change...
+  pack->draw ();
+  resize (x(), y(), pack->w(), pack->h());
+  return Fl_Window::draw ();
+}

@@ -154,7 +154,9 @@ main() {
   Fl_Button mac_colors_button(130, 272, 100, 22, "Mac Colors");
   Fl_Scroll s(10, 10, 220, 180);
   s.type(Fl_Scroll::VERTICAL_ALWAYS);
+#ifndef FLTK_2
   s.box(FL_THIN_DOWN_FRAME);
+#endif
   // When constructing an Fl_Toggle_Tree, the height doesn't matter.
 
   Fl_Toggle_Tree tree(12, 12, 220-s.scrollbar.w(), 10);

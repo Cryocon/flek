@@ -71,9 +71,11 @@ Fl_Toggle_Tree::Fl_Toggle_Tree(int x, int y, int w, int h) : Fl_Toggle_Tree_Base
   edit_input_ = new Fl_Input(x, y, 0, 0);
   edit_input_->box(FL_FLAT_BOX);
   edit_input_->color(FL_WHITE);
+#ifndef FLTK_2
   edit_input_->textcolor(FL_BLACK);
   edit_input_->textfont(textfont_);
   edit_input_->textsize(textsize_);
+#endif
   edit_callback((Fl_Callback*) edit_default_callback, this);
   edit_input_->when(FL_WHEN_RELEASE | FL_WHEN_ENTER_KEY | FL_WHEN_NOT_CHANGED);
 
@@ -135,10 +137,12 @@ void Fl_Toggle_Tree::draw_node(int depth, int cy, Fl_Toggle_Node_Base* node) {
       closed_pixmap_->draw(x() + depth*16, cy);
   }
 
+#ifndef FLTK_2
   if (tnode->selected_)
     textcolor(selection_label_color());
   else
     textcolor(labelcolor());
+#endif
 
   if (tnode->label_) {
     int D = depth * 16 + label_offset_;
@@ -213,7 +217,9 @@ void Fl_Toggle_Tree::draw_label(char* str, int indent, int x, int y, int w, int 
       BREAK:
     */
     fl_font(font, size);
-    if (!active_r()) lcol = inactive(lcol);
+#ifndef FLTK_2
+    if (!active_r()) lcol = inactive (lcol);
+#endif
     //    if (((FL_BLINE*)v)->flags & SELECTED)
     //      lcol = contrast(lcol, selection_color());
     fl_color(lcol);

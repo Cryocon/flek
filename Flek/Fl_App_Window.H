@@ -19,13 +19,15 @@ class Fl_App_Window : public Fl_Window
   void add_dockable (Fl_Dockable_Group *W, int position = 0);
   void pack_dock () 
     { 
-      pack->pack(); 
+      /// pack->pack(); 
       if ((pack->w() != w()) || (pack->h() != h()))
         size (pack->w(), pack->h());
     }
   void show ();
   void begin () { Fl_Group::current (contents); }
   void end () { Fl_Group::current ((Fl_Group*) parent ()); }
+  void draw ();
+  Fl_Pack_Fu *tpack () {return pack; }
   
  protected:
   Fl_Pack_Fu    *pack;
