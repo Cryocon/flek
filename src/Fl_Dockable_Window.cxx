@@ -63,12 +63,12 @@ int Fl_Gripper::handle(int event) {
       int y_up = Fl::event_y();
 
       Fl_Pack* parent = (Fl_Pack*)group->parent();
-      int content_location = 0;
 
       if((_grippertype & FL_SHOVABLE) && (event & FL_RELEASE)
         && (group->parent()) && (x_up <= w() + 2) && (y_up <= h() + 2)) {
 
 #if 0
+        int content_location = 0;
 	// Apparently there is a bug somewhere in this algorithm.  bdl
         for(int i = 0; i < parent->children(); i++) {
           if (parent->child(i)->type() != FL_WINDOW) {
@@ -149,8 +149,8 @@ int Fl_Gripper::handle(int event) {
       }	    
 
       // Isn't it docked?
-      if(!group->get_docked())
-        // Move the Dock_Group around the screen.
+      if(!group->docked())
+        // Move the window around following the pointer.
         group->position((x_first + (x_drag - x_down)), (y_first + (y_drag - y_down)));
     }
 
@@ -184,7 +184,7 @@ Fl_Dockable_Window::create_dockable_window() {
   uw_ = w();
   uh_ = h();
   gripper = new Fl_Gripper(0, 0, gripper_width, h());
-  docked = 0;
+  _docked = 0;
   contents = new Fl_Window(gripper_width, 0, w(), h());
   resizable(contents);
   grippertype(FL_DRAGABLE);
@@ -215,7 +215,7 @@ int Fl_Dockable_Window::handle(int event) {
 }
 
 void Fl_Dockable_Window::undock(int x, int y) {
-  docked = 0;
+  _docked = 0;
   // printf ("undocking..\n");
   if(parent()) {
     Fl_Group *group = (Fl_Group*)parent();

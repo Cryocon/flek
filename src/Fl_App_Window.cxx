@@ -152,18 +152,18 @@ void Fl_App_Window::accept_dockable(Fl_Dockable_Window *W) {
   dockable_windows[dockable_windows_size++] = W;
 }
 
-void Fl_App_Window::add_dockable(Fl_Dockable_Window *W, int pos) {
+void Fl_App_Window::add_dockable(Fl_Dockable_Window* W, int pos) {
   // Add the dockable window to this window's list of dockable windows.
   accept_dockable(W);
 
   // Dock the dockable window on this window.
   Fl_Dockable_Window::current = W;
-  Fl_Dockable_Window::current->hide();
+  W->hide();
   _pack->insert(*W, pos);
-  W->set_docked(1);
+  W->docked(1);
 
   if(shown()) {
-    Fl_Dockable_Window::current->show();
+    W->show();
     // Repack.
     resize(x(), y(), w(), h());
   }

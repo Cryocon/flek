@@ -1,6 +1,6 @@
 /* -*-C++-*- 
 
-   "$Id: Fl_Dockable_Window.H,v 1.5 2000/05/17 01:52:36 brad Exp $"
+   "$Id: Fl_Dockable_Window.H,v 1.6 2000/05/17 05:50:27 brad Exp $"
    
    Copyright 1999-2000 by the Flek development team.
    
@@ -39,7 +39,9 @@
 
 /** @package libflek_ui
  * Fl_Gripper is a little button that looks like you can grab it
- * and drag something around with it.  Used by Fl_Dockable_Window.
+ * (to drag something around with) or push it, depending on the
+ * gripper type.
+ * Used by Fl_Dockable_Window.
  */
 class Fl_Gripper : public Fl_Button {
 private:
@@ -56,11 +58,15 @@ protected:
 public:
   Fl_Gripper(int x, int y, int w, int h, const char *l = 0) : 
     Fl_Button(x, y, w, h, l) {
-      color(FL_LIGHT2);
-      label("@-92<->");
-      labeltype(FL_SYMBOL_LABEL);      
   }
 
+  /* Sets the type of gripper.
+   * If you set the type to FL_SHOVABLE, you get a
+   * gripper button that cannot be dragged, but can be pushed to "shove" the
+   * toolbar to the other docking location.
+   * If you set the type to FL_SHOVABLE | FL_DRAGABLE, the gripper looks
+   * dragable, and is both dragable and shovable.
+   */
   void grippertype(unsigned char t); 
   unsigned char grippertype();
 };
@@ -75,7 +81,7 @@ protected:
   Fl_Gripper* gripper;
   Fl_Window* contents;
   static long gripper_width;
-  short docked;
+  short _docked;
   int uw_;
   int uh_;
   Fl_Dockable_Window::create_dockable_window();
@@ -89,10 +95,7 @@ public:
   Fl_Dockable_Window(int w, int h, const char *l = 0);
   Fl_Dockable_Window(int x, int y, int w, int h, const char *l = 0);
 
-  ~Fl_Dockable_Window ();
-
-  void show();
-  int handle(int);
+  ~Fl_Dockable_Window();
 
   /**
    * Begin adding new widgets to the contents window.
@@ -102,21 +105,23 @@ public:
   /**
    * Undocks the group to screen coordinates (x, y).
    */
-  void undock(int x=-1, int y=-1);  
+  void undock(int x = -1, int y = -1);  
 
-  short get_docked() { return docked; }
-  void set_docked(short r) { docked = r; }  
+  /**
+   * Sets or tests whether window is docked or not.
+   */
+  void docked(short r) { _docked = r; }  
+  short docked() { return _docked; }
   
   /**
-   * Sets the look and action of the gripper.
-   * If you set the type to FL_SHOVABLE, you get a
-   * gripper button that cannot be dragged, but can be pushed to "shove" the
-   * toolbar to the other docking location.
-   * If you set the type to FL_SHOVABLE | FL_DRAGABLE, the gripper looks
-   * dragable, and is both dragable and shovable.
+   * Sets the look and action of the gripper.  See Fl_Gripper::grippertype()
+   * for more information.
    */
   void grippertype(unsigned char t); 
   unsigned char grippertype();
+
+  int handle(int);
+  void show();
 };
 
 #endif

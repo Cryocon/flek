@@ -1,6 +1,6 @@
 /* -*-C++-*- 
 
-   "$Id: Fl_App_Window.H,v 1.19 2000/05/15 08:33:07 brad Exp $"
+   "$Id: Fl_App_Window.H,v 1.20 2000/05/17 05:50:27 brad Exp $"
    
    Copyright 1999-2000 by the Flek development team.
    
@@ -79,7 +79,6 @@ private:
 
 protected:
   virtual FL_EXPORT void flush();
-  int handle(int);
 
 public:
   /**
@@ -150,7 +149,7 @@ public:
   void add_dockable(Fl_Dockable_Window* W, int position = 0);
 
   /**
-   * Makes the contents window the current group.
+   * Begin adding widgets to the contents window.
    */
   void begin() { Fl_Group::current(_contents); }
 
@@ -159,6 +158,8 @@ public:
    */
   void show();
   void hide();
+
+  int handle(int);
 };
 
 #endif
