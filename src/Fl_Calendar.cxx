@@ -51,10 +51,13 @@ Fl_Calendar_Base::Fl_Calendar_Base (int x, int y, int w, int h,
 			       (w/7),
 			       (h/6));
 #ifndef FLTK_2
-      days[i]->box (FL_THIN_UP_BOX);
       days[i]->down_box (FL_THIN_DOWN_BOX);
-      days[i]->labelsize (12);
+      days[i]->labelsize (10);
+#else
+      days[i]->label_size (10);
 #endif
+      days[i]->box (FL_THIN_UP_BOX);
+      days[i]->color (52);
       days[i]->type (FL_RADIO_BUTTON);
       days[i]->callback ((Fl_Callback*)&fl_calendar_button_cb, (void *)this);
     }
@@ -298,8 +301,12 @@ Fl_Calendar::Fl_Calendar (int x, int y, int w, int h,
 				   (h/8));
       weekdays[i]->box (FL_THIN_UP_BOX);  
 #ifndef FLTK_2
-      weekdays[i]->labelsize (12);
+      weekdays[i]->labelsize (10);
+#else
+      weekdays[i]->label_size (10);
 #endif
+      weekdays[i]->color (52);
+
     }
   
   weekdays[SUNDAY]->label ("S");
@@ -311,30 +318,40 @@ Fl_Calendar::Fl_Calendar (int x, int y, int w, int h,
   weekdays[SATURDAY]->label ("S");
 
   previous = new Fl_Button (x, y, (w/7), (h/8), "@<-");
+  previous->box (FL_THIN_UP_BOX);
 #ifndef FLTK_2
   previous->labeltype (FL_SYMBOL_LABEL);
-  previous->labelsize (12);
-  previous->box (FL_THIN_UP_BOX);
+  previous->labelsize (10);
   previous->down_box (FL_THIN_DOWN_BOX);
+#else
+  previous->label_type (FL_SYMBOL_LABEL);
+  previous->label_size (10);
 #endif
   previous->callback ((Fl_Callback*)&fl_calendar_previous_cb, (void *)this);  
 
   next = new Fl_Button (x + (w/7)*6, y, (w/7), (h/8), "@->");
+  next->box (FL_THIN_UP_BOX);
 #ifndef FLTK_2
   next->labeltype (FL_SYMBOL_LABEL);
-  next->labelsize (12);
-  next->box (FL_THIN_UP_BOX);
+  next->labelsize (10);
   next->down_box (FL_THIN_DOWN_BOX);
+#else
+  previous->label_type (FL_SYMBOL_LABEL);
+  previous->label_size (10);
 #endif
   next->callback ((Fl_Callback*)&fl_calendar_next_cb, (void *)this);
   
   caption = new Fl_Button (x + (w/7), y, (w/7)*5, (h/8));
+  caption->box (FL_THIN_UP_BOX);
 #ifndef FLTK_2
   caption->labeltype (FL_SYMBOL_LABEL);
   caption->labelfont (3);
-  caption->labelsize (12);
-  caption->box (FL_THIN_UP_BOX);
+  caption->labelsize (10);
   caption->down_box (FL_THIN_DOWN_BOX);
+#else
+  caption->label_type (FL_SYMBOL_LABEL);
+  caption->label_font (3);
+  caption->label_size (10);
 #endif
   
   Fl_Calendar_Base::csize (x, y + (2*h/8), w, (6*h/8));

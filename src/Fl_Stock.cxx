@@ -12,9 +12,40 @@
 #include "stock_button_apply.xpm"
 #include "stock_button_close.xpm"
 
+#include "stock_add.xpm"
+#include "stock_bottom.xpm"
+#include "stock_top.xpm"
+#include "stock_clear.xpm"
+#include "stock_down_arrow.xpm"
+#include "stock_up_arrow.xpm"
+#include "stock_left_arrow.xpm"
+#include "stock_right_arrow.xpm"
+#include "stock_remove.xpm"
+#include "stock_open.xpm"
+#include "stock_new.xpm"
+
+#include "stock_copy.xpm"
+#include "stock_cut.xpm"
+#include "stock_exec.xpm"
+#include "stock_first.xpm"
+#include "stock_help.xpm"
+#include "stock_last.xpm"
+#include "stock_save.xpm"
+#include "stock_save_as.xpm"
+#include "stock_search.xpm"
+#include "stock_search_replace.xpm"
+
 Fl_Stock_Button::Fl_Stock_Button (int x, int y, int w, int h, const char *l) : 
   Fl_Button (x, y, w, h, l)
 {
+  // Scheme this :
+#ifdef FLTK_2
+  label_size (10);
+#else
+  labelsize (10);
+#endif
+  color (52);
+  box (FL_FLAT_BOX);
 }
 
 void Fl_Stock_Button::draw()
@@ -33,6 +64,7 @@ void
 Fl_Stock_Button::draw_label (int X, int Y, int W, int H,
 			     Fl_Color c, Fl_Flags f)
 {
+  printf ("Drawing with flags == %d\n", f);
   int tw=0, th=0;
   int iw=0, ih=0;
 
@@ -64,6 +96,7 @@ Fl_Stock_Button::draw_label (int X, int Y, int W, int H,
 
   if ((f & FL_TEXT_ALIGN_TOP) || (f & FL_TEXT_ALIGN_BOTTOM))
     {
+      printf("align top\n");
       h = th + ih + spacer;
       w = ((tw > iw) ? tw : iw); // max
     }
@@ -146,7 +179,7 @@ Fl_Stock_Button::draw_label (int X, int Y, int W, int H,
   }
 
   if (label_ && *label_) {
-#ifdef FLTK2
+#ifdef FLTK_2
     fl_font(label_font(), label_size());
     //if (flags() & FL_SHORTCUT_LABEL) fl_draw_shortcut = 1;
     //printf ("label = %d, %d, %d, %d\n", tdx, tdy, tw, th);
@@ -224,4 +257,282 @@ Fl_Stock_Button_Apply::Fl_Stock_Button_Apply(int x, int y, int w, int h,
   if (!Stock_Button_Apply_Image)
     Stock_Button_Apply_Image = new Fl_Pixmap(stock_button_apply_xpm);
   image (Stock_Button_Apply_Image);
+}
+
+
+static Fl_Pixmap* Stock_Button_Add_Image = 0;
+
+Fl_Stock_Button_Add::Fl_Stock_Button_Add(int x, int y, int w, int h, 
+				       const char *l) : 
+  Fl_Stock_Button (x, y, w, h, "Add")
+{
+  if (!Stock_Button_Add_Image)
+    Stock_Button_Add_Image = new Fl_Pixmap(stock_add_xpm);
+  image (Stock_Button_Add_Image);
+  set_flag (FL_TEXT_ALIGN_BOTTOM);
+}
+
+static Fl_Pixmap* Stock_Button_Bottom_Image = 0;
+
+Fl_Stock_Button_Bottom::Fl_Stock_Button_Bottom(int x, int y, int w, int h, 
+				       const char *l) : 
+  Fl_Stock_Button (x, y, w, h, "Bottom")
+{
+  if (!Stock_Button_Bottom_Image)
+    Stock_Button_Bottom_Image = new Fl_Pixmap(stock_bottom_xpm);
+  image (Stock_Button_Bottom_Image);
+  set_flag (FL_TEXT_ALIGN_BOTTOM);
+}
+
+static Fl_Pixmap* Stock_Button_Clear_Image = 0;
+
+Fl_Stock_Button_Clear::Fl_Stock_Button_Clear(int x, int y, int w, int h, 
+				       const char *l) : 
+  Fl_Stock_Button (x, y, w, h, "Clear")
+{
+  if (!Stock_Button_Clear_Image)
+    Stock_Button_Clear_Image = new Fl_Pixmap(stock_clear_xpm);
+  image (Stock_Button_Clear_Image);
+  set_flag (FL_TEXT_ALIGN_BOTTOM);
+}
+
+static Fl_Pixmap* Stock_Button_Down_Image = 0;
+
+Fl_Stock_Button_Down::Fl_Stock_Button_Down(int x, int y, int w, int h, 
+				       const char *l) : 
+  Fl_Stock_Button (x, y, w, h, "Down")
+{
+  if (!Stock_Button_Down_Image)
+    Stock_Button_Down_Image = new Fl_Pixmap(stock_down_arrow_xpm);
+  image (Stock_Button_Down_Image);
+  set_flag (FL_TEXT_ALIGN_BOTTOM);
+}
+
+static Fl_Pixmap* Stock_Button_Up_Image = 0;
+
+Fl_Stock_Button_Up::Fl_Stock_Button_Up(int x, int y, int w, int h, 
+				       const char *l) : 
+  Fl_Stock_Button (x, y, w, h, "Up")
+{
+  if (!Stock_Button_Up_Image)
+    Stock_Button_Up_Image = new Fl_Pixmap(stock_up_arrow_xpm);
+  image (Stock_Button_Up_Image);
+  set_flag (FL_TEXT_ALIGN_BOTTOM);
+}
+
+static Fl_Pixmap* Stock_Button_Left_Image = 0;
+
+Fl_Stock_Button_Left::Fl_Stock_Button_Left(int x, int y, int w, int h, 
+				       const char *l) : 
+  Fl_Stock_Button (x, y, w, h, "Left")
+{
+  if (!Stock_Button_Left_Image)
+    Stock_Button_Left_Image = new Fl_Pixmap(stock_left_arrow_xpm);
+  image (Stock_Button_Left_Image);
+  set_flag (FL_TEXT_ALIGN_BOTTOM);
+}
+
+static Fl_Pixmap* Stock_Button_Right_Image = 0;
+
+Fl_Stock_Button_Right::Fl_Stock_Button_Right(int x, int y, int w, int h, 
+				       const char *l) : 
+  Fl_Stock_Button (x, y, w, h, "Right")
+{
+  if (!Stock_Button_Right_Image)
+    Stock_Button_Right_Image = new Fl_Pixmap(stock_right_arrow_xpm);
+  image (Stock_Button_Right_Image);
+  set_flag (FL_TEXT_ALIGN_BOTTOM);
+}
+
+static Fl_Pixmap* Stock_Button_Previous_Image = 0;
+
+Fl_Stock_Button_Previous::Fl_Stock_Button_Previous(int x, int y, int w, int h, 
+				       const char *l) : 
+  Fl_Stock_Button (x, y, w, h, "Previous")
+{
+  if (!Stock_Button_Previous_Image)
+    Stock_Button_Previous_Image = new Fl_Pixmap(stock_left_arrow_xpm);
+  image (Stock_Button_Previous_Image);
+  set_flag (FL_TEXT_ALIGN_BOTTOM);
+}
+
+static Fl_Pixmap* Stock_Button_Next_Image = 0;
+
+Fl_Stock_Button_Next::Fl_Stock_Button_Next(int x, int y, int w, int h, 
+				       const char *l) : 
+  Fl_Stock_Button (x, y, w, h, "Next")
+{
+  if (!Stock_Button_Next_Image)
+    Stock_Button_Next_Image = new Fl_Pixmap(stock_right_arrow_xpm);
+  image (Stock_Button_Next_Image);
+  set_flag (FL_TEXT_ALIGN_BOTTOM);
+  printf ("Fl_Next flags = %d -- FL_ALIGN_BOTTOM = %d\n", flags(), FL_TEXT_ALIGN_BOTTOM);
+}
+
+static Fl_Pixmap* Stock_Button_New_Image = 0;
+
+Fl_Stock_Button_New::Fl_Stock_Button_New(int x, int y, int w, int h, 
+				       const char *l) : 
+  Fl_Stock_Button (x, y, w, h, "New")
+{
+  if (!Stock_Button_New_Image)
+    Stock_Button_New_Image = new Fl_Pixmap(stock_new_xpm);
+  image (Stock_Button_New_Image);
+  set_flag (FL_TEXT_ALIGN_BOTTOM);
+}
+
+static Fl_Pixmap* Stock_Button_Open_Image = 0;
+
+Fl_Stock_Button_Open::Fl_Stock_Button_Open(int x, int y, int w, int h, 
+				       const char *l) : 
+  Fl_Stock_Button (x, y, w, h, "Open")
+{
+  if (!Stock_Button_Open_Image)
+    Stock_Button_Open_Image = new Fl_Pixmap(stock_open_xpm);
+  image (Stock_Button_Open_Image);
+  set_flag (FL_TEXT_ALIGN_BOTTOM);
+}
+
+static Fl_Pixmap* Stock_Button_Remove_Image = 0;
+
+Fl_Stock_Button_Remove::Fl_Stock_Button_Remove(int x, int y, int w, int h, 
+				       const char *l) : 
+  Fl_Stock_Button (x, y, w, h, "Remove")
+{
+  if (!Stock_Button_Remove_Image)
+    Stock_Button_Remove_Image = new Fl_Pixmap(stock_remove_xpm);
+  image (Stock_Button_Remove_Image);
+  set_flag (FL_TEXT_ALIGN_BOTTOM);
+}
+
+static Fl_Pixmap* Stock_Button_Top_Image = 0;
+
+Fl_Stock_Button_Top::Fl_Stock_Button_Top(int x, int y, int w, int h, 
+				       const char *l) : 
+  Fl_Stock_Button (x, y, w, h, "Top")
+{
+  if (!Stock_Button_Top_Image)
+    Stock_Button_Top_Image = new Fl_Pixmap(stock_top_xpm);
+  image (Stock_Button_Top_Image);
+  set_flag (FL_TEXT_ALIGN_BOTTOM);
+}
+
+static Fl_Pixmap* Stock_Button_Copy_Image = 0;
+
+Fl_Stock_Button_Copy::Fl_Stock_Button_Copy(int x, int y, int w, int h, 
+				       const char *l) : 
+  Fl_Stock_Button (x, y, w, h, "Copy")
+{
+  if (!Stock_Button_Copy_Image)
+    Stock_Button_Copy_Image = new Fl_Pixmap(stock_copy_xpm);
+  image (Stock_Button_Copy_Image);
+  set_flag (FL_TEXT_ALIGN_BOTTOM);
+}
+
+static Fl_Pixmap* Stock_Button_Cut_Image = 0;
+
+Fl_Stock_Button_Cut::Fl_Stock_Button_Cut(int x, int y, int w, int h, 
+				       const char *l) : 
+  Fl_Stock_Button (x, y, w, h, "Cut")
+{
+  if (!Stock_Button_Cut_Image)
+    Stock_Button_Cut_Image = new Fl_Pixmap(stock_cut_xpm);
+  image (Stock_Button_Cut_Image);
+  set_flag (FL_TEXT_ALIGN_BOTTOM);
+}
+
+static Fl_Pixmap* Stock_Button_Exec_Image = 0;
+
+Fl_Stock_Button_Exec::Fl_Stock_Button_Exec(int x, int y, int w, int h, 
+				       const char *l) : 
+  Fl_Stock_Button (x, y, w, h, "Exec")
+{
+  if (!Stock_Button_Exec_Image)
+    Stock_Button_Exec_Image = new Fl_Pixmap(stock_exec_xpm);
+  image (Stock_Button_Exec_Image);
+  set_flag (FL_TEXT_ALIGN_BOTTOM);
+}
+
+static Fl_Pixmap* Stock_Button_First_Image = 0;
+
+Fl_Stock_Button_First::Fl_Stock_Button_First(int x, int y, int w, int h, 
+				       const char *l) : 
+  Fl_Stock_Button (x, y, w, h, "First")
+{
+  if (!Stock_Button_First_Image)
+    Stock_Button_First_Image = new Fl_Pixmap(stock_first_xpm);
+  image (Stock_Button_First_Image);
+  set_flag (FL_TEXT_ALIGN_BOTTOM);
+}
+
+static Fl_Pixmap* Stock_Button_Help_Image = 0;
+
+Fl_Stock_Button_Help::Fl_Stock_Button_Help(int x, int y, int w, int h, 
+				       const char *l) : 
+  Fl_Stock_Button (x, y, w, h, "Help")
+{
+  if (!Stock_Button_Help_Image)
+    Stock_Button_Help_Image = new Fl_Pixmap(stock_help_xpm);
+  image (Stock_Button_Help_Image);
+  set_flag (FL_TEXT_ALIGN_BOTTOM);
+}
+
+static Fl_Pixmap* Stock_Button_Last_Image = 0;
+
+Fl_Stock_Button_Last::Fl_Stock_Button_Last(int x, int y, int w, int h, 
+				       const char *l) : 
+  Fl_Stock_Button (x, y, w, h, "Last")
+{
+  if (!Stock_Button_Last_Image)
+    Stock_Button_Last_Image = new Fl_Pixmap(stock_last_xpm);
+  image (Stock_Button_Last_Image);
+  set_flag (FL_TEXT_ALIGN_BOTTOM);
+}
+
+static Fl_Pixmap* Stock_Button_Save_Image = 0;
+
+Fl_Stock_Button_Save::Fl_Stock_Button_Save(int x, int y, int w, int h, 
+				       const char *l) : 
+  Fl_Stock_Button (x, y, w, h, "Save")
+{
+  if (!Stock_Button_Save_Image)
+    Stock_Button_Save_Image = new Fl_Pixmap(stock_save_xpm);
+  image (Stock_Button_Save_Image);
+  set_flag (FL_TEXT_ALIGN_BOTTOM);
+}
+
+static Fl_Pixmap* Stock_Button_Save_As_Image = 0;
+
+Fl_Stock_Button_Save_As::Fl_Stock_Button_Save_As(int x, int y, int w, int h, 
+				       const char *l) : 
+  Fl_Stock_Button (x, y, w, h, "Save_As")
+{
+  if (!Stock_Button_Save_As_Image)
+    Stock_Button_Save_As_Image = new Fl_Pixmap(stock_save_as_xpm);
+  image (Stock_Button_Save_As_Image);
+  set_flag (FL_TEXT_ALIGN_BOTTOM);
+}
+
+static Fl_Pixmap* Stock_Button_Search_Image = 0;
+
+Fl_Stock_Button_Search::Fl_Stock_Button_Search(int x, int y, int w, int h, 
+				       const char *l) : 
+  Fl_Stock_Button (x, y, w, h, "Search")
+{
+  if (!Stock_Button_Search_Image)
+    Stock_Button_Search_Image = new Fl_Pixmap(stock_search_xpm);
+  image (Stock_Button_Search_Image);
+  set_flag (FL_TEXT_ALIGN_BOTTOM);
+}
+
+static Fl_Pixmap* Stock_Button_Search_Replace_Image = 0;
+
+Fl_Stock_Button_Search_Replace::Fl_Stock_Button_Search_Replace(int x, int y, int w, int h, 
+				       const char *l) : 
+  Fl_Stock_Button (x, y, w, h, "Search_Replace")
+{
+  if (!Stock_Button_Search_Replace_Image)
+    Stock_Button_Search_Replace_Image = new Fl_Pixmap(stock_search_replace_xpm);
+  image (Stock_Button_Search_Replace_Image);
+  set_flag (FL_TEXT_ALIGN_BOTTOM);
 }

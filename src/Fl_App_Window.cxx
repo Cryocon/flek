@@ -12,6 +12,7 @@ Fl_App_Window::Fl_App_Window (int x, int y, int w, int h, const char *l = 0) :
   pack->type (Fl_Pack_Fu::VERTICAL);
   contents = new Fl_Window (0, 0, w, h);
   contents->box(FL_BORDER_BOX);
+  contents->color (52);
   pack->add (contents);
   begin ();
 }
@@ -23,6 +24,7 @@ Fl_App_Window::Fl_App_Window (int w, int h, const char *l = 0) :
   pack->type (Fl_Pack_Fu::VERTICAL);
   contents = new Fl_Window (0, 0, w, h);
   contents->box(FL_BORDER_BOX);
+  contents->color (52);
   pack->add (contents);
   begin ();
 }

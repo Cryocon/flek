@@ -5,11 +5,11 @@ all: stock_buttons dockable_group toggle_tree # frametab pixbutton slider
 stock_buttons: stock_buttons.cxx
 	$(CXX) $(CXXFLAGS) -I.. stock_buttons.cxx -L../lib -lflek_ui $(LDLIBS) -o $@
 
-#wtest: wtest.cxx
-#	$(CXX) $(CXXFLAGS) -I.. wtest.cxx -L../lib -lflek_ui $(LDLIBS) -o $@
+wtest: wtest.cxx
+	$(CXX) $(CXXFLAGS) -I.. wtest.cxx -L../lib -lflek_ui $(LDLIBS) -o $@
 
-#wtest2: wtest2.cxx
-#	$(CXX) $(CXXFLAGS) -I.. wtest2.cxx -L../lib -lflek_ui $(LDLIBS) -o $@
+wtest2: wtest2.cxx
+	$(CXX) $(CXXFLAGS) -I.. wtest2.cxx -L../lib -lflek_ui $(LDLIBS) -o $@
 
 #packfu: packfu.cxx
 #	$(CXX) $(CXXFLAGS) -I.. packfu.cxx -L../lib -lflek_ui $(LDLIBS) -o $@
