@@ -1,6 +1,6 @@
 /* -*-C++-*- 
 
-   "$Id: Fl_Gl_Arcball_Window.cxx,v 1.7 2000/02/17 18:26:29 jamespalmer Exp $"
+   "$Id: Fl_Gl_Arcball_Window.cxx,v 1.8 2000/04/13 13:56:29 jamespalmer Exp $"
    
    Copyright 1999-2000 by the Flek development team.
    
@@ -25,46 +25,12 @@
 
 #include <FL/Fl.H>
 #include <Flek/Fl_Gl_Arcball_Window.H>
-#include <GL/gl.h>
+#include <Flek/gl.h>
 
 #define LG_NSEGS 4
 #define NSEGS (1<<LG_NSEGS)
 #define CIRCSEGS 32
 #define HALFCIRCSEGS 16
-
-int Fl_Gl_Arcball_Window::handle_rotation (int event)
-{  
-  switch (event)
-    {
-     case FL_PUSH:
-      drag.set ((2.0*Fl::event_x ()) / w() - 1.0, (-2.0 * Fl::event_y ()) / h() + 1.0, 0);
-      arcball.mouse (drag);
-      arcball.beginDrag ();
-      arcball.update ();
-      break;
-     case FL_RELEASE:
-      drag.set ((2.0*Fl::event_x ()) / w() - 1.0, (-2.0 * Fl::event_y ()) / h() + 1.0, 0);
-      arcball.mouse (drag);
-      arcball.endDrag ();
-      arcball.update ();
-      break;
-     case FL_DRAG:
-      drag.set ((2.0*Fl::event_x ()) / w() - 1.0, (-2.0 * Fl::event_y ()) / h() + 1.0, 0);
-      arcball.mouse (drag);
-      arcball.update ();
-      redraw ();
-      break;
-    }
-  return 1;
-}
-
-int Fl_Gl_Arcball_Window::handle (int event)
-{
-  if ((event == FL_PUSH) || (event == FL_RELEASE) || (event == FL_DRAG))
-    return handle_rotation (event);
-  
-  return Fl_Gl_Window::handle (event);
-}
 
 static void unitCircle (void)
 {
@@ -80,21 +46,21 @@ static void unitCircle (void)
 /**
  * Draw a circle with the given normal, center and radius 
  */
-static void drawCircle (const fVector3& center, const fVector3& normal, double radius)
+static void drawCircle (const FVector3& center, const FVector3& normal, double radius)
 {
   // First find the coordinate axis centered at the circle center.
   // The normal will be the Z axis.
-  fVector3 xaxis, yaxis, zaxis;
+  FVector3 xaxis, yaxis, zaxis;
   
   zaxis = normalized (normal);
-  xaxis = fVector3 (0,1,0) % zaxis;
+  xaxis = FVector3 (0,1,0) % zaxis;
   if ( normsqr(xaxis) < 1.0e-5 ) 
     xaxis.set (1,0,0);
   yaxis = zaxis % xaxis;
   
   // Circle will be on the XY plane, defined by the axis system 
   // just computed 
-  fVector3 pts[CIRCSEGS+1];
+  FVector3 pts[CIRCSEGS+1];
   double theta = 0.0, dtheta = M_PI/HALFCIRCSEGS;
   double costheta, sintheta;
   for (int i=0; i < (HALFCIRCSEGS >> 2); ++i )
@@ -119,9 +85,9 @@ static void drawCircle (const fVector3& center, const fVector3& normal, double r
  * Halve arc between unit vectors v1 and v2.
  * Assumes that v1 and v3 are unit vectors
  */
-static fVector3 bisect (const fVector3& v1, const fVector3& v2)
+static FVector3 bisect (const FVector3& v1, const FVector3& v2)
 {
-  fVector3 v = v1 + v2;
+  FVector3 v = v1 + v2;
   float Nv = normsqr (v);
   
   if (Nv < 1.0e-5) 
@@ -134,10 +100,10 @@ static fVector3 bisect (const fVector3& v1, const fVector3& v2)
 /**
  *  Draw an arc defined by its ends.
  */
-static void drawAnyArc (const fVector3& vFrom, const fVector3& vTo)
+static void drawAnyArc (const FVector3& vFrom, const FVector3& vTo)
 {
   int i;
-  fVector3 pts[NSEGS+1];
+  FVector3 pts[NSEGS+1];
   double dot;
   
   pts[0] = vFrom;
@@ -157,9 +123,9 @@ static void drawAnyArc (const fVector3& vFrom, const fVector3& vTo)
 /**
  * Draw the arc of a semi-circle defined by its axis.
  */
-static void drawHalfArc(const fVector3& n)
+static void drawHalfArc(const FVector3& n)
 {
-  fVector3 p, m;
+  FVector3 p, m;
   
   if ( fabs(n[2]-1.0) > 1.0e-5 )
     {
@@ -182,7 +148,7 @@ void Fl_Gl_Arcball_Window::drawConstraints (void) const
 {
   if ( arcball.axisSet () == NoAxes ) return;
   
-  fVector3 axis;
+  FVector3 axis;
   int i;
   
   for (i=0; i < 3; ++i)
@@ -242,9 +208,3 @@ void Fl_Gl_Arcball_Window::arcball_draw ()
   glPopMatrix();
   glMatrixMode(GL_MODELVIEW);
 }
-  
-void Fl_Gl_Arcball_Window::arcball_transform ()
-{
-  glMultMatrix (arcball);
-}
-

@@ -1,6 +1,6 @@
 /* -*-C++-*- 
    
-   "$Id: fMatrix4x4.h,v 1.9 2000/02/13 01:02:32 jamespalmer Exp $"
+   "$Id: FMatrix4x4.H,v 1.1 2000/04/13 13:56:28 jamespalmer Exp $"
    
    Copyright 1999-2000 by the Flek development team.
    
@@ -26,12 +26,12 @@
 // The original vector, matrix, and quaternion code was written by
 // Vinod Srinivasan and then adapted for Flek.
 
-#ifndef FMATRIX_4x4_H_
-#define FMATRIX_4x4_H_
+#ifndef _FMATRIX_4x4_H_
+#define _FMATRIX_4x4_H_
 
-#include <Flek/fBase.h>
-#include <Flek/fVector4.h>
-#include <Flek/fMatrix3x3.h>
+#include <Flek/FBase.H>
+#include <Flek/FVector4.H>
+#include <Flek/FMatrix3x3.H>
 
 /** @package libflek_core
  * Class for a 4x4 matrix. Built from Vector4d
@@ -40,17 +40,17 @@
  * row operations are simplified
  */
 
-class fMatrix4x4 : public fBase
+class FMatrix4x4 : public FBase
 {
 public:
   
-  typedef fMatrix4x4 * Ptr;
+  typedef FMatrix4x4 * Ptr;
   
   /**
    * Default constructor - creates an identity matrix.
    */
-  fMatrix4x4 ()
-    : fBase ()
+  FMatrix4x4 ()
+    : FBase ()
     {
       row[0].set (1.0, 0.0, 0.0, 0.0);
       row[1].set (0.0, 1.0, 0.0, 0.0);
@@ -61,17 +61,17 @@ public:
   /**
    * 1 argument constructor - from scalar, set all elements to given value
    */
-  fMatrix4x4 (double scalar)
-    : fBase ()
+  FMatrix4x4 (double scalar)
+    : FBase ()
     {
       row[0] = scalar; row[1] = scalar; row[2] = scalar; row[3] = scalar;
     }
   
   /**
-   * 4 argument constructor - from 4 fVector4s
+   * 4 argument constructor - from 4 FVector4s
    */
-  fMatrix4x4 (const fVector4& r0, const fVector4& r1, const fVector4& r2, const fVector4& r3)
-    : fBase ()
+  FMatrix4x4 (const FVector4& r0, const FVector4& r1, const FVector4& r2, const FVector4& r3)
+    : FBase ()
     {
       row[0] = r0; row[1] = r1; row[2] = r2; row[3] = r3;
     }
@@ -79,42 +79,42 @@ public:
   /**
    * Copy constructor
    */
-  fMatrix4x4 (const fMatrix4x4& mat)
-    : fBase ()
+  FMatrix4x4 (const FMatrix4x4& mat)
+    : FBase ()
     {
-      copyFrom (mat);
+      copy_from (mat);
     }
   
   /**
    * Constructor from a 3x3 matrix
    */
-  fMatrix4x4 (const fMatrix3x3& mat3)
-    : fBase ()
+  FMatrix4x4 (const FMatrix3x3& mat3)
+    : FBase ()
     {
-      copyFrom (mat3);
+      copy_from (mat3);
     }
   
   /**
    * Destructor
    */
-  virtual ~fMatrix4x4 ()
+  virtual ~FMatrix4x4 ()
     {}
   
   /**
    * Assignment operator
    */
-  fMatrix4x4& operator = (const fMatrix4x4& mat)
+  FMatrix4x4& operator = (const FMatrix4x4& mat)
     {
-      copyFrom (mat);
+      copy_from (mat);
       return (*this);
     }
   
   /**
-   * Assignment from a fMatrix3x3
+   * Assignment from a FMatrix3x3
    */
-  fMatrix4x4& operator = (const fMatrix3x3& mat3)
+  FMatrix4x4& operator = (const FMatrix3x3& mat3)
     {
-      copyFrom (mat3);
+      copy_from (mat3);
       return (*this);
     }
   
@@ -127,9 +127,9 @@ public:
     }
   
   /**
-   * Set the rows of the matrix to the given fVector4s
+   * Set the rows of the matrix to the given FVector4s
    */
-  void set (const fVector4& r0, const fVector4& r1, const fVector4& r2, const fVector4& r3)
+  void set (const FVector4& r0, const FVector4& r1, const FVector4& r2, const FVector4& r3)
     {
       row[0] = r0; row[1] = r1; row[2] = r2; row[3] = r3;
     }
@@ -151,18 +151,18 @@ public:
     }
   
   /** 
-   * Make a copy of the object implement fBase class pure virtual function
+   * Make a copy of the object implement FBase class pure virtual function
    */
-  virtual fBase::Ptr copy (void) const
+  virtual FBase::Ptr copy (void) const
     {
-      Ptr mat = new fMatrix4x4 (*this);
+      Ptr mat = new FMatrix4x4 (*this);
       return mat;
     }
   
   /**
    * Access a row of the matrix - no range checks.
    */
-  fVector4& operator [] (uint index)
+  FVector4& operator [] (uint index)
     {
       return row[index];
     }
@@ -170,7 +170,7 @@ public:
   /**
    * Access a row of the matrix - no range checks : const version
    */
-  const fVector4& operator [] (uint index) const
+  const FVector4& operator [] (uint index) const
     {
       return row[index];
     }
@@ -178,30 +178,30 @@ public:
   /**
    * Class member functions which return the identity matrix
    */
-  static fMatrix4x4 identity (void)
+  static FMatrix4x4 identity (void)
     {
-      fMatrix4x4 imat;  // Default constructor creates an identity matrix
+      FMatrix4x4 imat;  // Default constructor creates an identity matrix
       return imat;
     }
   
   /**
    * Class member functions which return the identity matrix
    */
-  static fMatrix4x4 I (void)
+  static FMatrix4x4 I (void)
     {
-      fMatrix4x4 imat;  // Default constructor creates an identity matrix
+      FMatrix4x4 imat;  // Default constructor creates an identity matrix
       return imat;
     }
   
   // Arithmetic assignment operators
   
-  void operator += (const fMatrix4x4& mat)
+  void operator += (const FMatrix4x4& mat)
     {
       for (int i=0; i < 4; ++i)
 	row[i] += mat.row[i];
     }
   
-  void operator -= (const fMatrix4x4& mat)
+  void operator -= (const FMatrix4x4& mat)
     {
       for (int i=0; i < 4; ++i)
 	row[i] -= mat.row[i];
@@ -224,15 +224,15 @@ public:
   /**
    * Find the 3x3 sub-matrix which is the co-factor for the given element
    */
-  fMatrix3x3 cofactor(uint r, uint c) const
+  FMatrix3x3 cofactor(uint r, uint c) const
     {
-      fMatrix3x3 cof;
-      fVector3 cofrow;
+      FMatrix3x3 cof;
+      FVector3 cofrow;
       uint cfcol, cfrow;
       
       if ( (r > 3) || (c > 3) )
 	{
-	  cerr << "fMatrix3x3 fMatrix4x4 :: cofactor(int,int) : Index out of range!" << endl;
+	  cerr << "FMatrix3x3 FMatrix4x4 :: cofactor(int,int) : Index out of range!" << endl;
 	  return cof;
 	}
       
@@ -260,13 +260,13 @@ public:
   /**
    * Find the transpose of a given matrix.
    */
-  friend fMatrix4x4 transpose(const fMatrix4x4& mat)
+  friend FMatrix4x4 transpose(const FMatrix4x4& mat)
     {
-      fMatrix4x4 trans (mat); trans.transpose ();
+      FMatrix4x4 trans (mat); trans.transpose ();
       return trans;
     }
   
-  friend double determinant(const fMatrix4x4& mat)
+  friend double determinant(const FMatrix4x4& mat)
     {
       double det = 0.0;
       
@@ -280,7 +280,7 @@ public:
    */
   void invert(void)
     {
-      fVector4 inv[4];
+      FVector4 inv[4];
       int i,j,swaprow;
       
       for (i=0; i < 4; ++i)
@@ -305,7 +305,7 @@ public:
 	  // Check if pivot is non-zero
 	  if ( !isNonZero (row[i][i]) )
 	    {
-	      cerr << "fMatrix4x4 inverse(const fMatrix4x4&) : Singular matrix!" << endl;
+	      cerr << "FMatrix4x4 inverse(const FMatrix4x4&) : Singular matrix!" << endl;
 	      // Return original matrix without change
 	      return;
 	    }
@@ -345,9 +345,9 @@ public:
   /** 
    * Find the inverse of a given matrix using elementary row operations
    */
-  friend fMatrix4x4 inverse(const fMatrix4x4& mat)
+  friend FMatrix4x4 inverse(const FMatrix4x4& mat)
     {
-      fMatrix4x4 inv (mat); inv.invert ();
+      FMatrix4x4 inv (mat); inv.invert ();
       return inv;
     }
   
@@ -356,9 +356,9 @@ public:
   /**
    * Negation
    */
-  friend fMatrix4x4 operator - (const fMatrix4x4& mat)
+  friend FMatrix4x4 operator - (const FMatrix4x4& mat)
     {
-      fMatrix4x4 neg;
+      FMatrix4x4 neg;
       
       for (int i=0; i < 4; ++i)
 	neg.row[i] = -mat.row[i];
@@ -366,16 +366,16 @@ public:
       return neg;
     }
   
-  friend fMatrix4x4 operator + (const fMatrix4x4& mat1, const fMatrix4x4& mat2)
+  friend FMatrix4x4 operator + (const FMatrix4x4& mat1, const FMatrix4x4& mat2)
     {
-      fMatrix4x4 sum (mat1);
+      FMatrix4x4 sum (mat1);
       sum += mat2;
       return sum;
     }
   
-  friend fMatrix4x4 operator - (const fMatrix4x4& mat1, const fMatrix4x4& mat2)
+  friend FMatrix4x4 operator - (const FMatrix4x4& mat1, const FMatrix4x4& mat2)
     {
-      fMatrix4x4 diff (mat1);
+      FMatrix4x4 diff (mat1);
       diff -= mat2;
       return diff;
     }
@@ -383,9 +383,9 @@ public:
   /**
    * Post-multiplication by a scalar.
    */
-  friend fMatrix4x4 operator * (const fMatrix4x4& mat, double scalar)
+  friend FMatrix4x4 operator * (const FMatrix4x4& mat, double scalar)
     {
-      fMatrix4x4 prod (mat);
+      FMatrix4x4 prod (mat);
       prod *= scalar;
       return prod;
     }
@@ -393,9 +393,9 @@ public:
   /**
    * Pre-multiplication by a scalar.
    */
-  friend fMatrix4x4 operator * (double scalar, const fMatrix4x4& mat)
+  friend FMatrix4x4 operator * (double scalar, const FMatrix4x4& mat)
     {
-      fMatrix4x4 prod (mat);
+      FMatrix4x4 prod (mat);
       prod *= scalar;
       return prod;
     }
@@ -403,9 +403,9 @@ public:
   /**
    * Division by a scalar.
    */
-  friend fMatrix4x4 operator / (const fMatrix4x4& mat, double scalar)
+  friend FMatrix4x4 operator / (const FMatrix4x4& mat, double scalar)
     {
-      fMatrix4x4 quot (mat);
+      FMatrix4x4 quot (mat);
       quot /= scalar;
       return quot;
     }
@@ -413,14 +413,14 @@ public:
   /**
    * Multiplication of 2 matrices - outer product.
    */
-  friend fMatrix4x4 operator * (const fMatrix4x4& mat1, const fMatrix4x4& mat2);
+  friend FMatrix4x4 operator * (const FMatrix4x4& mat1, const FMatrix4x4& mat2);
   
   /**
    * Element-by-element multiplication of 2 matrices.
    */
-  friend fMatrix4x4 product (const fMatrix4x4& mat1, const fMatrix4x4& mat2)
+  friend FMatrix4x4 product (const FMatrix4x4& mat1, const FMatrix4x4& mat2)
     {
-      fMatrix4x4 prod;
+      FMatrix4x4 prod;
       
       prod.row[0] = product (mat1[0], mat2[0]);
       prod.row[1] = product (mat1[1], mat2[1]);
@@ -431,11 +431,11 @@ public:
     }
   
   /**
-   * Post-multiplication by a fVector4. Vector is assumed to be a column vector.
+   * Post-multiplication by a FVector4. Vector is assumed to be a column vector.
    */
-  friend fVector4 operator * (const fMatrix4x4& mat, const fVector4& vec)
+  friend FVector4 operator * (const FMatrix4x4& mat, const FVector4& vec)
     {
-      fVector4 prod;
+      FVector4 prod;
       
       prod.set (mat.row[0]*vec, 
 		mat.row[1]*vec, 
@@ -445,18 +445,18 @@ public:
     }
   
   /**
-   * Pre-multiplication by a fVector4. Vector is assumed to be a row vector.
+   * Pre-multiplication by a FVector4. Vector is assumed to be a row vector.
    */
-  friend fVector4 operator * (const fVector4& vec, const fMatrix4x4& mat);
+  friend FVector4 operator * (const FVector4& vec, const FMatrix4x4& mat);
   
   /**
-   * Multiplication of two fVector4s to produce a fMatrix4x4 - outer product
+   * Multiplication of two FVector4s to produce a FMatrix4x4 - outer product
    * or tensor product of two Vectors.  
    * Same as multiplying row vector (v1) with column vector (v2)
    */
-  friend fMatrix4x4 operator ^ (const fVector4& v1, const fVector4& v2)
+  friend FMatrix4x4 operator ^ (const FVector4& v1, const FVector4& v2)
     {
-      fMatrix4x4 prod;
+      FMatrix4x4 prod;
       
       prod.row[0] = v1[0]*v2;
       prod.row[1] = v1[1]*v2;
@@ -466,7 +466,7 @@ public:
       return prod;
     }
   
-  friend void swap (fMatrix4x4& mat1, fMatrix4x4& mat2)
+  friend void swap (FMatrix4x4& mat1, FMatrix4x4& mat2)
     {
       for (int i=0; i < 4; ++i)
 	swap (mat1.row[i], mat2.row[i]);
@@ -476,9 +476,9 @@ public:
    * Multiply self with another matrix. Simply calls above defined friend 
    * function.
    */
-  void operator *= (const fMatrix4x4& mat)
+  void operator *= (const FMatrix4x4& mat)
     {
-      fMatrix4x4 prod = (*this) * mat;
+      FMatrix4x4 prod = (*this) * mat;
       *this = prod;
     }
 
@@ -486,7 +486,7 @@ public:
    * Fill an array with contents of the matrix
    * Row - major form -> Row 1 == { array[0], array[1], array[2], array[3] }
    */
-  void fillArrayRowMajor (double array[16]) const
+  void fill_array_row_major (double array[16]) const
     {
       int index=0;
       for (int i=0; i < 4; ++i)
@@ -503,7 +503,7 @@ public:
    * Fill an array with contents of the matrix
    * Row - major form -> Column 1 == { array[0], array[1], array[2], array[3] }  
    */
-  void fillArrayColumnMajor (double array[16]) const
+  void fill_array_column_major (double array[16]) const
     {
       int index=0;
       for (int i=0; i < 4; ++i)
@@ -516,7 +516,7 @@ public:
 	}
     }
   
-  friend ostream& operator << (ostream& o, const fMatrix4x4& mat)
+  friend ostream& operator << (ostream& o, const FMatrix4x4& mat)
     {
       o << "[ " << mat.row[0] << "," << endl
 	<< "  " << mat.row[1] << "," << endl
@@ -525,7 +525,7 @@ public:
       return o;
     }
   
-  friend istream& operator >> (istream& i, fMatrix4x4& mat)
+  friend istream& operator >> (istream& i, FMatrix4x4& mat)
     {
       char rowsep, dummy;
       i >> dummy >> mat.row[0] >> rowsep
@@ -536,12 +536,12 @@ public:
     }
 protected:
   
-  fVector4   row[4];                                // 4 rows of the matrix
+  FVector4   row[4];                                // 4 rows of the matrix
   
   /**
    * Copy values from another matrix
    */
-  void copyFrom (const fMatrix4x4& mat)
+  void copy_from (const FMatrix4x4& mat)
     {
       for (int i=0; i < 4; ++i)
 	row[i] = mat.row[i];
@@ -550,11 +550,11 @@ protected:
   /**
    * Copy from a 3x3 matrix. 4th row and column elements are all set to 0
    */
-  void copyFrom (const fMatrix3x3& mat3)
+  void copy_from (const FMatrix3x3& mat3)
     {
       for (int i=0; i < 3; ++i)
 	row[i] = mat3[i];
     }
 };
 
-#endif // #ifndef FMATRIX_4x4_H_
+#endif // #ifndef FMatrix_4x4_H_

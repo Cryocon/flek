@@ -1,6 +1,6 @@
 /* -*-C++-*- 
 
-   "$Id: Fl_Calendar.H,v 1.4 2000/02/13 04:43:56 jamespalmer Exp $"
+   "$Id: Fl_Calendar.H,v 1.5 2000/04/13 13:56:28 jamespalmer Exp $"
    
    Copyright 1999-2000 by the Flek development team.
    
@@ -23,8 +23,8 @@
 
 */
 
-#ifndef _FL_CALENDAR_H
-#define _FL_CALENDAR_H
+#ifndef _FL_CALENDAR_H_
+#define _FL_CALENDAR_H_
 
 #include <FL/Fl_Group.H>
 #include <FL/Fl_Button.H>

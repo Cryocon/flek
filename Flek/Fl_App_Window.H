@@ -1,6 +1,6 @@
 /* -*-C++-*- 
 
-   "$Id: Fl_App_Window.H,v 1.5 2000/02/13 01:02:32 jamespalmer Exp $"
+   "$Id: Fl_App_Window.H,v 1.6 2000/04/13 13:56:28 jamespalmer Exp $"
    
    Copyright 1999-2000 by the Flek development team.
    
@@ -23,8 +23,8 @@
 
 */
 
-#ifndef FL_APP_WINDOW_H_
-#define FL_APP_WINDOW_H_
+#ifndef _FL_APP_WINDOW_H_
+#define _FL_APP_WINDOW_H_
 
 #include <FL/Fl_Widget.H>
 #include <FL/Fl_Window.H>

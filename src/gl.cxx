@@ -1,16 +1,16 @@
-#include <Flek/fVector2.h>
-#include <Flek/fVector3.h>
-#include <Flek/fVector4.h>
+#include <Flek/FVector2.H>
+#include <Flek/FVector3.H>
+#include <Flek/FVector4.H>
 
-#include <Flek/fMatrix3x3.h>
-#include <Flek/fMatrix4x4.h>
+#include <Flek/FMatrix3x3.H>
+#include <Flek/FMatrix4x4.H>
 
 #include <Flek/gl.h>
 
-void glMultMatrix (const fMatrix4x4 &M)
+void glMultMatrix (const FMatrix4x4 &M)
 {
   double m[16];
-  M.fillArrayRowMajor (m);
+  M.fill_array_row_major (m);
   glMultMatrixd (m);
 }
 

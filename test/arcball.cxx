@@ -1,136 +1,164 @@
-/*
-  "$Id: arcball.cxx,v 1.6 2000/02/10 16:55:35 jamespalmer Exp $"
-  
-  This program tests fArcball and Fl_Gl_Arcball_Window.
-
-  Copyright 1999-2000 by James Dean Palmer and others.
-  
-  This library is free software; you can redistribute it and/or
-  modify it under the terms of the GNU Library General Public
-  License as published by the Free Software Foundation; either
-  version 2 of the License, or (at your option) any later version.
-  
-  This library is distributed in the hope that it will be useful,
-  but WITHOUT ANY WARRANTY; without even the implied warranty of
-  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-  Library General Public License for more details.
-  
-  You should have received a copy of the GNU Library General Public
-  License along with this library; if not, write to the Free Software
-  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307
-  USA.
-  
-  Please report all bugs and problems to "flek-devel@sourceforge.net".
-
-*/
-
-#include <FL/Fl.H>
-#include <FL/Fl_Window.H>
-#include <FL/Fl_Toggle_Button.H>
-#include <FL/math.h>
-
+#include <Flek/FVector3.H>
 #include <Flek/Fl_Gl_Arcball_Window.H>
-#include <Flek/gl.h>
-#include <GL/glu.h>
+//#include "Grid.hh"
+#include <fstream.h>
 
-class arcball_window : public Fl_Gl_Arcball_Window 
+class Arcball : public Fl_Gl_Arcball_Window 
 {
-public:
-  arcball_window (int x, int y, int w, int h, const char *l=0);  
-  void draw ();
+  protected :
+
+     GLUquadric * quadric;
+  //Grid grid;
+     
+  public :
+
+     Arcball(int x, int y, int w, int h, const char *l=0)
+       : Fl_Gl_Arcball_Window(x,y,w,h,l) //, grid(ZX,20.0,20)
+       {
+         quadric = gluNewQuadric();
+       }
+
+     ~Arcball()
+       {
+         gluDeleteQuadric(quadric);
+       }
+
+  // CTRL+left = zoom; CTRL+mid = dolly; ALT+LEFT = rotate; ALT+MID = pan
+  
+     int handle(int event)
+       {
+	 /* Maya like controls:
+         if ( (event == FL_PUSH) && (Fl::event_button() == FL_RIGHT_MOUSE) )
+            exit(0);
+         if ( (event == FL_PUSH) || (event == FL_RELEASE) || (event == FL_DRAG) )
+            {
+              if ( Fl::event_state(FL_ALT) ) {
+                   if ( Fl::event_state(FL_CTRL) ) {
+                           // ALT and CTRL buttons were down. Do zooming on middle mouse
+                        if ( Fl::event_button() == FL_MIDDLE_MOUSE ) handle_zoom (event);
+                        else if ( Fl::event_button() == FL_LEFT_MOUSE ) handle_dolly (event);
+                      }
+                   else
+                      {
+                           // ALT button was down. Handle rotates and translates                   
+                        if ( Fl::event_button() == FL_LEFT_MOUSE ) handle_rotate (event);
+                        else if ( Fl::event_button() == FL_MIDDLE_MOUSE ) handle_pan (event);
+                      }
+                   if ( event != FL_PUSH ) redraw();
+                   return 1;
+                 }
+	      return Fl_Gl_Arcball_Window::handle(event);
+              //return 0;
+            }
+	  */
+         return Fl_Gl_Arcball_Window::handle(event);
+       }
+
+     void reshape(void)
+       {
+         cenx = ceny = 0.0; cenz = 0.0;
+         eyex = eyey = 0.0; eyez = 20.0;
+         upx = upz = 0.0; upy = 1.0;
+
+         aspect = double(w())/double(h());
+         near = 1.0; far = 100.0;
+#if 1
+            // Perspective projection
+         fovy = 45.0;
+         projtype = Perspective;
+#else
+            // Orthographic projection
+         vmin = -10.0; vmax = 10.0;
+         umin = vmin*aspect; umax = vmax*aspect;
+         projtype = Orthographic;
+#endif 
+         Fl_Gl_Arcball_Window :: reshape();
+       }
+     
+     void draw(void)
+       {
+         if ( !valid() )
+            {
+              valid(1);
+              reshape();
+              //grid.generate();
+            }
+
+         glClearColor(0,0,0,1);
+         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+         glEnable(GL_DEPTH_TEST);
+
+            // Draw the arcball controls.
+         arcball_draw();
+
+         glMatrixMode(GL_MODELVIEW);
+
+         glPushMatrix();
+
+             // Multiply by the arcball transformation.
+         arcball_transform();
+
+            // Draw a grid in the ZX plane
+         glLineWidth(0.5);
+         glColor3f(0.3,0.3,0.3);
+         //grid.render();
+
+            // Draw the axes
+         {
+           glLineWidth(2.0);
+           glBegin(GL_LINES);
+
+           glColor3f(0.0,1.0,1.0);                     // X Axis
+           glVertex3f(0,0,0); glVertex3f(5,0,0);
+
+           glColor3f(1.0,0.0,1.0);                     // Y Axis
+           glVertex3f(0,0,0); glVertex3f(0,5,0);
+
+           glColor3f(1.0,1.0,0.0);                     // Z Axis
+           glVertex3f(0,0,0); glVertex3f(0,0,5);
+
+           glEnd();
+           glLineWidth(1.0);
+         }
+
+         glPushMatrix();
+         glRotatef(-90,1,0,0);
+
+         glEnable(GL_CULL_FACE);
+            // Draw sphere
+         glColor3f(1.0,0.75,0.5);
+         glPolygonMode(GL_FRONT,GL_FILL);
+         gluSphere(quadric,4,8,8);
+
+            // Draw sphere grid
+         glColor3f(0,0,0);
+         glEnable(GL_POLYGON_OFFSET_LINE);
+         glPolygonOffset(1,-4.01);
+         glPolygonMode(GL_FRONT,GL_LINE);
+         gluSphere(quadric,4,8,8);
+         glDisable(GL_POLYGON_OFFSET_LINE);
+         glPopMatrix();
+
+         glPopMatrix();
+
+         glFlush();
+       }
 };
 
-arcball_window::arcball_window (int x, int y, int w, int h, const char *l) :
-  Fl_Gl_Arcball_Window(x,y,w,h,l) 
-{
-  origin (fVector3 (0, 0, 0));
-  radius (0.9);
-}
-
-float v0[3] = {0.0, 0.0, 0.0};
-float v1[3] = {1.0, 0.0, 0.0};
-float v2[3] = {1.0, 1.0, 0.0};
-float v3[3] = {0.0, 1.0, 0.0};
-float v4[3] = {0.0, 0.0, 1.0};
-float v5[3] = {1.0, 0.0, 1.0};
-float v6[3] = {1.0, 1.0, 1.0};
-float v7[3] = {0.0, 1.0, 1.0};
-
-#define v3f(x) glVertex3fv(x)
-
-void drawcube (int wire) 
-{
-  /* Draw a colored cube */
-  glBegin(wire ? GL_LINE_LOOP : GL_POLYGON);
-    glColor3ub(0,0,255);
-    v3f(v0); v3f(v1); v3f(v2); v3f(v3);
-    glEnd();
-  glBegin(wire ? GL_LINE_LOOP : GL_POLYGON);
-    glColor3ub(0,255,255); v3f(v4); v3f(v5); v3f(v6); v3f(v7);
-    glEnd();
-  glBegin(wire ? GL_LINE_LOOP : GL_POLYGON);
-    glColor3ub(255,0,255); v3f(v0); v3f(v1); v3f(v5); v3f(v4);
-    glEnd();
-  glBegin(wire ? GL_LINE_LOOP : GL_POLYGON);
-    glColor3ub(255,255,0); v3f(v2); v3f(v3); v3f(v7); v3f(v6);
-    glEnd();
-  glBegin(wire ? GL_LINE_LOOP : GL_POLYGON);
-    glColor3ub(0,255,0); v3f(v0); v3f(v4); v3f(v7); v3f(v3);
-    glEnd();
-  glBegin(wire ? GL_LINE_LOOP : GL_POLYGON);
-    glColor3ub(255,0,0); v3f(v1); v3f(v2); v3f(v6); v3f(v5);
-    glEnd();
-}
-
-void arcball_window::draw() 
-{
-  if (!valid ()) {
-    valid (1);
-    glViewport (0, 0, w (), h ());
-
-    glMatrixMode(GL_PROJECTION);
-    glLoadIdentity();
-    glEnable (GL_DEPTH_TEST);
-    glFrustum (-0.5, 0.5, -0.5, 0.5, 1, 10000);
-
-    glMatrixMode(GL_MODELVIEW);
-    glLoadIdentity();
-    gluLookAt (0,0,5,0,0,0,0,1,0);
-  }
-
-  glClear (GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
-  // Draw the arcball controls.
-  arcball_draw ();
-
-  glMatrixMode (GL_MODELVIEW); 
-  glPushMatrix ();
-  
-  // Multiply by the arcball transformation.
-  arcball_transform ();
-  { 
-    // Center the cube :
-    glTranslatef (-.5, -.5, -.5);
-    
-    // Draw the cube :
-    drawcube (0);
-  }
-  glPopMatrix ();
-}
-
-#include <stdio.h>
-
 int main (int argc, char **argv) 
-{  
-  Fl_Window window (300, 300);
+{
+  Fl_Window window(500, 500);
   
-  arcball_window awindow (10, 10, window.w()-20, window.h()-20);
-  window.add (awindow);
-  window.resizable (&awindow);
+  Arcball win(10, 10, window.w()-20, window.h()-20, "ArcballWindow Test Program");
 
-  window.end ();
-  window.show (argc,argv);
-  awindow.show ();
+  win.mode(FL_RGB|FL_DOUBLE|FL_DEPTH);
+  window.add(win);
+  window.resizable(&win);
+
+  window.end();
+  window.show(argc,argv);
+  win.show();
   
-  return Fl::run ();
+  return Fl::run();
 }

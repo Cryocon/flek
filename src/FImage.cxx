@@ -1,5 +1,5 @@
 #include <Flek/math.h>
-#include <Flek/fImage.h>
+#include <Flek/FImage.H>
 #include <iostream.h>
 #include <fstream.h>
 
@@ -13,21 +13,21 @@ typedef unsigned char * ucharPtr;
 #define INT_MULT(a,b,t)  ((t) = (a) * (b) + 0x80, ((((t) >> 8) + (t)) >> 8))
 #define INT_BLEND(a,b,alpha,tmp)  (INT_MULT((a)-(b), alpha, tmp) + (b))
 
-fImage::fImage ()
+FImage::FImage ()
 {
   Data = 0;
   W = 0;
   H = 0;
 }
 
-fImage::fImage (int w, int h)
+FImage::FImage (int w, int h)
 {
   W = w;
   H = h;
   Data = new uchar [W*H*4];
 }
 
-fImage::~fImage ()
+FImage::~FImage ()
 {
   if (Data) delete [] Data;
 }
@@ -56,7 +56,7 @@ void composite (unsigned char* dest,
     }
 }
 
-fImage* composite (fImage *A, fImage *B, int xo, int yo, float value)
+FImage* composite (FImage *A, FImage *B, int xo, int yo, float value)
 {
   int xi = max (xo, 0);
   int yi = max (yo, 0);    
@@ -86,7 +86,7 @@ void add (unsigned char* dest,
     }
 }
 
-fImage* add (fImage *A, fImage *B, int xo, int yo, float value)
+FImage* add (FImage *A, FImage *B, int xo, int yo, float value)
 {
   int xi = max (xo, 0);
   int yi = max (yo, 0);    
@@ -116,7 +116,7 @@ void subtract (unsigned char* dest,
     }
 }
 
-fImage* subtract (fImage *A, fImage *B, int xo, int yo, float value)
+FImage* subtract (FImage *A, FImage *B, int xo, int yo, float value)
 {
   int xi = max (xo, 0);
   int yi = max (yo, 0);    
@@ -146,7 +146,7 @@ void difference (unsigned char* dest,
     }
 }
 
-fImage* difference (fImage *A, fImage *B, int xo, int yo, float value)
+FImage* difference (FImage *A, FImage *B, int xo, int yo, float value)
 {
   int xi = max (xo, 0);
   int yi = max (yo, 0);    
@@ -158,7 +158,7 @@ fImage* difference (fImage *A, fImage *B, int xo, int yo, float value)
   return A;
 }
 
-void lightenOnly (unsigned char* dest,
+void lighten_only (unsigned char* dest,
 		  const unsigned char* src,
 		  int opacity,
 		  int length)
@@ -176,7 +176,7 @@ void lightenOnly (unsigned char* dest,
     }
 }
 
-fImage* lightenOnly (fImage *A, fImage *B, int xo, int yo, float value)
+FImage* lighten_only (FImage *A, FImage *B, int xo, int yo, float value)
 {
   int xi = max (xo, 0);
   int yi = max (yo, 0);    
@@ -184,11 +184,11 @@ fImage* lightenOnly (fImage *A, fImage *B, int xo, int yo, float value)
   int yf = min (max (yo + B->height (), 0), A->height ());
 
   for (int row=yi; row < yf; row++)
-    lightenOnly ( *(*A)(xi, row), *(*B)(xi-xo, row-yo), (int)(value*255), xf-xi );
+    lighten_only ( *(*A)(xi, row), *(*B)(xi-xo, row-yo), (int)(value*255), xf-xi );
   return A;
 }
 
-void darkenOnly (unsigned char* dest,
+void darken_only (unsigned char* dest,
 		 const unsigned char* src,
 		 int opacity,
 		 int length)
@@ -206,7 +206,7 @@ void darkenOnly (unsigned char* dest,
     }
 }
 
-fImage* darkenOnly (fImage *A, fImage *B, int xo, int yo, float value)
+FImage* darken_only (FImage *A, FImage *B, int xo, int yo, float value)
 {
   int xi = max (xo, 0);
   int yi = max (yo, 0);    
@@ -214,7 +214,7 @@ fImage* darkenOnly (fImage *A, fImage *B, int xo, int yo, float value)
   int yf = min (max (yo + B->height (), 0), A->height ());
   
   for (int row=yi; row < yf; row++)
-    darkenOnly ( *(*A)(xi, row), *(*B)(xi-xo, row-yo), (int)(value*255), xf-xi );
+    darken_only ( *(*A)(xi, row), *(*B)(xi-xo, row-yo), (int)(value*255), xf-xi );
   return A;
 }
 
@@ -236,7 +236,7 @@ void divide (unsigned char* dest,
     }
 }
 
-fImage* divide (fImage *A, fImage *B, int xo, int yo, float value)
+FImage* divide (FImage *A, FImage *B, int xo, int yo, float value)
 {
   int xi = max (xo, 0);
   int yi = max (yo, 0);    
@@ -266,7 +266,7 @@ void multiply (unsigned char* dest,
     }
 }
 
-fImage* multiply (fImage *A, fImage *B, int xo, int yo, float value)
+FImage* multiply (FImage *A, FImage *B, int xo, int yo, float value)
 {
   int xi = max (xo, 0);
   int yi = max (yo, 0);
@@ -296,7 +296,7 @@ void screen (unsigned char* dest,
     }
 }
 
-fImage* screen (fImage *A, fImage *B, int xo, int yo, float value)
+FImage* screen (FImage *A, FImage *B, int xo, int yo, float value)
 {
   int xi = max (xo, 0);
   int yi = max (yo, 0);    
@@ -327,7 +327,7 @@ void overlay (unsigned char* dest,
     }
 }
 
-fImage* overlay (fImage *A, fImage *B, int xo, int yo, float value)
+FImage* overlay (FImage *A, FImage *B, int xo, int yo, float value)
 {
   int xi = max (xo, 0);
   int yi = max (yo, 0);    

@@ -1,6 +1,6 @@
 /* -*-C++-*- 
 
-   "$Id: fMatrix3x3.h,v 1.5 2000/02/13 01:02:32 jamespalmer Exp $"
+   "$Id: FMatrix3x3.H,v 1.1 2000/04/13 13:56:28 jamespalmer Exp $"
    
    Copyright 1999-2000 by the Flek development team.
    
@@ -26,11 +26,11 @@
 // The original vector, matrix, and quaternion code was written by
 // Vinod Srinivasan and then adapted for Flek.
 
-#ifndef FMATRIX_3x3_H_
-#define FMATRIX_3x3_H_
+#ifndef _FMATRIX3x3_H_
+#define _FMATRIX3x3_H_
 
-#include <Flek/fBase.h>
-#include <Flek/fVector3.h>
+#include <Flek/FBase.H>
+#include <Flek/FVector3.H>
 
 /** @package libflek_core
  * Class for a 3x3 matrix. Built from Vector3d
@@ -39,17 +39,17 @@
  * row operations are simplified
  */
 
-class fMatrix3x3 : public fBase
+class FMatrix3x3 : public FBase
 {
 public:
   
-  typedef fMatrix3x3 * Ptr;
+  typedef FMatrix3x3 * Ptr;
   
   /**
    * Default constructor - creates an identity matrix
    */
-  fMatrix3x3 ()
-    : fBase ()
+  FMatrix3x3 ()
+    : FBase ()
     {
       row[0].set (1.0, 0.0, 0.0);
       row[1].set (0.0, 1.0, 0.0);
@@ -59,17 +59,17 @@ public:
   /**
    * 1 argument constructor - from scalar, set all elements to given value
    */
-  fMatrix3x3 (double scalar)
-    : fBase ()
+  FMatrix3x3 (double scalar)
+    : FBase ()
     {
       row[0] = scalar; row[1] = scalar; row[2] = scalar;
     }
   
   /**
-   * 3 argument constructor - from 3 fVector3s
+   * 3 argument constructor - from 3 FVector3s
    */
-  fMatrix3x3 (const fVector3& r0, const fVector3& r1, const fVector3& r2)
-    : fBase ()
+  FMatrix3x3 (const FVector3& r0, const FVector3& r1, const FVector3& r2)
+    : FBase ()
     {
       row[0] = r0; row[1] = r1; row[2] = r2;
     }
@@ -77,24 +77,24 @@ public:
   /**
    * Copy constructor
    */
-  fMatrix3x3 (const fMatrix3x3& mat)
-    : fBase ()
+  FMatrix3x3 (const FMatrix3x3& mat)
+    : FBase ()
     {
-      copyFrom (mat);
+      copy_from (mat);
     }
 
   /**
    * Destructor
    */
-  virtual ~fMatrix3x3 ()
+  virtual ~FMatrix3x3 ()
     {}
   
   /**
    *  Assignment operator
    */
-  fMatrix3x3& operator = (const fMatrix3x3& mat)
+  FMatrix3x3& operator = (const FMatrix3x3& mat)
     {
-      copyFrom (mat);
+      copy_from (mat);
       return (*this);
     }
   
@@ -107,9 +107,9 @@ public:
     }
   
   /**
-   * Set the rows of the matrix to the given fVector3s
+   * Set the rows of the matrix to the given FVector3s
    */
-  void set(const fVector3& r0, const fVector3& r1, const fVector3& r2)
+  void set(const FVector3& r0, const FVector3& r1, const FVector3& r2)
     {
       row[0] = r0; row[1] = r1; row[2] = r2;
     }
@@ -131,18 +131,18 @@ public:
   
   /** 
    * Make a copy of the object
-   * implement fBase class pure virtual function
+   * implement FBase class pure virtual function
    */
-  virtual fBase::Ptr copy (void) const
+  virtual FBase::Ptr copy (void) const
     {
-      Ptr mat = new fMatrix3x3 (*this);
+      Ptr mat = new FMatrix3x3 (*this);
       return mat;
     }
 
   /**
    * Access a row of the matrix - no range checks
    */
-  fVector3& operator [] (uint index)
+  FVector3& operator [] (uint index)
     {
       return row[index];
     }
@@ -150,7 +150,7 @@ public:
   /**
    * Access a row of the matrix - no range checks : const version
    */
-  const fVector3& operator [] (uint index) const
+  const FVector3& operator [] (uint index) const
     {
       return row[index];
     }
@@ -158,27 +158,27 @@ public:
   /**
    * Class member functions which return the identity matrix
    */
-  static fMatrix3x3 identity (void)
+  static FMatrix3x3 identity (void)
     {
-      fMatrix3x3 imat;  // Default constructor creates an identity matrix
+      FMatrix3x3 imat;  // Default constructor creates an identity matrix
       return imat;
     }
      
-  static fMatrix3x3 I (void)
+  static FMatrix3x3 I (void)
     {
-      fMatrix3x3 imat;  // Default constructor creates an identity matrix
+      FMatrix3x3 imat;  // Default constructor creates an identity matrix
       return imat;
     }
   
   //--- Arithmetic assignment operators ---//
   
-  void operator += (const fMatrix3x3& mat)
+  void operator += (const FMatrix3x3& mat)
     {
       for (int i=0; i < 3; ++i)
 	row[i] += mat.row[i];
     }
   
-  void operator -= (const fMatrix3x3& mat)
+  void operator -= (const FMatrix3x3& mat)
     {
       for (int i=0; i < 3; ++i)
 	row[i] -= mat.row[i];
@@ -209,16 +209,16 @@ public:
   /**
    * Find the transpose of a given matrix.
    */
-  friend fMatrix3x3 transpose (const fMatrix3x3& mat)
+  friend FMatrix3x3 transpose (const FMatrix3x3& mat)
     {
-      fMatrix3x3 trans (mat); trans.transpose ();
+      FMatrix3x3 trans (mat); trans.transpose ();
       return trans;
     }
 
   /**
    * Find the determinant of a given matrix.
    */  
-  friend double determinant(const fMatrix3x3& mat)
+  friend double determinant(const FMatrix3x3& mat)
     {
       double det = 0.0;
       
@@ -236,7 +236,7 @@ public:
    */
   void invert (void)
     {
-      fVector3 inv[3];
+      FVector3 inv[3];
       int i,j,swaprow;
       
       // inv will be identity initially and will become the inverse at the end
@@ -259,7 +259,7 @@ public:
 	  // Check if pivot is non-zero
 	  if ( !isNonZero(row[i][i]) )
 	    {
-	      cerr << "fMatrix3x3 inverse(const fMatrix3x3&) : Singular matrix!" << endl;
+	      cerr << "FMatrix3x3 inverse(const FMatrix3x3&) : Singular matrix!" << endl;
 	      // Return original matrix without change
 	      return;
 	    }
@@ -299,9 +299,9 @@ public:
   /**
    * Find the inverse of a given matrix using elementary row operations
    */
-  friend fMatrix3x3 inverse (const fMatrix3x3& mat)
+  friend FMatrix3x3 inverse (const FMatrix3x3& mat)
     {
-      fMatrix3x3 inv (mat); inv.invert ();
+      FMatrix3x3 inv (mat); inv.invert ();
       return inv;
     }
   
@@ -310,9 +310,9 @@ public:
   /**
    * Negation
    */
-  friend fMatrix3x3 operator - (const fMatrix3x3& mat)
+  friend FMatrix3x3 operator - (const FMatrix3x3& mat)
     {
-      fMatrix3x3 neg;
+      FMatrix3x3 neg;
       
       for (int i=0; i < 3; ++i)
 	neg.row[i] = -mat.row[i];
@@ -320,16 +320,16 @@ public:
       return neg;
     }
   
-  friend fMatrix3x3 operator + (const fMatrix3x3& mat1, const fMatrix3x3& mat2)
+  friend FMatrix3x3 operator + (const FMatrix3x3& mat1, const FMatrix3x3& mat2)
     {
-      fMatrix3x3 sum (mat1);
+      FMatrix3x3 sum (mat1);
       sum += mat2;
       return sum;
     }
   
-  friend fMatrix3x3 operator - (const fMatrix3x3& mat1, const fMatrix3x3& mat2)
+  friend FMatrix3x3 operator - (const FMatrix3x3& mat1, const FMatrix3x3& mat2)
     {
-      fMatrix3x3 diff (mat1);
+      FMatrix3x3 diff (mat1);
       diff -= mat2;
       return diff;
     }
@@ -337,9 +337,9 @@ public:
   /**
    * Post-multiplication by a scalar.
    */
-  friend fMatrix3x3 operator * (const fMatrix3x3& mat, double scalar)
+  friend FMatrix3x3 operator * (const FMatrix3x3& mat, double scalar)
     {
-      fMatrix3x3 prod (mat);
+      FMatrix3x3 prod (mat);
       prod *= scalar;
       return prod;
     }
@@ -347,9 +347,9 @@ public:
   /**
    * Pre-multiplication by a scalar.
    */
-  friend fMatrix3x3 operator * (double scalar, const fMatrix3x3& mat)
+  friend FMatrix3x3 operator * (double scalar, const FMatrix3x3& mat)
     {
-      fMatrix3x3 prod (mat);
+      FMatrix3x3 prod (mat);
       prod *= scalar;
       return prod;
     }
@@ -357,9 +357,9 @@ public:
   /**
    * Division by a scalar.
    */
-  friend fMatrix3x3 operator / (const fMatrix3x3& mat, double scalar)
+  friend FMatrix3x3 operator / (const FMatrix3x3& mat, double scalar)
     {
-      fMatrix3x3 quot (mat);
+      FMatrix3x3 quot (mat);
       quot /= scalar;
       return quot;
     }
@@ -367,14 +367,14 @@ public:
   /**
    * Multiplication of 2 matrices - outer product.
    */
-  friend fMatrix3x3 operator * (const fMatrix3x3& mat1, const fMatrix3x3& mat2);
+  friend FMatrix3x3 operator * (const FMatrix3x3& mat1, const FMatrix3x3& mat2);
   
   /** 
    * Element-by-element multiplication of 2 matrices.
    */
-  friend fMatrix3x3 product (const fMatrix3x3& mat1, const fMatrix3x3& mat2)
+  friend FMatrix3x3 product (const FMatrix3x3& mat1, const FMatrix3x3& mat2)
     {
-      fMatrix3x3 prod;
+      FMatrix3x3 prod;
       
       prod.row[0] = product (mat1[0], mat2[0]);
       prod.row[1] = product (mat1[1], mat2[1]);
@@ -384,29 +384,29 @@ public:
     }
   
   /**
-   * Post-multiplication by a fVector3. Vector is assumed to be a column vector.
+   * Post-multiplication by a FVector3. Vector is assumed to be a column vector.
    */
-  friend fVector3 operator * (const fMatrix3x3& mat, const fVector3& vec)
+  friend FVector3 operator * (const FMatrix3x3& mat, const FVector3& vec)
     {
-      fVector3 prod;
+      FVector3 prod;
       
       prod.set (mat.row[0]*vec, mat.row[1]*vec, mat.row[2]*vec);
       return prod;
     }
   
   /**
-   * Pre-multiplication by a fVector3. Vector is assumed to be a row vector.
+   * Pre-multiplication by a FVector3. Vector is assumed to be a row vector.
    */
-  friend fVector3 operator * (const fVector3& vec, const fMatrix3x3& mat);
+  friend FVector3 operator * (const FVector3& vec, const FMatrix3x3& mat);
   
   /** 
-   * Multiplication of two fVector3s to produce a fMatrix3x3 - outer product
+   * Multiplication of two FVector3s to produce a FMatrix3x3 - outer product
    * or tensor product of two Vectors.  Same as multiplying row vector (v1) 
    * with column vector (v2) 
    */
-  friend fMatrix3x3 operator ^ (const fVector3& v1, const fVector3& v2)
+  friend FMatrix3x3 operator ^ (const FVector3& v1, const FVector3& v2)
     {
-      fMatrix3x3 prod;
+      FMatrix3x3 prod;
       
       prod.row[0] = v1[0]*v2;
       prod.row[1] = v1[1]*v2;
@@ -415,7 +415,7 @@ public:
       return prod;
     }
   
-  friend void swap (fMatrix3x3& mat1, fMatrix3x3& mat2)
+  friend void swap (FMatrix3x3& mat1, FMatrix3x3& mat2)
     {
       for (int i=0; i < 3; ++i)
 	swap (mat1.row[i], mat2.row[i]);
@@ -425,13 +425,13 @@ public:
    * Multiply self with another matrix. Simply calls above defined 
    * friend function.
    */
-  void operator *= (const fMatrix3x3& mat)
+  void operator *= (const FMatrix3x3& mat)
     {
-      fMatrix3x3 prod = (*this) * mat;
+      FMatrix3x3 prod = (*this) * mat;
       *this = prod;
     }
   
-  friend ostream& operator << (ostream& o, const fMatrix3x3& mat)
+  friend ostream& operator << (ostream& o, const FMatrix3x3& mat)
     {
       o << "[ " << mat.row[0] << "," << endl
 	<< "  " << mat.row[1] << "," << endl
@@ -439,7 +439,7 @@ public:
       return o;
     }
   
-  friend istream& operator >> (istream& i, fMatrix3x3& mat)
+  friend istream& operator >> (istream& i, FMatrix3x3& mat)
     {
       char rowsep, dummy;
       i >> dummy >> mat.row[0] >> rowsep
@@ -453,16 +453,16 @@ protected:
   /**
    * 3 rows of the matrix
    */
-  fVector3 row[3];
+  FVector3 row[3];
   
   /**
    * Copy values from another matrix.
    */
-  void copyFrom (const fMatrix3x3& mat)
+  void copy_from (const FMatrix3x3& mat)
     {
       for (int i=0; i < 3; ++i)
 	row[i] = mat.row[i];
     }
 };
 
-#endif // #ifndef FMATRIX_3x3_H_ 
+#endif // #ifndef FMatrix_3x3_H_ 

@@ -1,6 +1,6 @@
 /* -*-C++-*- 
 
-   "$Id: fImage.h,v 1.7 2000/04/07 19:40:19 jamespalmer Exp $"
+   "$Id: FImage.H,v 1.1 2000/04/13 13:56:28 jamespalmer Exp $"
    
    Copyright 1999-2000 by the Flek development team.
    
@@ -23,56 +23,56 @@
 
 */
 
-#ifndef __FIMAGE__
-#define __FIMAGE__
+#ifndef _FIMAGE_H_
+#define _FIMAGE_H_
 
 typedef unsigned char uchar;
 
-class fImage;
+class FImage;
 
-class fImageIterator {
+class FImageIterator {
 
  private:
   
-  friend class fImage;
+  friend class FImage;
 
-  fImageIterator (uchar *p) : ptr (p) { }
+  FImageIterator (uchar *p) : ptr (p) { }
 
  public:
 
-  fImageIterator () : ptr (0) { }
+  FImageIterator () : ptr (0) { }
 
-  bool operator == (fImageIterator &p) const { return (ptr == p.ptr); }
+  bool operator == (FImageIterator &p) const { return (ptr == p.ptr); }
 
-  bool operator != (fImageIterator &p) const { return (ptr != p.ptr); }
+  bool operator != (FImageIterator &p) const { return (ptr != p.ptr); }
 
-  fImageIterator operator++ () 
+  FImageIterator operator++ () 
     { 
       ptr += 4;
       return *this;
     }
 
-  fImageIterator operator++ (int)
+  FImageIterator operator++ (int)
     {
-      fImageIterator tmp = *this;
+      FImageIterator tmp = *this;
       ptr += 4;
       return tmp;
     }
 
-  fImageIterator operator-- ()
+  FImageIterator operator-- ()
     {
       ptr -= 4;
       return *this;
     }
 
-  fImageIterator operator-- (int)
+  FImageIterator operator-- (int)
     {
-      fImageIterator tmp = *this;
+      FImageIterator tmp = *this;
       ptr -= 4;
       return tmp;
     }
 
-  fImageIterator& operator = (const fImageIterator &p)
+  FImageIterator& operator = (const FImageIterator &p)
     {
       ptr = p.ptr;
       return *this;
@@ -88,32 +88,32 @@ class fImageIterator {
 
 
 /** @package libflek_image
- * fImage provides four 8 bit channels (Red, Green, Blue and Alpha).
+ * FImage provides four 8 bit channels (Red, Green, Blue and Alpha).
  * The image is stored internally as an array of unsigned chars in
  * RGBA order.  The internal representation can be used directly by
  * OpenGL with the GL_RGBA format and the GL_UNSIGNED_BYTE type.
  */
-class fImage
+class FImage
 {
   
  public:
 
-  typedef fImageIterator iterator;
+  typedef FImageIterator iterator;
 
   /**
    * The default constructor does not allocate any space for the image.
    */
-  fImage ();
+  FImage ();
 
   /**
    * This constructor allocated W*H pixels for storing the image.
    */
-  fImage (int w, int h);
+  FImage (int w, int h);
 
   /** 
    * The destructor deallocated any allocated memory.
    */
-  ~fImage ();
+  ~FImage ();
 
   //void width (int i) { W = i; }
   //void height (int i) { H = i; }
@@ -165,7 +165,7 @@ class fImage
  * Composite image B "over" image A in place.  Image B can be offset by xo, yo. 
  * And the operation may have an opacity o.
  */
-fImage* composite (fImage *A, fImage *B, int xo=0, int yo=0, float o=1.0);
+FImage* composite (FImage *A, FImage *B, int xo=0, int yo=0, float o=1.0);
 
 /**
  * Composite src "over" dest, where src and dest are an array of unsigned
@@ -179,7 +179,7 @@ void composite (unsigned char* dest, const unsigned char* src, int opacity, int 
  * Add image B to image A in place.  Image B can be offset by xo, yo. 
  * And the operation may have an opacity o.
  */
-fImage* add (fImage *A, fImage *B, int xo=0, int yo=0, float o=1.0);
+FImage* add (FImage *A, FImage *B, int xo=0, int yo=0, float o=1.0);
 
 /**
  * Add src to dest, where src and dest are an array of unsigned
@@ -193,7 +193,7 @@ void add (unsigned char* dest, const unsigned char* src, int opacity, int length
  * Subtract image B from image A in place.  Image B can be offset by xo, yo. 
  * And the operation may have an opacity o.
  */
-fImage* subtract (fImage *A, fImage *B, int xo=0, int yo=0, float o=1.0);
+FImage* subtract (FImage *A, FImage *B, int xo=0, int yo=0, float o=1.0);
 
 /**
  * Subtract src from dest, where src and dest are an array of unsigned
@@ -207,7 +207,7 @@ void subtract (unsigned char* dest, const unsigned char* src, int opacity, int l
  * Create a difference from images A and B in place.  Image B can be offset by xo, yo. 
  * And the operation may have an opacity o.
  */
-fImage* difference (fImage *A, fImage *B, int xo=0, int yo=0, float o=1.0);
+FImage* difference (FImage *A, FImage *B, int xo=0, int yo=0, float o=1.0);
 
 /**
  * The difference of src and dest, where src and dest are an array of unsigned
@@ -221,7 +221,7 @@ void difference (unsigned char* dest, const unsigned char* src, int opacity, int
  * Lighten image A from Image B in place.  Image B can be offset by xo, yo. 
  * And the operation may have an opacity o.
  */
-fImage* lightenOnly (fImage *A, fImage *B, int xo=0, int yo=0, float o=1.0);
+FImage* lighten_only (FImage *A, FImage *B, int xo=0, int yo=0, float o=1.0);
 
 /**
  * Use the maximum (lightest) value of src and dest, where src and dest are an array of unsigned
@@ -229,13 +229,13 @@ fImage* lightenOnly (fImage *A, fImage *B, int xo=0, int yo=0, float o=1.0);
  * gives the src frame an overall opacity/transparency.  length is the
  * number of RGBA pixels to perform this operation on.
  */
-void lightenOnly (unsigned char* dest, const unsigned char* src, int opacity, int length);
+void lighten_only (unsigned char* dest, const unsigned char* src, int opacity, int length);
 
 /**
  * Darken image A from Image B in place.  Image B can be offset by xo, yo. 
  * And the operation may have an opacity o.
  */
-fImage* darkenOnly (fImage *A, fImage *B, int xo=0, int yo=0, float o=1.0);
+FImage* darken_only (FImage *A, FImage *B, int xo=0, int yo=0, float o=1.0);
 
 /**
  * Use the minimum (darkest) value of src and dest, where src and dest are an array of unsigned
@@ -243,13 +243,13 @@ fImage* darkenOnly (fImage *A, fImage *B, int xo=0, int yo=0, float o=1.0);
  * gives the src frame an overall opacity/transparency.  length is the
  * number of RGBA pixels to perform this operation on.
  */
-void darkenOnly (unsigned char* dest, const unsigned char* src, int opacity, int length);
+void darken_only (unsigned char* dest, const unsigned char* src, int opacity, int length);
 
 /**
  * Divide image A by Image B in place.  Image B can be offset by xo, yo. 
  * And the operation may have an opacity o.
  */
-fImage* divide (fImage *A, fImage *B, int xo=0, int yo=0, float o=1.0);
+FImage* divide (FImage *A, FImage *B, int xo=0, int yo=0, float o=1.0);
 
 /**
  * Divide dest by src, where src and dest are an array of unsigned
@@ -263,7 +263,7 @@ void divide (unsigned char* dest, const unsigned char* src, int opacity, int len
  * Multiply image A by Image B in place.  Image B can be offset by xo, yo. 
  * And the operation may have an opacity o.
  */
-fImage* multiply (fImage *A, fImage *B, int xo=0, int yo=0, float o=1.0);
+FImage* multiply (FImage *A, FImage *B, int xo=0, int yo=0, float o=1.0);
 
 /**
  * Multiply dest by src, where src and dest are an array of unsigned
@@ -277,7 +277,7 @@ void multiply (unsigned char* dest, const unsigned char* src, int opacity, int l
  * Screen image A by Image B in place.  Image B can be offset by xo, yo. 
  * And the operation may have an opacity o.
  */
-fImage* screen (fImage *A, fImage *B, int xo=0, int yo=0, float o=1.0);
+FImage* screen (FImage *A, FImage *B, int xo=0, int yo=0, float o=1.0);
 
 /**
  * Screen dest by src, where src and dest are an array of unsigned
@@ -291,7 +291,7 @@ void screen (unsigned char* dest, const unsigned char* src, int opacity, int len
  * Overlay image A by Image B in place.  Image B can be offset by xo, yo. 
  * And the operation may have an opacity o.
  */
-fImage* overlay (fImage *A, fImage *B, int xo=0, int yo=0, float o=1.0);
+FImage* overlay (FImage *A, FImage *B, int xo=0, int yo=0, float o=1.0);
 
 /**
  * Overlay dest by src, where src and dest are an array of unsigned

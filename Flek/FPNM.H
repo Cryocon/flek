@@ -1,6 +1,6 @@
 /* -*-C++-*- 
 
-   "$Id: fPNM.h,v 1.4 2000/04/07 19:40:20 jamespalmer Exp $"
+   "$Id: FPNM.H,v 1.1 2000/04/13 13:56:28 jamespalmer Exp $"
    
    Copyright 1999-2000 by the Flek development team.
    
@@ -23,10 +23,10 @@
 
 */
 
-#ifndef __FPNM__
-#define __FPNM__
+#ifndef _FPNM_H_
+#define _FPNM_H_
 
-#include <Flek/fImage.h>
+#include <Flek/FImage.H>
 
 /** @package libflek_image
  * The fPNM class provides static methods that read, write and test PNM images.
@@ -36,24 +36,24 @@
  * oft used but very <i>non-standard</i> PPM-P7, which is basically the P6 format
  * with an alpha channel.
  */
-class fPNM {
+class FPNM {
  public:
 
   /**
    * Check the PBM/PGM/PPM magic number to see if this image matches any of
    * the recognized formats.
    */
-  static bool isPNM (char *filename);
+  static bool valid (char *filename);
 
   /**
    * Read a PPM from disk and return a new fImage object.
    */
-  static fImage * read (char *filename);
+  static FImage * read (char *filename);
 
   /**
    * Write a PPM to disk from an fImage object.
    */  
-  static int write (char *filename, fImage* img);
+  static int write (char *filename, FImage* img);
 
 };
 

@@ -6,6 +6,7 @@
 
 Fl_Toggle_Tree_Base::Fl_Toggle_Tree_Base(int x, int y, int w, int h) : Fl_Widget(x, y, w, h) {
   first_ = 0;
+  t_current_ = 0;
   top_ = 0;
   top_depth_ = 0;
   damaged_ = 0;

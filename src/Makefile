@@ -1,14 +1,16 @@
 CORECPPFILES = \
-	fArcball.cxx \
-	fDate.cxx \
-	fXml.cxx \
-	fDom.cxx \
-	fDomAttr.cxx \
-	fFile.cxx \
-	fVector.cxx \
-	fImage.cxx \
-	fSGI.cxx \
-	fPNM.cxx 
+	FArcball.cxx \
+	FDate.cxx \
+	FXml.cxx \
+	FFile.cxx \
+	FVector.cxx \
+	FImage.cxx \
+	FSGI.cxx \
+	FPNM.cxx 
+
+#	fDom.cxx \
+#	fDomAttr.cxx \
+
 
 UICPPFILES = \
 	Fl_App_Window.cxx \
@@ -19,9 +21,8 @@ UICPPFILES = \
 	Fl_Toggle_Node_Base.cxx \
 	Fl_Toggle_Node.cxx \
 	Fl_Toggle_Tree_Base.cxx \
-	Fl_Toggle_Tree.cxx 
-
-FLVWFILES = Flv_CStyle.cxx \
+	Fl_Toggle_Tree.cxx \
+	Flv_CStyle.cxx \
 	Flv_Style.cxx \
 	Flv_List.cxx \
 	Flv_Table.cxx \

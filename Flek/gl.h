@@ -1,6 +1,6 @@
 /* -*-c++-*- 
 
-   "$Id: gl.h,v 1.7 2000/04/07 19:40:20 jamespalmer Exp $"
+   "$Id: gl.h,v 1.8 2000/04/13 13:56:29 jamespalmer Exp $"
    
    Copyright 1999-2000 by the Flek development team.
    
@@ -23,16 +23,16 @@
 
 */
 
-#ifndef FGL_H_
-#define FGL_H_
+#ifndef _FGL_H_
+#define _FGL_H_
 
-#include <Flek/fVector2.h>
-#include <Flek/fVector3.h>
-#include <Flek/fVector4.h>
-#include <Flek/fMatrix4x4.h>
-#include <Flek/fMatrix3x3.h>
-#include <Flek/fArcball.h>
-#include <Flek/fImage.h>
+#include <Flek/FVector2.H>
+#include <Flek/FVector3.H>
+#include <Flek/FVector4.H>
+#include <Flek/FMatrix4x4.H>
+#include <Flek/FMatrix3x3.H>
+#include <Flek/FArcball.H>
+#include <Flek/FImage.H>
 
 #include <GL/gl.h>
 #include <FL/gl.h>
@@ -42,13 +42,13 @@
  * This function is a wrapper around the GL function,
  * glMultMatrixd.
  */
-void glMultMatrix (const fMatrix4x4& M);
+void glMultMatrix (const FMatrix4x4& M);
 
 /** 
  * Multiply the current GL matrix by an arcball rotation 
  * matrix.
  */
-inline void glMultMatrix (const fArcball& a)
+inline void glMultMatrix (const FArcball& a)
 {
   glMultMatrix (a.value ());
 }
@@ -58,7 +58,7 @@ inline void glMultMatrix (const fArcball& a)
  * line, and polygon vertices.  This form takes an fVector4 as
  * it's argument.
  */
-inline void glVertex (const fVector4& v)
+inline void glVertex (const FVector4& v)
 {
   glVertex4d (v[0], v[1], v[2], v[3]);
 }
@@ -66,7 +66,7 @@ inline void glVertex (const fVector4& v)
 /**
  * This form of glVertex takes an fVector3 as it's argument.
  */
-inline void glVertex (const fVector3& v)
+inline void glVertex (const FVector3& v)
 {
   glVertex3d (v[0], v[1], v[2]);
 }
@@ -74,7 +74,7 @@ inline void glVertex (const fVector3& v)
 /**
  * This form of glVertex takes an fVector2 as it's argument.
  */
-inline void glVertex (const fVector2& v)
+inline void glVertex (const FVector2& v)
 {
   glVertex2d (v[0], v[1]);
 }
@@ -107,7 +107,7 @@ inline void glVertex (const double& x, const double& y)
  * glColor is used to specify the current color. 
  * This form takes an fVector4 as it's argument (RGBA).
  */
-inline void glColor (const fVector4& v)
+inline void glColor (const FVector4& v)
 {
   glColor4d (v[0], v[1], v[2], v[3]);
 }
@@ -115,7 +115,7 @@ inline void glColor (const fVector4& v)
 /**
  * This form takes an fVector3 as it's argument (RGB).
  */
-inline void glColor (const fVector3& v)
+inline void glColor (const FVector3& v)
 {
   glColor3d (v[0], v[1], v[2]);
 }
@@ -141,7 +141,7 @@ inline void glColor (const double& x, const double& y, const double& z)
  * This form takes an fVector4 as it's argument.
  * It ignores the w, or 4th term in the fVector4.
  */
-inline void glNormal (const fVector4& v)
+inline void glNormal (const FVector4& v)
 {
   glNormal3d (v[0], v[1], v[2]);
 }
@@ -149,7 +149,7 @@ inline void glNormal (const fVector4& v)
 /**
  * This form takes an fVector3 as it's argument.
  */
-inline void glNormal (const fVector3& v)
+inline void glNormal (const FVector3& v)
 {
   glNormal3d (v[0], v[1], v[2]);
 }
@@ -157,7 +157,7 @@ inline void glNormal (const fVector3& v)
 /**
  * This form takes an fVector2 and a z value as it's arguments.
  */
-inline void glNormal (const fVector2& v, const double &z)
+inline void glNormal (const FVector2& v, const double &z)
 {
   glNormal3d (v[0], v[1], z);
 }
@@ -175,7 +175,7 @@ inline void glNormal (const double& x, const double& y, const double& z)
  * an x, y and z scale component.
  * This form takes an fVector3 as it's argument.
  */
-inline void glScale (const fVector3& v)
+inline void glScale (const FVector3& v)
 {
   glScaled (v[0], v[1], v[2]);
 }
@@ -193,7 +193,7 @@ inline void glScale (const double &x, const double &y=1, const double &z=1)
  * an x, y and z translation component.
  * This form takes an fVector3 as it's argument.
  */
-inline void glTranslate (const fVector3& v)
+inline void glTranslate (const FVector3& v)
 {
   glTranslated (v[0], v[1], v[2]);
 }
@@ -209,7 +209,7 @@ inline void glTranslate (const double &x, const double &y=0, const double &z=0)
 /**
  * glRotate rotates the current transformation matrix by an angle a about an axis v.
  */
-inline void glRotate (const double &a, const fVector3 &v)
+inline void glRotate (const double &a, const FVector3 &v)
 {
   glRotated (a, v[0], v[1], v[2]);
 }
@@ -225,7 +225,7 @@ inline void glRotate (const double &a, const double &x, const double &y, const d
 /**
  * This function loads an image for texturing in OpenGL.
  */
-inline void glTexImage2D (fImage* img, GLenum target=GL_TEXTURE_2D, GLint level=0)
+inline void glTexImage2D (FImage* img, GLenum target=GL_TEXTURE_2D, GLint level=0)
 {
   glTexImage2D (target,
                 level,

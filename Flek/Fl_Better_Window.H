@@ -1,5 +1,5 @@
-#ifndef _FL_BETTER_WINDOW_H
-#define _FL_BETTER_WINDOW_H
+#ifndef _FL_BETTER_WINDOW_H_
+#define _FL_BETTER_WINDOW_H_
 
 #include <FL/Fl_Window.H>
 

@@ -1,16 +1,16 @@
-#include <Flek/fImage.h>
-#include <Flek/fPNM.h>
-#include <Flek/fSGI.h>
+#include <Flek/FImage.H>
+#include <Flek/FPNM.H>
+#include <Flek/FSGI.H>
 #include <stdio.h>
 
 #define TEST
 
 void main ()
 {
-  fImage *imgA, *imgB; 
+  FImage *imgA, *imgB; 
 
-  imgA = fPNM::read ("./test1.ppm");
-  imgB = fSGI::read ("./test2.rgb");
+  imgA = FPNM::read ("./test1.ppm");
+  imgB = FSGI::read ("./test2.rgb");
   printf ("Testing layer operations..\n");
   //normal (imgA, imgB, 0, 0, 0.5);
   //add    (imgA, imgB, 0, 0, 0.5);
@@ -23,7 +23,7 @@ void main ()
   //screen    (imgA, imgB, 0, 0, 0.5);
   overlay   (imgA, imgB, 0, 0, 1.0);
 
-  fSGI::write ("out.sgi", imgA, fSGI::RLE, 3);
+  FSGI::write ("out.sgi", imgA, FSGI::RLE, 3);
    
   delete imgA;
   delete imgB;  

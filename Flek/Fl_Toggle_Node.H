@@ -1,5 +1,5 @@
-#ifndef Fl_ToggleNode_H
-#define Fl_ToggleNode_H
+#ifndef _FL_TOGGLE_NODE_H_
+#define _FL_TOGGLE_NODE_H_
 
 #include <Flek/Fl_Toggle_Node_Base.H>
 #include <string.h>
@@ -43,11 +43,11 @@ public:
     pixmap_ = ptr;
   }
 
-  void* data() const {
+  void* user_data() const {
     return data_;
   }
 
-  void data(void* v) {
+  void user_data(void* v) {
     data_ = v;
   }
 

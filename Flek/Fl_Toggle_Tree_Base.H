@@ -1,6 +1,6 @@
 /* -*-C++-*- 
 
-   "$Id: Fl_Toggle_Tree_Base.H,v 1.3 2000/02/13 01:02:32 jamespalmer Exp $"
+   "$Id: Fl_Toggle_Tree_Base.H,v 1.4 2000/04/13 13:56:28 jamespalmer Exp $"
    
    Copyright 1999-2000 by the Flek development team.
    
@@ -23,8 +23,8 @@
 
 */
 
-#ifndef Fl_Tree_H
-#define Fl_Tree_H
+#ifndef _FL_TREE_H_
+#define _FL_TREE_H_
 
 #include <FL/fl_draw.H>
 #include <FL/Fl_Scroll.H>

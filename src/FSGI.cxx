@@ -1,7 +1,7 @@
 #include <Flek/math.h>
-#include <Flek/fFile.h>
-#include <Flek/fImage.h>
-#include <Flek/fSGI.h>
+#include <Flek/FFile.H>
+#include <Flek/FImage.H>
+#include <Flek/FSGI.H>
 #include <iostream.h>
 
 /*
@@ -9,18 +9,18 @@
  * The read data is stored in the array row.
  */
 static int 
-getRLE8 (fFile &input, int width, uchar *row)
+get_rle8 (FFile &input, int width, uchar *row)
 { 
   int i;
   uchar c;
-  int runCount; // RLE runs
+  int run_count; // RLE runs
   int length; // Bytes read 
  
   length = 0; 
  
   while (width > 0) 
     {
-      input.getHi (c);
+      input.get_hi (c);
       if (input.bad ())
 	{
 	  cerr << "ERROR" << endl;
@@ -29,22 +29,22 @@ getRLE8 (fFile &input, int width, uchar *row)
 
       length++; 
       
-      runCount = c & 127; 
-      if (runCount == 0) 
+      run_count = c & 127; 
+      if (run_count == 0) 
 	break; 
       
       if (c & 128) 
 	{
-	  input.read (row, runCount);
-	  length += runCount;
-	  width -= runCount;
-	  row += runCount;
+	  input.read (row, run_count);
+	  length += run_count;
+	  width -= run_count;
+	  row += run_count;
 	}
       else 
 	{ 
-	  input.getHi (c);
+	  input.get_hi (c);
 	  length++; 
-	  for (i = 0; i < runCount; i++, row++, width--) 
+	  for (i = 0; i < run_count; i++, row++, width--) 
 	    *row = c;
 	}
     }
@@ -52,10 +52,10 @@ getRLE8 (fFile &input, int width, uchar *row)
 }
 
 static int 
-putRLE8 (fFile &output, int width, uchar *row)
+put_rle8 (FFile &output, int width, uchar *row)
 { 
   int length;  // Byte count of output line 
-  int runCount;   // Number of repeated/non-repeated pixels
+  int run_count;   // Number of repeated/non-repeated pixels
   int x;
   int i;
   uchar *start, repeat;
@@ -75,18 +75,18 @@ putRLE8 (fFile &output, int width, uchar *row)
       row -= 2; 
       x += 2; 
       
-      runCount = row - start; 
-      while (runCount > 0) 
+      run_count = row - start; 
+      while (run_count > 0) 
 	{ 
-	  i = runCount > 126 ? 126 : runCount; 
-	  runCount -= i; 
+	  i = run_count > 126 ? 126 : run_count; 
+	  run_count -= i; 
 	  
-	  output.putHi ((uchar)(128|i));
+	  output.put_hi ((uchar)(128|i));
 	  length++;
  
 	  while (i > 0) 
 	    { 
-	      output.putHi ((uchar)*start);
+	      output.put_hi ((uchar)*start);
 
 	      start++; 
 	      length++; 
@@ -109,15 +109,15 @@ putRLE8 (fFile &output, int width, uchar *row)
 	  x--; 
 	}
       
-      runCount = row - start; 
-      while (runCount > 0) 
+      run_count = row - start; 
+      while (run_count > 0) 
 	{ 
-	  i = runCount > 126 ? 126 : runCount; 
-	  runCount -= i; 
+	  i = run_count > 126 ? 126 : run_count; 
+	  run_count -= i; 
 
-	  output.putHi ((uchar)i);
+	  output.put_hi ((uchar)i);
 
-	  output.putHi ((uchar)repeat);
+	  output.put_hi ((uchar)repeat);
 
 	  length += 2; 
 	}
@@ -125,7 +125,7 @@ putRLE8 (fFile &output, int width, uchar *row)
  
   length++; 
  
-  output.putHi ((char) 0);
+  output.put_hi ((char) 0);
   if (output.bad ())
     return -1;
 
@@ -139,17 +139,17 @@ typedef struct
   ushort           width,       // Width in pixels
                    height,      // Height in pixels
                    channels;    // Number of channels 
-  ulong            firstRow,    // File offset for first row
-                   nextRow,     // File offset for next row
+  ulong            first_row,    // File offset for first row
+                   next_row,     // File offset for next row
                    **table,     // Offset table for compression
                    **length;    // Length table for compression 
-  uchar            *arleRow;    // Advanced RLE compression buffer
-  long             arleOffset,  // Advanced RLE buffer offset
-                   arleLength;  // Advanced RLE buffer length
+  uchar            *arle_row;    // Advanced RLE compression buffer
+  long             arle_offset,  // Advanced RLE buffer offset
+                   arle_length;  // Advanced RLE buffer length
 } sgiT;
 
 int 
-sgiPutRow (fFile &output, sgiT &img, uchar *row, int y, int channel)
+sgi_put_row (FFile &output, sgiT &img, uchar *row, int y, int channel)
 { 
   int   x;
   long  offset;
@@ -159,7 +159,7 @@ sgiPutRow (fFile &output, sgiT &img, uchar *row, int y, int channel)
   
   switch (img.compression) 
     { 
-    case fSGI::NONE: 
+    case FSGI::NONE: 
       
       offset = 512 + (y + channel * img.height) * img.width * img.bpc;
       if (offset != output.tell ()) 
@@ -170,39 +170,39 @@ sgiPutRow (fFile &output, sgiT &img, uchar *row, int y, int channel)
 
       break; 
  
-    case fSGI::ARLE: 
+    case FSGI::ARLE: 
 
       // Check the last row written.
-      if (img.arleOffset > 0) 
+      if (img.arle_offset > 0) 
         {
           for (x = 0; x < img.width; x++) 
-            if (row[x] != img.arleRow[x]) 
+            if (row[x] != img.arle_row[x]) 
               break; 
 	  
           if (x == img.width) 
 	    { 
-	      img.table[channel][y]  = img.arleOffset; 
-	      img.length[channel][y] = img.arleLength; 
+	      img.table[channel][y]  = img.arle_offset; 
+	      img.length[channel][y] = img.arle_length; 
 	      return (0); 
 	    }
         }
       
       // If that didn't match, search the previous rows.
-      output.seek (img.firstRow);
+      output.seek (img.first_row);
       
       if (img.bpc == 1) 
         { 
           do 
 	    { 
-	      img.arleOffset = output.tell (); 
-	      if ((img.arleLength = getRLE8 (output, img.width, img.arleRow)) < 0) 
+	      img.arle_offset = output.tell (); 
+	      if ((img.arle_length = get_rle8 (output, img.width, img.arle_row)) < 0) 
 		{ 
 		  x = 0; 
 		  break; 
 		}
 	      
 	      for (x = 0; x < img.width; x ++) 
-		if (row[x] != img.arleRow[x]) 
+		if (row[x] != img.arle_row[x]) 
 		  break; 
 	    } 
           while (x < img.width); 
@@ -215,35 +215,35 @@ sgiPutRow (fFile &output, sgiT &img, uchar *row, int y, int channel)
 
       if (x == img.width) 
         { 
-          img.table[channel][y]  = img.arleOffset; 
-          img.length[channel][y] = img.arleLength; 
+          img.table[channel][y]  = img.arle_offset; 
+          img.length[channel][y] = img.arle_length; 
           return 0; 
         } 
       else 
 	output.seek (0);
  
-    case fSGI::RLE: 
+    case FSGI::RLE: 
 
-      offset = img.table[channel][y] = img.nextRow;
+      offset = img.table[channel][y] = img.next_row;
       if (offset != output.tell ()) 
 	output.seek (offset); 
  
       if (img.bpc == 1) 
-	x = putRLE8 (output, img.width, row); 
+	x = put_rle8 (output, img.width, row); 
       else 
 	{
 	  cerr << "SGI files larger than 1 byte per channel are not supported." << endl;
 	  return -1;
 	}
  
-      if (img.compression == fSGI::ARLE) 
+      if (img.compression == FSGI::ARLE) 
         { 
-          img.arleOffset = offset; 
-          img.arleLength = x; 
-          memcpy(img.arleRow, row, img.width); 
+          img.arle_offset = offset; 
+          img.arle_length = x; 
+          memcpy(img.arle_row, row, img.width); 
         }
  
-      img.nextRow = output.tell (); 
+      img.next_row = output.tell (); 
       img.length[channel][y] = x; 
       
       return x; 
@@ -253,7 +253,7 @@ sgiPutRow (fFile &output, sgiT &img, uchar *row, int y, int channel)
 } 
 
 int
-sgiGetRow (fFile &input, sgiT& img, uchar* row, int y, int channel)
+sgi_get_row (FFile &input, sgiT& img, uchar* row, int y, int channel)
 {
   ulong offset;
   
@@ -264,7 +264,7 @@ sgiGetRow (fFile &input, sgiT& img, uchar* row, int y, int channel)
   
   switch (img.compression)
     {
-    case fSGI::NONE:
+    case FSGI::NONE:
       
       offset = 512 + (y + channel * img.height) * img.width * img.bpc;
 
@@ -283,7 +283,7 @@ sgiGetRow (fFile &input, sgiT& img, uchar* row, int y, int channel)
 	}
       break;
 
-    case fSGI::RLE:
+    case FSGI::RLE:
         offset = img.table[channel][y];
         if (offset != (ulong)input.tell ())
 	  input.seek (offset);
@@ -294,7 +294,7 @@ sgiGetRow (fFile &input, sgiT& img, uchar* row, int y, int channel)
 	  cerr << "ERROR: Bad seek (EOF)" << endl;
 
         if (img.bpc == 1)
-          return (getRLE8 (input, img.width, row));
+          return (get_rle8 (input, img.width, row));
 
 	cerr << "SGI files larger than 1 byte per channel are not supported." << endl;
 	return -1;
@@ -305,32 +305,32 @@ sgiGetRow (fFile &input, sgiT& img, uchar* row, int y, int channel)
 
 #include <stdlib.h>
 
-fImage * fSGI::read (char *filename)
+FImage * FSGI::read (char *filename)
 {
-  fFile input;
+  FFile input;
   sgiT img;
-  input.open (filename, fFileRead);
+  input.open (filename, FFileRead);
   uchar c;
 
   short magic;
-  input.getHi (magic);
+  input.get_hi (magic);
 
   if (magic != MAGIC)
     return 0;
   
-  input.getHi (c);
+  input.get_hi (c);
   img.compression = c;
-  input.getHi (c);
+  input.get_hi (c);
   img.bpc = c;
-  input.getHi (img.width); // Dimensions (ignore)
-  input.getHi (img.width);
-  input.getHi (img.height);
-  input.getHi (img.channels);
+  input.get_hi (img.width); // Dimensions (ignore)
+  input.get_hi (img.width);
+  input.get_hi (img.height);
+  input.get_hi (img.channels);
   unsigned long t;
-  input.getHi (t); // Minimum pixel 
-  input.getHi (t); // Maximum pixel 
+  input.get_hi (t); // Minimum pixel 
+  input.get_hi (t); // Maximum pixel 
 
-  fImage *Nimg = new fImage (img.width, img.height);
+  FImage *Nimg = new FImage (img.width, img.height);
   
   if (img.compression)
     {
@@ -351,7 +351,7 @@ fImage * fSGI::read (char *filename)
 	for (j = 0; j < img.height; j ++)
 	  {
 	    ulong offset;
-	    input.getHi (offset);
+	    input.get_hi (offset);
 	    img.table[i][j] = offset;
 	  }
     }
@@ -368,10 +368,10 @@ fImage * fSGI::read (char *filename)
     {
       for (int y=0; y < img.height; y++)
 	{
-	  sgiGetRow (input, img, rows[0], y, 0);
-	  sgiGetRow (input, img, rows[1], y, 1);
-	  sgiGetRow (input, img, rows[2], y, 2);
-	  sgiGetRow (input, img, rows[3], y, 3);
+	  sgi_get_row (input, img, rows[0], y, 0);
+	  sgi_get_row (input, img, rows[1], y, 1);
+	  sgi_get_row (input, img, rows[2], y, 2);
+	  sgi_get_row (input, img, rows[3], y, 3);
 
 	  for (int x=0; x < img.width; x++, pixel += 4)
 	    {
@@ -386,9 +386,9 @@ fImage * fSGI::read (char *filename)
     {
       for (int y=0; y < img.height; y++)
 	{
-	  sgiGetRow (input, img, rows[0], y, 0);
-	  sgiGetRow (input, img, rows[1], y, 1);
-	  sgiGetRow (input, img, rows[2], y, 2);
+	  sgi_get_row (input, img, rows[0], y, 0);
+	  sgi_get_row (input, img, rows[1], y, 1);
+	  sgi_get_row (input, img, rows[2], y, 2);
 
 	  for (int x=0; x < img.width; x++, pixel += 4)
 	    {
@@ -403,8 +403,8 @@ fImage * fSGI::read (char *filename)
     {
       for (int y=0; y < img.height; y++)
 	{
-	  sgiGetRow (input, img, rows[0], y, 0);
-	  sgiGetRow (input, img, rows[1], y, 1);
+	  sgi_get_row (input, img, rows[0], y, 0);
+	  sgi_get_row (input, img, rows[1], y, 1);
 
 	  for (int x=0; x < img.width; x++, pixel += 4)
 	    {
@@ -419,7 +419,7 @@ fImage * fSGI::read (char *filename)
     {
       for (int y=0; y < img.height; y++)
 	{
-	  sgiGetRow (input, img, rows[0], y, 0);
+	  sgi_get_row (input, img, rows[0], y, 0);
 
 	  for (int x=0; x < img.width; x++, pixel += 4)
 	    {
@@ -445,10 +445,10 @@ fImage * fSGI::read (char *filename)
 
 #include <string.h>
 
-int fSGI::write (char *filename, fImage *data, int compression, int channels)
+int FSGI::write (char *filename, FImage *data, int compression, int channels)
 {
-  fFile output;
-  output.open (filename, fFileWritePlus);
+  FFile output;
+  output.open (filename, FFileWritePlus);
 
   sgiT img;
   uchar c;
@@ -459,26 +459,26 @@ int fSGI::write (char *filename, fImage *data, int compression, int channels)
   img.width = data->width ();
   img.height = data->height ();
   img.channels = channels;
-  img.firstRow = 0;
-  img.nextRow = 0;
+  img.first_row = 0;
+  img.next_row = 0;
   img.table = 0;
   img.length = 0;
-  img.arleRow = 0;
-  img.arleOffset = 0;
-  img.arleLength = 0;
+  img.arle_row = 0;
+  img.arle_offset = 0;
+  img.arle_length = 0;
 
-  output.putHi ((unsigned short)MAGIC);
+  output.put_hi ((unsigned short)MAGIC);
   c = (img.compression != 0);
-  output.putHi (c); // compression
+  output.put_hi (c); // compression
   c = img.bpc;
-  output.putHi (c); // bpc
-  output.putHi ((unsigned short)3); // dimensions
-  output.putHi (img.width);
-  output.putHi (img.height);
-  output.putHi (img.channels);
-  output.putHi ((long)0); // Minimum pixel 
-  output.putHi ((long)255); // Maximum pixel 
-  output.putHi ((long)0); // Reserved
+  output.put_hi (c); // bpc
+  output.put_hi ((unsigned short)3); // dimensions
+  output.put_hi (img.width);
+  output.put_hi (img.height);
+  output.put_hi (img.channels);
+  output.put_hi ((long)0); // Minimum pixel 
+  output.put_hi ((long)255); // Maximum pixel 
+  output.put_hi ((long)0); // Reserved
 
   // This bit helps stop us from wasting processor time on blank space.
   int   blankSize = max ((unsigned short)max ((unsigned short)488, (unsigned short)(img.width*img.channels)), (unsigned short)(img.height*img.channels*4));
@@ -489,28 +489,28 @@ int fSGI::write (char *filename, fImage *data, int compression, int channels)
 
   switch (compression)
     {
-    case fSGI::NONE:
+    case FSGI::NONE:
 
       for (i = img.height; i > 0; i--)
 	output.write (blank, img.width*img.channels);
 
       break;
       
-    case fSGI::ARLE:
+    case FSGI::ARLE:
 
       // Allocate an extra row for ARLE
-      img.arleRow  = new uchar [img.width];
-      img.arleOffset = 0;
+      img.arle_row  = new uchar [img.width];
+      img.arle_offset = 0;
       
-    case fSGI::RLE:
+    case FSGI::RLE:
 
       // Write blank scanline tables for RLE and ARLE
       // Write 0s for img.height * img.channels * 2 * sizeof (long)
       output.write (blank, img.height * sizeof(long) * img.channels);
       output.write (blank, img.height * sizeof(long) * img.channels);
 
-      img.firstRow = output.tell ();
-      img.nextRow = output.tell ();
+      img.first_row = output.tell ();
+      img.next_row = output.tell ();
 
       img.table = new ulongPtr [img.channels];
       img.table[0] = new ulong [img.height * img.channels];
@@ -549,10 +549,10 @@ int fSGI::write (char *filename, fImage *data, int compression, int channels)
 	      rows[3][x] = pixel[3];
 	    }
 	  
-	  sgiPutRow (output, img, rows[0], y, 0);
-	  sgiPutRow (output, img, rows[1], y, 1);
-	  sgiPutRow (output, img, rows[2], y, 2);
-	  sgiPutRow (output, img, rows[3], y, 3);
+	  sgi_put_row (output, img, rows[0], y, 0);
+	  sgi_put_row (output, img, rows[1], y, 1);
+	  sgi_put_row (output, img, rows[2], y, 2);
+	  sgi_put_row (output, img, rows[3], y, 3);
 	}
     }
   else if (img.channels == 3)
@@ -566,9 +566,9 @@ int fSGI::write (char *filename, fImage *data, int compression, int channels)
 	      rows[2][x] = pixel[2];
 	    }
 	  
-	  sgiPutRow (output, img, rows[0], y, 0);
-	  sgiPutRow (output, img, rows[1], y, 1);
-	  sgiPutRow (output, img, rows[2], y, 2);
+	  sgi_put_row (output, img, rows[0], y, 0);
+	  sgi_put_row (output, img, rows[1], y, 1);
+	  sgi_put_row (output, img, rows[2], y, 2);
 	}
     }
   else if (img.channels == 2)
@@ -581,8 +581,8 @@ int fSGI::write (char *filename, fImage *data, int compression, int channels)
 	      rows[1][x] = pixel[1];
 	    }
 	  
-	  sgiPutRow (output, img, rows[0], y, 0);
-	  sgiPutRow (output, img, rows[1], y, 1);
+	  sgi_put_row (output, img, rows[0], y, 0);
+	  sgi_put_row (output, img, rows[1], y, 1);
 	}
     }
   else if (img.channels == 1)
@@ -594,7 +594,7 @@ int fSGI::write (char *filename, fImage *data, int compression, int channels)
 	      rows[0][x] = pixel[0];
 	    }
 	  
-	  sgiPutRow (output, img, rows[0], y, 0);
+	  sgi_put_row (output, img, rows[0], y, 0);
 	}
     }
 
@@ -603,19 +603,19 @@ int fSGI::write (char *filename, fImage *data, int compression, int channels)
       output.seek (512);
 
       // Write the offset table.
-      LoToHi (img.table[0], img.channels * img.height);
+      lo_to_hi (img.table[0], img.channels * img.height);
       output.write ((char*)img.table[0], img.height * img.channels * 4);
 
       // Write the length table.
-      LoToHi (img.length[0], img.channels * img.height);
+      lo_to_hi (img.length[0], img.channels * img.height);
       output.write ((char*)img.length[0], img.height * img.channels * 4);
 
     }
 
   output.close ();
 
-  if (compression == fSGI::ARLE)
-    delete [] img.arleRow;
+  if (compression == FSGI::ARLE)
+    delete [] img.arle_row;
 
   if (compression)
     {
@@ -630,13 +630,13 @@ int fSGI::write (char *filename, fImage *data, int compression, int channels)
   delete [] blank;
 }
 
-bool fSGI::isSGI (char *filename)
+bool FSGI::valid (char *filename)
 {
-  fFile input;
-  input.open (filename, fFileRead);
+  FFile input;
+  input.open (filename, FFileRead);
 
   short magic;
-  input.getHi (magic);
+  input.get_hi (magic);
 
   input.close ();
 

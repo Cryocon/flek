@@ -1,5 +1,6 @@
 /* -*-C++-*- 
-   "$Id: fDate.h,v 1.1 2000/02/25 01:43:48 jamespalmer Exp $"
+
+   "$Id: FDate.H,v 1.1 2000/04/13 13:56:28 jamespalmer Exp $"
    
    Copyright 1999-2000 by the Flek development team.
    
@@ -25,47 +26,73 @@
 #ifndef __FDATE_H__
 #define __FDATE_H__
 
-#include <Flek/fBase.h>
+#include <Flek/FBase.H>
 #include <iostream.h>
 
+typedef enum {
+  SUNDAY,
+  MONDAY,
+  TUESDAY,
+  WEDNESDAY,
+  THURSDAY,
+  FRIDAY,
+  SATURDAY
+} FWeekday;
+
+typedef enum {
+  JANUARY = 1,
+  FEBRUARY,
+  MARCH,
+  APRIL,
+  MAY,
+  JUNE,
+  JULY,
+  AUGUST,
+  SEPTEMBER,
+  OCTOBER,
+  NOVEMBER,
+  DECEMBER
+} FMonth;
+
 /** @package libflek_core
- * fDate provides a date class that stores the day, month and year.
+ * FDate provides a date class that stores the day, month and year.
  */
-class fDate : public fBase
+class FDate : public FBase
 {
-public:
+
+ public:
 
   /**
    * Default constructor.
    */
-  fDate ();
+  FDate ();
 
   /**
    * Constructor that takes the year, month and day as it's arguments.
    */
-  fDate (int y, int m, int d);
+  FDate (int y, int m, int d);
 
   /**
    * The copy constructor.
    */
-  fDate (const fDate &);
+  FDate (const FDate &);
 
-  virtual fBase::Ptr copy (void) const;
+  virtual FBase::Ptr copy (void) const;
 
   /**
    * Set the date value given a year y, a month m, and a day d.
    */
-  void setDate (int y, int m, int d);
+  void set_date (int y, int m, int d);
 
   /**
-   * Set the date value from another fDate object.
+   * Set the date value from another FDate object.
    */
-  void setDate (const fDate &);
+  void set_date (const FDate &);
 
   /**
    * Set the format.
    */
-  void setFormat (int);
+  void set_format (int);
 
   /**
    * Set the date value to today's date.
@@ -105,77 +132,108 @@ public:
   /**
    * Gets the Julian date.
    */
-  double dJulian ();
+  double julian_date ();
 
   /**
    * Equality comparison of two dates.
    */
-  bool operator== (const fDate &);
+  bool operator== (const FDate &);
 
   /**
    * Inequality comparison of two dates.
    */
-  bool operator!= (const fDate &);
+  bool operator!= (const FDate &);
 
   /**
    * Comparison of two dates.
    */
-  bool operator< (const fDate &);
+  bool operator< (const FDate &);
 
   /**
    * Comparison of two dates.
    */
-  bool operator> (const fDate &);
+  bool operator> (const FDate &);
 
   /**
    * Set one date equal to another date.
    */
-  void operator= (const fDate &);
+  void operator= (const FDate &);
 
   /**
    * Adds days to the date.
    */
-  const fDate &operator+= (int);
+  const FDate &operator+= (int);
 
   /**
    * Pre-increment operator.
    */
-  fDate &operator++ ();
+  FDate &operator++ ();
 
   /**
    * Post-increment operator.
    */
-  fDate operator++ (int);
-
-  /**
-   * Returns wether day d is at the end of the month.
-   */
-  bool endOfMonth (int m);
-
-  /**
-   * Returns wether year y is a leap year.
-   */
-  bool leapYear (int y);
-
-  /**
-   * Returns wether the date y-m-d is valid.
-   */
-  bool isValid (int y, int m, int d);
+  FDate operator++ (int);
 
   /**
    * ostream operator.
    */
-  friend ostream& operator << (ostream &, const fDate &);
+  friend ostream& operator << (ostream &, const FDate &);
 
+  /**
+   * Returns wether day d is at the end of the month.
+   */
+  bool end_of_month (int m);
+
+  /**
+   * Returns wether year y is a leap year.
+   */
+  bool leap_year (int y);
+  bool leap_year ()
+    { return leap_year (Year); }
+
+  /**
+   * Returns wether the date y-m-d is valid.
+   */
+  bool is_valid (int y, int m, int d);
+  bool is_valid ()
+    { return is_valid (Year, Month, Day); }
+  
+  int days_in_month (int, int);
+  int days_in_month () 
+    { return days_in_month (Month, leap_year (Year)); }
+  
+  int day_of_year (int, int, int);
+  int day_of_year () 
+    { return day_of_year (Year, Month, Day); }
+  
+  int day_of_epoch (int, int, int);
+  int day_of_epoch () 
+    { return day_of_epoch (Year, Month, Day); }
+    
+  int day_of_week (int, int, int);
+  int day_of_week () 
+    { return day_of_week (Year, Month, Day); }
+  
+  void previous_month ();
+  void next_month ();
+
+  void previous_year ();
+  void next_year ();
+  
+  char *to_string (int) const;
+  char *to_string () const;
+
+  static const int   days[];
+  static const int   julian_days[];
+  static const char* month_name[];
+  
 private:
 
   int  Year;
   int  Month;
   int  Day;
   int  Fmt;
-  static const int Days[];
-  static const int JDays[];
-  void helpIncrement();
+  void help_increment ();
 
 };
 

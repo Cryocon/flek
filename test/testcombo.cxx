@@ -1,6 +1,6 @@
 #include <FL/Fl.H>
 #include <FL/Fl_Window.H>
-#include <FL/Flve_Combo.H>
+#include <Flek/Flve_Combo.H>
 
 int main(int argc, char **argv) {
   Fl_Window* w;

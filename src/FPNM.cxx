@@ -1,8 +1,8 @@
-#include <Flek/fPNM.h>
+#include <Flek/FPNM.H>
 #include <iostream.h>
 #include <fstream.h>
 
-static int skipComments (ifstream& input) 
+static int skip_comments (ifstream& input) 
 {
   char c;
   // Skip space up to first comment.
@@ -34,7 +34,7 @@ static int skipComments (ifstream& input)
   return 0;
 }
 
-bool fPNM::isPNM (char *filename)
+bool FPNM::valid (char *filename)
 {
   ifstream input;
   int type;
@@ -62,7 +62,7 @@ bool fPNM::isPNM (char *filename)
   return true;
 }
 
-fImage * fPNM::read (char *filename)
+FImage * FPNM::read (char *filename)
 {
   ifstream input;
   int width, height;
@@ -87,7 +87,7 @@ fImage * fPNM::read (char *filename)
   if ((type < 1) || (type > 7))
     return 0;
   
-  if (skipComments (input))
+  if (skip_comments (input))
     return 0;
   
   switch (type) {
@@ -98,12 +98,12 @@ fImage * fPNM::read (char *filename)
   case 7:
     input >> width;
     
-    if (skipComments (input))
+    if (skip_comments (input))
       return 0;
     
     input >> height;
     
-    if (skipComments (input))
+    if (skip_comments (input))
       return 0;
     
     input >> depth;
@@ -113,7 +113,7 @@ fImage * fPNM::read (char *filename)
   case 4:
     input >> width;
     
-    if (skipComments (input))
+    if (skip_comments (input))
       return 0;
     
     input >> height;
@@ -126,10 +126,10 @@ fImage * fPNM::read (char *filename)
   // Single whitespace before input.
   input >> c;
   
-  fImage* img = new fImage (width, height);
-  fImage::iterator begin;
-  fImage::iterator end;
-  fImage::iterator i;
+  FImage* img = new FImage (width, height);
+  FImage::iterator begin;
+  FImage::iterator end;
+  FImage::iterator i;
   uchar* pixel;
   int row;
   
@@ -288,12 +288,12 @@ fImage * fPNM::read (char *filename)
   return img;
 }
 
-int fPNM::write (char *filename, fImage* img)
+int FPNM::write (char *filename, FImage* img)
 {
   ofstream output;
-  fImage::iterator begin;
-  fImage::iterator end;
-  fImage::iterator i;
+  FImage::iterator begin;
+  FImage::iterator end;
+  FImage::iterator i;
   uchar* pixel;
   
   output.open (filename);
@@ -301,7 +301,7 @@ int fPNM::write (char *filename, fImage* img)
     return 1;
   
   output << "P6" << endl;
-  output << "# CREATOR: Flek's fPNM::write ()" << endl;
+  output << "# CREATOR: Flek's FPNM::write ()" << endl;
   output << img->width () << " " << img->height () << endl;
   output << "255 ";
   

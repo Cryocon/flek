@@ -1,5 +1,5 @@
-#ifndef Fl_Node_H
-#define Fl_Node_H
+#ifndef _FL_NODE_H_
+#define _FL_NODE_H_
 
 class Fl_Toggle_Node_Base {
 

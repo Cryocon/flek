@@ -12,34 +12,43 @@ void Fl_Toggle_Tree::select_range(Fl_Toggle_Node* start,
                                  Fl_Toggle_Node* end, int add) {
 
   Fl_Toggle_Node *tnode = (Fl_Toggle_Node *) first_;
-  int selecting = 0;
+  Fl_Toggle_Node *selecting = 0;
   selection_current_ = 0;
   selection_count_ = 0;
 
   traverse_start(tnode);
 
   while (tnode) {
-    if (tnode == start || tnode == end) {
-      if (tnode->selected_ == 0) {
-        tnode->selected_ = 1;
-        tnode->changed_ = 1;
-      }
-      if (start != end) selecting = !selecting;
-    } else {
-      if (selecting) {
-        if (tnode->selected_ == 0) {
-          tnode->selected_ = 1;
-          tnode->changed_ = 1;
-        }
-      } else {
-        int tmp = tnode->selected_;
-        tnode->selected_ &= add;
-        tnode->changed_ =
-          tmp != tnode->selected_;
-      }
+    if (! selecting) {
+      if (tnode == start)
+	selecting = end;
+      else if (tnode == end)
+	selecting = start;
     }
+    
+    // add == 0 - pick one only (unpick rest)
+    // add == 1 - add picked (never unpick)
+    // add > 1  - toggle picked
+      
+    int tmp = tnode->selected_;
+    if (selecting && (add > 1))
+      tnode->selected_ = ! tnode->selected_;
+    else if (selecting)
+      tnode->selected_ = 1;
+    else if (add == 0)
+      tnode->selected_ = 0;
+    
+    tnode->changed_ =
+      tmp != tnode->selected_;
+    
+    if (tnode == selecting)
+      selecting = 0;
+    
     tnode = traverse_forward();
   }
+  current_ = 0;
+  if (selection_count() == 1)
+    current_ = selection();
 }
 
 Fl_Pixmap* Fl_Toggle_Tree::s_closed_pixmap_ = 0;
@@ -65,6 +74,10 @@ Fl_Toggle_Tree::Fl_Toggle_Tree(int x, int y, int w, int h) : Fl_Toggle_Tree_Base
   column_widths_ = no_columns;
   column_char_ = '\t';
 
+  selection_i_ = 0;
+  selection_count_ = 0;
+  selection_current_ = 0;
+  
   textfont_ = FL_HELVETICA;
   textsize_ = 12;
   textcolor_ = FL_BLACK;
@@ -299,65 +312,71 @@ int Fl_Toggle_Tree::handle(int event) {
   //  printf("event: %d\n",event);
   static Fl_Toggle_Node* prev = 0;
   switch (event) {
-  case FL_ENTER:
+   case FL_ENTER:
     return 1;
-  case FL_RELEASE: {
-      if (edit_input_->visible()) {
-        end_edit();
+   case FL_KEYBOARD:
+    return 0;
+   case FL_SHORTCUT:
+    return 0;
+   case FL_RELEASE: {
+     if (edit_input_->visible()) {
+       end_edit();
       }
-      int depth;
-      int cy;
-      Fl_Toggle_Node* tnode = (Fl_Toggle_Node*) Fl_Toggle_Tree_Base::find(Fl::event_y(), depth, cy);
-      if (Fl::event_x() < x() + depth*16 + 16) {
-        if (tnode->opened_) {
-          current_ = tnode;
-          state_ = FL_TOGGLE_OPENED;
-          do_callback();
-          close(tnode);
-        } else {
-          current_ = tnode;
-          state_ = FL_TOGGLE_CLOSED;
-          do_callback();
-          open(tnode);
-        }
-      } else {
-        if (Fl::event_state(FL_SHIFT)) {
-          if (prev == 0) prev = tnode;
-          select_range(prev, tnode, 1);
-          current_ = 0;
-          state_ = FL_TOGGLE_SELECT;
-          do_callback();
-        } else if (Fl::event_state(FL_CTRL)) {
-          if (!tnode->selected_)
-            select_range(tnode, tnode, Fl::event_state(FL_CTRL));
-          else {
-	    selection_current_ = NULL;
-            tnode->selected_ = 0;
-            tnode->changed_ = 1;
-            tnode = 0;
+     int depth;
+     int cy;
+     Fl_Toggle_Node* tnode = (Fl_Toggle_Node*) Fl_Toggle_Tree_Base::find(Fl::event_y(), depth, cy);
+     if (Fl::event_x() < x() + depth*16 + 16) {
+       if (tnode->opened_) {
+	 current_ = tnode;
+	 state_ = FL_TOGGLE_OPENED;
+	 do_callback();
+	 close(tnode);
+       } else {
+	 current_ = tnode;
+	 state_ = FL_TOGGLE_CLOSED;
+	 do_callback();
+	 open(tnode);
+       }
+     } else {
+       if (Fl::event_state(FL_SHIFT)) {
+	 if (prev == 0) prev = tnode;
+	 select_range(prev, tnode, 1);
+	 //current_ = 0;
+	 state_ = FL_TOGGLE_SELECT;
+	 do_callback();
+       } else if (Fl::event_state(FL_CTRL)) {
+	 //if (!tnode->selected_)
+	 select_range(tnode, tnode, Fl::event_state(FL_CTRL));
+	 /*
+	 else {
+	   selection_current_ = NULL;
+	   tnode->selected_ = 0;
+	   tnode->changed_ = 1;
+	   tnode = 0;
+	 }
+	 current_ = 0;
+	 */
+	 state_ = FL_TOGGLE_SELECT;
+	 do_callback();
+       } else {
+	 select_range(tnode, tnode, 0);
+	 state_ = Fl::event_clicks() ? FL_TOGGLE_HIT : FL_TOGGLE_SELECT;
+	 if (tnode == current_ && state_ == FL_TOGGLE_SELECT) {
+	   state_ = FL_TOGGLE_RESELECT;
           }
-          current_ = 0;
-          state_ = FL_TOGGLE_SELECT;
-          do_callback();
-        } else {
-          select_range(tnode, tnode, 0);
-          state_ = Fl::event_clicks() ? FL_TOGGLE_HIT : FL_TOGGLE_SELECT;
-          if (tnode == current_ && state_ == FL_TOGGLE_SELECT) {
-            state_ = FL_TOGGLE_RESELECT;
-          }
-          current_ = tnode;
+          //current_ = tnode;
           if (state_ == FL_TOGGLE_RESELECT && edit_on_reselect_) {
             edit(tnode, x() + depth*16 + label_offset_, cy);
           }
-
-          do_callback();
-        }
-        damaged_ = 0;
-        damage(FL_DAMAGE_CHILD);
-        prev = tnode;
-      }
-    }
-    break;
+	 
+	 do_callback();
+       }
+       damaged_ = 0;
+       damage(FL_DAMAGE_CHILD);
+       prev = tnode;
+     }
+   }
+   return 1;
   }
   return 1;
 }
@@ -504,7 +523,7 @@ Fl_Toggle_Node * Fl_Toggle_Tree::find (void * a) {
 
   while (curr) {
     if (curr->label()) {
-      if (curr->data() == a) {
+      if (curr->user_data() == a) {
         return curr;
       }
     }

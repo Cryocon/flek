@@ -1,6 +1,6 @@
 /* -*-C++-*- 
 
-   "$Id: fSGI.h,v 1.2 2000/04/07 19:40:20 jamespalmer Exp $"
+   "$Id: FVector.H,v 1.1 2000/04/13 13:56:28 jamespalmer Exp $"
    
    Copyright 1999-2000 by the Flek development team.
    
@@ -23,40 +23,35 @@
 
 */
 
-#ifndef __FSGI__
-#define __FSGI__
+// The original vector, matrix, and quaternion code was written by
+// Vinod Srinivasan and then adapted for Flek.
 
-#include <Flek/fImage.h>
+#ifndef _FVECTOR_H_
+#define _FVECTOR_H_
 
-/** @package libflek_image
- * The fSGI class provides static methods that read, write and test SGI images.
+/*
+ * Common stuff for all the static Vector classes
+ * Forward declarations for all the classes is included here, along with 
+ * common include files and prototypes for functions that use different kinds
+ * of Vectors.
  */
-class fSGI {
- public:
 
-  enum {
-    NONE = 0,
-    RLE = 1,
-    ARLE = 2,
-    MAGIC = 474
-  };
+// Common include files
+#include <stdlib.h>
+#include <Flek/math.h>
+#include <Flek/iostream.h>
+#include <Flek/FBase.H>
 
-  /**
-   * Check the PBM/PGM/PPM magic number to see if this image matches any of
-   * the recognized formats.
-   */
-  static bool isSGI (char *filename);
+// Forward declarations
+class FVector2;
+class FVector3;
+class FVector4;
+class FGl;
 
-  /**
-   * Read a PPM from disk and return a new fImage object.
-   */
-  static fImage * read (char *filename);
+// Function prototypes
+FVector3 operator % (const FVector2& vec1, const FVector2& vec2);
+FVector3 operator % (const FVector3& vec1, const FVector2& vec2);
+FVector3 operator % (const FVector2& vec1, const FVector3& vec2);
 
-  /**
-   * Write a PPM to disk from an fImage object.
-   */  
-  static int write (char *filename, fImage* img, int compression = RLE, int channels=3);
+#endif // #ifndef FVECTOR_H_
 
-};
-
-#endif

@@ -1,10 +1,10 @@
-#include <Flek/fXml.h>
+#include <Flek/FXml.H>
 #include <string.h>
 
 void main ()
 {
-  fXmlDocument doc = fXmlDocument::parseFile ("fxml.xml");
-  fXmlNode node = doc.children ();
+  FXmlDocument doc = FXmlDocument::parse_file ("FXml.xml");
+  FXmlNode node = doc.children ();
 
   if (doc.valid ())
     if (doc.name ())
@@ -17,11 +17,11 @@ void main ()
       if (!strcmp (node.name (), "transaction"))
 	{
 	  printf ("node name=%s\n", node.name ());
-	  fXmlAttr attribute = node.properties ();
+	  FXmlAttr attribute = node.properties ();
 	  
 	  while (attribute.valid ())
 	    {
-	      fXmlNode property = attribute.value ();
+	      FXmlNode property = attribute.value ();
 	      if (property.valid ())
 		printf ("property=%s\n", property.content ());
 	      attribute = attribute.next ();
