@@ -62,7 +62,7 @@ bool fPNM::isPNM (char *filename)
   return true;
 }
 
-fImageRGBA * fPNM::readRGBA (char *filename)
+fImage * fPNM::read (char *filename)
 {
   ifstream input;
   int width, height;
@@ -126,10 +126,10 @@ fImageRGBA * fPNM::readRGBA (char *filename)
   // Single whitespace before input.
   input >> c;
   
-  fImageRGBA* img = new fImageRGBA (width, height);
-  fImageRGBA::iterator begin;
-  fImageRGBA::iterator end;
-  fImageRGBA::iterator i;
+  fImage* img = new fImage (width, height);
+  fImage::iterator begin;
+  fImage::iterator end;
+  fImage::iterator i;
   uchar* pixel;
   int row;
   
@@ -288,12 +288,12 @@ fImageRGBA * fPNM::readRGBA (char *filename)
   return img;
 }
 
-int fPNM::writeRGBA (char *filename, fImageRGBA* img)
+int fPNM::write (char *filename, fImage* img)
 {
   ofstream output;
-  fImageRGBA::iterator begin;
-  fImageRGBA::iterator end;
-  fImageRGBA::iterator i;
+  fImage::iterator begin;
+  fImage::iterator end;
+  fImage::iterator i;
   uchar* pixel;
   
   output.open (filename);
@@ -301,7 +301,7 @@ int fPNM::writeRGBA (char *filename, fImageRGBA* img)
     return 1;
   
   output << "P6" << endl;
-  output << "# CREATOR: Flek's fPNM::writeRGBA()" << endl;
+  output << "# CREATOR: Flek's fPNM::write ()" << endl;
   output << img->width () << " " << img->height () << endl;
   output << "255 ";
   
