@@ -63,6 +63,12 @@ public:
     return opened_;
   }
 
+  inline Fl_Toggle_Node* previous() { return (Fl_Toggle_Node*)prev_; }
+  inline Fl_Toggle_Node* next() { return (Fl_Toggle_Node*)next_; }
+  inline Fl_Toggle_Node* child() { retrun (Fl_Toggle_Node*)sub_; }
+  inline Fl_Toggle_Node* visible_child() { return (Fl_Toggle_Node*)vsub_; }
+  inline Fl_Toggle_Node* parent() { return (Fl_Toggle_Node*)up_; }
+
 protected:
 
   int selected_;

@@ -16,6 +16,12 @@ public:
     opened_ = 0;
   }
 
+  inline Fl_Toggle_Node_Base* previous() { return prev_; }
+  inline Fl_Toggle_Node_Base* next() { return next_; }
+  inline Fl_Toggle_Node_Base* child() { retrun sub_; }
+  inline Fl_Toggle_Node_Base* visible_child() { return vsub_; }
+  inline Fl_Toggle_Node_Base* parent() { return up_; }
+
 protected:
 
   Fl_Toggle_Node_Base* prev_;
