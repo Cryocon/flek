@@ -31,7 +31,7 @@ main ()
   myapp->add_dockable (mygroup);
 
   myapp->begin ();
-  Fl_Button *button = new Fl_Button (5, 5, 100, 100, "Hello World");
+  (void) new Fl_Button (5, 5, 100, 100, "Hello World");
   myapp->end ();
 
   print_children (myapp);

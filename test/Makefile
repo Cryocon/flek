@@ -1,6 +1,9 @@
 include ../makeinclude
 
-all: stock_buttons dockable_group toggle_tree # frametab pixbutton slider
+all: arcball stock_buttons dockable_group toggle_tree # frametab pixbutton slider 
+
+arcball: arcball.cxx
+	$(CXX) $(CXXFLAGS) $(FLTKINC) -I.. arcball.cxx -L../lib -lflek_ui $(LDLIBS) -lGL -lGLU -o $@
 
 stock_buttons: stock_buttons.cxx
 	$(CXX) $(CXXFLAGS) $(FLTKINC) -I.. stock_buttons.cxx -L../lib -lflek_ui $(LDLIBS) -o $@
