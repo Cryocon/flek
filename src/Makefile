@@ -3,6 +3,7 @@ CORECPPFILES = \
 	fDate.cxx \
 	fDom.cxx \
 	fDomAttr.cxx \
+	fFile.cxx \
 	fVector.cxx \
 	fImage.cxx \
 	fSGI.cxx \
