@@ -244,3 +244,122 @@ fMatrix4x4::get_col_array (int j)
 }
 
 */
+
+void 
+fMatrix4x4::rotation_x (double value)
+{
+  double ca = double (cos (value));
+  double sa = double (sin (value));
+  data[0][0] = 1;   data[0][1] = 0;    data[0][2] = 0;
+  data[1][0] = 0;   data[1][1] = ca;   data[1][2] = -sa;
+  data[2][0] = 0;   data[2][1] = sa;   data[2][2] = ca;
+}
+
+void 
+fMatrix4x4::rotation_y (double value)
+{
+  double ca = double (cos (value));
+  double sa = double (sin (value));
+  data[0][0] = ca;  data[0][1] = 0;    data[0][2] = sa;
+  data[1][0] = 0;   data[1][1] = 1;    data[1][2] = 0;
+  data[2][0] = -sa; data[2][1] = 0;    data[2][2] = ca;
+}
+
+void 
+fMatrix4x4::rotation_z (double value)
+{
+  double ca = double (cos (value));
+  double sa = double (sin (value));
+  data[0][0] = ca;  data[0][1] = -sa;  data[0][2] = 0;
+  data[1][0] = sa;  data[1][1] = ca;   data[1][2] = 0;
+  data[2][0] = 0;   data[2][1] = 0;    data[2][2] = 1;
+}
+
+/* rotation creates a rotation matrix using an equivalent angle-axis 
+ * representation.  That is to say, if the axis provided (a vector) is a 
+ * general axis (and not one of the unit directions) any orientation can 
+ * be obtained through proper axis and angle selection.  This is called the 
+ * angle-axis representation. (Craig 51)
+ */
+
+void 
+fMatrix4x4::rotation (double a, fVector3 v) 
+{
+  if ((v.x() == 0.0) && (v.y() == 0.0) && (v.z() == 0.0)) 
+    {
+      a = 0;
+      v.set (1, 0, 0);
+    }
+  double ca = double (cos (a));
+  double sa = double (sin (a));
+  double va = 1.0f - ca;
+  double x2 = v.x () * v.x ();
+  double y2 = v.y () * v.y ();
+  double z2 = v.z () * v.z ();
+  double xyv = v.x () * v.y () * va;
+  double xzv = v.x () * v.z () * va;
+  double yzv = v.y () * v.z () * va;
+  double xsa = v.x () * sa;
+  double ysa = v.y () * sa;
+  double zsa = v.z () * sa;
+    
+  data[0][0] = x2*va+ca;
+  data[0][1] = xyv+zsa;
+  data[0][2] = xzv-ysa;
+  data[0][3] = 0.0;
+  data[1][0] = xyv-zsa;
+  data[1][1] = y2*va+ca;
+  data[1][2] = yzv+xsa;
+  data[1][3] = 0.0;
+  data[2][0] = xzv+ysa;
+  data[2][1] = yzv-xsa;
+  data[2][2] = z2*va+ca;
+  m34 = m41 = m42 = m43 = 0.0;
+  m44 = 1.0;
+}
+
+void 
+fMatrix4x4::rotation (double ax, double ay, double az) 
+{
+  double cax = cos (ax);
+  double cay = cos (ay);
+  double caz = cos (az);
+  double sax = sin (ax);
+  double say = sin (ay);
+  double saz = sin (az);
+  
+  data[0][0] = caz*cay;   
+  data[0][1] = caz*say*sax - saz*cax;
+  data[0][2] = caz*say*cax + saz*sax;
+  m14 = 0.0;
+  data[1][0] = saz*cay;
+  data[1][1] = saz*say*sax + caz*cax;
+  data[1][2] = saz*say*cax - caz*sax;
+  m24 = 0.0;
+  data[2][0] = -say;
+  data[2][1] = cay*sax;
+  data[2][2] = cay*cax;
+  m34 = m41 = m42 = m43 = 0.0;
+  m44 = 1.0;
+}
+
+void 
+fMatrix4x4::translation (fVector3 v) 
+{
+    data[0][0] = 1.0;
+    data[1][0] = 0.0;
+    data[2][0] = 0.0;
+    data[3][0] = v.x ();
+    data[0][1] = 0.0;
+    data[1][1] = 1.0;
+    data[2][1] = 0.0;
+    data[3][1] = v.y ();
+    data[0][2] = 0.0;
+    data[1][2] = 0.0;
+    data[2][2] = 0.0;
+    data[3][2] = v.z ();
+    data[0][3] = 0.0;
+    data[1][3] = 0.0;
+    data[2][3] = 0.0;
+    data[3][3] = 1.0;  
+}
