@@ -20,13 +20,11 @@ void
 main ()
 {
   Fl_App_Window *myapp = new Fl_App_Window (50, 50, 200, 200, 
-					    "App Window!");
+					    "dockable_group test");
+  myapp->resizable(myapp);
   myapp->show ();
 
-  myapp->resizable(myapp);
-  
-  Fl_Dockable_Group *mygroup = new Fl_Dockable_Group (0, 0, 100, 30, 
-						      "other");
+  Fl_Dockable_Group *mygroup = new Fl_Dockable_Group (0, 0, 100, 30, "mygroup");
 
   mygroup->show ();
 
