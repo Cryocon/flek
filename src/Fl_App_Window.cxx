@@ -6,12 +6,12 @@
 #include <FL/fl_draw.H>
 
 Fl_App_Window::Fl_App_Window(int x, int y, int w, int h, const char* l) : 
-  Fl_Window (x, y, w, h, l) {
+  Fl_Window (x, y, w, h, l), dockable_windows_size(0) {
   create_app_window(w, h, l);
 }
 
 Fl_App_Window::Fl_App_Window(int w, int h, const char* l) : 
-  Fl_Window (w, h, l) {
+  Fl_Window (w, h, l), dockable_windows_size(0) {
   create_app_window(w, h, l);
 }
 
@@ -36,8 +36,8 @@ int Fl_App_Window::handle (int event) {
     //if ((w() != _pack->w()) || (h() != pack->h()))
     //size (_pack->w(), pack->h());
     //damage (FL_DAMAGE_ALL);
-    //size (w(), h() - Fl_Dockable_Group::current->h());
-    _contents->size(_contents->w(), _contents->h() + Fl_Dockable_Group::current->h());
+    //size (w(), h() - Fl_Dockable_Window::current->h());
+    _contents->size(_contents->w(), _contents->h() + Fl_Dockable_Window::current->h());
     redraw ();
     return 1;
   }
@@ -71,7 +71,7 @@ int Fl_App_Window::handle (int event) {
          && (dy > (ey - FL_DOCK_DELTA + cY)) )  // ymin
 	 {
 	 //printf ("DOCK!!!!!!!!!!!!!!!!!!!!!!!!!!!\n");
-	 add_dockable(Fl_Dockable_Group::current, i);
+	 add_dockable(Fl_Dockable_Window::current, i);
 	 return 1;
       }
     }
@@ -88,57 +88,54 @@ void Fl_App_Window::add (Fl_Widget *w) {
   _contents->add(w);
 }
 
-void Fl_App_Window::add_dockable (Fl_Dockable_Group *W, int pos) {
-  Fl_Dockable_Group::current = W;
-  Fl_Dockable_Group::current->hide();
+void Fl_App_Window::add_dockable (Fl_Dockable_Window *W, int pos) {
+  Fl_Dockable_Window::current = W;
+  Fl_Dockable_Window::current->hide();
   _pack->insert(*W, pos);
   W->set_docked(1);
   
   if(_pack->horizontal())
-    // Fl_Dockable_Group::current->size(Fl_Dockable_Group::current->w(), h());
-    _contents->size(w()-Fl_Dockable_Group::current->w(), h());
+    // Fl_Dockable_Window::current->size(Fl_Dockable_Window::current->w(), h());
+    _contents->size(w()-Fl_Dockable_Window::current->w(), h());
   else
-    // Fl_Dockable_Group::current->size(w(), Fl_Dockable_Group::current->h());
-    _contents->size(w(), h()-Fl_Dockable_Group::current->h());
+    // Fl_Dockable_Window::current->size(w(), Fl_Dockable_Window::current->h());
+    _contents->size(w(), h()-Fl_Dockable_Window::current->h());
   
   if(shown()) {
-    Fl_Dockable_Group::current->show ();
-      redraw();
-    }
-
-    for(vector<Fl_Dockable_Group*>::const_iterator i = dockable_groups.begin(); i != dockable_groups.end(); i++) {
-      if(W == (*i)) {
-        return;
-      }
-    }
-    dockable_groups.push_back(W);  
-
-    // FLTK BUG???  calling redraw() should call draw(), right??  
-    // Not always so we need to pack things here..
-  {
-    //_pack->draw ();
-    //if ((w() != _pack->w()) || (h() != pack->h()))
-    //size (_pack->w(), pack->h());
-    //redraw ();
-    //size ((w() > W->w()) ? w() : W->w(), h()+W->h());
-    //flush ();
+    Fl_Dockable_Window::current->show ();
+    redraw();
   }
+
+  // Is it already in the list?
+  for(int i=0; i < dockable_windows_size; i++)
+    if(W == dockable_windows[i])
+      return;
+
+  // Add it to the list.
+  dockable_windows[dockable_windows_size++] = W;
+
+  // FLTK BUG???  calling redraw() should call draw(), right??  
+  // Not always so we need to pack things here..
+  //_pack->draw ();
+  //if ((w() != _pack->w()) || (h() != pack->h()))
+  //size (_pack->w(), pack->h());
+  //redraw ();
+  //size ((w() > W->w()) ? w() : W->w(), h()+W->h());
+  //flush ();
 }
 
 void Fl_App_Window::show() {
   Fl_Window::show();
   _pack->show();
   _contents->show();
-  for(vector<Fl_Dockable_Group*>::const_iterator i = dockable_groups.begin(); i != dockable_groups.end(); i++) {
-    (*i)->show();
-  }
+  for(int i=0; i < dockable_windows_size; i++)
+    dockable_windows[i]->show();
   redraw();
 }
 
 void Fl_App_Window::hide() {
-  for(vector<Fl_Dockable_Group*>::const_iterator i = dockable_groups.begin(); i != dockable_groups.end(); i++) {
-    (*i)->hide();
-  }
+  for(int i=0; i < dockable_windows_size; i++)
+    dockable_windows[i]->hide();
   Fl_Window::hide();
 }
 

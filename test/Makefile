@@ -1,6 +1,6 @@
 include ../makeinclude
 
-ALL = calendar stock_buttons dockable_group toggle_tree \
+ALL = calendar stock_buttons docking toggle_tree \
 	testlist testtable testtable2 basiclist exercise testedit 
 
 ifdef GL_LIB
@@ -31,7 +31,7 @@ image: image.cxx
 stock_buttons: stock_buttons.cxx
 	$(CXX) $(UICOMPILE) $@.cxx $(UILINK) -o $@
 
-dockable_group: dockable_group.cxx
+docking: docking.cxx
 	$(CXX) $(UICOMPILE) $@.cxx $(UILINK) -o $@
 
 toggle_tree: toggle_tree.cxx
@@ -59,7 +59,7 @@ fxml: fxml.cxx
 	$(CXX) `../flek-config --use-xml --cxxflags` -g3 $@.cxx `../flek-config --use-xml --ldflags` -o $@
 
 clean:
-	rm -f core *.o toggle_tree dockable_group bitmaps filedialog \
+	rm -f core *.o toggle_tree docking bitmaps filedialog \
 	arcball calendar frametab pixbutton slider pixbutton packfu wtest wtest2 stock_buttons \
 	testlist testtable testtable2 basiclist exercise testedit fdom
 

@@ -46,7 +46,7 @@ CPP_FLEK_UI = \
 	Fl_App_Window.cxx \
 	Fl_Better_Window.cxx \
 	Fl_Calendar.cxx \
-	Fl_Dockable_Group.cxx \
+	Fl_Dockable_Window.cxx \
 	Fl_Stock.cxx \
 	Fl_Toggle_Node_Base.cxx \
 	Fl_Toggle_Node.cxx \
@@ -64,7 +64,7 @@ H_FLEK_UI = \
 	Fl_App_Window.H \
 	Fl_Better_Window.H \
 	Fl_Calendar.H \
-	Fl_Dockable_Group.H \
+	Fl_Dockable_Window.H \
 	Fl_Stock.H \
 	Fl_Toggle_Node_Base.H \
 	Fl_Toggle_Node.H \

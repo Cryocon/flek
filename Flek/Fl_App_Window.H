@@ -1,6 +1,6 @@
 /* -*-C++-*- 
 
-   "$Id: Fl_App_Window.H,v 1.12 2000/05/12 02:14:11 brad Exp $"
+   "$Id: Fl_App_Window.H,v 1.13 2000/05/12 03:01:46 brad Exp $"
    
    Copyright 1999-2000 by the Flek development team.
    
@@ -31,7 +31,7 @@
 #include <FL/Fl_Window.H>
 #include <FL/Fl_Pack.H>
 
-#include <Flek/Fl_Dockable_Group.H>
+#include <Flek/Fl_Dockable_Window.H>
 
 /** @package libflek_ui
  * Fl_App_Window is a window that can have Fl_Dockable_Groups 
@@ -46,7 +46,17 @@ class Fl_App_Window : public Fl_Window {
 private:
   Fl_Pack* _pack;
   Fl_Window* _contents;
-  vector<Fl_Dockable_Group*> dockable_groups;
+
+  /**
+   * dockable_windows is a list of pointers to dockable windows that have ever been
+   * docked to this application window.  It is mainly used to provide automatic
+   * showing and hiding of undocked windows when the application windows is shown/hid.
+   * Hack Alert: This list is implemented as a simple fixed size array,
+   * currently sized at 64 elements.
+   */
+  Fl_Dockable_Window* dockable_windows[64];
+  int dockable_windows_size;
+
   void create_app_window(int w, int h, const char* l);
 
 protected:
@@ -99,12 +109,12 @@ public:
   void resize(int x, int y, int w, int h);
   
   /**
-   * Dock an Fl_Dockable_Group to the window.
-   * Docking an Fl_Dockable_Group to an Fl_App_Window does not change
+   * Dock an Fl_Dockable_Window to the window.
+   * Docking an Fl_Dockable_Window to an Fl_App_Window does not change
    * the size of the Fl_App_Window.  Rather, the size of the contents
-   * window is adjusted to accomodate the Fl_Dockable_Group.
+   * window is adjusted to accomodate the Fl_Dockable_Window.
    */
-  void add_dockable(Fl_Dockable_Group* W, int position = 0);
+  void add_dockable(Fl_Dockable_Window* W, int position = 0);
 
   /**
    * Makes the contents window the current group.
