@@ -1,13 +1,14 @@
 #include <Flek/fDom.h>
 #include <stdio.h>
 
-int listen (fDomNode *node, long event, long message)
+int listen (fDomNode *node, long event, long)
 {
   if (event == fDomNode::DAMAGE)
     {
       fDomAttr *n = node->getAttribute ("name");
       printf ("Ahhk.  Data was changed: %s\n", n->value ());
     }
+  return 1;
 }
 
 fDomNode root, a, b, c, n;

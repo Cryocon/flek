@@ -1,6 +1,6 @@
 /* -*-C++-*- 
 
-   "$Id: fImage.h,v 1.1 2000/03/02 06:50:10 jamespalmer Exp $"
+   "$Id: fImage.h,v 1.2 2000/03/03 01:46:19 jamespalmer Exp $"
    
    Copyright 1999-2000 by the Flek development team.
    
@@ -80,9 +80,10 @@ class fImageRGBAIterator {
       return tmp;
     }
 
-  operator = (const fImageRGBAIterator &p)
+  fImageRGBAIterator& operator = (const fImageRGBAIterator &p)
     {
       ptr = p.ptr;
+      return *this;
     }
 
   uchar* operator* ()

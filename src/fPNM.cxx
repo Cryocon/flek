@@ -11,7 +11,8 @@ static int skipComments (ifstream& input)
   input.unsetf (ios::skipws);
   if (c!='#')
     {
-      input.unget ();
+      input.putback (c);
+      //input.unget ();
       input.setf (ios::skipws);
       return 0;
     }
@@ -27,7 +28,8 @@ static int skipComments (ifstream& input)
       if (input.bad()) 
 	return 1;
     }
-  input.unget ();
+  input.putback (c);
+  //input.unget ();
   input.setf (ios::skipws);
   return 0;
 }
@@ -129,11 +131,12 @@ fImageRGBA * fPNM::readRGBA (char *filename)
   fImageRGBA::iterator end;
   fImageRGBA::iterator i;
   uchar* pixel;
+  int row;
   
   switch (type)
     {
     case 1: // ASCII B&W
-      for (int row = height-1; row >= 0; row--)
+      for (row = height-1; row >= 0; row--)
 	{
 	  begin = img->begin (row);
 	  end = img->end (row);
@@ -158,7 +161,7 @@ fImageRGBA * fPNM::readRGBA (char *filename)
       break;
     case 2:  // ASCII GRAY
       input.unsetf (ios::skipws);
-      for (int row = height-1; row >= 0; row--)
+      for (row = height-1; row >= 0; row--)
 	{
 	  unsigned int g;
 	  begin = img->begin (row);
@@ -177,7 +180,7 @@ fImageRGBA * fPNM::readRGBA (char *filename)
       break;
     case 3:  // ASCII RGB
       input.unsetf (ios::skipws);
-      for (int row = height-1; row >= 0; row--)
+      for (row = height-1; row >= 0; row--)
 	{
 	  unsigned int r;
 	  unsigned int g;
@@ -198,7 +201,7 @@ fImageRGBA * fPNM::readRGBA (char *filename)
 	}
       break;
     case 4: // RAW BITPACKED B&W
-      for (int row = height-1; row >= 0; row--)
+      for (row = height-1; row >= 0; row--)
 	{
 	  begin = img->begin (row);
 	  end = img->end (row);
@@ -226,7 +229,7 @@ fImageRGBA * fPNM::readRGBA (char *filename)
 	}
       break;
     case 5: // RAW GRAY
-      for (int row = height-1; row >= 0; row--)
+      for (row = height-1; row >= 0; row--)
 	{
 	  begin = img->begin (row);
 	  end = img->end (row);
@@ -243,7 +246,7 @@ fImageRGBA * fPNM::readRGBA (char *filename)
 	}
       break;
     case 6: // RAW RGB
-      for (int row = height-1; row >= 0; row--)
+      for (row = height-1; row >= 0; row--)
 	{
 	  begin = img->begin (row);
 	  end = img->end (row);
@@ -261,7 +264,7 @@ fImageRGBA * fPNM::readRGBA (char *filename)
 	}
       break;
     case 7: // RAW RGBA (nonstandard)
-      for (int row = height-1; row >= 0; row--)
+      for (row = height-1; row >= 0; row--)
 	{
 	  begin = img->begin (row);
 	  end = img->end (row);

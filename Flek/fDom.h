@@ -1,6 +1,6 @@
 /* -*-C++-*- 
 
-   "$Id: fDom.h,v 1.10 2000/02/29 04:25:28 jamespalmer Exp $"
+   "$Id: fDom.h,v 1.11 2000/03/03 01:46:19 jamespalmer Exp $"
    
    Copyright 1999-2000 by the Flek development team.
    
@@ -33,8 +33,8 @@
 #include <stdio.h>
 #include <ctype.h>
 
-#include <vector>
-#define collection vector
+//#include <ministl/vector>
+#include <vector.h>
 
 class fDomNode;
 
@@ -48,7 +48,7 @@ class fDomListener : public fBase
  public:
 
   typedef fDomListener * Ptr;
-  typedef collection<Ptr> Collection;
+  typedef vector<Ptr> Collection;
   
   typedef int (*Function)(fDomNode *, long, long);
 
@@ -163,7 +163,7 @@ class fDomNode : public fBase
  public:
 
   typedef fDomNode * Ptr;
-  typedef collection<Ptr> Collection;
+  typedef vector<Ptr> Collection;
 
   /**
    * Constructor.
@@ -205,7 +205,7 @@ class fDomNode : public fBase
   /** 
    * Remove a listener from this node.
    */
-  void removeListener (fDomListener *o) { } //Listeners.erase (o); } FIXME
+  void removeListener (fDomListener *) { } //Listeners.erase (o); } FIXME
 
   /** 
    * Clear all listeners.

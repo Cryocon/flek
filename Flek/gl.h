@@ -1,6 +1,6 @@
 /* -*-c++-*- 
 
-   "$Id: gl.h,v 1.4 2000/02/29 04:25:28 jamespalmer Exp $"
+   "$Id: gl.h,v 1.5 2000/03/03 01:46:19 jamespalmer Exp $"
    
    Copyright 1999-2000 by the Flek development team.
    
@@ -32,6 +32,7 @@
 #include <Flek/fMatrix4x4.h>
 #include <Flek/fMatrix3x3.h>
 #include <Flek/fArcball.h>
+#include <Flek/fImage.h>
 
 #include <GL/gl.h>
 #include <FL/gl.h>
@@ -213,6 +214,19 @@ inline void glRotate (const double &a, const fVector3 &v)
 inline void glRotate (const double &a, const double &x, const double &y, const double &z)
 {
   glRotated (a, x, y, z);
+}
+
+inline void glTexImage2D (fImageRGBA* img, GLenum target=GL_TEXTURE_2D, GLint level=0)
+{
+  glTexImage2D (target,
+                level,
+                4,
+                img->width (),
+                img->height (),
+                0,
+                GL_RGBA,
+                GL_UNSIGNED_BYTE,
+                (GLvoid *)(*img->begin()) );
 }
 
 #endif
