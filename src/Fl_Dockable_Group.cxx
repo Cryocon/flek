@@ -202,7 +202,7 @@ void Fl_Dockable_Group::undock (int x=-1, int y=-1)
       // Give the dock an opportunity to handle the event.
       Fl::handle (FL_UNDOCK, group->window ());
       
-      group->redraw ();
+      //group->redraw ();
       
       if ((x > -1) && (y > -1))
 	position (x, y);

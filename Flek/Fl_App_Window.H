@@ -26,10 +26,12 @@ class Fl_App_Window : public Fl_Window
   void show ();
   void begin () { Fl_Group::current (contents); }
   void end () { Fl_Group::current ((Fl_Group*) parent ()); }
-  void draw ();
   Fl_Pack_Fu *tpack () {return pack; }
   
  protected:
+  virtual FL_EXPORT void draw ();
+  virtual FL_EXPORT void flush ();
+  
   Fl_Pack_Fu    *pack;
   Fl_Window    *contents;
 };

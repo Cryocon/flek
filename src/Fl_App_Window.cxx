@@ -2,6 +2,8 @@
 #include <stdio.h>
 
 #include <Flek/Fl_App_Window.H>
+#include <FL/x.H>
+#include <FL/fl_draw.H>
 
 Fl_App_Window::Fl_App_Window (int x, int y, int w, int h, const char *l = 0) : 
   Fl_Window (x, y, w, h, l)
@@ -105,10 +107,11 @@ void Fl_App_Window::add_dockable (Fl_Dockable_Group *W, int pos = 0)
   // FLTK BUG???  calling redraw() should call draw(), right??  
   // Not always so we need to pack things here..
   {
-    pack->draw ();
-    if ((w() != pack->w()) || (h() != pack->h()))
-      size (pack->w(), pack->h());
+//    pack->draw ();
+//    if ((w() != pack->w()) || (h() != pack->h()))
+//      size (pack->w(), pack->h());
     redraw ();
+    //flush ();
   }
 }
 
@@ -122,9 +125,19 @@ void Fl_App_Window::show ()
 void 
 Fl_App_Window::draw ()
 {
-  printf ("####################################\n");
+  printf ("Fl_App_Window::draw()\n");
   // if pack->w() and pack->h() change...
   pack->draw ();
   resize (x(), y(), pack->w(), pack->h());
   return Fl_Window::draw ();
+}
+
+void Fl_App_Window::flush() {
+  //Fl_Window::flush();
+  printf("Fl_App_Window::flush()\n");
+  make_current();
+  Fl_X *i = Fl_X::i(this);
+  //if (damage() == FL_DAMAGE_EXPOSE && can_boxcheat(box())) fl_boxcheat = this;
+  fl_clip_region(i->region); i->region = 0;
+  draw ();
 }
