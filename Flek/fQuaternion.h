@@ -35,7 +35,7 @@ class fQuaternion
 
   ~fQuaternion () {};
 
-  set (double x, double y, double z, double w)
+  void set (double x, double y, double z, double w)
     {
       s = w;
       v[0] = x;

@@ -58,60 +58,33 @@ fArcball::mouse (fVector3 vNow_)
   vNow = vNow_;
 }
 
-/* Choose a constraint set, or none. */
-void 
-fArcball::useSet (AxisSet axisSet_)
-{
-  if (!dragging) axisSet = axisSet_;
-}
-
-/* Begin drawing arc for all drags combined. */
-void 
-fArcball::showResult ()
-{
-  ShowResult = 1;
-}
-
-/* Stop drawing arc for all drags combined. */
-void 
-fArcball::hideResult ()
-{
-  ShowResult = 0;
-}
-
 /* Using vDown, vNow, dragging, and axisSet, compute rotation etc. */
 void 
 fArcball::update ()
 {
   int setSize = setSizes[axisSet];
   fVector3 *set = (fVector3 *)(sets[axisSet]);
-  vFrom = mouseOnSphere(vDown, center, radius);
-  vTo = mouseOnSphere(vNow, center, radius);
+  vFrom = mouse_on_sphere (vDown, center, radius);
+  vTo = mouse_on_sphere (vNow, center, radius);
   if (dragging) {
     if (axisSet!=NoAxes) {
-      vFrom = constrainToAxis(vFrom, set[axisIndex]);
-      vTo = constrainToAxis(vTo, set[axisIndex]);
+      vFrom = constrain_to_axis (vFrom, set[axisIndex]);
+      vTo = constrain_to_axis (vTo, set[axisIndex]);
     }
-    qDrag = quatFromBallPoints (vFrom, vTo);
+    qDrag = quaternion_from_ball_points (vFrom, vTo);
     qNow = qDrag * qDown;
   } else {
     if (axisSet!=NoAxes) {
-      axisIndex = nearestConstraintAxis(vTo, set, setSize);
+      axisIndex = nearest_constraint_axis (vTo, set, setSize);
     }
   }
-  quatToBallPoints (qDown, &vrFrom, &vrTo);
+  quaternion_to_ball_points (qDown, &vrFrom, &vrTo);
   //quatToMatrix (qNow.conjugate (), mNow); /* Gives transpose for GL. */
   mNow = qNow.to_matrix (); //(qNow.conjugate ()).to_matrix ();
 }
 
-/* Return rotation matrix defined by controller use. */
-fMatrix4x4 fArcball::value ()
-{
-  return mNow; 
-}
-
 /* Begin drag sequence. */
-void fArcball::beginDrag ()
+void fArcball::begin_drag ()
 {
   dragging = 1;
   vDown = vNow;
@@ -119,7 +92,7 @@ void fArcball::beginDrag ()
 
 /* Stop drag sequence. */
 void 
-fArcball::endDrag ()
+fArcball::end_drag ()
 {
   dragging = 0;
   qDown = qNow;
@@ -150,9 +123,9 @@ fArcball::draw ()
       //glScalef (r, r, r);
       // FIXME!! 
       //circ (0.0, 0.0, 0.0);
-      drawResultArc ();
-      drawConstraints ();
-      drawDragArc ();
+      draw_result_arc ();
+      draw_constraints ();
+      draw_drag_arc ();
     }
   glPopMatrix();
   glMatrixMode(GL_PROJECTION);
@@ -162,7 +135,7 @@ fArcball::draw ()
 
 /* Draw an arc defined by its ends. (static) */
 void 
-fArcball::drawAnyArc (fVector3 vFrom, fVector3 vTo)
+fArcball::draw_any_arc (fVector3 vFrom, fVector3 vTo)
 {
   int i;
   fVector3 pts[NSEGS+1];
@@ -186,7 +159,7 @@ fArcball::drawAnyArc (fVector3 vFrom, fVector3 vTo)
 
 /* Draw the arc of a semi-circle defined by its axis. (static) */
 void 
-fArcball::drawHalfArc (fVector3 n)
+fArcball::draw_half_arc (fVector3 n)
 {
   fVector3 p, m;
   p[2] = 0;
@@ -197,13 +170,13 @@ fArcball::drawHalfArc (fVector3 n)
     p[0] = 0; p[1] = 1;
   }
   m = p % n;
-  drawAnyArc (p, m);
-  drawAnyArc (m, -p);
+  draw_any_arc (p, m);
+  draw_any_arc (m, -p);
 }
 
 /* Draw all constraint arcs. */
 void 
-fArcball::drawConstraints ()
+fArcball::draw_constraints ()
 {
   ConstraintSet set;
   fVector3 axis;
@@ -223,27 +196,27 @@ fArcball::drawConstraints ()
 		    sin ((double)i*2.0*M_PI/36.0),0.0);
       glEnd ();
     } else {
-      drawHalfArc (axis);
+      draw_half_arc (axis);
     }
   }
 }
 
 /* Draw "rubber band" arc during dragging. */
 void 
-fArcball::drawDragArc ()
+fArcball::draw_drag_arc ()
 {
   DRAGCOLOR();
   if (dragging) 
-    drawAnyArc (vFrom, vTo);
+    draw_any_arc (vFrom, vTo);
 }
 
 /* Draw arc for result of all drags. */
 void 
-fArcball::drawResultArc ()
+fArcball::draw_result_arc ()
 {
   RESCOLOR();
   if (ShowResult) 
-    drawAnyArc (vrFrom, vrTo);
+    draw_any_arc (vrFrom, vrTo);
 }
 
 
@@ -251,7 +224,7 @@ fArcball::drawResultArc ()
 
 /* Convert window coordinates to sphere coordinates. */
 fVector3 
-fArcball::mouseOnSphere(fVector3 mouse, fVector3 ballCenter, double ballRadius)
+fArcball::mouse_on_sphere(fVector3 mouse, fVector3 ballCenter, double ballRadius)
 {
   fVector3 ballMouse;
   register double mag;
@@ -271,7 +244,7 @@ fArcball::mouseOnSphere(fVector3 mouse, fVector3 ballCenter, double ballRadius)
 
 /* Construct a unit quaternion from two points on unit sphere */
 fQuaternion 
-fArcball::quatFromBallPoints(fVector3 from, fVector3 to)
+fArcball::quaternion_from_ball_points (fVector3 from, fVector3 to)
 {
   fQuaternion qu;
   qu[0] = from[1]*to[2] - from[2]*to[1];
@@ -283,7 +256,7 @@ fArcball::quatFromBallPoints(fVector3 from, fVector3 to)
 
 /* Convert a unit quaternion to two points on unit sphere */
 void 
-fArcball::quatToBallPoints(fQuaternion q, fVector3 *arcFrom, fVector3 *arcTo)
+fArcball::quaternion_to_ball_points (fQuaternion q, fVector3 *arcFrom, fVector3 *arcTo)
 {
   double s;
   s = sqrt(q[0]*q[0] + q[1]*q[1]);
@@ -300,7 +273,7 @@ fArcball::quatToBallPoints(fQuaternion q, fVector3 *arcFrom, fVector3 *arcTo)
 
 /* Force sphere point to be perpendicular to axis. */
 fVector3 
-fArcball::constrainToAxis (fVector3 loose, fVector3 axis)
+fArcball::constrain_to_axis (fVector3 loose, fVector3 axis)
 {
   fVector3 onPlane;
   register float norm;
@@ -322,7 +295,7 @@ fArcball::constrainToAxis (fVector3 loose, fVector3 axis)
 
 /* Find the index of nearest arc of axis set. */
 int 
-fArcball::nearestConstraintAxis(fVector3 loose, fVector3 *axes, int nAxes)
+fArcball::nearest_constraint_axis (fVector3 loose, fVector3 *axes, int nAxes)
 {
   fVector3 onPlane;
   register float max, dot;
@@ -330,7 +303,7 @@ fArcball::nearestConstraintAxis(fVector3 loose, fVector3 *axes, int nAxes)
   max = -1; 
   nearest = 0;
   for (i=0; i<nAxes; i++) {
-    onPlane = constrainToAxis (loose, axes[i]);
+    onPlane = constrain_to_axis (loose, axes[i]);
     dot = onPlane * loose;
     if (dot > max) {
       max = dot; 

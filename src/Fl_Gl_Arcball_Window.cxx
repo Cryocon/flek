@@ -6,10 +6,10 @@ int Fl_Gl_Arcball_Window::handle (int event)
   switch (event)
     {
      case FL_PUSH:
-      arcball.beginDrag ();
+      arcball.begin_drag ();
       break;
      case FL_RELEASE:
-      arcball.endDrag ();
+      arcball.end_drag ();
       break;
      case FL_DRAG:
 	{

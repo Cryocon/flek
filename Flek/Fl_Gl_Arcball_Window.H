@@ -1,4 +1,4 @@
-#include <FL/Fl_Gl_Window.h>
+#include <FL/Fl_Gl_Window.H>
 #include <Flek/fArcball.h>
 
 class Fl_Gl_Arcball_Window : public Fl_Gl_Window

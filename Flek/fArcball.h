@@ -10,16 +10,16 @@ typedef double *ConstraintSet;
 class fArcball {
  public:
   fArcball ();
-  void fArcball::place (fVector3 center, double radius);
-  void fArcball::mouse (fVector3 vNow);
-  void fArcball::useSet (AxisSet axisSet);
-  void fArcball::showResult ();
-  void fArcball::hideResult ();
-  void fArcball::update ();
-  fMatrix4x4 fArcball::value ();
-  void fArcball::beginDrag ();
-  void fArcball::endDrag ();
-  void fArcball::draw ();
+  void place (fVector3 center, double radius);
+  void mouse (fVector3 vNow);
+  void use_set (AxisSet set) { if (!dragging) axisSet = set; }
+  void show_result () { ShowResult = 1; }
+  void hide_result () { ShowResult = 0; }
+  void update ();
+  fMatrix4x4 value () { return mNow; }
+  void begin_drag ();
+  void end_drag ();
+  void draw ();
   
  protected:
   fVector3 center;
@@ -34,17 +34,17 @@ class fArcball {
   int axisIndex;
   
  private:
-  void fArcball::drawAnyArc (fVector3 vFrom, fVector3 vTo);
-  void fArcball::drawHalfArc (fVector3 n);
-  void fArcball::drawConstraints ();
-  void fArcball::drawDragArc ();
-  void fArcball::drawResultArc ();
+  void draw_any_arc (fVector3 vFrom, fVector3 vTo);
+  void draw_half_arc (fVector3 n);
+  void draw_constraints ();
+  void draw_drag_arc ();
+  void draw_result_arc ();
   
-  fVector3 mouseOnSphere (fVector3 mouse, fVector3 ballCenter, double ballRadius);
-  fVector3 constrainToAxis (fVector3 loose, fVector3 axis);
-  int nearestConstraintAxis (fVector3 loose, fVector3 *axes, int nAxes);
-  fQuaternion quatFromBallPoints (fVector3 from, fVector3 to);
-  void quatToBallPoints (fQuaternion q, fVector3 *arcFrom, fVector3 *arcTo);
+  fVector3 mouse_on_sphere (fVector3 mouse, fVector3 ballCenter, double ballRadius);
+  fVector3 constrain_to_axis (fVector3 loose, fVector3 axis);
+  int nearest_constraint_axis (fVector3 loose, fVector3 *axes, int nAxes);
+  fQuaternion quaternion_from_ball_points (fVector3 from, fVector3 to);
+  void quaternion_to_ball_points (fQuaternion q, fVector3 *arcFrom, fVector3 *arcTo);
 };
 
 #endif
