@@ -1,6 +1,6 @@
 /* -*-C++-*- 
 
-   "$Id: Fl_Dockable_Window.H,v 1.2 2000/05/14 02:44:10 brad Exp $"
+   "$Id: Fl_Dockable_Window.H,v 1.3 2000/05/15 08:31:42 brad Exp $"
    
    Copyright 1999-2000 by the Flek development team.
    
@@ -67,6 +67,7 @@ protected:
   short docked;
   int uw_;
   int uh_;
+  Fl_Dockable_Window::create_dockable_window();
 
 public:
   static Fl_Dockable_Window* current;
@@ -79,7 +80,6 @@ public:
 
   ~Fl_Dockable_Window ();
 
-  void draw();  
   void show();
   int handle(int);
 
@@ -94,9 +94,6 @@ public:
   void undock(int x=-1, int y=-1);  
   short get_docked() { return docked; }
   void  set_docked(short r) { docked = r; }  
-  int uw() { return uw_; }
-  int uh() { return uh_; }
-  void usize(int tw, int th) { uw_ = tw; uh_ = th; }
 };
 
 #endif

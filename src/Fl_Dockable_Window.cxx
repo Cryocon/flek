@@ -23,11 +23,11 @@ void Fl_Gripper::draw() {
 #else
   fl_clip(x()+1, y()+1, w()-3, h()-3);
 #endif
-  
+
   for(int i=0; i<w(); i+=6)
     for(int j=0; j<h(); j+=6)
       fl_draw_pixmap(grip_tile_xpm, i+2, j+2);
-  
+
   fl_pop_clip();
 }
 
@@ -126,36 +126,28 @@ int Fl_Gripper::handle(int event) {
 }
 
 Fl_Dockable_Window::Fl_Dockable_Window(int x, int y, int w, int h, const char *l) 
-  : Fl_Window(x,y,(w+gripper_width),h,l) {
-  usize(w, h);
-  gripper = new Fl_Gripper(0, 0, gripper_width, h);
-  docked = 0;
-  contents = new Fl_Window(gripper_width, 0, w, h);
-  contents->box(FL_UP_BOX);
-  contents->color(52);
-  resizable(contents);
-  begin();
+  : Fl_Window(x, y, (w + gripper_width), h, l) {
+  create_dockable_window();
 }
 
-Fl_Dockable_Window::Fl_Dockable_Window (int w, int h, const char *l) 
-  : Fl_Window ((w+gripper_width),h,l) {
-  usize(w, h);
-  gripper = new Fl_Gripper(0, 0, gripper_width, h);
+Fl_Dockable_Window::Fl_Dockable_Window(int w, int h, const char *l) 
+  : Fl_Window((w + gripper_width), h, l) {
+  create_dockable_window();
+}
+
+Fl_Dockable_Window::create_dockable_window() {
+  clear_border();
+  uw_ = w();
+  uh_ = h();
+  gripper = new Fl_Gripper(0, 0, gripper_width, h());
   docked = 0;
-  contents = new Fl_Window(gripper_width, 0, w, h);
-  contents->box(FL_UP_BOX);
-  contents->color(52);
+  contents = new Fl_Window(gripper_width, 0, w(), h());
   resizable(contents);
   begin();
 }
 
 Fl_Dockable_Window::~Fl_Dockable_Window() {
   delete gripper;
-}
-
-void Fl_Dockable_Window::draw() {
-  clear_border();
-  Fl_Window::draw();
 }
 
 void Fl_Dockable_Window::show() {
@@ -198,7 +190,7 @@ void Fl_Dockable_Window::undock(int x, int y) {
       
       // printf("positioned x, y = %d,%d", x, y);
 
-      size(uw(), uh());
+      size(uw_, uh_);
 
       // printf ("show me!!\n");
       show();
