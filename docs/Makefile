@@ -2,18 +2,11 @@
 
 all:
 	perl ./scandoc.pl -itemplate.pl -t4 ../Flek/*.H ../src/*.cxx
-#	\
-#	../Flek/Fl_App_Window.H \
-#	../Flek/Fl_Stock.H \
-#	../Flek/Fl_Toggle_Tree.H \
-#	../Flek/Fl_Toggle_Tree_Base.H \
-#	../Flek/Fl_Gl_Arcball_Window.H \
-#	../Flek/Fl_Dockable_Group.H \
-#	../Flek/Fl_Calendar.H ; \
-#	cp ../test/arcball.cxx ./arcball.txt
+	cp ../test/arcball.cxx ./arcball.txt
+	cp ../AUTHORS ./authors.txt
 
 sourceforge:
-	scp *.txt *.html *.htm *.png jamespalmer@flek.sourceforge.net:~/flek/htdocs/docs/
+	scp *.txt *.html *.htm *.png *.gif jamespalmer@flek.sourceforge.net:~/flek/htdocs/docs/
 
 install:
 

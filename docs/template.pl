@@ -43,7 +43,7 @@ file "index.html";
           <li><a href="hacking.htm#FlekDoc">Flek Doc</a> - Documentation conventions.</li>
         </ul>
       </li>
-      <li><a href="authors.htm">Credits and Acknowledgements</a></li>
+      <li><a href="authors.txt">Credits and Acknowledgements</a></li>
     </ul>
     
     <h2>Class and Function Reference</h2>
