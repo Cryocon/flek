@@ -170,12 +170,12 @@ unsigned char Fl_Gripper::grippertype() {
 
 
 Fl_Dockable_Window::Fl_Dockable_Window(int x, int y, int w, int h, const char *l) 
-  : Fl_Window(x, y, (w + gripper_width), h, l) {
+  : Fl_Window(x, y, w, h, l) {
   create_dockable_window();
 }
 
 Fl_Dockable_Window::Fl_Dockable_Window(int w, int h, const char *l) 
-  : Fl_Window((w + gripper_width), h, l) {
+  : Fl_Window(w, h, l) {
   create_dockable_window();
 }
 
