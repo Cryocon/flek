@@ -66,7 +66,7 @@ install: $(LIBRARY).a $(DSONAME)
 	@echo "Installing include files..."
 	@-mkdir -p $(includedir)
 	@-mkdir -p $(includedir)/Flek
-	@-cp ../FL/*.[Hh]  $(includedir)/Flek
+	@-cp ../Flek/*.[Hh]  $(includedir)/Flek
 	@-chmod 755 $(includedir)/Flek
 	@-chmod 644 $(includedir)/Flek/*
 
