@@ -1,6 +1,6 @@
 /* -*-C++-*- 
 
-   "$Id: Fl_Gl_Arcball_Window.cxx,v 1.9 2000/04/14 20:15:38 jamespalmer Exp $"
+   "$Id: Fl_Gl_Arcball_Window.cxx,v 1.10 2000/04/15 20:04:53 jamespalmer Exp $"
    
    Copyright 1999-2000 by the Flek development team.
    
@@ -25,7 +25,7 @@
 
 #include <FL/Fl.H>
 #include <Flek/Fl_Gl_Arcball_Window.H>
-#include <Flek/gl.h>
+#include <Flek/gl.H>
 
 #define LG_NSEGS 4
 #define NSEGS (1<<LG_NSEGS)

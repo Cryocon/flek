@@ -5,7 +5,7 @@
 #include <Flek/FMatrix3x3.H>
 #include <Flek/FMatrix4x4.H>
 
-#include <Flek/gl.h>
+#include <Flek/gl.H>
 
 void glMultMatrix (const FMatrix4x4 &M)
 {

@@ -1,6 +1,6 @@
 /* -*-C++-*- 
 
-   "$Id: FZoom_Control.H,v 1.2 2000/04/14 20:15:38 jamespalmer Exp $"
+   "$Id: FZoom_Control.H,v 1.3 2000/04/15 20:04:53 jamespalmer Exp $"
    
    Copyright 1999-2000 by the Flek development team.
    
@@ -28,7 +28,7 @@
 
 #include <Flek/FVector3.H>
 #include <Flek/FMatrix4x4.H>
-#include <Flek/math.h>
+#include <Flek/math.H>
 
 /**
  * @package libflek_gl
@@ -152,7 +152,7 @@ public:
       // Note: This is in the transformed mouse coordinates (-1 to 1)
       // Also only the x mouse coordinate is used
       double diff = vNowx - vDownx;
-      double fact = 1 + Abs(diff);
+      double fact = 1 + absolute (diff);
       if ( diff < 0.0 ) zNow /= fact;
       else zNow *= fact;
       

@@ -1,6 +1,6 @@
 /* -*-C++-*- 
 
-   "$Id: FFile.H,v 1.2 2000/04/14 20:15:38 jamespalmer Exp $"
+   "$Id: FFile.H,v 1.3 2000/04/15 20:04:53 jamespalmer Exp $"
    
    Copyright 1999-2000 by the Flek development team.
    
@@ -48,8 +48,8 @@ enum FFileMode {
 /** @package libflek_core
  * fFile provides efficient file io routines in a c++ encapsulation.  
  * On most systems it should perform better than c++ io streams.
- * This class was much influenced by Ruby's file class:
- * http://www.ruby-lang.org/en/man-1.4/File.html
+ * Ultimately, this class should be similar to Ruby's
+ * <a href="http://www.ruby-lang.org/en/man-1.4/File.html">File Class</a>.
  */
 class FFile {
 
@@ -129,7 +129,7 @@ class FFile {
    * Put a single unsigned short into the file stream using Hi (MSB) byte order.
    */
   inline void put_hi (short c) {
-    put_hi ((unsigned short) c)
+    put_hi ((unsigned short) c);
   }
   
   /**
@@ -258,13 +258,6 @@ class FFile {
   }
 
   char* expand (char* name);
-
-  /**
-   * Checks to see if the file exists.
-   */
-  static bool exists (const char* name) {
-    
-  }
   
 protected:
 

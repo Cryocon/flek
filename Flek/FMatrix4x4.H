@@ -1,6 +1,6 @@
 /* -*-C++-*- 
    
-   "$Id: FMatrix4x4.H,v 1.1 2000/04/13 13:56:28 jamespalmer Exp $"
+   "$Id: FMatrix4x4.H,v 1.2 2000/04/15 20:04:53 jamespalmer Exp $"
    
    Copyright 1999-2000 by the Flek development team.
    
@@ -303,7 +303,7 @@ public:
 	    }
 	  
 	  // Check if pivot is non-zero
-	  if ( !isNonZero (row[i][i]) )
+	  if ( !is_non_zero (row[i][i]) )
 	    {
 	      cerr << "FMatrix4x4 inverse(const FMatrix4x4&) : Singular matrix!" << endl;
 	      // Return original matrix without change

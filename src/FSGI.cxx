@@ -1,4 +1,4 @@
-#include <Flek/math.h>
+#include <Flek/math.H>
 #include <Flek/FFile.H>
 #include <Flek/FImage.H>
 #include <Flek/FSGI.H>

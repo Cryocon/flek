@@ -5,9 +5,10 @@ AC_INIT(Flek/Fl_App_Window.H)
 
 AC_PROG_RANLIB
 
-LIBNAMECORE="libflek_core"
-LIBNAMEUI="libflek_ui"
-LIBNAMEGL="libflek_gl"
+LIB_NAME_FLEK_CORE="libflek_core"
+LIB_NAME_FLEK_UI="libflek_ui"
+LIB_NAME_FLEK_GL="libflek_gl"
+LIB_NAME_FLEK_XML="libflek_xml"
 
 if test "$RANLIB" != ":"; then
   LIBCOMMAND="ar cr"
@@ -52,9 +53,10 @@ fi])
 AC_ARG_ENABLE(shared, [  --enable-shared         turn on shared libraries [default=no]],[
 if eval "test x$enable_shared = xyes"; then
   PICFLAG=1
-  DSOLIBNAMECORE="libflek_core"
-  DSOLIBNAMEUI="libflek_ui"
-  DSOLIBNAMEGL="libflek_gl"
+  DSO_NAME_FLEK_CORE="libflek_core"
+  DSO_NAME_FLEK_UI="libflek_ui"
+  DSO_NAME_FLEK_GL="libflek_gl"
+  DSO_NAME_FLEK_XML="libflek_xml"
   case $uname in
       SunOS* | UNIX_S*)
 	  DSOEXT=".so.1"
@@ -123,40 +125,38 @@ CPPFLAGS="$CPPFLAGS $X_CFLAGS"
 AC_ARG_WITH([gl], 
   [ --with-gl=dir specify the base GL dir if non-default (like /usr/X11R6/], 
   [ 
-    GLLIBPATH="-L$withval/lib"
-    GLINCPATH="-I$withval/include"
+    GL_LIB="-L$withval/lib -lGLU -lGL"
+    GL_INC="-I$withval/include"
   ], 
   [
-    GLLIBPATH=""
-    GLINCPATH=""
+    GL_LIB=""
+    GL_INC=""
+    
+    dnl# My test to see if OpenGL is on this machine:
+    if test "$uname" = "CYGWIN"
+    then
+      GLLIB="-lopengl32 -lglu32"
+      AC_DEFINE(HAVE_GL)
+    else
+      AC_CHECK_LIB(GL, glXMakeCurrent, AC_DEFINE(HAVE_GL) GL_LIB="-lGLU -lGL", \
+          AC_CHECK_LIB(MesaGL,glXMakeCurrent, AC_DEFINE(HAVE_GL) GL_LIB="-lMesaGLU -lMesaGL",,\
+              -lX11 -lXext $X_EXTRA_LIBS -lm), \
+          -lX11 -lXext $X_EXTRA_LIBS -lm)
+    fi
   ])
 
 AC_ARG_WITH([xml], 
   [ --with-xml=dir specify the base xml dir if non-default (like /usr/X11R6/], 
   [ 
-    XMLLIBPATH="-L$withval/lib"
-    XMLINCPATH="-I$withval/include"
+    XML_LIB="-L$withval/lib -lxml"
+    XML_INC="-I$withval/include"
   ], 
   [
-    XMLLIBPATH=""
-    XMLINCPATH=""
+    XML_LIB=""
+    XML_INC=""
+    AC_CHECK_LIB(xml, xmlGetProp, AC_DEFINE(HAVE_XML) XML_LIB="-lxml",echo "libxml not found.  You will not be able to build libflek_xml.",)
   ])
 
-
-dnl# My test to see if OpenGL is on this machine:
-GLLIB=
-if test "$uname" = "CYGWIN"
-then
-    GLLIB="-lopengl32 -lglu32"
-    AC_DEFINE(HAVE_GL)
-else
-    AC_CHECK_LIB(GL, glXMakeCurrent, AC_DEFINE(HAVE_GL) GLLIB=" $GLLIBPATH -lGLU -lGL", \
-        AC_CHECK_LIB(MesaGL,glXMakeCurrent, AC_DEFINE(HAVE_GL) GLLIB=" $GLINCPATH -lMesaGLU -lMesaGL",,\
-            -lX11 -lXext $X_EXTRA_LIBS -lm), \
-        -lX11 -lXext $X_EXTRA_LIBS -lm)
-fi
-
-AC_SUBST(GLLIB)
 
 MAKEDEPEND="\$(CXX) -M"
 
@@ -241,22 +241,39 @@ fi
 dnl All tests done with the C++ compiler...
 AC_LANG_CPLUSPLUS
 
-FLTKDIR=""
-FLTKLIB=""
-FLTKINC=""
-FLTKFLAGS=""
+FLTK_DIR=""
+FLTK_LIB=""
+FLTK_INC=""
+FLTK_FLAGS=""
 
 AC_ARG_WITH([fltk-dir], 
   [ --with-fltk-dir=dir specify the Fltk source dir], 
   [ 
-    FLTKDIR="$withval"
-    FLTKLIB="-L$withval/lib -lfltk"
-    FLTKINC="-I$withval"
+    FLTK_DIR="$withval"
+    FLTK_LIB="-L$withval/lib -lfltk"
+    FLTK_INC="-I$withval"
   ], 
   [
-    FLTKLIB="-lfltk"
-    AC_CHECK_LIB(fltk,numericsort, AC_DEFINE(HAVE_FLTK) FLTKLIB="-lfltk",,)
+#    FLTK_LIB=""
+#    AC_CHECK_LIB(fltk,numericsort, AC_DEFINE(HAVE_FLTK) FLTK_LIB="-lfltk","** Fltk not found.  You will not be able to build libflek_ui or libflek_gl.",)
+
+AC_ARG_WITH([fltk], 
+  [ --with-fltk-dir=dir specify the directory where fltk is installed. ], 
+  [ 
+    FLTK_DIR="$withval"
+    FLTK_LIB="-L$withval/lib -lfltk"
+    FLTK_INC="-I$withval/include"
+  ], 
+  [
+    FLTK_LIB=""
+    AC_CHECK_LIB(fltk,numericsort, AC_DEFINE(HAVE_FLTK) FLTK_LIB="-lfltk","** Fltk not found.  You will not be able to build libflek_ui or libflek_gl.",)
   ])
+
+
+
+  ])
+
+
 
 AC_ARG_WITH([fltk2], 
   [ --with-fltk2], 
@@ -272,24 +289,26 @@ AC_ARG_WITH([no-gl],
   ], [])
 
 AC_SUBST(HAVEGL)
-AC_SUBST(GLLIBPATH)
-AC_SUBST(GLINCPATH)
+AC_SUBST(GL_LIB)
+AC_SUBST(GL_INC)
 
-AC_SUBST(XMLLIBPATH)
-AC_SUBST(XMLINCPATH)
+AC_SUBST(XML_LIB)
+AC_SUBST(XML_INC)
 
-AC_SUBST(FLTKDIR)
-AC_SUBST(FLTKLIB)
-AC_SUBST(FLTKINC)
+AC_SUBST(FLTK_DIR)
+AC_SUBST(FLTK_LIB)
+AC_SUBST(FLTK_INC)
 AC_SUBST(FLTKFLAGS)
 
-AC_SUBST(LIBNAMECORE)
-AC_SUBST(LIBNAMEUI)
-AC_SUBST(LIBNAMEGL)
+AC_SUBST(LIB_NAME_FLEK_CORE)
+AC_SUBST(LIB_NAME_FLEK_UI)
+AC_SUBST(LIB_NAME_FLEK_GL)
+AC_SUBST(LIB_NAME_FLEK_XML)
 
-AC_SUBST(DSOLIBNAMECORE)
-AC_SUBST(DSOLIBNAMEUI)
-AC_SUBST(DSOLIBNAMEGL)
+AC_SUBST(DSO_NAME_FLEK_CORE)
+AC_SUBST(DSO_NAME_FLEK_UI)
+AC_SUBST(DSO_NAME_FLEK_GL)
+AC_SUBST(DSO_NAME_FLEK_XML)
 
 AC_SUBST(DSOEXT)
 AC_SUBST(DSOCOMMAND)
@@ -302,5 +321,5 @@ AC_OUTPUT(makeinclude flek-config)
 chmod +x flek-config
 
 dnl#
-dnl# End of "$Id: configure.in,v 1.10 2000/04/07 19:52:52 jamespalmer Exp $".
+dnl# End of "$Id: configure.in,v 1.11 2000/04/15 20:04:53 jamespalmer Exp $".
 dnl#

@@ -1,6 +1,6 @@
 /* -*-C++-*- 
 
-   "$Id: FVector2.H,v 1.1 2000/04/13 13:56:28 jamespalmer Exp $"
+   "$Id: FVector2.H,v 1.2 2000/04/15 20:04:53 jamespalmer Exp $"
    
    Copyright 1999-2000 by the Flek development team.
    
@@ -387,7 +387,7 @@ public:
   friend double normalize (FVector2& vec)
     {
       double n = norm (vec);
-      if ( isNonZero (n) == true ) vec /= n;
+      if ( is_non_zero (n) == true ) vec /= n;
       return n;
     }
 
@@ -415,7 +415,7 @@ public:
    */ 
   friend istream& operator >> (istream& i, FVector2& vec)
     {
-      removeWhiteSpace (i);
+      remove_white_space (i);
       if ( i.peek() == '[' )
 	{
 	  // Correct format

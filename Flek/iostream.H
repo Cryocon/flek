@@ -1,4 +1,4 @@
-// $Id: iostream.h,v 1.1 2000/02/06 08:43:40 jamespalmer Exp $
+// $Id: iostream.H,v 1.1 2000/04/15 20:04:53 jamespalmer Exp $
 
 #ifndef _STREAMIO_HH_
 #define _STREAMIO_HH_
@@ -8,8 +8,7 @@
 #include <iostream.h>
 #include <iomanip.h>
 
-inline void removeWhiteSpace(istream& i)
-{
+inline void remove_white_space(istream& i) {
   char c;
 
   while ( i )
@@ -23,7 +22,7 @@ inline void removeWhiteSpace(istream& i)
      }
 }
 
-inline void removeSpaces(istream& i)
+inline void remove_spaces(istream& i)
 {
   char c;
 
@@ -38,7 +37,7 @@ inline void removeSpaces(istream& i)
      }
 }
 
-inline void removeSpacesAndTabs(istream& i)
+inline void remove_spaces_and_tabs(istream& i)
 {
   char c;
 
@@ -53,7 +52,7 @@ inline void removeSpacesAndTabs(istream& i)
      }
 }
 
-inline void readTillEOL(istream& i)
+inline void read_till_eol(istream& i)
 {
   char c;
 

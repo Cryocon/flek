@@ -4,6 +4,7 @@
 #include <stdlib.h>
 #include <unistd.h> // realpath
 #include <stdio.h> // tmpnam
+#include <sys/stat.h>
 
 void lo_to_hi (ulong *buffer, int len)
 {

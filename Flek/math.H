@@ -1,5 +1,5 @@
 /* -*-C++-*- 
-   "$Id: math.h,v 1.6 2000/03/05 16:16:35 jamespalmer Exp $"
+   "$Id: math.H,v 1.1 2000/04/15 20:04:53 jamespalmer Exp $"
    
    Copyright 1999-2000 by the Flek development team.
    
@@ -26,6 +26,7 @@
 #define _INLINES_HH_
 
 #include <math.h>
+#include <Flek/types.H>
 
 /*
  * Predefined constants, and macros
@@ -33,13 +34,17 @@
  * this file. Or dont include this file at all and define them on your own
  */
 
+/**
+ * @package libflek_core
+ */
+
 #ifndef _INLINE_ABS_
 #define _INLINE_ABS_
 
-/** @package libflek_core
+/** 
  * Returns the absolute value.
  */
-inline int Abs(int x)
+inline int absolute (int x)
 {
   return (x < 0) ? -x : x;
 }
@@ -47,7 +52,7 @@ inline int Abs(int x)
 /**
  * Returns the absolute value.
  */
-inline float Abs(float x)
+inline float absolute (float x)
 {
   return (x < 0.0) ? -x : x;
 }
@@ -55,36 +60,27 @@ inline float Abs(float x)
 /**
  * Returns the absolute value.
  */
-inline double Abs(double x)
+inline double absolute (double x)
 {
   return (x < 0.0) ? -x : x;
 }
 
 #endif
 
-/**
- * Zero '0' value to be used for comparison and assignment
- */
+// Zero '0' value to be used for comparison and assignment
 #ifndef ZERO
 #define ZERO 1.0e-10
 #endif
 
-/**
- * float infinity to be used for comparison and assignment
- */
+// float infinity to be used for comparison and assignment
 #ifndef FLT_INF
 #define FLT_INF 1.0e35
 #endif
 
-/**
- * double infinity to be used for comparison and assignment
- */
+// double infinity to be used for comparison and assignment
 #ifndef DBL_INF
 #define DBL_INF 1.0e100
 #endif
-
-typedef unsigned int uint;
-typedef unsigned short ushort;
 
 #ifndef _INLINE_ZERO_CHECKS_
 #define _INLINE_ZERO_CHECKS_
@@ -92,8 +88,7 @@ typedef unsigned short ushort;
 /**
  * Check if passed number is non-zero.
  */
-inline bool isNonZero (int num)
-{
+inline bool is_non_zero (int num) {
   if ( num != 0 ) return true;
   return false;
 }
@@ -101,8 +96,7 @@ inline bool isNonZero (int num)
 /**
  * Check if passed number is non-zero.  (Uses ZERO bounds).
  */
-inline bool isNonZero (double num)
-{
+inline bool is_non_zero (double num) {
   if ( (num < -ZERO) || (num > ZERO) ) return true;
   return false;
 }
@@ -112,14 +106,12 @@ inline bool isNonZero (double num)
 #ifndef _INLINE_FP_EQUAL_
 #define _INLINE_FP_EQUAL_
 
-inline bool areEqual(float x1, float x2)
-{
-  return ( ( Abs(x1-x2) < ZERO ) ? true : false );
+inline bool are_equal (float x1, float x2) {
+  return ( ( absolute (x1-x2) < ZERO ) ? true : false );
 }
 
-inline bool areEqual(double x1, double x2)
-{
-  return ( ( Abs(x1-x2) < ZERO ) ? true : false );
+inline bool are_equal (double x1, double x2) {
+  return ( ( absolute (x1-x2) < ZERO ) ? true : false );
 }
 
 #endif // #ifndef _INLINE_FP_EQUAL_
@@ -131,8 +123,7 @@ inline bool areEqual(double x1, double x2)
 /**
  * Check if passed number is odd.
  */
-inline bool isOdd (int num)
-{
+inline bool is_odd (int num) {
   if ( num % 2 ) return true;
   return false;
 }
@@ -140,8 +131,7 @@ inline bool isOdd (int num)
 /**
  * Check if passed number is even.
  */
-inline bool isEven (int num)
-{
+inline bool is_even (int num) {
   if ( num % 2 ) return false;
   return true;
 }
@@ -149,8 +139,7 @@ inline bool isEven (int num)
 /**
  * Check if passed number is odd.
  */
-inline bool isOdd (uint num)
-{
+inline bool is_odd (uint num) {
   if ( num % 2 ) return true;
   return false;
 }
@@ -158,8 +147,7 @@ inline bool isOdd (uint num)
 /**
  * Check if passed number is even.
  */
-inline bool isEven (uint num)
-{
+inline bool is_even (uint num) {
   if ( num % 2 ) return false;
   return true;
 }
@@ -172,64 +160,56 @@ inline bool isEven (uint num)
 /**
  * Square the number.
  */
-inline int sqr (int x)
-{
+inline int sqr (int x) {
   return x*x;
 }
 
 /**
  * Cube the number.
  */
-inline int cube (int x)
-{
+inline int cube (int x) {
   return x*x*x;
 }
 
 /**
  * Square the number.
  */
-inline uint sqr (uint x)
-{
+inline uint sqr (uint x) {
   return x*x;
 }
 
 /**
  * Cube the number.
  */
-inline uint cube (uint x)
-{
+inline uint cube (uint x) {
   return x*x*x;
 }
 
 /**
  * Square the number.
  */
-inline float sqr (float x)
-{
+inline float sqr (float x) {
   return x*x;
 }
 
 /**
  * Cube the number.
  */
-inline float cube (float x)
-{
+inline float cube (float x) {
   return x*x*x;
 }
 
 /**
  * Square the number.
  */
-inline double sqr (double x)
-{
+inline double sqr (double x) {
   return x*x;
 }
 
 /**
  * Cube the number.
  */
-inline double cube (double x)
-{
+inline double cube (double x) {
   return x*x*x;
 }
 
@@ -241,74 +221,64 @@ inline double cube (double x)
 /**
  * Minimum of two numbers.
  */
-inline int min (int x, int y)
-{
+inline int min (int x, int y) {
   return ( (x < y) ? x : y );
 }
 
 /**
  * Maximum of two numbers.
  */
-inline int max (int x, int y)
-{
+inline int max (int x, int y) {
   return ( (x > y) ? x : y );
 }
 
 /**
  * Minimum of two numbers.
  */
-inline uint min (uint x, uint y)
-{
+inline uint min (uint x, uint y) {
   return ( (x < y) ? x : y );
 }
 
 /**
  * Maximum of two numbers.
  */
-inline uint max (uint x, uint y)
-{
+inline uint max (uint x, uint y) {
   return ( (x > y) ? x : y );
 }
 
-inline ushort min (ushort x, ushort y)
-{
+inline ushort min (ushort x, ushort y) {
   return ( (x < y) ? x : y );
 }
 
-inline ushort max (ushort x, ushort y)
-{
+inline ushort max (ushort x, ushort y) {
   return ( (x > y) ? x : y );
 }
 
 /**
  * Minimum of two numbers.
  */
-inline float min (float x, float y)
-{
+inline float min (float x, float y) {
   return ( (x < y) ? x : y );
 }
 
 /**
  * Maximum of two numbers.
  */
-inline float max (float x, float y)
-{
+inline float max (float x, float y) {
   return ( (x > y) ? x : y );
 }
 
 /**
  * Minimum of two numbers.
  */
-inline double min (double x, double y)
-{
+inline double min (double x, double y) {
   return ( (x < y) ? x : y );
 }
 
 /**
  * Maximum of two numbers.
  */
-inline double max (double x, double y)
-{
+inline double max (double x, double y) {
   return ( (x > y) ? x : y );
 }
 
@@ -321,8 +291,7 @@ inline double max (double x, double y)
 /**
  * Swap two numbers.
  */
-inline void swap (int& x, int& y)
-{
+inline void swap (int& x, int& y) {
   int t = x;
   x = y; y = t;
 }
@@ -330,8 +299,7 @@ inline void swap (int& x, int& y)
 /**
  * Swap two numbers.
  */
-inline void swap (uint& x, uint& y)
-{
+inline void swap (uint& x, uint& y) {
   uint t = x;
   x = y; y = t;
 }
@@ -339,8 +307,7 @@ inline void swap (uint& x, uint& y)
 /**
  * Swap two numbers.
  */
-inline void swap (float& x, float& y)
-{
+inline void swap (float& x, float& y) {
   float t = x;
   x = y; y = t;
 }
@@ -348,8 +315,7 @@ inline void swap (float& x, float& y)
 /**
  * Swap two numbers.
  */
-inline void swap (double& x, double& y)
-{
+inline void swap (double& x, double& y) {
   double t = x;
   x = y; y = t;
 }
@@ -362,32 +328,28 @@ inline void swap (double& x, double& y)
 /**
  * Degrees to radians.
  */
-inline float deg2rad (float deg)
-{
+inline float deg2rad (float deg) {
   return deg*M_PI/180.0;
 }
 
 /**
  * Degrees to radians.
  */
-inline double deg2rad (double deg)
-{
+inline double deg2rad (double deg) {
   return deg*M_PI/180.0;
 }
 
 /**
  * Radians to degrees.
  */
-inline float rad2deg (float rad)
-{
+inline float rad2deg (float rad) {
   return rad*180.0/M_PI;
 }
 
 /**
  * Radians to degrees.
  */
-inline double rad2deg (double rad)
-{
+inline double rad2deg (double rad) {
   return rad*180.0/M_PI;
 }
 
@@ -399,44 +361,51 @@ inline double rad2deg (double rad)
 /**
  * Return the sign of a number.  1, 0, or -1.
  */
-inline int sign (int x)
-{
+inline int sign (int x) {
   return ( (x < 0) ? -1 : ((x > 0) ? 1 : 0) );
 }
 
 /**
  * Return the sign of a number.  1, 0, or -1.
  */
-inline float sign (float x)
-{
+inline float sign (float x) {
   return ( (x < 0.0) ? -1.0 : ((x > 0.0) ? 1.0 : 0.0) );
 }
 
 /**
  * Return the sign of a number.  1, 0, or -1.
  */
-inline double sign (double x)
-{
+inline double sign (double x) {
   return ( (x < 0.0) ? -1.0 : ((x > 0.0) ? 1.0 : 0.0) );
 }
 
 /**
  * For matrices - sign of cofactor. 1 if i+j is even, -1 if i+j is odd
  */
-inline int cofsign (uint i, uint j)
-{
+inline int cofsign (uint i, uint j) {
   return ( ((i+j)%2) ? -1 : 1 );
 }
 
 #endif
 
-inline int clampUpper (int x, int Clamp)
-{
-  if (x > Clamp) return Clamp;
-  return x;
+/**
+ * Clamp a value to an upper bound.
+ * 
+ * @param Value The value to clamp.
+ * @param Clamp The upper bound.
+ */
+inline int clamp_upper (int Value, int Clamp) {
+  if (Value > Clamp) return Clamp;
+  return Value;
 }
 
-inline int clampLower (int x, int Clamp)
+/**
+ * Clamp a value to a lower bound.
+ * 
+ * @param Value The value to clamp.
+ * @param Clamp The lower bound.
+ */
+inline int clamp_lower (int x, int Clamp)
 {
   if (x < Clamp) return Clamp;
   return x;

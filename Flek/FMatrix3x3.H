@@ -1,6 +1,6 @@
 /* -*-C++-*- 
 
-   "$Id: FMatrix3x3.H,v 1.1 2000/04/13 13:56:28 jamespalmer Exp $"
+   "$Id: FMatrix3x3.H,v 1.2 2000/04/15 20:04:53 jamespalmer Exp $"
    
    Copyright 1999-2000 by the Flek development team.
    
@@ -46,7 +46,7 @@ public:
   typedef FMatrix3x3 * Ptr;
   
   /**
-   * Default constructor - creates an identity matrix
+   * Default constructor - creates an identity matrix.
    */
   FMatrix3x3 ()
     : FBase ()
@@ -57,7 +57,7 @@ public:
     }
 
   /**
-   * 1 argument constructor - from scalar, set all elements to given value
+   * One argument constructor - from scalar, set all elements to given value.
    */
   FMatrix3x3 (double scalar)
     : FBase ()
@@ -66,7 +66,7 @@ public:
     }
   
   /**
-   * 3 argument constructor - from 3 FVector3s
+   * Three argument constructor - from 3 FVector3s.
    */
   FMatrix3x3 (const FVector3& r0, const FVector3& r1, const FVector3& r2)
     : FBase ()
@@ -75,7 +75,7 @@ public:
     }
 
   /**
-   * Copy constructor
+   * Copy constructor.
    */
   FMatrix3x3 (const FMatrix3x3& mat)
     : FBase ()
@@ -107,14 +107,23 @@ public:
     }
   
   /**
-   * Set the rows of the matrix to the given FVector3s
+   * Sets the rows of the matrix.
+   * 
+   * @param r0 The new row "0" for this matrix.
+   * @param r1 The new row "0" for this matrix.
+   * @param r2 The new row "0" for this matrix.
    */
   void set(const FVector3& r0, const FVector3& r1, const FVector3& r2)
     {
       row[0] = r0; row[1] = r1; row[2] = r2;
     }
-  
-  void set(double scalar)
+
+  /**
+   * Sets every element in the matrix to a scalar.
+   * 
+   * @param scalar Value assigned to each element.
+   */
+  void set (double scalar)
     {
       row[0] = scalar; row[1] = scalar; row[2] = scalar;
     }
@@ -122,14 +131,14 @@ public:
   /**
    *  Reset the matrix to it's default state - identity
    */
-  void reset(void)
+  void reset ()
     {
       row[0].set (1.0, 0.0, 0.0);
       row[1].set (0.0, 1.0, 0.0);
       row[2].set (0.0, 0.0, 1.0);
     }
-  
-  /** 
+
+  /*
    * Make a copy of the object
    * implement FBase class pure virtual function
    */
@@ -141,14 +150,19 @@ public:
 
   /**
    * Access a row of the matrix - no range checks
+   * 
+   * @param index The index of the row that should be returned.
+   * @return The specified row of the matrix.
    */
-  FVector3& operator [] (uint index)
-    {
-      return row[index];
-    }
+  FVector3& operator [] (uint index) {
+    return row[index];
+  }
 
   /**
    * Access a row of the matrix - no range checks : const version
+   * 
+   * @param index The index of the row that should be returned.
+   * @return The specified row of the matrix.
    */
   const FVector3& operator [] (uint index) const
     {
@@ -156,40 +170,65 @@ public:
     }
 
   /**
-   * Class member functions which return the identity matrix
+   * Creates the identity matrix.
+   * 
+   * @return The identity matrix.
    */
-  static FMatrix3x3 identity (void)
+  static FMatrix3x3 identity ()
     {
       FMatrix3x3 imat;  // Default constructor creates an identity matrix
       return imat;
     }
-     
+
+  /**
+   * Creates the identity matrix.
+   * 
+   * @return The identity matrix.
+   */
   static FMatrix3x3 I (void)
     {
       FMatrix3x3 imat;  // Default constructor creates an identity matrix
       return imat;
     }
   
-  //--- Arithmetic assignment operators ---//
-  
+  /**  
+   * Adds each element in the given matrix to this matrix.
+   * 
+   * @param mat The matrix of values to add to this matrix.
+   */
   void operator += (const FMatrix3x3& mat)
     {
       for (int i=0; i < 3; ++i)
 	row[i] += mat.row[i];
     }
-  
+
+  /**  
+   * Subtracts each element in the given matrix from this matrix.
+   * 
+   * @param mat The matrix of values to subtract from this matrix.
+   */
   void operator -= (const FMatrix3x3& mat)
     {
       for (int i=0; i < 3; ++i)
 	row[i] -= mat.row[i];
     }
-  
+
+  /**  
+   * Multiplies each element in the matrix by a scalar.
+   * 
+   * @param scalar The scalar to multiply by.
+   */
   void operator *= (double scalar)
     {
       for (int i=0; i < 3; ++i)
 	row[i] *= scalar;
     }
-  
+
+  /**  
+   * Divides each element in the matrix by a scalar.
+   * 
+   * @param scalar The scalar to divide by.
+   */
   void operator /= (double scalar)
     {
       for (int i=0; i < 3; ++i)
@@ -197,7 +236,7 @@ public:
     }
   
   /**
-   * Find the transpose of a given matrix.
+   * Transposes this matrix.
    */
   void transpose (void)
     {
@@ -207,7 +246,10 @@ public:
     }
 
   /**
-   * Find the transpose of a given matrix.
+   * Finds the transpose of a given matrix.
+   * 
+   * @param mat The matrix to find a transpose for.
+   * @return The transpose of the giben matrix.
    */
   friend FMatrix3x3 transpose (const FMatrix3x3& mat)
     {
@@ -216,7 +258,10 @@ public:
     }
 
   /**
-   * Find the determinant of a given matrix.
+   * Finds the determinant of a given matrix.
+   * 
+   * @param mat The source matrix.
+   * @return The detrminant of the source matrix.
    */  
   friend double determinant(const FMatrix3x3& mat)
     {
@@ -232,7 +277,7 @@ public:
     }
   
   /**
-   * Invert the matrix, using elementary row operations.
+   * Inverts this matrix, using elementary row operations.
    */
   void invert (void)
     {
@@ -257,7 +302,7 @@ public:
 	    }
 	  
 	  // Check if pivot is non-zero
-	  if ( !isNonZero(row[i][i]) )
+	  if ( !is_non_zero(row[i][i]) )
 	    {
 	      cerr << "FMatrix3x3 inverse(const FMatrix3x3&) : Singular matrix!" << endl;
 	      // Return original matrix without change
@@ -297,7 +342,10 @@ public:
     }
   
   /**
-   * Find the inverse of a given matrix using elementary row operations
+   * Find the inverse of a given matrix using elementary row operations.
+   * 
+   * @param mat The source matrix.
+   * @return The inverse of the source matrix.
    */
   friend FMatrix3x3 inverse (const FMatrix3x3& mat)
     {
@@ -305,10 +353,12 @@ public:
       return inv;
     }
   
-  //--- Arithmetic operators, implemented as friend functions ---//
-  
   /**
-   * Negation
+   * Negation.  Each element in the given matrix is returned
+   * negated in a new matrix.
+   * 
+   * @param mat The source matrix.
+   * @return The negated matrix.
    */
   friend FMatrix3x3 operator - (const FMatrix3x3& mat)
     {

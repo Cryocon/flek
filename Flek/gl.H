@@ -1,6 +1,6 @@
 /* -*-c++-*- 
 
-   "$Id: gl.h,v 1.9 2000/04/14 20:15:38 jamespalmer Exp $"
+   "$Id: gl.H,v 1.1 2000/04/15 20:04:53 jamespalmer Exp $"
    
    Copyright 1999-2000 by the Flek development team.
    

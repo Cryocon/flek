@@ -1,17 +1,42 @@
-CORECPPFILES = \
+#  -*- sh -*-
+
+# Note:  In order for the rpm script to work the last line in H_FLEK_* must not 
+# have any trailing spaces!
+
+CPP_FLEK_CORE = \
 	FDate.cxx \
-	FXml.cxx \
 	FFile.cxx \
 	FVector.cxx \
 	FImage.cxx \
 	FSGI.cxx \
-	FPNM.cxx 
+	FPNM.cxx
 
-#	fDom.cxx \
-#	fDomAttr.cxx \
+H_FLEK_CORE = \
+	FBase.H \
+	FDate.H \
+	FFile.H \
+	FImage.H \
+	FMatrix3x3.H \
+	FMatrix4x4.H \
+	FPNM.H \
+	FQuaternion.H \
+	FSGI.H \
+	FTransformation.H \
+	FVector.H \
+	FVector2.H \
+	FVector3.H \
+	FVector4.H \
+	math.H \
+	iostream.H \
+	types.H      
 
+CPP_FLEK_XML = \
+	FXml.cxx \
 
-UICPPFILES = \
+H_FLEK_XML = \
+	FXml.H
+
+CPP_FLEK_UI = \
 	Fl_App_Window.cxx \
 	Fl_Better_Window.cxx \
 	Fl_Calendar.cxx \
@@ -29,19 +54,36 @@ UICPPFILES = \
 	Flve_Input.cxx \
 	Flve_Combo.cxx
 
-GLCPPFILES = \
+H_FLEK_UI = \
+	Fl_App_Window.H \
+	Fl_Better_Window.H \
+	Fl_Calendar.H \
+	Fl_Dockable_Group.H \
+	Fl_Stock.H \
+	Fl_Toggle_Node_Base.H \
+	Fl_Toggle_Node.H \
+	Fl_Toggle_Tree_Base.H \
+	Fl_Toggle_Tree.H \
+	Flv_CStyle.H \
+	Flv_Style.H \
+	Flv_List.H \
+	Flv_Table.H \
+	Flve_Check_Button.H \
+	Flve_Input.H \
+	Flve_Combo.H
+
+CPP_FLEK_GL = \
 	gl.cxx \
 	FArcball_Control.cxx \
-	Fl_Gl_Arcball_Window.cxx \
+	Fl_Gl_Arcball_Window.cxx 
 
-#	Fl_Dir.cxx \
-#	Fl_Frametab.cxx \
-#	Fl_NSlider.cxx \
-#	Fl_Pix_Box.cxx \
-#	Fl_Pix_Button.cxx
-#	Fl_Pack_Fu.cxx \
-#       Fl_File_Dialog.cxx \
-#	Fl_Input_File.cxx \
+H_FLEK_GL = \
+	gl.H \
+	FArcball_Control.H \
+	FDolly_Control.H \
+	FZoom_Control.H \
+	FTrans_Control.H \
+	Fl_Gl_Arcball_Window.H
 
 CFILES = 
 
@@ -51,48 +93,67 @@ CLEAN =
 
 include ../makeinclude
 
-all:	corelib uilib gllib
+all: flek-core flek-ui flek-gl flek-xml
 
-CORELIBRARY = ../lib/$(LIBNAMECORE)
-COREDSONAME = $(DSOLIBNAMECORE)$(DSOEXT)
-COREOBJECTS = $(CORECPPFILES:.cxx=.o) $(CORECFILES:.c=.o)
-$(CORELIBRARY).a: $(COREOBJECTS)
+install: flek-core-install flek-ui-install flek-gl-install flek-xml-install
+
+################################################################
+
+LIB_FLEK_CORE = ../lib/$(LIB_NAME_FLEK_CORE)
+DSO_FLEK_CORE = $(DSO_NAME_FLEK_CORE)$(DSOEXT)
+OBJ_FLEK_CORE = $(CPP_FLEK_CORE:.cxx=.o) 
+$(LIB_FLEK_CORE).a: $(OBJ_FLEK_CORE)
 	rm -f $@
-	$(LIBCOMMAND) $@ $(COREOBJECTS)
+	$(LIBCOMMAND) $@ $(OBJ_FLEK_CORE)
 	$(RANLIB) $@
-libflek_core.so.1 libflek_core.sl.1: $(COREOBJECTS)
-	$(DSOCOMMAND) $@ $(COREOBJECTS)
+libflek_core.so.1 libflek_core.sl.1: $(OBJ_FLEK_CORE)
+	$(DSOCOMMAND) $@ $(OBJ_FLEK_CORE)
 
-UILIBRARY = ../lib/$(LIBNAMEUI)
-UISONAME = $(DSOLIBNAMEUI)$(DSOEXT)
-UIOBJECTS = $(UICPPFILES:.cxx=.o) $(UICFILES:.c=.o)
-$(UILIBRARY).a: $(UIOBJECTS)
+LIB_FLEK_UI = ../lib/$(LIB_NAME_FLEK_UI)
+DSO_FLEK_UI = $(DSO_NAME_FLEK_UI)$(DSOEXT)
+OBJ_FLEK_UI = $(CPP_FLEK_UI:.cxx=.o) 
+$(LIB_FLEK_UI).a: $(OBJ_FLEK_UI)
 	rm -f $@
-	$(LIBCOMMAND) $@ $(UIOBJECTS)
+	$(LIBCOMMAND) $@ $(OBJ_FLEK_UI)
 	$(RANLIB) $@
-libflek_ui.so.1 libflek_ui.sl.1: $(UIOBJECTS)
-	$(DSOCOMMAND) $@ $(UIOBJECTS)
+libflek_ui.so.1 libflek_ui.sl.1: $(OBJ_FLEK_UI)
+	$(DSOCOMMAND) $@ $(OBJ_FLEK_UI)
 
-GLLIBRARY = ../lib/$(LIBNAMEGL)
-GLDSONAME = $(DSOLIBNAMEGL)$(DSOEXT)
-GLOBJECTS = $(GLCPPFILES:.cxx=.o) $(GLCFILES:.c=.o)
-$(GLLIBRARY).a: $(GLOBJECTS)
+LIB_FLEK_GL = ../lib/$(LIB_NAME_FLEK_GL)
+DSO_FLEK_GL = $(DSO_NAME_FLEK_GL)$(DSOEXT)
+OBJ_FLEK_GL = $(CPP_FLEK_GL:.cxx=.o) 
+$(LIB_FLEK_GL).a: $(OBJ_FLEK_GL)
 	rm -f $@
-	$(LIBCOMMAND) $@ $(GLOBJECTS)
+	$(LIBCOMMAND) $@ $(OBJ_FLEK_GL)
 	$(RANLIB) $@
-libflek_gl.so.1 libflek_gl.sl.1: $(GLOBJECTS)
-	$(DSOCOMMAND) $@ $(GLOBJECTS)
+libflek_gl.so.1 libflek_gl.sl.1: $(OBJ_FLEK_GL)
+	$(DSOCOMMAND) $@ $(OBJ_FLEK_GL)
 
-corelib: $(CORELIBRARY).a $(COREDSONAME)
-uilib: $(UILIBRARY).a $(UIDSONAME)
-gllib: $(GLLIBRARY).a $(GLDSONAME)
+LIB_FLEK_XML = ../lib/$(LIB_NAME_FLEK_XML)
+DSO_FLEK_XML = $(DSO_NAME_FLEK_XML)$(DSOEXT)
+OBJ_FLEK_XML = $(CPP_FLEK_XML:.cxx=.o) 
+$(LIB_FLEK_XML).a: $(OBJ_FLEK_XML)
+	rm -f $@
+	$(LIBCOMMAND) $@ $(OBJ_FLEK_XML)
+	$(RANLIB) $@
+libflek_xml.so.1 libflek_xml.sl.1: $(OBJ_FLEK_XML)
+	$(DSOCOMMAND) $@ $(OBJ_FLEK_XML)
+
+flek-core: $(LIB_FLEK_CORE).a $(DSO_FLEK_CORE)
+flek-ui: $(LIB_FLEK_UI).a $(DSO_FLEK_UI)
+flek-gl: $(LIB_FLEK_GL).a $(DSO_FLEK_GL)
+flek-xml: $(LIB_FLEK_XML).a $(DSO_FLEK_XML)
+
+################################################################
 
 .SUFFIXES:	.cxx .h .o
 
 .cxx.o :
-	$(CXX) -I.. $(XMLINC) $(FLTKINC) $(CXXFLAGS) -c $< -o $(<:.cxx=.o)
+	$(CXX) -I.. $(XML_INC) $(GL_INC) $(FLTK_INC) $(CXXFLAGS) -c $< -o $(<:.cxx=.o)
 .c.o :
 	$(CC) -I. $(CFLAGS) -c -o $@ $<
+
+################################################################
 
 clean :
 	-@ rm -f *.o *.do $(LIBRARY) $(CLEAN) core *~ ../include/*~ makedepend cmap
@@ -101,50 +162,109 @@ distclean: clean
 	-@ rm -f config.* makeinclude
 
 depend:
-	$(MAKEDEPEND) $(CXXFLAGS) -I. $(CPPFILES) $(CFILES) > makedepend
+	$(MAKEDEPEND) $(CXXFLAGS) -I. $(CPPFILES) > makedepend
 
-install: $(CORELIBRARY).a $(UILIBRARY).a $(GLLIBRARY).a $(DSONAME)
-	@echo "Installing libraries..."
+################################################################
+
+flek-core-install: $(LIB_FLEK_CORE).a $(DSO_NAME_FLEK_CORE)
+	@echo "Installing libflek_core..."
 	@-mkdir -p $(libdir)
-	@rm -f $(libdir)/$(LIBNAMECORE)
-	@rm -f $(libdir)/$(LIBNAMEUI)
-	@rm -f $(libdir)/$(LIBNAMEGL)
-	@-cp $(CORELIBRARY).a $(libdir)
-	@-cp $(UILIBRARY).a $(libdir)
-	@-cp $(GLLIBRARY).a $(libdir)
-	@-chmod 644 $(libdir)/$(LIBNAMECORE).a
-	@-chmod 644 $(libdir)/$(LIBNAMEUI).a
-	@-chmod 644 $(libdir)/$(LIBNAMEGL).a
+	@rm -f $(libdir)/$(LIB_NAME_FLEK_CORE)
+	@-cp $(LIB_FLEK_CORE).a $(libdir)
+	@-chmod 644 $(libdir)/$(LIB_NAME_FLEK_CORE).a
 	@if test -n "$(DSOEXT)"; then \
-		@echo "Installing core library."; \
-		if test $(DSONAMECORE) = $(LIBNAMECORE).so.1; then ext=.so; else ext=.s1; fi; \
-		rm -f $(libdir)/$(LIBNAMECORE)$$ext.1;\
-		rm -f $(libdir)/$(LIBNAMECORE)$$ext;\
-		cp $(LIBNAMECORE)$$ext.2 $(libdir); \
-		chmod 755 $(libdir)/$(LIBNAMECORE)$$ext.1; \
-		ln -s $(libdir)/$(LIBNAMECORE)$$ext.2 $(libdir)/$(LIBNAMECORE)$$ext;\
-		@echo "Installing UI library."; \
-		if test $(DSONAMEUI) = $(LIBNAMEUI).so.1; then ext=.so; else ext=.s1; fi; \
-		rm -f $(libdir)/$(LIBNAMEUI)$$ext.1;\
-		rm -f $(libdir)/$(LIBNAMEUI)$$ext;\
-		cp $(LIBNAMEUI)$$ext.2 $(libdir); \
-		chmod 755 $(libdir)/$(LIBNAMEUI)$$ext.1; \
-		ln -s $(libdir)/$(LIBNAMEUI)$$ext.2 $(libdir)/$(LIBNAMEUI)$$ext;\
-		@echo "Installing GL library."; \
-		if test $(DSONAMEGL) = $(LIBNAMEGL).so.1; then ext=.so; else ext=.s1; fi; \
-		rm -f $(libdir)/$(LIBNAMEGL)$$ext.1;\
-		rm -f $(libdir)/$(LIBNAMEGL)$$ext;\
-		cp $(LIBNAMEGL)$$ext.2 $(libdir); \
-		chmod 755 $(libdir)/$(LIBNAMEGL)$$ext.1; \
-		ln -s $(libdir)/$(LIBNAMEGL)$$ext.2 $(libdir)/$(LIBNAMEGL)$$ext;\
+		@echo "Installing libflek_core DSO library."; \
+		if test $(DSO_NAME_FLEK_CORE) = $(LIB_NAME_FLEK_CORE).so.1; then ext=.so; else ext=.s1; fi; \
+		rm -f $(libdir)/$(LIB_NAME_FLEK_CORE)$$ext.1;\
+		rm -f $(libdir)/$(LIB_NAME_FLEK_CORE)$$ext;\
+		cp $(LIB_NAME_FLEK_CORE)$$ext.2 $(libdir); \
+		chmod 755 $(libdir)/$(LIB_NAME_FLEK_CORE)$$ext.1; \
+		ln -s $(libdir)/$(LIB_NAME_FLEK_CORE)$$ext.2 $(libdir)/$(LIB_NAME_FLEK_CORE)$$ext;\
 	fi
 	@echo "Installing include files..."
 	@-mkdir -p $(includedir)
 	@-mkdir -p $(includedir)/Flek
-	@-cp ../Flek/*.[Hh]  $(includedir)/Flek
+	@-cd ../Flek/; cp $(H_FLEK_CORE) $(includedir)/Flek; cd ../src/
 	@-chmod 755 $(includedir)/Flek
 	@-chmod 644 $(includedir)/Flek/*
-	cp ../flek-config $(bindir)
+	@-mkdir -p $(bindir)
+	@-chmod 755 $(bindir)
+	cp ../flek-config $(bindir)/
+
+flek-ui-install: $(LIB_FLEK_UI).a $(DSO_NAME_FLEK_UI)
+	@echo "Installing libflek_UI..."
+	@-mkdir -p $(libdir)
+	@rm -f $(libdir)/$(LIB_NAME_FLEK_UI)
+	@-cp $(LIB_FLEK_UI).a $(libdir)
+	@-chmod 644 $(libdir)/$(LIB_NAME_FLEK_UI).a
+	@if test -n "$(DSOEXT)"; then \
+		@echo "Installing libflek_ui DSO library."; \
+		if test $(DSO_NAME_FLEK_UI) = $(LIB_NAME_FLEK_UI).so.1; then ext=.so; else ext=.s1; fi; \
+		rm -f $(libdir)/$(LIB_NAME_FLEK_UI)$$ext.1;\
+		rm -f $(libdir)/$(LIB_NAME_FLEK_UI)$$ext;\
+		cp $(LIB_NAME_FLEK_UI)$$ext.2 $(libdir); \
+		chmod 755 $(libdir)/$(LIB_NAME_FLEK_UI)$$ext.1; \
+		ln -s $(libdir)/$(LIB_NAME_FLEK_UI)$$ext.2 $(libdir)/$(LIB_NAME_FLEK_UI)$$ext;\
+	fi
+	@echo "Installing include files..."
+	@-mkdir -p $(includedir)
+	@-mkdir -p $(includedir)/Flek
+	@-cd ../Flek/; cp $(H_FLEK_UI) $(includedir)/Flek; cd ../src/
+	@-chmod 755 $(includedir)/Flek
+	@-chmod 644 $(includedir)/Flek/*
+
+flek-gl-install: $(LIB_FLEK_GL).a $(DSO_NAME_FLEK_GL)
+	@echo "Installing libflek_gl..."
+	@-mkdir -p $(libdir)
+	@rm -f $(libdir)/$(LIB_NAME_FLEK_GL)
+	@-cp $(LIB_FLEK_GL).a $(libdir)
+	@-chmod 644 $(libdir)/$(LIB_NAME_FLEK_GL).a
+	@if test -n "$(DSOEXT)"; then \
+		@echo "Installing libflek_gl DSO library."; \
+		if test $(DSO_NAME_FLEK_GL) = $(LIB_NAME_FLEK_GL).so.1; then ext=.so; else ext=.s1; fi; \
+		rm -f $(libdir)/$(LIB_NAME_FLEK_GL)$$ext.1;\
+		rm -f $(libdir)/$(LIB_NAME_FLEK_GL)$$ext;\
+		cp $(LIB_NAME_FLEK_GL)$$ext.2 $(libdir); \
+		chmod 755 $(libdir)/$(LIB_NAME_FLEK_GL)$$ext.1; \
+		ln -s $(libdir)/$(LIB_NAME_FLEK_GL)$$ext.2 $(libdir)/$(LIB_NAME_FLEK_GL)$$ext;\
+	fi
+	@echo "Installing include files..."
+	@-mkdir -p $(includedir)
+	@-mkdir -p $(includedir)/Flek
+	@-cd ../Flek/; cp $(H_FLEK_GL) $(includedir)/Flek; cd ../src/
+	@-chmod 755 $(includedir)/Flek
+	@-chmod 644 $(includedir)/Flek/*
+
+flek-xml-install: $(LIB_FLEK_XML).a $(DSO_NAME_FLEK_XML)
+	@echo "Installing libflek_xml..."
+	@-mkdir -p $(libdir)
+	@rm -f $(libdir)/$(LIB_NAME_FLEK_XML)
+	@-cp $(LIB_FLEK_XML).a $(libdir)
+	@-chmod 644 $(libdir)/$(LIB_NAME_FLEK_XML).a
+	@if test -n "$(DSOEXT)"; then \
+		@echo "Installing libflek_xml DSO library."; \
+		if test $(DSO_NAME_FLEK_XML) = $(LIB_NAME_FLEK_XML).so.1; then ext=.so; else ext=.s1; fi; \
+		rm -f $(libdir)/$(LIB_NAME_FLEK_XML)$$ext.1;\
+		rm -f $(libdir)/$(LIB_NAME_FLEK_XML)$$ext;\
+		cp $(LIB_NAME_FLEK_XML)$$ext.2 $(libdir); \
+		chmod 755 $(libdir)/$(LIB_NAME_FLEK_XML)$$ext.1; \
+		ln -s $(libdir)/$(LIB_NAME_FLEK_XML)$$ext.2 $(libdir)/$(LIB_NAME_FLEK_XML)$$ext;\
+	fi
+	@echo "Installing include files..."
+	@-mkdir -p $(includedir)
+	@-mkdir -p $(includedir)/Flek
+	@-cd ../Flek/; cp $(H_FLEK_XML) $(includedir)/Flek; cd ../src/
+	@-chmod 755 $(includedir)/Flek
+	@-chmod 644 $(includedir)/Flek/*
+
+################################################################
+
+list-headers:
+	@echo "Generating header file lists."
+	@echo "$(H_FLEK_CORE)" | sed 's/[ ]*$$//' | sed 's/ / =/g' | tr '=' "\n" | sed 's/^/\%\{prefix\}\/include\/Flek\//g' > flek_core_h.list
+	@echo "$(H_FLEK_XML)"  | sed 's/[ ]*$$//' | sed 's/ / =/g' | tr '=' "\n" | sed 's/^/\%\{prefix\}\/include\/Flek\//g' > flek_xml_h.list
+	@echo "$(H_FLEK_UI)"   | sed 's/[ ]*$$//' | sed 's/ / =/g' | tr '=' "\n" | sed 's/^/\%\{prefix\}\/include\/Flek\//g' > flek_ui_h.list
+	@echo "$(H_FLEK_GL)"   | sed 's/[ ]*$$//' | sed 's/ / =/g' | tr '=' "\n" | sed 's/^/\%\{prefix\}\/include\/Flek\//g' > flek_gl_h.list
 
 ################################################################
 # DO NOT DELETE

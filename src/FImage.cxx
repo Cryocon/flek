@@ -1,4 +1,4 @@
-#include <Flek/math.h>
+#include <Flek/math.H>
 #include <Flek/FImage.H>
 #include <iostream.h>
 #include <fstream.h>
@@ -79,9 +79,9 @@ void add (unsigned char* dest,
   for (; dest<end; dest+=4, src+=4)
     {
       a = INT_MULT(src[3], opacity, t1);
-      dest[0] = INT_BLEND(clampUpper(src[0]+dest[0], 255), dest[0], a, t1);
-      dest[1] = INT_BLEND(clampUpper(src[1]+dest[1], 255), dest[1], a, t1);
-      dest[2] = INT_BLEND(clampUpper(src[2]+dest[2], 255), dest[2], a, t1);
+      dest[0] = INT_BLEND(clamp_upper(src[0]+dest[0], 255), dest[0], a, t1);
+      dest[1] = INT_BLEND(clamp_upper(src[1]+dest[1], 255), dest[1], a, t1);
+      dest[2] = INT_BLEND(clamp_upper(src[2]+dest[2], 255), dest[2], a, t1);
       dest[3] = 255;
     }
 }
@@ -109,9 +109,9 @@ void subtract (unsigned char* dest,
   for (; dest<end; dest+=4, src+=4)
     {
       a = INT_MULT(src[3], opacity, t1);
-      dest[0] = INT_BLEND(clampLower(dest[0]-src[0], 0), dest[0], a, t1);
-      dest[1] = INT_BLEND(clampLower(dest[1]-src[1], 0), dest[1], a, t1);
-      dest[2] = INT_BLEND(clampLower(dest[2]-src[2], 0), dest[2], a, t1);
+      dest[0] = INT_BLEND(clamp_lower(dest[0]-src[0], 0), dest[0], a, t1);
+      dest[1] = INT_BLEND(clamp_lower(dest[1]-src[1], 0), dest[1], a, t1);
+      dest[2] = INT_BLEND(clamp_lower(dest[2]-src[2], 0), dest[2], a, t1);
       dest[3] = 255;
     }
 }

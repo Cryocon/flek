@@ -1,6 +1,6 @@
 /* -*-C++-*- 
 
-   "$Id: FVector.H,v 1.1 2000/04/13 13:56:28 jamespalmer Exp $"
+   "$Id: FVector.H,v 1.2 2000/04/15 20:04:53 jamespalmer Exp $"
    
    Copyright 1999-2000 by the Flek development team.
    
@@ -38,9 +38,9 @@
 
 // Common include files
 #include <stdlib.h>
-#include <Flek/math.h>
-#include <Flek/iostream.h>
+#include <Flek/math.H>
 #include <Flek/FBase.H>
+#include <Flek/iostream.H>
 
 // Forward declarations
 class FVector2;

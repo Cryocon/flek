@@ -1,6 +1,6 @@
 /* -*-C++-*- 
 
-   "$Id: FBase.H,v 1.1 2000/04/13 14:38:56 jamespalmer Exp $"
+   "$Id: FBase.H,v 1.2 2000/04/15 20:04:53 jamespalmer Exp $"
    
    Copyright 1999-2000 by the Flek development team.
    
@@ -40,19 +40,22 @@ class FBase
   
  public:
 
-  typedef FBase * Ptr;
+  typedef FBase* Ptr;
 
   /**
-   * Empty assignment operator.
+   * Assignment operator.  This operator must be overriden to be useful,
+   * it's default behavior is to do nothing.
+   * 
+   * @param src
    */
-  FBase& operator = (const FBase&) {
+  FBase& operator = (const FBase& src) {
     return *this;
   }
 
   /**
-   * Virtual destructor.
+   * Destructor.
    */
-  virtual ~FBase() {}
+  virtual ~FBase () {}
 
   /**
    * Derived class should give a meaningful implementation
@@ -63,7 +66,7 @@ class FBase
    * 
    * Make a copy of the FBase and return a pointer to the new one.
    */
-  virtual Ptr copy(void) const = 0;
+  virtual Ptr copy () const = 0;
 
 protected:
   
@@ -74,8 +77,10 @@ protected:
 
   /** 
    * The copy constructor is protected to prevent instantiation.
+   * 
+   * @param src The class to take initial data from.
    */
-  FBase (const FBase&) {}
+  FBase (const FBase& src) {}
 };
 
 #endif // #ifndef FBASE_H_

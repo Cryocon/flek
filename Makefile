@@ -71,7 +71,13 @@ makeinclude: configure makeinclude.in
 configure: configure.in
 	autoconf
 
+rpm:
+	cd src; $(MAKE) list-headers; cd ..
+	cd ..; rm -rf /tmp/flek-0.1 /tmp/flek-0.1.tar.gz; cp -R ./flek /tmp/flek-0.1
+	cd /tmp; cp ./flek-0.1/flek.spec ./flek.spec; tar cv flek-0.1 > flek-0.1.tar; \
+	  gzip flek-0.1.tar; cp flek-0.1.tar.gz /usr/src/RPM/SOURCES/; \
+	  rpm -ba ./flek.spec
 
 #
-# End of "$Id: Makefile,v 1.2 2000/02/06 20:54:54 jamespalmer Exp $".
+# End of "$Id: Makefile,v 1.3 2000/04/15 20:04:53 jamespalmer Exp $".
 #

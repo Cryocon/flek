@@ -1,6 +1,6 @@
 /* -*-C++-*- 
 
-   "$Id: FQuaternion.H,v 1.1 2000/04/13 13:56:28 jamespalmer Exp $"
+   "$Id: FQuaternion.H,v 1.2 2000/04/15 20:04:53 jamespalmer Exp $"
   
    Copyright 1999-2000 by the Flek development team.
    
@@ -264,7 +264,7 @@ public:
   friend double normalize(FQuaternion& quat)
     {
       double len = length(quat);
-      if ( isNonZero(len) == true )
+      if ( is_non_zero(len) == true )
 	quat /= len;
       return len;
     }

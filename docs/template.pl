@@ -335,11 +335,19 @@ foreach $p (packages()) {
     <h3><<
     
     print $p->name () . " Global Functions</h3>\n";
-      
+    
+    $last = "";
     foreach $m ($p->globalfuncs()) {
+      if ($last ne $m->name()) {
+        if ($last ne "") { print "</blockquote>"; }
+	$last = $m->name();
+	print "<a name=\"" . $last . "\"></a>\n";
+	print "<h3><font color=\"red\">$last</font></h3>\n";
+	print "<blockquote>\n";
+      }
       &global_function ($m);
     }
-
+    if ($last ne "") { print "</blockquote>"; }
 >>
 <hr>
 <font size="-1">$copyright<br>
@@ -384,7 +392,7 @@ sub function {
 	<<
 	if ($f->params()) {
 		>>
-		<p><font color="$key_color"><b>Parameters</b></font><dd>
+		<p><font color="$key_color"><b>Parameters</b></font>
 		<table>
 		<<
 		foreach $a ($f->params()) {
@@ -453,33 +461,32 @@ sub global_function {
 
 	>>
 	<a name="$(f.name)"></a>
-	<dl>
-	<dt>
 	<h4>$jamesname;</h4>
-	<dd>
+	<blockquote>
 	<<print &processDescription( $f->description() );>>
-	<p><dl>
+	<p>
 	<<
 	if ($f->params()) {
 		>>
-		<dt><b>Parameters</b><dd>
-		<table width=85%><tr><td colspan=2><hr></td></tr>
+		<p><font color="$key_color"><b>Parameters</b></font>
+		<table>
 		<<
 		foreach $a ($f->params()) {
-			>><tr valign=top><th align=right>
-			$(a.name)</th><td><<
+			>><tr valign="top"><td align="right">
+			<b>$(a.name)</b></td><td><<
 			print &processDescription( $a->description() );
 			>></td></tr>
 			<<
 		}
-		>><tr><td colspan=2><hr></td></tr></table>
+		>></table>
 		<<
 	}
 	
 	if ($f->returnValue()) {
-		>><dt><b>Return Value</b>
-		<dd><<
-		print &processDescription( $f->returnValue() );>><p>
+		>><p><font color="$key_color"><b>Return Value</b></font>
+		<br><<
+		print &processDescription( $f->returnValue() );>>
+		</p>
 		<<
 	}
 	
@@ -513,7 +520,7 @@ sub global_function {
 		>><p>
 		<<
 	}
-	>></dl></dl>
+	>></blockquote>
 	<<
 }
 
