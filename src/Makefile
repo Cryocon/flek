@@ -4,6 +4,7 @@ CORECPPFILES = \
 	fDom.cxx \
 	fDomAttr.cxx \
 	fVector.cxx \
+	fImage.cxx \
 	fPNM.cxx 
 
 UICPPFILES = \

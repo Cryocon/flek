@@ -1,5 +1,5 @@
 /* -*-C++-*- 
-   "$Id: math.h,v 1.4 2000/02/15 22:16:36 jamespalmer Exp $"
+   "$Id: math.h,v 1.5 2000/03/03 17:19:32 jamespalmer Exp $"
    
    Copyright 1999-2000 by the Flek development team.
    
@@ -418,5 +418,17 @@ inline int cofsign (uint i, uint j)
 }
 
 #endif
+
+inline int clampUpper (int x, int Clamp)
+{
+  if (x > Clamp) return Clamp;
+  return x;
+}
+
+inline int clampLower (int x, int Clamp)
+{
+  if (x < Clamp) return Clamp;
+  return x;
+}
 
 #endif // #ifndef _INLINES_HH_

@@ -1,6 +1,6 @@
 /* -*-C++-*- 
 
-   "$Id: fImage.h,v 1.2 2000/03/03 01:46:19 jamespalmer Exp $"
+   "$Id: fImage.h,v 1.3 2000/03/03 17:19:32 jamespalmer Exp $"
    
    Copyright 1999-2000 by the Flek development team.
    
@@ -194,7 +194,21 @@ class fImageRGBA
   uchar *Data;
   int W;
   int H;
+
 };
 
+fImageRGBA* add (fImageRGBA *A, fImageRGBA *B, int xo=0, int yo=0, bool inplace=false);
+
+fImageRGBA* subtract (fImageRGBA *A, fImageRGBA *B, int xo=0, int yo=0, bool inplace=false);
+
+fImageRGBA* difference (fImageRGBA *A, fImageRGBA *B, int xo=0, int yo=0, bool inplace=false);
+
+fImageRGBA* lightenOnly (fImageRGBA *A, fImageRGBA *B, int xo=0, int yo=0, bool inplace=false);
+
+fImageRGBA* darkenOnly (fImageRGBA *A, fImageRGBA *B, int xo=0, int yo=0, bool inplace=false);
+
+fImageRGBA* divide (fImageRGBA *A, fImageRGBA *B, int xo=0, int yo=0, bool inplace=false);
+
+fImageRGBA* multiply (fImageRGBA *A, fImageRGBA *B, int xo=0, int yo=0, bool inplace=false);
 
 #endif

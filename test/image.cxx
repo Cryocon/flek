@@ -6,18 +6,19 @@
 
 void main ()
 {
-  fImageRGBA *img; 
-  uchar *pixel;
+  fImageRGBA *imgA, *imgB; 
+//  uchar *pixel;
 
-  img = fPNM::readRGBA ("test.ppm");
+  imgA = fPNM::readRGBA ("test1.ppm");
+  imgB = fPNM::readRGBA ("test2.ppm");
 
   int test = 0;
 
-  fImageRGBA::iterator begin = img->begin ();
-  fImageRGBA::iterator end = img->end ();
-  fImageRGBA::iterator i;
+  //fImageRGBA::iterator begin = img->begin ();
+  //fImageRGBA::iterator end = img->end ();
+  //fImageRGBA::iterator i;
 
-  // Lets invert the image.
+  /* Lets invert the image.
   for (i = begin; i != end; i++)
     {
       pixel = *i;
@@ -27,9 +28,38 @@ void main ()
       // pixel[3]; ALPHA
       test++;
     }
+*/
 
+  fImageRGBA *result = add (imgA, imgB);   
+  fPNM::writeRGBA ("out_add.ppm", result);
+  delete result;
+  
+  result = subtract (imgA, imgB);   
+  fPNM::writeRGBA ("out_subtract.ppm", result);
+  delete result;
+  
+  result = difference (imgA, imgB);
+  fPNM::writeRGBA ("out_difference.ppm", result);
+  delete result;
+  
+  result = lightenOnly (imgA, imgB);
+  fPNM::writeRGBA ("out_lightenOnly.ppm", result);
+  delete result;
+  
+  result = darkenOnly (imgA, imgB);
+  fPNM::writeRGBA ("out_darkenOnly.ppm", result);
+  delete result;
 
-  fPNM::writeRGBA ("output.ppm", img);
+  /*
+  result = divide (imgA, imgB);
+  fPNM::writeRGBA ("out_divide.ppm", result);
+  delete result;
 
-  printf ("total pixels processed = %d\n", test);
+  result = multiply (imgA, imgB);
+  fPNM::writeRGBA ("out_multiply.ppm", result);
+  delete result;
+  */
+  delete imgA;
+  delete imgB;
+  
 }

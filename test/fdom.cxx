@@ -15,14 +15,14 @@ fDomNode root, a, b, c, n;
 
 void main ()
 {
-  collection<fDomNode*> documents;
+  vector<fDomNode*> documents;
 
   printf ("sizeof (fDomAttr) = %d\n", sizeof(fDomAttr));
   printf ("sizeof (fDomAttrNumber) = %d\n", sizeof(fDomAttrNumber));
   printf ("sizeof (fDomAttrInteger) = %d\n", sizeof(fDomAttrInteger));
   printf ("sizeof (fDomNode) = %d\n", sizeof(fDomNode));
   printf ("sizeof (fDomDynamicNode) = %d\n", sizeof(fDomDynamicNode));
-  printf ("sizeof (list) = %d\n", sizeof(collection<fDomNode*>));
+  printf ("sizeof (list) = %d\n", sizeof(vector<fDomNode*>));
   
   root.setAttribute ("name", "Document");
 
