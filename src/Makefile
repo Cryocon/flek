@@ -1,4 +1,5 @@
 CORECPPFILES = \
+	fList.cxx \
 	fArcball.cxx \
 	fVector.cxx \
 

@@ -12,7 +12,7 @@ all:
 	cp ../test/arcball.cxx ./arcball.txt
 
 sourceforge:
-	scp *.txt *.html *.htm *.png jamespalmer@sourceforge.net:~/flek/htdocs/docs/
+	scp *.txt *.html *.htm *.png jamespalmer@flek.sourceforge.net:~/flek/htdocs/docs/
 
 install:
 
