@@ -71,8 +71,7 @@ int Fl_App_Window::handle(int event) {
 #ifdef FL_APP_WINDOW_DEBUG
     printf("Fl_App_Window::handle - undock\n");
 #endif
-    // Repack.
-    resize(x(), y(), w(), h());
+    repack();
     return 1;
   }
   
@@ -158,15 +157,17 @@ void Fl_App_Window::add_dockable(Fl_Dockable_Window* W, int pos) {
 
   // Dock the dockable window on this window.
   Fl_Dockable_Window::current = W;
-  W->hide();
+
+  if(W->shown())
+    W->hide();
+
   _pack->insert(*W, pos);
+  repack();
+
   W->docked(1);
 
-  if(shown()) {
+  if(shown())
     W->show();
-    // Repack.
-    resize(x(), y(), w(), h());
-  }
 }
 
 void Fl_App_Window::show() {
@@ -200,11 +201,7 @@ void Fl_App_Window::flush() {
   draw();
 }
 
-void Fl_App_Window::resize(int X, int Y, int W, int H) {
-#ifdef FL_APP_WINDOW_DEBUG
-  printf("Fl_App_Window::resize() win %p\n", this);
-#endif
-
+void Fl_App_Window::repack() {
   // Figure how much space everything but the contents takes up.
   int children_w = 0;
   int children_h = 0;
@@ -216,10 +213,16 @@ void Fl_App_Window::resize(int X, int Y, int W, int H) {
   }
 
   // Make contents fill all remaining space.
-  _contents->resize(0, 0, W - children_w, H - children_h);
+  _contents->resize(0, 0, w() - children_w, h() - children_h);
 
   // Resize the pack to fill the window.
-  _pack->resize(0, 0, W, H); // _pack->w() + dw, _pack->h() + dh);
+  _pack->resize(0, 0, w(), h());
+}
 
+void Fl_App_Window::resize(int X, int Y, int W, int H) {
+#ifdef FL_APP_WINDOW_DEBUG
+  printf("Fl_App_Window::resize() win %p\n", this);
+#endif
   Fl_Widget::resize(X, Y, W, H);
+  repack();
 }

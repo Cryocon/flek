@@ -1,6 +1,6 @@
 /* -*-C++-*- 
 
-   "$Id: Fl_App_Window.H,v 1.20 2000/05/17 05:50:27 brad Exp $"
+   "$Id: Fl_App_Window.H,v 1.21 2000/05/20 02:20:05 brad Exp $"
    
    Copyright 1999-2000 by the Flek development team.
    
@@ -121,6 +121,11 @@ public:
    */
   void add(Fl_Widget *w);
 
+  /**
+   * Repacks the window.  Used after resizing or adding dockable windows.
+   */
+  void repack();
+  
   /**
    * Resizes the contents window.
    */
