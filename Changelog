@@ -1,3 +1,16 @@
+2000-01-28  James Dean Palmer <james@tiger-marmalade.com>
+
+	- Added Fl_Stock_Button_Ok, Fl_Stock_Button_Cancel,
+	  Fl_Stock_Button_Yes, Fl_Stock_Button_No, 
+	  Fl_Stock_Button_Apply, Fl_Stock_Button_Close
+	- Added Fl_Stock_Button base class with it's own
+	  draw_label routine.
+
+2000-01-27  James Dean Palmer <james@tiger-marmalade.com>
+
+	- Added some of Curtis Edwards's widgets to Flek.
+	  (some temporarily).
+	
 2000-01-25  James Dean Palmer <james@tiger-marmalade.com>
 
         - Added Fl_Toggle_Tree.  Lots of name changes.

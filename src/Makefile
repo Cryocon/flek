@@ -6,7 +6,8 @@ CPPFILES = \
 	Fl_Toggle_Node_Base.cxx \
 	Fl_Toggle_Node.cxx \
 	Fl_Toggle_Tree_Base.cxx \
-	Fl_Toggle_Tree.cxx 
+	Fl_Toggle_Tree.cxx \
+	Fl_Stock.cxx 
 #	Fl_Dir.cxx \
 #	Fl_Frametab.cxx \
 #	Fl_NSlider.cxx \
@@ -16,7 +17,7 @@ CPPFILES = \
 
 #Fl_File_Dialog.cxx \
 #	Fl_Input_File.cxx \
-	
+
 
 CFILES = 
 
