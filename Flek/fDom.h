@@ -7,6 +7,11 @@
 
 class fDomNode;
 
+/** @package libflek_core
+ * The listener class is actually just a wrapper around a callback
+ * function.  The callback function may be executed by whatever
+ * fDomNode it gets connected to.
+ */
 class fDomListener : public fBase
 {
  public:
@@ -14,22 +19,33 @@ class fDomListener : public fBase
   typedef fDomListener * Ptr;
   
   typedef int (*Function)(fDomNode *, long, long);
-  
+
+  /**
+   * The constructor takes the listener function as an argument.
+   * The listener function must be of the form,
+   * <br><pre>int function (fDomNode *n, long message, long argument);</pre>
+   */
   fDomListener (Function f) { F = f; }
 
+  /**
+   * Invokes the listener function.
+   */
   int listen (fDomNode *node, long message, long argument)
     {
       return (F)(node, message, argument);
     }
 
+  /**
+   * Sets the listener function.
+   */
   void set (Function f) { F = f; }
-  
+ 
+  /**
+   * Gets the listener function.
+   */ 
   Function get () { return F; }
   
-  fBase::Ptr copy (void) const
-    {
-      return (fBase::Ptr) new fDomListener (F);
-    }
+  fBase::Ptr copy (void) const { return (fBase::Ptr) new fDomListener (F); }
 
  protected:
 
@@ -37,37 +53,36 @@ class fDomListener : public fBase
 
 };
 
+/**
+ * fDomAttribute provides a class with key-value pairs.
+ * Both the key and the value are strings.
+ */
 class fDomAttribute : public fBase
 {
  public:
 
-  fDomAttribute () 
-    {
-      key = 0;
-      value = 0;
-    }
+  /**
+   * Default constructor.
+   */
+  fDomAttribute ();
 
-    fDomAttribute (char *k, char *v) 
-    {
-      key = strdup (k);
-      value = strdup (v);
-    }
+  /**
+   * Copy constructor.
+   */
+  fDomAttribute (char *k, char *v);
   
   typedef fDomAttribute * Ptr;
 
-  fBase::Ptr copy (void) const
-    {
-      Ptr o = new fDomAttribute;
-      o->key = strdup (key);
-      o->value = strdup (value);
-      return o;
-    }
+  fBase::Ptr copy (void) const;
 
   char *key;
   char *value; 
 
 };
 
+/** 
+ * xmlFile is a utility class used when parsing xml files.
+ */
 class xmlFile
 {
  public:
@@ -84,43 +99,13 @@ class xmlFile
     PARSE_ERROR=5
   };
 
-  int open (const char *filename, const char *mode)
-    {
-      fh = fopen (filename, mode);
-      if (fh)
-	return 1;
-      return 0;
-    }
+  int open (const char *filename, const char *mode);
 
-  int close ()
-    {
-      return fclose (fh);
-    }
+  int close ();
 
-  int read ()
-    {
-      int rc;
+  int read ();
 
-      rc = fread (&ch, 1, 1, fh);
-
-      if (rc==0)
-	Eof = 1;
-
-      if (feof (fh))
-	Eof = 1;
-
-      if (ch == '\n') 
-	linecnt++;
-
-      printf ("#: %c\n", ch);
-
-      return rc;
-    }
-
-  int eof ()
-    {
-      return Eof;
-    }
+  int eof () { return Eof; }
 
   int isEndl ()
     {
@@ -134,152 +119,19 @@ class xmlFile
       return 0;
     }
 
-  int skipSpace ()
-    {
-      int rc = 1;
-      
-      // Skip whitespace
-      while (isSpace () && (rc = read ())) { }
-     
-      // Return if there is nothing to be read.
-      if (!rc)
-	return 0;
+  int skipSpace ();
 
-      if (ch == '>')
-	return END_OF_PAIRED_TAG;
-      
-      if (ch == '/')
-	{
-	  ch = ' ';
-	  // Skip whitespace
-	  while (isSpace () && (rc = read ())) { }
-	  if (ch == '>')
-	    return END_OF_UNPAIRED_TAG;
-	  return PARSE_ERROR;
-	}
-      return 0;
-    }
+  int readKey (char *key);
 
-  int readKey (char *key)
-    {
-      int rc = 1, i = 0;
-      key[i] = ch;
-      while ((ch != '=') && (!isSpace ()) && (rc = read ())) { i++; key[i] = ch; }
-      key[i] = 0;
-      return (!rc);
-    }
+  int readQuote (char *value);
 
-  int readQuote (char *value)
-    {
-      int rc = 0, i = 0;
-      char quote = ch;
-      ch = ' ';
-      while ((ch != quote) && (rc = read ())) { value[i] = ch; i++; }
-      if (!rc)
-	return (!rc);
-      if (i>0) 
-	value[i-1] = 0;
-      else
-	value[0] = 0;
-      rc = read ();
-      return (!rc);
-    }
+  int readValue (char *value);
 
-  int readValue (char *value)
-    {
-      int rc, i = 0;
-      value[i] = ch;
-      while ((ch != '>') && (ch != '/') && (!isSpace ()) && (rc = read ())) { i++; value[i] = ch; }
-      value[i] = 0;
+  int readText (char *text);
 
-      rc = skipSpace ();
-      if (!rc)
-	return (!rc);
-      return 0;
-    }
+  int readAttribute (char *key, char *value);
 
-  int readText (char *text)
-    {
-      int rc, i = 0;
-      text[i] = ch;
-      while ((ch != '<') && (ch != '>') && (rc = read ())) 
-	{ i++; text[i] = ch; }
-      text[i] = 0;
-    }
-
-  int readAttribute (char *key, char *value)
-    {
-      int rc;
-      key[0] = 0;
-      value[0] = 0;
-      
-      rc = skipSpace ();
-      if (rc)
-	return rc;
-
-      rc = readKey (key);
-
-      if (rc)
-	return rc;
-
-      printf ("KEY=\"%s\"\n", key);
-
-      rc = skipSpace ();
-      if (rc)
-	return rc;
-
-      if (ch != '=')
-	return 0; // A key without a value!!
-
-      ch = ' '; // Pretend = was just white space.
-
-      rc = skipSpace ();
-      printf ("Skipped =..\n");
-
-      if (rc)
-	return rc;
-
-      if (isQuote ())
-	rc = readQuote (value);
-      else
-	rc = readValue (value);
-
-      printf ("VALUE=\"%s\"\n", value);
-
-      return 0;
-    }
-
-  int readTag (char *tag)
-    {
-      int rc = 0;
-      printf ("BEGIN: readTag ();\n");
-      rc = skipSpace ();
-      if (ch != '<')
-	return PARSE_ERROR;
-      
-      ch = ' ';
-      rc = 0;
-      read (); // ch = ' '; skipSpace ();
-      if (ch == '/')
-	{
-	  ch = ' ';
-	  rc = skipSpace ();
-	  if (rc)
-	    return PARSE_ERROR;
-	  rc = END_TAG;
-	}
-      else if (rc)
-	return PARSE_ERROR;
-      else rc = BEGIN_TAG;
-
-      int i = 0;
-      tag[i] = ch;
-      while ((ch != '>') && (ch != '/') && (!isSpace ()) && (read ())) 
-	{ i++; tag[i] = ch; }
-      tag[i] = 0;
-
-      return rc;
-    }
+  int readTag (char *tag);
 
   int isQuote ()
     {
@@ -297,28 +149,37 @@ class xmlFile
   int Eof;
 };
 
+
+/**
+ * fDomNode is the base node type for fDom documents.
+ */
 class fDomNode : public fBase 
 {
  public:
 
   typedef fDomNode * Ptr;
 
+  /**
+   * Constructor.
+   */
   fDomNode ()
     {
     }
 
+  /**
+   * Copy constructor.
+   */
   fDomNode (const fDomNode & n) : fBase (n)
     {
-      // Add children..
       Children = n.Children;
-      // Add attributes..
       Attributes = n.Attributes;
-      // Add listeners..
       Listeners = n.Listeners;
     }
 
-  int type () { return 1; }
-
+  /**
+   * Returns the name or "type" of the node.  This is usually
+   * defined on a per class level, and not per object instance.
+   */
   virtual char * name () { return "node"; }
 
   enum {
@@ -328,66 +189,53 @@ class fDomNode : public fBase
   };
 
   // Listener functions:
-  void addListener (fDomListener *o)
-    { Listeners.push_back (o); }
 
-  void removeListener (fDomListener *o)
-    { Listeners.erase (o); }
+  /** 
+   * Attach a listener to this node.
+   */
+  void addListener (fDomListener *o) { Listeners.push_back (o); }
+  void addListener (fDomListener &o) { Listeners.push_back (o); }
 
-  void clearListeners ()
-    { Listeners.erase (); }
+  /** 
+   * Remove a listener from this node.
+   */
+  void removeListener (fDomListener *o) { Listeners.erase (o); }
 
-  void damage (long dmg)
-    { handleListeners (DAMAGE, dmg); }
+  /** 
+   * Clear all listeners.
+   */
+  void clearListeners () { Listeners.erase (); }
 
-  virtual void handleListeners (int event, long argument)
-    {
-      fIterator p, last;
-      fDomListener *q;
-      last = Listeners.end ();
-      for (p = Listeners.begin (); p != last; p++)
-	{
-	  q = (fDomListener *)(*p);
-	  q->listen (this, event, argument);
-	}
-    }
-  
+  /**
+   * Send a damage message to any listeners with the message,
+   * dmg.
+   */
+  void damage (long dmg) { handleListeners (DAMAGE, dmg); }
+
+  /**
+   * Iterate through all listeners and invoke their listen
+   * methods in turn with the given event and message.
+   */
+  virtual void handleListeners (int event, long argument);
   
   /**
-   * One can override this function to stick attributes wherever you like.
+   * Attributes are normally stored as strings in the Attributes list.
+   * You can override this function to stick attributes wherever you like.
    */
-  virtual void xmlPushAttribute (char *key, char *value)
-    {
-      fDomAttribute attribute;
-
-      attribute.key = key;
-      attribute.value = value;
-      printf ("PUSHING ATTRIBUTES : (%s, %s)\n", key, value);
-      Attributes.push_back (&attribute);
-    }
+  virtual void xmlPushAttribute (char *key, char *value);
     
   // Attribute functions
-  int xmlReadAttributes (xmlFile &xml) 
-    {
-      char key[128];
-      char value[128];
-      int rc = 0;
-      
-      printf ("!! Beginning of Attributes\n");
-      while (!(rc = xml.readAttribute (key, value))) 
-	{
-	  xmlPushAttribute (key, value);
-	}
-      printf ("!! End of Attributes\n");
-      return rc;
-    }
+  int xmlReadAttributes (xmlFile &xml);
 
   /** 
    * Override this function to deal with the text in between tags
-   * in a non-default manner.
+   * in a non-default manner (stored in an fDomTextNode.)
    */
   virtual int xmlPushText (xmlFile &xml);
-  
+
+  /**
+   * Read the xml file.
+   */
   int xmlRead (char *filename)
     {
       xmlFile xml;
@@ -395,138 +243,42 @@ class fDomNode : public fBase
       return xmlRead (xml);
     }
 
-  int xmlRead (xmlFile &xml)
-    {
-      int rc = 0;
-      char tag[128];
-
-      xml.ch = ' ';
-      // Reset the current value.
-      while (!(xml.eof ()))
-	{
-	  printf ("WHILE... %c\n", xml.ch);
-
-	  // Clean up after last tag..
-	  if (xml.ch == '>') 
-	    xml.ch = ' ';
-
-	  rc = xml.skipSpace ();
-
-	  if (xml.ch == '<')
-	    {
-	      rc = xml.readTag (tag);
-	      printf ("TAG=\"%s\"\n", tag);
-	      if (rc == xmlFile::END_TAG)
-		{
-		  printf ("END OF TAG!\n");
-		  return rc;
-		}
-	      xmlPushTag (xml, tag);
-	    }
-	  else
-	    {
-	      // If it's not tagged it gets shoved into a text node
-	      xmlPushText (xml);
-	    }
-	}
-      return 0;
-    }
+  int xmlRead (xmlFile &xml);
 
   int xmlPushTag (xmlFile &xml, char *tag);
   
-  virtual void writeAttributes () 
-    {
-      fIterator p, last;
-      fDomAttribute *att;
+  virtual void writeAttributes ();
 
-      last = Attributes.end ();
-      for (p = Attributes.begin (); p != last; p++)
-	{
-	  att = ((fDomAttribute *)(*p));
-	  // Need code to escape special characters and quotes..
-	  printf ("%s=\"%s\" ", att->key, att->value);
-	}      
-    }
+  /**
+   * Set an attribute key to value.
+   */
+  virtual void setAttribute (char *key, char *value);
 
-  virtual void setAttribute (char *key, char *value)
-    {
-      fIterator p, last;
-      fDomAttribute *att;
-      int set = 0;
-      last = Attributes.end ();
-      for (p = Attributes.begin (); p != last; p++)
-	{
-	  att = ((fDomAttribute *)(*p));
-	  if (!strcmp (att->key, key))
-	    {
-	      free (att->value);
-	      att->value = strdup (value);
-	      set = 1;
-	    }
-	}
-      if (!set)
-	{
-	  att = new fDomAttribute;
-	  att->key = strdup (key);
-	  att->value = strdup (value);
-	  Attributes.push_back (att);
-	}
-      damage (0);
-    }
-
-  virtual char * getAttribute (char *key) 
-    {
-      fIterator p, last;
-      fDomAttribute *att;
-      last = Attributes.end ();
-      for (p = Attributes.begin (); p != last; p++)
-	{
-	  att = ((fDomAttribute *)(*p));
-	  if (!strcmp (att->key, key))
-	    {
-	      return att->value;
-	    }
-	}
-      return 0;
-    }
+  /** 
+   * Get an attribute value from the key.
+   */
+  virtual char * getAttribute (char *key);
 
   fBase::Ptr copy (void) const
     {
       return (new fDomNode (*this));
     }
 
-  // Child functions
+  /**
+   * Add a daughter node.
+   */
   void add  (fDomNode *child) { Children.push_back (child); }
+  void add  (fDomNode &child) { Children.push_back (child); }
 
-  virtual void writeChildren () 
-    {
-      fIterator p, last;
-      fDomNode *node;
-      last = Children.end ();
-      for (p = Children.begin (); p != last; p++)
-	{
-	  node = ((fDomNode *)(*p));
-	  node->write ();
-	}
-    }
+  /**
+   * Write this node's children.
+   */
+  virtual void writeChildren ();
 
-  virtual void write ()
-    {
-      printf ("<%s", name ());
-      if (Attributes.size () > 0)
-	{
-	  printf (" ");
-	  writeAttributes ();
-	}
-      if (Children.size () == 0)
-	printf ("/>\n");
-      else
-	{
-	  printf (">\n");
-	  writeChildren ();
-	  printf ("</%s>\n", name ());
-	}
-    }
+  /**
+   * Write this node.
+   */
+  virtual void write ();
 
  protected:
 
@@ -535,6 +287,11 @@ class fDomNode : public fBase
   fList Listeners;   // A list of listener functions.
 
 };
+
+/**
+ * fDomTextNode provides a special kind of node that represents
+ * a block of text with no markup symbols or child data.
+ */
 
 class fDomTextNode : public fDomNode
 {
@@ -553,7 +310,14 @@ class fDomTextNode : public fDomNode
       printf ("\n");
     }
 
+  /**
+   * Sets the text block. 
+   */
   void text (char *t) { if (Text) free (Text); Text = strdup (t); }
+
+  /**
+   * Gets the text block.
+   */
   char *text () { return Text; }
 
   fBase::Ptr copy (void) const
@@ -565,6 +329,10 @@ class fDomTextNode : public fDomNode
   char *Text;
 };
 
+/**
+ * fDomDynamicNode is a special node designed to express 
+ * any undefined node type.
+ */
 class fDomDynamicNode : public fDomNode
 {
  public:
@@ -573,7 +341,15 @@ class fDomDynamicNode : public fDomNode
     {
       Name = strdup (n.Name);
     }
+
+  /**
+   * Gets the node name.
+   */
   char * name () { return Name; }
+
+  /** 
+   * Sets the node name.
+   */
   void name (char *n) { if (Name) free (Name); Name = strdup (n); }
 
   fBase::Ptr copy (void) const
@@ -584,64 +360,4 @@ class fDomDynamicNode : public fDomNode
  protected:
   char *Name;
 };
-
-static void trim_left (char *text)
-{
-  int j = 0;
-  int first = 1;
-  for (unsigned int i=0; i<strlen(text); i++)
-    {
-      text[j] = text[i];
-      if (!isspace (text[i]))
-	first = 0;
-
-      if (!first) j++;
-    }
-}
-
-static void trim_right (char *text)
-{
-  for (int i=strlen(text)-1; i>=0; i--)
-    {
-      if (isspace (text[i])) text[i] = 0;
-      else return;
-    }
-}
-
-static void trim (char *text)
-{
-  trim_right (text);
-  trim_left (text);
-}
-
-int fDomNode::xmlPushText (xmlFile &xml)
-{
-  char text[1024];
-  
-  xml.readText (text);
-  
-  trim (text);
-
-  if (strlen (text) > 0)
-    {
-      fDomTextNode t;
-      t.text (text);
-      Children.push_back (&t);
-    }
-}
-
-int fDomNode::xmlPushTag (xmlFile &xml, char *tag)
-{
-  int rc;
-  fDomDynamicNode t;
-  // Use a node with a static tag if available, otherwise use a dynamic tag.
-  t.name (tag);
-  Children.push_back (&t);
-
-  rc = ((fDomDynamicNode *)(Children.back ()))->xmlReadAttributes (xml);
-  if (rc == xmlFile::END_OF_UNPAIRED_TAG)
-    return rc;
-
-  ((fDomDynamicNode *)(Children.back ()))->xmlRead (xml);
-}
 

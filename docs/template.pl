@@ -32,6 +32,7 @@ $project_logo
 <h2>Documentation</h2>
 <ul>
 <li><a href="flek-config.htm">Using flek-config</a></li>
+<li><a href="fDom.htm">fDom: The Flek Document-Component Model</a></li>
 </ul>
 <h2>Class and Function Reference</h2>
 <blockquote>

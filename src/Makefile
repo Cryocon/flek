@@ -2,6 +2,7 @@ CORECPPFILES = \
 	fList.cxx \
 	fArcball.cxx \
 	fVector.cxx \
+	fDom.cxx
 
 UICPPFILES = \
 	Fl_App_Window.cxx \

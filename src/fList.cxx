@@ -1,11 +1,11 @@
-// $Id: fList.cxx,v 1.3 2000/02/17 18:28:02 jamespalmer Exp $
+// $Id: fList.cxx,v 1.4 2000/02/19 18:33:54 jamespalmer Exp $
 
 // Source code for the generic fList class
 
 #include <Flek/fList.h>
 
 fList::fList ()
-  : node (NULL), length (0), useCopy (true)
+  : node (NULL), length (0)
 {
   // Allocate memory for the control node
   // which will always be at the end of the list
@@ -38,17 +38,14 @@ fConstReference fList::back (void) const
 }
 
 // Insert a value before a specified position
-void fList::insertBefore (fIterator& pos, fConstReference data)
+void fList::insertBefore (fIterator& pos, fConstReference data, bool Copy)
 {
   // Create a new node
   fListNode::Ptr temp = new fListNodePtr;
   // Node referred to by Iterator
   fLink::Ptr itr_node = pos.node;
 
-  if (useCopy)
-    temp->setData (data->copy());
-  else 
-    temp->setData (data);
+  temp->setData (data, Copy);
   
   temp->setNext (itr_node);
   temp->setPrev (itr_node->prev());
@@ -61,17 +58,14 @@ void fList::insertBefore (fIterator& pos, fConstReference data)
 }
 
 // Insert a value after a specified position
-void fList::insertAfter (fIterator& pos, fConstReference data)
+void fList::insertAfter (fIterator& pos, fConstReference data, bool Copy)
 {
   // Create a new node
   fListNode::Ptr temp = new fListNodePtr;
   // Node referred to by Iterator
   fLink::Ptr itr_node = pos.node;
   
-  if (useCopy)
-    temp->setData (data->copy());
-  else
-    temp->setData (data);
+  temp->setData (data, Copy);
   
   temp->setNext (itr_node->next());
   temp->setPrev (itr_node);
@@ -84,20 +78,20 @@ void fList::insertAfter (fIterator& pos, fConstReference data)
 }
 
 // Insert a range of values before a specified position
-void fList::insertBefore (fIterator& pos, fConstIterator& first, fConstIterator& last)
+void fList::insertBefore (fIterator& pos, fConstIterator& first, fConstIterator& last, bool Copy)
 {
   // Assumes that 'last' can be reached from 'first' through a finite
   // number of increment ( ++ ) operations
   // Otherwise this will go into an infinite loop!
   while (first != last)
     {
-      insertBefore (pos, *first);
+      insertBefore (pos, *first, Copy);
       ++first;
     }
 }
 
 // Insert a range of values after a specified position
-void fList::insertAfter (fIterator& pos, fConstIterator& first, fConstIterator& last)
+void fList::insertAfter (fIterator& pos, fConstIterator& first, fConstIterator& last, bool Copy)
 {
   // Assumes that 'last' can be reached from 'first' through a finite
   // number of increment ( ++ ) operations
@@ -106,22 +100,22 @@ void fList::insertAfter (fIterator& pos, fConstIterator& first, fConstIterator& 
   // Insert in reverse order to preserve original sequence of first to last
   while (last != first)
     {
-      insertAfter (pos, *last);
+      insertAfter (pos, *last, Copy);
       --last;
     }
-  insertAfter (pos, *first);
+  insertAfter (pos, *first, Copy);
 }
 
-void fList::push_front (fConstReference data)
+void fList::push_front (fConstReference data, bool Copy)
 {
   fIterator temp = begin ();
-  insertBefore (temp, data);
+  insertBefore (temp, data, Copy);
 }
 
-void fList::push_back (fConstReference data)
+void fList::push_back (fConstReference data, bool Copy)
 {
   fIterator temp = end ();
-  insertBefore (temp, data);
+  insertBefore (temp, data, Copy);
 }
 
 void fList::erase (fIterator& pos)
@@ -133,9 +127,7 @@ void fList::erase (fIterator& pos)
   // Can we just say 'delete itr_node->data' ??
   
   // This needs to be modified, since we can't access the pointer directly
-  if ((useCopy) && (itr_node->data()))
-    delete (itr_node->data());
-  itr_node->setData (NULL);
+  itr_node->clearData ();
 
   // Update adjacent links
   (itr_node->prev())->setNext (itr_node->next());
@@ -197,8 +189,8 @@ void fList::pop_back (void)
   erase (temp);
 }
 
-fList::fList (const fList& new_list)
-  : node(NULL), length(0), useCopy(new_list.useCopy)
+fList::fList (const fList& new_list, bool Copy)
+  : node(NULL), length(0)
 {
   // Create control node and insert the new list at the beginning
   node = new fListNodePtr;
@@ -210,7 +202,7 @@ fList::fList (const fList& new_list)
   temp2 = new_list.begin ();
   temp3 = new_list.end ();
   temp3--;
-  insert (temp1, temp2, temp3);
+  insert (temp1, temp2, temp3, Copy);
 }
 
 fList::~fList()
@@ -236,7 +228,7 @@ fList& fList::operator = (const fList& new_list)
 	  fConstIterator last2 = new_list.end ();
 	  last2--;
 	  
-	  insert (first1, first2, last2);
+	  insert (first1, first2, last2, true);
 	}
     }
 
@@ -299,7 +291,7 @@ void fList::set (uint i, fConstReference data)
      {
        if ( count == i )
           {
-            first.node->setData (data); 
+            first.node->setData (data, false); 
 	    break;
           }
        ++count; ++first;

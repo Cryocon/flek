@@ -1,6 +1,6 @@
 /* -*-C++-*- 
 
-   "$Id: fList.h,v 1.2 2000/02/17 17:13:16 jamespalmer Exp $"
+   "$Id: fList.h,v 1.3 2000/02/19 18:33:54 jamespalmer Exp $"
    
    Copyright 1999-2000 by the Flek development team.
    
@@ -59,7 +59,7 @@ public:
   /**
    * Copy constructor.
    */
-  fList(const fList& new_list);
+  fList(const fList& new_list, bool Copy=true);
 
   /**
    * Destructor.
@@ -78,22 +78,6 @@ public:
     {
       Ptr newlist = new fList(*this);
       return newlist;
-    }
-  
-  /**
-   * Set the copy flag to true.
-   */
-  void setCopyFlag(void)
-    {
-      useCopy = true;
-    }
-  
-  /**
-   * Reset the copy flag to false.
-   */
-  void resetCopyFlag(void)
-    {
-      useCopy = false;
     }
   
   /**
@@ -169,19 +153,29 @@ public:
   /**
    * Insertion before the iterator position with a single value.
    */
-  void insertBefore (fIterator& pos, fConstReference data); 
+  void insertBefore (fIterator& pos, fConstReference data, bool Copy=false); 
 
+  void insertBefore (fIterator& pos, fBase & data, bool Copy=true)
+    {
+      insertBefore (pos, &data, Copy);
+    }
+  
   /**
    * Insertion after the iterator position with a single value.
    */
-  void insertAfter (fIterator& pos, fConstReference data);
+  void insertAfter (fIterator& pos, fConstReference data, bool Copy=false);
 
+  void insertAfter (fIterator& pos, fBase & data, bool Copy=true)
+    {
+      insertAfter (pos, &data, Copy);
+    }
+  
   /**
    * Insertion (by default) after the iterator position with a single value.
    */
-  void insert (fIterator& pos, fConstReference data)
+  void insert (fIterator& pos, fConstReference data, bool Copy=false)
     {
-      insertAfter(pos, data);
+      insertAfter(pos, data, Copy);
     }
 
   /**
@@ -189,35 +183,55 @@ public:
    * (Assumes last can be reached from first with a finite number of ++
    * operations.
    */
-  void insertBefore(fIterator& pos, fConstIterator& first, fConstIterator& last);
+  void insertBefore(fIterator& pos, fConstIterator& first, fConstIterator& last, bool Copy=false);
 
   /**
    * Insertion after the iterator position with a range of values.
    * (Assumes last can be reached from first with a finite number of ++
    * operations.
    */
-  void insertAfter(fIterator& pos, fConstIterator& first, fConstIterator& last);
+  void insertAfter(fIterator& pos, fConstIterator& first, fConstIterator& last, bool Copy=false);
 
   /**
    * Insertion (by default) after the iterator position with a range of values.
    * (Assumes last can be reached from first with a finite number of ++
    * operations.
    */
-  void insert(fIterator& pos, fConstIterator& first, fConstIterator& last)
+  void insert(fIterator& pos, fConstIterator& first, fConstIterator& last, bool Copy=false)
     {
-      insertAfter (pos,first,last);
+      insertAfter (pos,first,last,Copy);
     }
   
   /**
-   * Insert at beginning. 
+   * Insert at beginning from an fBase (or subclass) pointer.  By default a new copy
+   * of the data <b>will not</b> be made.
    */
-  void push_front (fConstReference data);
+  void push_front (fConstReference data, bool Copy=false);
 
   /**
-   * Insert at end.
+   * Insert at beginning from an fBase reference.  By default a new copy <b>will</b>
+   * be made.
    */
-  void push_back (fConstReference data);
-  
+  void push_front (fBase & data, bool Copy=true)
+    {
+      push_front (&data, Copy);
+    }
+
+  /**
+   * Insert at end from an fBase (or subclass) pointer.  By default a new copy
+   * of the data <b>will not</b> be made.
+   */
+  void push_back (fConstReference data, bool Copy=false);
+
+  /**
+   * Insert at end from an fBase reference.  By default a new copy <b>will</b>
+   * be made.
+   */
+  void push_back (fBase & data, bool Copy=true)
+    {
+      push_back (&data, Copy);
+    }
+
   
   //-- Deletion functions --//
   
@@ -313,9 +327,6 @@ protected:
   // Length of list
   Size length;
 
-  // Flag to indicate if the copy () function should be used during 
-  // insertion. Default is true
-  bool useCopy;  
 };
 
 #endif

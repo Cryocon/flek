@@ -1,6 +1,6 @@
 /* -*-C++-*- 
 
-   "$Id: fListNode.h,v 1.2 2000/02/17 17:13:16 jamespalmer Exp $"
+   "$Id: fListNode.h,v 1.3 2000/02/19 18:33:54 jamespalmer Exp $"
    
    Copyright 1999-2000 by the Flek development team.
    
@@ -44,29 +44,32 @@ class fListNode
 {
 public:
 
-    typedef fListNode * Ptr;
-
-     fListNode ()
-       {}
-
-     fListNode (const fListNode&)
-       {}
-
-     virtual ~fListNode()
-       {}
-
-     fListNode& operator = (const fListNode&)
-       {
-         return (*this);
-       }
-
-     virtual Ptr prev (void) = 0;
-     virtual Ptr next (void) = 0;
-     virtual fReference data (void) = 0;
-
-     virtual void setPrev (Ptr) = 0;
-     virtual void setNext (Ptr) = 0;
-     virtual void setData (fConstReference) = 0;
+  typedef fListNode * Ptr;
+  
+  fListNode ()
+    {}
+  
+  fListNode (const fListNode&)
+    {}
+  
+  virtual ~fListNode()
+    {}
+  
+  fListNode& operator = (const fListNode&)
+    {
+      return (*this);
+    }
+  
+  virtual Ptr prev (void) = 0;
+  virtual Ptr next (void) = 0;
+  virtual fReference data (void) = 0;
+  
+  virtual void setPrev (Ptr) = 0;
+  virtual void setNext (Ptr) = 0;
+  virtual void setData (fConstReference, bool useCopy=true) = 0;
+  
+  virtual void clearData () = 0;
+  
 };
 
 /**
@@ -76,21 +79,21 @@ public:
 class fListNodePtr : public fListNode
 {
 public:
-
+  
   typedef fListNodePtr * Ptr;
 
   /**
    * Default constructor
    */
   fListNodePtr ()
-    : fListNode (), bopData (NULL), lnpNext (NULL), lnpPrev (NULL)
+    : fListNode (), bopData (NULL), lnpNext (NULL), lnpPrev (NULL), lnpCopy (false)
     {}
-
+  
   /**
    * Copy constructor
    */
   fListNodePtr (const fListNodePtr& pln)
-    : fListNode (pln), bopData (pln.bopData), lnpNext (pln.lnpNext), lnpPrev (pln.lnpPrev)
+    : fListNode (pln), bopData (pln.bopData), lnpNext (pln.lnpNext), lnpPrev (pln.lnpPrev), lnpCopy (pln.lnpCopy)
     {}
      
   /**
@@ -105,7 +108,7 @@ public:
   fListNodePtr& operator = (const fListNodePtr& pln)
     {
       fListNode :: operator = (pln);
-      bopData = pln.bopData; lnpNext = pln.lnpNext; lnpPrev = pln.lnpPrev;
+      bopData = pln.bopData; lnpNext = pln.lnpNext; lnpPrev = pln.lnpPrev; lnpCopy = pln.lnpCopy;
       return (*this);
     }
   
@@ -143,17 +146,33 @@ public:
       lnpPrev = lnp;
     }
   
-  void setData (fConstReference bop)
+  void setData (fConstReference bop, bool useCopy=true)
     {
-      bopData = bop;
+      lnpCopy = useCopy;
+      if (lnpCopy)
+	bopData = bop->copy ();
+      else 
+	bopData = bop;
     }
 
+  bool isCopy ()
+    {
+      return lnpCopy;
+    }
+  
+  void clearData ()
+    {
+      if (lnpCopy)
+	delete bopData;
+      bopData = 0;
+    }
+  
 protected:
-
-  fValue bopData;  // Pointer to actual data
+  
+  fValue bopData;          // Pointer to actual data
   fListNode::Ptr lnpNext;  // Pointer to next node
   fListNode::Ptr lnpPrev;  // Pointer to previous node
-       
+  bool lnpCopy;            // Is this a copy of the data, or THE data.
 };
 
 #endif

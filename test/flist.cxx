@@ -48,15 +48,31 @@ void main (void)
   fIterator p;
   fIterator last;
 
-  A a1(1), a2(2), a3(3);
+  A a(1), b(2);
   
-  cout << "Data Set: " << endl;
-  cout << a1 << a2 << a3 << endl << endl;
-  
-  list.push_back (&a1);
-  list.push_back (&a2);
-  list.push_back (&a3);
+  //cout << "Data Set: " << endl;
+  //cout << a1 << a2 << a3 << endl << endl;
 
+  cout << "Testing node copy.. " << endl;
+  
+  a.a = 1;
+  list.push_back (a);
+  a.a = 2;
+  list.push_back (a);
+  a.a = 3;
+  list.push_back (a);
+
+  cout << "Testing node reference.. " << endl;
+
+  b.a = 4;
+  list.push_back (&b);  
+  b.a = 5;
+  list.push_back (&b);
+  b.a = 6;
+  list.push_back (&b);
+
+  cout << "List should read: 1 2 3 6 6 6" << endl;
+  
   cout << "Testing Iteration: " << endl;
   last = list.end();
   for (p = list.begin (); p != last; p++)
@@ -68,11 +84,15 @@ void main (void)
   a4ptr = (A *)list.get (1);
   fIterator pos = list.getNode (a4ptr);
   
-  list.insertAfter (pos, &a1);
-  list.insertBefore (pos, &a3);
+  a.a = 7;
+  list.insertAfter (pos, a);
+  a.a = 9;
+  list.insertBefore (pos, a);
 
   cout << endl << endl;
-
+  
+  cout << "List should read: 1 9 2 7 3 6 6 6" << endl;
+  
   cout << "Testing Insertion: " << endl;
   last = list.end();
   for (p = list.begin (); p != last; p++)

@@ -1,6 +1,6 @@
 James Dean Palmer <james@tiger-marmalade.com>
   (Library Maintainer)
-  Fl_App_Window, Fl_Dockable_Group, Fl_Calendar, Fl_Pack_Fu
+  fDom*, Fl_App_Window, Fl_Dockable_Group, Fl_Calendar, Fl_Pack_Fu
 
 Vinod Srinivasan <vinod@viz.tamu.edu>
   Wrote classes that the following were adapted from:
