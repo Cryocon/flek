@@ -3,7 +3,8 @@ CORECPPFILES = \
 	fDate.cxx \
 	fDom.cxx \
 	fDomAttr.cxx \
-	fVector.cxx 
+	fVector.cxx \
+	fPNM.cxx 
 
 UICPPFILES = \
 	Fl_App_Window.cxx \
