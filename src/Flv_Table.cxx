@@ -454,7 +454,12 @@ int Flv_Table::handle(int event)
 				break;
 
 		case FL_PUSH:
-			if (Fl::event_button1()==0)
+#ifndef FLTK_2
+	             if (Fl::event_button1()==0)
+#else
+	             if (Fl::event_state()&FL_BUTTON1==0)
+#endif
+	      
 				break;
 			if (drag_row!=4 || drag_col!=4)
 				break;
@@ -610,9 +615,16 @@ int Flv_Table::internal_handle(int event)
 				return 1;
 			}
 			r = 0;
-			if (Fl::event_button1() && (buttons() & FLV_BUTTON1)) r=1;
-			if (Fl::event_button2() && (buttons() & FLV_BUTTON2)) r=1;
-			if (Fl::event_button3() && (buttons() & FLV_BUTTON3)) r=1;
+#ifndef FLTK_2
+	  if (Fl::event_button1() && (buttons() & FLV_BUTTON1)) r=1;
+	  if (Fl::event_button2() && (buttons() & FLV_BUTTON2)) r=1;
+	  if (Fl::event_button3() && (buttons() & FLV_BUTTON3)) r=1;
+#else
+	  if ((Fl::event_state()&FL_BUTTON1) &&  (buttons() & FLV_BUTTON1)) r = 1;
+	  if ((Fl::event_state()&FL_BUTTON2) &&  (buttons() & FLV_BUTTON2)) r = 1;
+	  if ((Fl::event_state()&FL_BUTTON3) &&  (buttons() & FLV_BUTTON3)) r = 1;
+#endif
+
 			if (r==0)
 			{
 				vclicks = 0;

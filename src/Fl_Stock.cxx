@@ -52,7 +52,7 @@ void Fl_Stock_Button::draw()
 {
   if (type() == FL_HIDDEN_BUTTON) {box(FL_NO_BOX); return;}
 #ifdef FLTK_2
-  Fl_Color col = draw_button();
+  Fl_Color col = draw_button(flags());
 #else
   Fl_Color col = value() ? selection_color() : color();
   draw_box(value() ? (down_box()?down_box():down(box())) : box(), col);
@@ -174,9 +174,11 @@ Fl_Stock_Button::draw_label (int X, int Y, int W, int H,
   if (image_) {
 #ifdef FLTK_2
     fl_color((f&FL_INACTIVE) ? fl_inactive(c) : c);
-#endif
+    image_->draw(idx, idy, iw, ih, 0, 0);
+#else
     image_->draw(idx, idy, iw, ih, a);
-    //printf ("image = %d, %d, %d, %d\n", idx, idy, iw, ih);
+#endif
+        //printf ("image = %d, %d, %d, %d\n", idx, idy, iw, ih);
   }
 
   if (label_ && *label_) {

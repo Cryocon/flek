@@ -481,15 +481,17 @@ const char *Fl_Date_Input::value()
   return (Input.value ());
 }
 
-void Fl_Date_Input::text_font(int tf)
-{
-  Input.textfont (tf);
-}
- 
-void Fl_Date_Input::text_size(int sz)
-{
-  Input.textsize (sz);
-}
+#ifndef FLTK_2
+void Fl_Date_Input::text_font (int tf) { Input.textfont (tf); }
+#else
+void Fl_Date_Input::text_font (Fl_Font tf) { Input.text_font (tf); }
+#endif
+
+#ifndef FLTK_2
+void Fl_Date_Input::text_size(int sz) { Input.textsize (sz); }
+#else
+void Fl_Date_Input::text_size(int sz) { Input.text_size (sz); }
+#endif
 
 void Fl_Date_Input::format (int fmt)
 {

@@ -141,7 +141,8 @@ void composite (unsigned char* dest,
     {
       if (src_channels > 3) {
 	a = INT_MULT(src[3], opacity, t1);
-	if (dest_channels > 3) dest[3] = 255;
+	// b + (1-b)*a
+	if (dest_channels > 3) dest[3] = min (src[3] + INT_MULT (255-src[3], dest[3], t1), 255);//INT_MULT(dest[3], a, t1); //dest[3] = 255;
       } else
 	a = opacity;
       dest[0] = INT_BLEND(src[0], dest[0], a, t1);

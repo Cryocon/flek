@@ -1399,7 +1399,7 @@ void Flv_List::switch_editor( int nr )
 static void revert(Fl_Style* s) {
 	s->selection_color = FL_BLUE_SELECTION_COLOR;
 	s->selection_text_color = FL_WHITE;
-	s->off_color = FL_BLACK;
+  //s->off_color = FL_BLACK;
 	s->box = FL_THIN_DOWN_BOX;
 	s->color = FL_GRAY_RAMP+1;
 }

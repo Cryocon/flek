@@ -1,6 +1,6 @@
 /* -*-C++-*- 
 
-   "$Id: Fl_Gl_Arcball_Window.cxx,v 1.10 2000/04/15 20:04:53 jamespalmer Exp $"
+   "$Id: Fl_Gl_Arcball_Window.cxx,v 1.11 2000/05/12 14:18:12 jamespalmer Exp $"
    
    Copyright 1999-2000 by the Flek development team.
    
@@ -43,7 +43,7 @@ static void unitCircle (void)
   glEnd ();
 }
 
-/**
+/*
  * Draw a circle with the given normal, center and radius 
  */
 static void drawCircle (const FVector3& center, const FVector3& normal, double radius)
@@ -81,7 +81,7 @@ static void drawCircle (const FVector3& center, const FVector3& normal, double r
   glEnd ();
 }
 
-/**
+/*
  * Halve arc between unit vectors v1 and v2.
  * Assumes that v1 and v3 are unit vectors
  */
@@ -97,7 +97,7 @@ static FVector3 bisect (const FVector3& v1, const FVector3& v2)
   return v;
 }
 
-/**
+/*
  *  Draw an arc defined by its ends.
  */
 static void drawAnyArc (const FVector3& vFrom, const FVector3& vTo)
@@ -120,7 +120,7 @@ static void drawAnyArc (const FVector3& vFrom, const FVector3& vTo)
   glEnd ();
 }
 
-/**
+/*
  * Draw the arc of a semi-circle defined by its axis.
  */
 static void drawHalfArc(const FVector3& n)

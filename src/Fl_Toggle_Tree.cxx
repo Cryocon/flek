@@ -79,8 +79,10 @@ Fl_Toggle_Tree::Fl_Toggle_Tree(int x, int y, int w, int h) : Fl_Toggle_Tree_Base
   selection_i_ = 0;
   selection_count_ = 0;
   selection_current_ = 0;
-  
+
+#ifndef FLTK_2
   textfont_ = FL_HELVETICA;
+#endif
   textsize_ = 12;
   textcolor_ = FL_BLACK;
   edit_input_ = new Fl_Input(x, y, 0, 0);
