@@ -1,6 +1,6 @@
 # -*- sh -*-
 #
-# "$Id: makeinclude.in,v 1.9 2000/04/21 13:50:37 jamespalmer Exp $"
+# "$Id: makeinclude.in,v 1.10 2000/05/01 04:11:05 jamespalmer Exp $"
 #
 # Make include file for the Fast Light Tool Kit (FLTK).
 # @configure_input@
@@ -49,6 +49,9 @@ FLTK_INC = @FLTK_INC@
 XML_LIB = @XML_LIB@
 XML_INC = @XML_INC@
 
+JPEG_LIB = @JPEG_LIB@
+JPEG_INC = @JPEG_INC@
+
 GL_LIB = @GL_LIB@
 GL_INC = @GL_INC@
 
@@ -56,11 +59,12 @@ LIB_NAME_FLEK_CORE =@LIB_NAME_FLEK_CORE@
 LIB_NAME_FLEK_UI   =@LIB_NAME_FLEK_UI@
 LIB_NAME_FLEK_GL   =@LIB_NAME_FLEK_GL@
 LIB_NAME_FLEK_XML  =@LIB_NAME_FLEK_XML@
+LIB_NAME_FLEK_JPEG =@LIB_NAME_FLEK_JPEG@
 
 DSO_NAME_FLEK_CORE =@DSO_NAME_FLEK_CORE@
 DSO_NAME_FLEK_UI   =@DSO_NAME_FLEK_UI@
 DSO_NAME_FLEK_GL   =@DSO_NAME_FLEK_GL@
-DSO_NAME_FLEK_XML  =@DSO_NAME_FLEK_XML@
+DSO_NAME_FLEK_JPEG =@DSO_NAME_FLEK_JPEG@
 
 LIB_COMMAND	=@LIB_COMMAND@
 RANLIB		=@RANLIB@
@@ -71,9 +75,10 @@ DSO_COMMAND	=@DSO_COMMAND@
 
 LDLIBS_CORE =@LDFLAGS@ @LIBS@ -lm -ldl
 LDLIBS_XML  =@LDFLAGS@ @LIBS@ $(XML_LIB) -lm -ldl
+LDLIBS_JPEG =@LDFLAGS@ @LIBS@ $(JPEG_LIB) -lm -ldl
 LDLIBS_UI   =@LDFLAGS@ @LIBS@ -L/usr/X11R6/lib $(FLTK_LIB) -lX11 -lXext $(XML_LIB) @X_EXTRA_LIBS@ -lm -ldl
 LDLIBS_GL   =@LDFLAGS@ @LIBS@ -L/usr/X11R6/lib $(FLTK_LIB) $(GL_LIB) -lX11 -lXext $(XML_LIB) @X_EXTRA_LIBS@ -lm -ldl
 
 #
-# End of "$Id: makeinclude.in,v 1.9 2000/04/21 13:50:37 jamespalmer Exp $".
+# End of "$Id: makeinclude.in,v 1.10 2000/05/01 04:11:05 jamespalmer Exp $".
 #

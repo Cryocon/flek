@@ -1,6 +1,6 @@
 /* -*-C++-*- 
 
-   "$Id: FImage.H,v 1.2 2000/04/19 18:30:56 jamespalmer Exp $"
+   "$Id: FImage.H,v 1.3 2000/05/01 04:11:05 jamespalmer Exp $"
    
    Copyright 1999-2000 by the Flek development team.
    
@@ -36,11 +36,11 @@ class FImageIterator {
   
   friend class FImage;
 
-  FImageIterator (uchar *p) : ptr (p) { }
+  FImageIterator (uchar *p, int c=4) : ptr (p), channels (c) { }
 
  public:
 
-  FImageIterator () : ptr (0) { }
+  FImageIterator () : ptr (0), channels (4) { }
 
   bool operator == (FImageIterator &p) const { return (ptr == p.ptr); }
 
@@ -48,27 +48,27 @@ class FImageIterator {
 
   FImageIterator operator++ () 
     { 
-      ptr += 4;
+      ptr += channels;
       return *this;
     }
 
   FImageIterator operator++ (int)
     {
       FImageIterator tmp = *this;
-      ptr += 4;
+      ptr += channels;
       return tmp;
     }
 
   FImageIterator operator-- ()
     {
-      ptr -= 4;
+      ptr -= channels;
       return *this;
     }
 
   FImageIterator operator-- (int)
     {
       FImageIterator tmp = *this;
-      ptr -= 4;
+      ptr -= channels;
       return tmp;
     }
 
@@ -83,7 +83,7 @@ class FImageIterator {
  protected:
   
   uchar *ptr;
-
+  int channels;
 };
 
 
@@ -108,8 +108,13 @@ class FImage
   /**
    * This constructor allocated W*H pixels for storing the image.
    */
-  FImage (int w, int h);
+  FImage (int w, int h, int channels=4);
 
+  /**
+   * The copy constructor.
+   */
+  FImage (FImage *src);
+  
   /** 
    * The destructor deallocated any allocated memory.
    */
@@ -129,35 +134,70 @@ class FImage
   int height () { return H; }
 
   /**
+   * Gets the number of channels.
+   */
+  int channels () { return Channels; }
+
+  /** 
+   * A really bad scale function.
+   */
+  FImage* scale (int w, int h);
+
+  void flip_vertical ();
+  
+  /** 
+   * Clear the image to a certain color.
+   */
+  void clear (uchar r=0, uchar g=0, uchar b=0, uchar a=0);
+  
+  /**
+   * Sets the number of channels.  Crops or expands the number of channels.
+   */
+  void channels (int c);
+  
+  /**
    * Return an iterator connected to the first pixel on row r of the image.
    */
-  iterator begin (int r) { return iterator (Data+4*W*r); }
+  iterator begin (int r) { return iterator (Data+Channels*W*r, Channels); }
 
   /**
    * Return an iterator connected to the first pixel in the image.
    */
-  iterator begin () { return iterator (Data); }
+  iterator begin () { return iterator (Data, Channels); }
 
   /**
    * Return an iterator connected to the last+1 pixel on row r of the image.
    */
-  iterator end (int r) { return iterator (Data+(4*W*(r+1))); }
+  iterator end (int r) { return iterator (Data+(Channels*W*(r+1)), Channels); }
 
   /**
    * Return an iterator connected to the last+1 pixel in the image.
    */
-  iterator end () { return iterator (Data+(W*H*4)); }
+  iterator end () { return iterator (Data+(W*H*Channels), Channels); }
 
   /**
    * Return an iterator connected to position x, y.
    */
-  iterator operator() (int x, int y) { return iterator (Data+((W*y)+x)*4); }
+  iterator operator() (int x, int y) { return iterator (Data+((W*y)+x)*Channels, Channels); }
 
+  FImage& operator = (const FImage &p) {
+    delete [] Data;
+    W = p.W;
+    H = p.H;
+    Channels = p.Channels;
+    Data = new uchar [W*H*Channels];
+    for (int i=0; i<W*H*Channels; i++) {
+      Data[i] = p.Data[i];
+    }
+    return *this;
+  }
+  
  protected:
 
   uchar *Data;
   int W;
   int H;
+  int Channels;
 
 };
 
@@ -173,7 +213,7 @@ FImage* composite (FImage *A, FImage *B, int xo=0, int yo=0, float o=1.0);
  * gives the src frame an overall opacity/transparency.  length is the
  * number of RGBA pixels to perform this operation on.
  */
-void composite (unsigned char* dest, const unsigned char* src, int opacity, int length);
+void composite (unsigned char* dest, const unsigned char* src, int opacity, int length, int dest_channels, int src_channels);
 
 /**
  * Add image B to image A in place.  Image B can be offset by xo, yo. 
@@ -187,7 +227,7 @@ FImage* add (FImage *A, FImage *B, int xo=0, int yo=0, float o=1.0);
  * gives the src frame an overall opacity/transparency.  length is the
  * number of RGBA pixels to perform this operation on.
  */
-void add (unsigned char* dest, const unsigned char* src, int opacity, int length);
+void add (unsigned char* dest, const unsigned char* src, int opacity, int length, int dest_channels, int src_channels);
 
 /**
  * Subtract image B from image A in place.  Image B can be offset by xo, yo. 
@@ -201,7 +241,7 @@ FImage* subtract (FImage *A, FImage *B, int xo=0, int yo=0, float o=1.0);
  * gives the src frame an overall opacity/transparency.  length is the
  * number of RGBA pixels to perform this operation on.
  */
-void subtract (unsigned char* dest, const unsigned char* src, int opacity, int length);
+void subtract (unsigned char* dest, const unsigned char* src, int opacity, int length, int dest_channels, int src_channels);
 
 /**
  * Create a difference from images A and B in place.  Image B can be offset by xo, yo. 
@@ -215,7 +255,7 @@ FImage* difference (FImage *A, FImage *B, int xo=0, int yo=0, float o=1.0);
  * gives the src frame an overall opacity/transparency.  length is the
  * number of RGBA pixels to perform this operation on.
  */
-void difference (unsigned char* dest, const unsigned char* src, int opacity, int length);
+void difference (unsigned char* dest, const unsigned char* src, int opacity, int length, int dest_channels, int src_channels);
 
 /**
  * Lighten image A from Image B in place.  Image B can be offset by xo, yo. 
@@ -229,7 +269,7 @@ FImage* lighten_only (FImage *A, FImage *B, int xo=0, int yo=0, float o=1.0);
  * gives the src frame an overall opacity/transparency.  length is the
  * number of RGBA pixels to perform this operation on.
  */
-void lighten_only (unsigned char* dest, const unsigned char* src, int opacity, int length);
+void lighten_only (unsigned char* dest, const unsigned char* src, int opacity, int length, int dest_channels, int src_channels);
 
 /**
  * Darken image A from Image B in place.  Image B can be offset by xo, yo. 
@@ -243,7 +283,7 @@ FImage* darken_only (FImage *A, FImage *B, int xo=0, int yo=0, float o=1.0);
  * gives the src frame an overall opacity/transparency.  length is the
  * number of RGBA pixels to perform this operation on.
  */
-void darken_only (unsigned char* dest, const unsigned char* src, int opacity, int length);
+void darken_only (unsigned char* dest, const unsigned char* src, int opacity, int length, int dest_channels, int src_channels);
 
 /**
  * Divide image A by Image B in place.  Image B can be offset by xo, yo. 
@@ -257,7 +297,7 @@ FImage* divide (FImage *A, FImage *B, int xo=0, int yo=0, float o=1.0);
  * gives the src frame an overall opacity/transparency.  length is the
  * number of RGBA pixels to perform this operation on.
  */
-void divide (unsigned char* dest, const unsigned char* src, int opacity, int length);
+void divide (unsigned char* dest, const unsigned char* src, int opacity, int length, int dest_channels, int src_channels);
 
 /**
  * Multiply image A by Image B in place.  Image B can be offset by xo, yo. 
@@ -271,7 +311,7 @@ FImage* multiply (FImage *A, FImage *B, int xo=0, int yo=0, float o=1.0);
  * gives the src frame an overall opacity/transparency.  length is the
  * number of RGBA pixels to perform this operation on.
  */
-void multiply (unsigned char* dest, const unsigned char* src, int opacity, int length);
+void multiply (unsigned char* dest, const unsigned char* src, int opacity, int length, int dest_channels, int src_channels);
 
 /**
  * Screen image A by Image B in place.  Image B can be offset by xo, yo. 
@@ -285,7 +325,7 @@ FImage* screen (FImage *A, FImage *B, int xo=0, int yo=0, float o=1.0);
  * gives the src frame an overall opacity/transparency.  length is the
  * number of RGBA pixels to perform this operation on.
  */
-void screen (unsigned char* dest, const unsigned char* src, int opacity, int length);
+void screen (unsigned char* dest, const unsigned char* src, int opacity, int length, int dest_channels, int src_channels);
 
 /**
  * Overlay image A by Image B in place.  Image B can be offset by xo, yo. 
@@ -299,6 +339,6 @@ FImage* overlay (FImage *A, FImage *B, int xo=0, int yo=0, float o=1.0);
  * gives the src frame an overall opacity/transparency.  length is the
  * number of RGBA pixels to perform this operation on.
  */
-void overlay (unsigned char* dest, const unsigned char* src, int opacity, int length);
+void overlay (unsigned char* dest, const unsigned char* src, int opacity, int length, int dest_channels, int src_channels);
 
 #endif

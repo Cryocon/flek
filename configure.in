@@ -9,6 +9,7 @@ LIB_NAME_FLEK_CORE="libflek_core"
 LIB_NAME_FLEK_UI="libflek_ui"
 LIB_NAME_FLEK_GL="libflek_gl"
 LIB_NAME_FLEK_XML="libflek_xml"
+LIB_NAME_FLEK_JPEG="libflek_jpeg"
 
 if test "$RANLIB" != ":"; then
   LIB_COMMAND="ar cr"
@@ -58,6 +59,7 @@ if eval "test x$enable_shared = xyes"; then
   DSO_NAME_FLEK_UI="libflek_ui"
   DSO_NAME_FLEK_GL="libflek_gl"
   DSO_NAME_FLEK_XML="libflek_xml"
+  DSO_NAME_FLEK_JPEG="libflek_jpeg"
   case $uname in
       SunOS* | UNIX_S*)
 	  DSOEXT=".so.1"
@@ -136,7 +138,7 @@ AC_ARG_WITH([gl],
     dnl# My test to see if OpenGL is on this machine:
     if test "$uname" = "CYGWIN"
     then
-      GLLIB="-lopengl32 -lglu32"
+      GL_LIB="-lopengl32 -lglu32"
       AC_DEFINE(HAVE_GL)
     else
       AC_CHECK_LIB(GL, glXMakeCurrent, AC_DEFINE(HAVE_GL) GL_LIB="-lGLU -lGL", \
@@ -156,6 +158,18 @@ AC_ARG_WITH([xml],
     XML_LIB=""
     XML_INC=""
     AC_CHECK_LIB(xml, xmlGetProp, AC_DEFINE(HAVE_XML) XML_LIB="-lxml",echo "libxml not found.  You will not be able to build libflek_xml.",)
+  ])
+
+AC_ARG_WITH([jpeg], 
+  [  --with-jpeg=dir          specify the base jpeg dir if non-default (like /usr/jpeg/)], 
+  [ 
+    JPEG_LIB="-L$withval/lib -ljpeg"
+    JPEG_INC="-I$withval/include"
+  ], 
+  [
+    JPEG_LIB=""
+    JPEG_INC=""
+    AC_CHECK_LIB(jpeg, jpeg_stdio_src, AC_DEFINE(HAVE_JPEG) JPEG_LIB="-ljpeg",echo "libjpeg not found.  You will not be able to load jpeg images.",)
   ])
 
 
@@ -289,6 +303,10 @@ AC_SUBST(GL_INC)
 AC_SUBST(XML_LIB)
 AC_SUBST(XML_INC)
 
+AC_SUBST(HAVE_JPEG)
+AC_SUBST(JPEG_LIB)
+AC_SUBST(JPEG_INC)
+
 AC_SUBST(FLTK_DIR)
 AC_SUBST(FLTK_LIB)
 AC_SUBST(FLTK_INC)
@@ -298,11 +316,13 @@ AC_SUBST(LIB_NAME_FLEK_CORE)
 AC_SUBST(LIB_NAME_FLEK_UI)
 AC_SUBST(LIB_NAME_FLEK_GL)
 AC_SUBST(LIB_NAME_FLEK_XML)
+AC_SUBST(LIB_NAME_FLEK_JPEG)
 
 AC_SUBST(DSO_NAME_FLEK_CORE)
 AC_SUBST(DSO_NAME_FLEK_UI)
 AC_SUBST(DSO_NAME_FLEK_GL)
 AC_SUBST(DSO_NAME_FLEK_XML)
+AC_SUBST(DSO_NAME_FLEK_JPEG)
 
 AC_SUBST(DSOEXT)
 AC_SUBST(DSO_COMMAND)
@@ -315,5 +335,5 @@ AC_OUTPUT(makeinclude flek-config)
 chmod +x flek-config
 
 dnl#
-dnl# End of "$Id: configure.in,v 1.13 2000/04/21 13:50:37 jamespalmer Exp $".
+dnl# End of "$Id: configure.in,v 1.14 2000/05/01 04:11:05 jamespalmer Exp $".
 dnl#

@@ -16,7 +16,7 @@ calendar: calendar.cxx
 	$(CXX) $(UICOMPILE) $@.cxx $(UILINK) -o $@
 
 image: image.cxx
-	$(CXX) -g3 $(GLCOMPILE) $@.cxx $(GLLINK) -o $@
+	$(CXX) -g3 $(GLCOMPILE) $@.cxx $(GLLINK) -ljpeg -o $@
 
 stock_buttons: stock_buttons.cxx
 	$(CXX) $(UICOMPILE) $@.cxx $(UILINK) -o $@

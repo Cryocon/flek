@@ -36,6 +36,12 @@ CPP_FLEK_XML = \
 H_FLEK_XML = \
 	FXml.H
 
+CPP_FLEK_JPEG = \
+	FJPEG.cxx \
+
+H_FLEK_JPEG = \
+	FJPEG.H
+
 CPP_FLEK_UI = \
 	Fl_App_Window.cxx \
 	Fl_Better_Window.cxx \
@@ -89,9 +95,9 @@ H_FLEK_GL = \
 
 include ../makeinclude
 
-all: flek-core flek-ui flek-gl flek-xml
+all: flek-core flek-ui flek-gl flek-xml flek-jpeg
 
-install: flek-core-install flek-ui-install flek-gl-install flek-xml-install
+install: flek-core-install flek-ui-install flek-gl-install flek-xml-install flek-jpeg-install
 
 ################################################################
 
@@ -135,17 +141,28 @@ $(LIB_FLEK_XML).a: $(OBJ_FLEK_XML)
 ../lib/libflek_xml.so.1 ../lib/libflek_xml.sl.1: $(OBJ_FLEK_XML)
 	$(DSO_COMMAND) ../lib/$@ $(OBJ_FLEK_XML)
 
+LIB_FLEK_JPEG = ../lib/$(LIB_NAME_FLEK_JPEG)
+DSO_FLEK_JPEG = ../lib/$(DSO_NAME_FLEK_JPEG)$(DSOEXT)
+OBJ_FLEK_JPEG = $(CPP_FLEK_JPEG:.cxx=.o) 
+$(LIB_FLEK_JPEG).a: $(OBJ_FLEK_JPEG)
+	rm -f $@
+	$(LIB_COMMAND) ../lib/$@ $(OBJ_FLEK_JPEG)
+	$(RANLIB) $@
+../lib/libflek_jpeg.so.1 ../lib/libflek_jpeg.sl.1: $(OBJ_FLEK_JPEG)
+	$(DSO_COMMAND) ../lib/$@ $(OBJ_FLEK_JPEG)
+
 flek-core: $(LIB_FLEK_CORE).a $(DSO_FLEK_CORE)
 flek-ui: $(LIB_FLEK_UI).a $(DSO_FLEK_UI)
 flek-gl: $(LIB_FLEK_GL).a $(DSO_FLEK_GL)
 flek-xml: $(LIB_FLEK_XML).a $(DSO_FLEK_XML)
+flek-jpeg: $(LIB_FLEK_JPEG).a $(DSO_FLEK_JPEG)
 
 ################################################################
 
 .SUFFIXES:	.cxx .h .o
 
 .cxx.o :
-	$(CXX) -I.. $(XML_INC) $(GL_INC) $(FLTK_INC) $(CXXFLAGS) -c $< -o $(<:.cxx=.o)
+	$(CXX) -I.. $(XML_INC) $(JPEG_INC) $(GL_INC) $(FLTK_INC) $(CXXFLAGS) -c $< -o $(<:.cxx=.o)
 .c.o :
 	$(CC) -I. $(CFLAGS) -c -o $@ $<
 
@@ -253,12 +270,35 @@ flek-xml-install: $(LIB_FLEK_XML).a $(DSO_FLEK_XML)
 	@-chmod 755 $(includedir)/Flek
 	@-chmod 644 $(includedir)/Flek/*
 
+flek-jpeg-install: $(LIB_FLEK_JPEG).a $(DSO_FLEK_JPEG)
+	@echo "Installing libflek_jpeg..."
+	@-mkdir -p $(libdir)
+	@rm -f $(libdir)/$(LIB_NAME_FLEK_JPEG)
+	@-cp $(LIB_FLEK_JPEG).a $(libdir)
+	@-chmod 644 $(libdir)/$(LIB_NAME_FLEK_JPEG).a
+	@if test -n "$(DSOEXT)"; then \
+		echo "Installing libflek_jpeg DSO library."; \
+		if test $(DSO_FLEK_JPEG) = ../lib/$(DSO_NAME_FLEK_JPEG).so.1; then ext=.so; else ext=.s1; fi; \
+		rm -f $(libdir)/$(DSO_NAME_FLEK_JPEG)$$ext.1;\
+		rm -f $(libdir)/$(DSO_NAME_FLEK_JPEG)$$ext;\
+		cp $(DSO_FLEK_JPEG) $(libdir); \
+		chmod 755 $(libdir)/$(DSO_NAME_FLEK_JPEG)$$ext.1; \
+		ln -s $(libdir)/$(DSO_NAME_FLEK_JPEG)$$ext.1 $(libdir)/$(DSO_NAME_FLEK_JPEG)$$ext;\
+	fi
+	@echo "Installing include files..."
+	@-mkdir -p $(includedir)
+	@-mkdir -p $(includedir)/Flek
+	@-cd ../Flek/; cp $(H_FLEK_JPEG) $(includedir)/Flek; cd ../src/
+	@-chmod 755 $(includedir)/Flek
+	@-chmod 644 $(includedir)/Flek/*
+
 ################################################################
 
 list-headers:
 	@echo "Generating header file lists."
 	@echo "$(H_FLEK_CORE)" | sed 's/[ ]*$$//' | sed 's/ / =/g' | tr '=' "\n" | sed 's/^/\%\{prefix\}\/include\/Flek\//g' > flek_core_h.list
 	@echo "$(H_FLEK_XML)"  | sed 's/[ ]*$$//' | sed 's/ / =/g' | tr '=' "\n" | sed 's/^/\%\{prefix\}\/include\/Flek\//g' > flek_xml_h.list
+	@echo "$(H_FLEK_JPEG)"  | sed 's/[ ]*$$//' | sed 's/ / =/g' | tr '=' "\n" | sed 's/^/\%\{prefix\}\/include\/Flek\//g' > flek_jpeg_h.list
 	@echo "$(H_FLEK_UI)"   | sed 's/[ ]*$$//' | sed 's/ / =/g' | tr '=' "\n" | sed 's/^/\%\{prefix\}\/include\/Flek\//g' > flek_ui_h.list
 	@echo "$(H_FLEK_GL)"   | sed 's/[ ]*$$//' | sed 's/ / =/g' | tr '=' "\n" | sed 's/^/\%\{prefix\}\/include\/Flek\//g' > flek_gl_h.list
 
