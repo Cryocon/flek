@@ -1,12 +1,66 @@
-The usual thing:
+The Usual Routine
+-----------------
 
-./configure
-make
-make install
+  ./configure
+  make
+  make install
+
+There are also a number of make and install options.
 
 CONFIGURE OPTIONS
+-----------------
 
---with-fltk-dir=...     Specify where Fltk resides.
+--with-fltk=dir         Specify the base fltk prefix if non standard.
+
+--with-fltk-dir=dir     Specify the SOURCE dir where Fltk resides.  This is
+                        useful if Fltk is on your system but hasn't been
+                        installed.
+
+--with-gl=dir           Specify the base OpenGL prefix if non standard.
+
+--with-xml=dir          Specify the base libxml prefix if non standard.
+
 --with-fltk2            Use Fltk 2 (cvs) and not Fltk 1.0.7.
                         This is required to get Flek to compile with FLTK_2.
---with-no-gl            Don't compile OpenGL support.
+
+--enable-shared         Build shared libraries (DSO).  These are not built by
+                        default.
+
+MAKE OPTIONS
+------------
+
+If you are missing either libxml, fltk, or OpenGL/Mesa, you should install
+them and then follow the above instructions.  If you can't or don't want to
+and you sort of know what you are doing, keep reading.
+
+From the "src" directory you can optionally build and install the different
+Flek components seperately.  You will need to do this if, for example you 
+don't have (or want) libxml or OpenGL or even Fltk installed on your system.
+I have one project that only uses flek-core, so on some systems that's all I
+need to build and install.
+
+  cd src
+
+  make flek-core         # Build libflek_core
+  make flek-ui           # Build libflek_ui, needs flek_core, and fltk.
+  make flek-gl           # Build libflek_gl, needs flek_core, flek_ui, and OpenGL.
+  make flek-xml          # Build libflek_xml, needs flek_core, and libxml.
+  
+  make flek-core-install # Install libflek_core
+  make flek-ui-install   # Install libflek_ui
+  make flek-gl-install   # Install libflek_gl
+  make flek-xml-install  # Install libflek_xml
+  
+BUILDING RPMS (ADVANCED USERS)
+------------------------------
+
+The top level Makefile can also build an RPM "automagically" by typing:
+
+  make rpm
+  
+Please read the top level Makefile to see what is about to happen and check
+over the spec file, too.  Remember, I warned you.  This is here to make 
+rpm building convenient.
+
+--
+james@tiger-marmalade.com

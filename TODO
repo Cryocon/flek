@@ -1,8 +1,6 @@
 In no particular order :
 
-* Tweak installation and packaging ..
-
-* Menu Replacement --
+* Some sort of menu replacement --
 
   Should be able to "tear off".  
   Items should be able to have a pixmap.
@@ -10,21 +8,17 @@ In no particular order :
   More robust.
   Better dynamic API than Fl_Menu.
   
-* About Window --
+* About window --
   
   FltkWindow :: Fl_About (title, version, copyright, authors, comments, logo);
 
-* More Dock Acceptors --
-
-  Fl_Tile
-  Fl_Pack
-  Fl_Tabs
-  
-* Interprocess communication and "swallowed" windows.  see MRPC / tinymico.
+* Fix docking stuff in Fltk 2.0 and add more "dock acceptors".
 
 * Fl_Dockable_Group - needs a function to save and load the state of the 
-    floating and docked items.
-    
+  floating and docked items.
+
+* Interprocess communication.
+
 * 3D controllers (scale, rotate, translate)  Like Gleem.
 
 * Themes and scheme support for Fltk 2.0.

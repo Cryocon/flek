@@ -123,7 +123,7 @@ CFLAGS="$CFLAGS $X_CFLAGS"
 CPPFLAGS="$CPPFLAGS $X_CFLAGS"
 
 AC_ARG_WITH([gl], 
-  [ --with-gl=dir specify the base GL dir if non-default (like /usr/X11R6/], 
+  [  --with-gl=dir           specify the base GL dir if non-default (like /usr/X11R6/) ], 
   [ 
     GL_LIB="-L$withval/lib -lGLU -lGL"
     GL_INC="-I$withval/include"
@@ -146,7 +146,7 @@ AC_ARG_WITH([gl],
   ])
 
 AC_ARG_WITH([xml], 
-  [ --with-xml=dir specify the base xml dir if non-default (like /usr/X11R6/], 
+  [  --with-xml=dir          specify the base xml dir if non-default (like /usr/xml/)], 
   [ 
     XML_LIB="-L$withval/lib -lxml"
     XML_INC="-I$withval/include"
@@ -247,7 +247,7 @@ FLTK_INC=""
 FLTK_FLAGS=""
 
 AC_ARG_WITH([fltk-dir], 
-  [ --with-fltk-dir=dir specify the Fltk source dir], 
+  [  --with-fltk-dir=dir     specify the Fltk source dir], 
   [ 
     FLTK_DIR="$withval"
     FLTK_LIB="-L$withval/lib -lfltk"
@@ -258,7 +258,7 @@ AC_ARG_WITH([fltk-dir],
 #    AC_CHECK_LIB(fltk,numericsort, AC_DEFINE(HAVE_FLTK) FLTK_LIB="-lfltk","** Fltk not found.  You will not be able to build libflek_ui or libflek_gl.",)
 
 AC_ARG_WITH([fltk], 
-  [ --with-fltk-dir=dir specify the directory where fltk is installed. ], 
+  [  --with-fltk=dir         specify the directory where fltk is installed. ], 
   [ 
     FLTK_DIR="$withval"
     FLTK_LIB="-L$withval/lib -lfltk"
@@ -276,16 +276,9 @@ AC_ARG_WITH([fltk],
 
 
 AC_ARG_WITH([fltk2], 
-  [ --with-fltk2], 
+  [  --with-fltk2            Use Fltk 2.0 instead of Fltk 1.0x. ], 
   [ 
     FLTKFLAGS="-DFLTK_2"
-  ], [])
-
-HAVEGL=""
-AC_ARG_WITH([no-gl], 
-  [ --with-no-gl], 
-  [ 
-    HAVEGL="-DNO_GL"
   ], [])
 
 AC_SUBST(HAVEGL)
@@ -321,5 +314,5 @@ AC_OUTPUT(makeinclude flek-config)
 chmod +x flek-config
 
 dnl#
-dnl# End of "$Id: configure.in,v 1.11 2000/04/15 20:04:53 jamespalmer Exp $".
+dnl# End of "$Id: configure.in,v 1.12 2000/04/16 02:05:02 jamespalmer Exp $".
 dnl#

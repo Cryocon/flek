@@ -85,10 +85,6 @@ H_FLEK_GL = \
 	FTrans_Control.H \
 	Fl_Gl_Arcball_Window.H
 
-CFILES = 
-
-CLEAN =
-
 ################################################################
 
 include ../makeinclude
@@ -100,44 +96,44 @@ install: flek-core-install flek-ui-install flek-gl-install flek-xml-install
 ################################################################
 
 LIB_FLEK_CORE = ../lib/$(LIB_NAME_FLEK_CORE)
-DSO_FLEK_CORE = $(DSO_NAME_FLEK_CORE)$(DSOEXT)
+DSO_FLEK_CORE = ../lib/$(DSO_NAME_FLEK_CORE)$(DSOEXT)
 OBJ_FLEK_CORE = $(CPP_FLEK_CORE:.cxx=.o) 
 $(LIB_FLEK_CORE).a: $(OBJ_FLEK_CORE)
 	rm -f $@
 	$(LIBCOMMAND) $@ $(OBJ_FLEK_CORE)
 	$(RANLIB) $@
-libflek_core.so.1 libflek_core.sl.1: $(OBJ_FLEK_CORE)
-	$(DSOCOMMAND) $@ $(OBJ_FLEK_CORE)
+../lib/libflek_core.so.1 ../lib/libflek_core.sl.1: $(OBJ_FLEK_CORE)
+	$(DSOCOMMAND) ../lib/$@ $(OBJ_FLEK_CORE)
 
 LIB_FLEK_UI = ../lib/$(LIB_NAME_FLEK_UI)
-DSO_FLEK_UI = $(DSO_NAME_FLEK_UI)$(DSOEXT)
+DSO_FLEK_UI = ../lib/$(DSO_NAME_FLEK_UI)$(DSOEXT)
 OBJ_FLEK_UI = $(CPP_FLEK_UI:.cxx=.o) 
 $(LIB_FLEK_UI).a: $(OBJ_FLEK_UI)
 	rm -f $@
 	$(LIBCOMMAND) $@ $(OBJ_FLEK_UI)
 	$(RANLIB) $@
-libflek_ui.so.1 libflek_ui.sl.1: $(OBJ_FLEK_UI)
-	$(DSOCOMMAND) $@ $(OBJ_FLEK_UI)
+../lib/libflek_ui.so.1 ../lib/libflek_ui.sl.1: $(OBJ_FLEK_UI)
+	$(DSOCOMMAND) ../lib/$@ $(OBJ_FLEK_UI)
 
 LIB_FLEK_GL = ../lib/$(LIB_NAME_FLEK_GL)
-DSO_FLEK_GL = $(DSO_NAME_FLEK_GL)$(DSOEXT)
+DSO_FLEK_GL = ../lib/$(DSO_NAME_FLEK_GL)$(DSOEXT)
 OBJ_FLEK_GL = $(CPP_FLEK_GL:.cxx=.o) 
 $(LIB_FLEK_GL).a: $(OBJ_FLEK_GL)
 	rm -f $@
 	$(LIBCOMMAND) $@ $(OBJ_FLEK_GL)
 	$(RANLIB) $@
-libflek_gl.so.1 libflek_gl.sl.1: $(OBJ_FLEK_GL)
-	$(DSOCOMMAND) $@ $(OBJ_FLEK_GL)
+../lib/libflek_gl.so.1 ../lib/libflek_gl.sl.1: $(OBJ_FLEK_GL)
+	$(DSOCOMMAND) ../lib/$@ $(OBJ_FLEK_GL)
 
 LIB_FLEK_XML = ../lib/$(LIB_NAME_FLEK_XML)
-DSO_FLEK_XML = $(DSO_NAME_FLEK_XML)$(DSOEXT)
+DSO_FLEK_XML = ../lib/$(DSO_NAME_FLEK_XML)$(DSOEXT)
 OBJ_FLEK_XML = $(CPP_FLEK_XML:.cxx=.o) 
 $(LIB_FLEK_XML).a: $(OBJ_FLEK_XML)
 	rm -f $@
-	$(LIBCOMMAND) $@ $(OBJ_FLEK_XML)
+	$(LIBCOMMAND) ../lib/$@ $(OBJ_FLEK_XML)
 	$(RANLIB) $@
-libflek_xml.so.1 libflek_xml.sl.1: $(OBJ_FLEK_XML)
-	$(DSOCOMMAND) $@ $(OBJ_FLEK_XML)
+../lib/libflek_xml.so.1 ../lib/libflek_xml.sl.1: $(OBJ_FLEK_XML)
+	$(DSOCOMMAND) ../lib/$@ $(OBJ_FLEK_XML)
 
 flek-core: $(LIB_FLEK_CORE).a $(DSO_FLEK_CORE)
 flek-ui: $(LIB_FLEK_UI).a $(DSO_FLEK_UI)
@@ -156,7 +152,7 @@ flek-xml: $(LIB_FLEK_XML).a $(DSO_FLEK_XML)
 ################################################################
 
 clean :
-	-@ rm -f *.o *.do $(LIBRARY) $(CLEAN) core *~ ../include/*~ makedepend cmap
+	-@ rm -f *.o *.do ../libs/* core *~ ../include/*~ makedepend o *.list
 
 distclean: clean
 	-@ rm -f config.* makeinclude

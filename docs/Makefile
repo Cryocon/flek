@@ -18,7 +18,7 @@ sourceforge:
 install:
 
 clean:
-	rm *.html *.txt
+	rm -rf *.html *.txt
 
 distclean: clean
 

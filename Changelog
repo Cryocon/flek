@@ -1,3 +1,9 @@
+2000-04-15  James Dean Palmer <james@tiger-marmalade.com>
+
+        - More documentation.
+	- RPM build routine.
+	- Fixed shared library support.
+
 2000-04-13  James Dean Palmer <james@tiger-marmalade.com>
 
         - Method names renamed from thisStyle to this_style.
