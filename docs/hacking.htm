@@ -39,7 +39,7 @@
       standard class and method naming conventions.  For more information on
       the GNU coding guidelines, see the <a href="">online documentation</a>.
     </p>
-    <blockquote>
+
       <h3>Naming Conventions</h3>
       <p>Flek uses most of the same naming conventions as Fltk.  Methods are
       named like_this (and not likeThis), and widget are named like
@@ -67,8 +67,10 @@
 <font color="red">/**
  * Convert to a rotation matrix. Assumes that the quaternion has 
  * been normalized
+ *
+ * @return The converted matrix.
  */</font>
-<font color="blue">fMatrix3x3</font> toMatrix (<font color="blue">void</font>) const;
+<font color="blue">FMatrix3x3</font> to_matrix (<font color="blue">void</font>) const;
 </pre>
     </blockquote>
 

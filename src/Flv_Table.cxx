@@ -56,7 +56,10 @@
 #endif
 
 static Fl_Cursor last_cursor = FL_CURSOR_DEFAULT;
-static int drag_col=-4, drag_row=-4, anchor_left, anchor_top;
+static int drag_col=-4;
+static int drag_row=-4;
+static int anchor_left;
+static int anchor_top;
 
 
 Flv_Table::Flv_Table( int X, int Y, int W, int H, const char *l ) :

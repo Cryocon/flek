@@ -5,8 +5,10 @@
 
 #include <Flek/Fl_Toggle_Node.H>
 #include <Flek/Fl_Toggle_Tree.H>
-#include <Flek/open_icon.xpm>
-#include <Flek/closed_icon.xpm>
+#include "pixmaps/tt_open_icon.xpm"
+#include "pixmaps/tt_closed_icon.xpm"
+#include "pixmaps/tt_file_small.xpm"
+#include "pixmaps/tt_folder_small.xpm"
 
 void Fl_Toggle_Tree::select_range(Fl_Toggle_Node* start,
                                  Fl_Toggle_Node* end, int add) {
@@ -64,10 +66,10 @@ Fl_Toggle_Tree::Fl_Toggle_Tree(int x, int y, int w, int h) : Fl_Toggle_Tree_Base
   closed_pixmap_ = 0;
   opened_pixmap_ = 0;
   if (s_closed_pixmap_ == 0) {
-    s_closed_pixmap_ = new Fl_Pixmap(closed_icon);
+    s_closed_pixmap_ = new Fl_Pixmap(tt_closed_icon_xpm);
   }
   if (s_opened_pixmap_ == 0) {
-    s_opened_pixmap_ = new Fl_Pixmap(open_icon);
+    s_opened_pixmap_ = new Fl_Pixmap(tt_open_icon_xpm);
   }
   closed_pixmap(s_closed_pixmap_);
   opened_pixmap(s_opened_pixmap_);

@@ -575,12 +575,12 @@ LIB_NAME_FLEK_GL="libflek_gl"
 LIB_NAME_FLEK_XML="libflek_xml"
 
 if test "$RANLIB" != ":"; then
-  LIBCOMMAND="ar cr"
+  LIB_COMMAND="ar cr"
 else
-  LIBCOMMAND="ar crs"
+  LIB_COMMAND="ar crs"
 fi
-DSOCOMMAND="echo"
-DSONAME=""
+
+DSO_COMMAND="echo"
 
 uname=`uname`
 uversion=`uname -r | sed -e '1,$s/\.//g'`
@@ -632,24 +632,24 @@ if eval "test x$enable_shared = xyes"; then
   case $uname in
       SunOS* | UNIX_S*)
 	  DSOEXT=".so.1"
-	  DSOCOMMAND="\$(CXX) -Wl,-h,\$@ \$(LDLIBS) -G $DEBUGFLAG -o"
+	  DSO_COMMAND="\$(CXX) -Wl,-h,\$@ \$(LDLIBS) -G $DEBUGFLAG -o"
 	  ;;
       HP-UX*)
 	  DSOEXT=".s1.1"
-	  DSOCOMMAND="ld -b -z +h \$@ $DEBUGFLAG -o"
+	  DSO_COMMAND="ld -b -z +h \$@ $DEBUGFLAG -o"
 	  ;;
       OSF1*)
 	  DSOEXT=".so.1"
-          DSOCOMMAND="\$(CXX) -Wl,-soname,\$@ \$(LDLIBS) -shared $DEBUGFLAG -o"
+          DSO_COMMAND="\$(CXX) -Wl,-soname,\$@ \$(LDLIBS) -shared $DEBUGFLAG -o"
 cd 	  ;;
       IRIX*)
 	  DSOEXT=".so.1"
-          DSOCOMMAND="\$(CXX) -soname \$@ \$(LDLIBS) -shared $DEBUGFLAG -o"
+          DSO_COMMAND="\$(CXX) -soname \$@ \$(LDLIBS) -shared $DEBUGFLAG -o"
 	  ;;
       CYGWIN*)
 	  DLLCFLAGS="-DFL_DLL -DFL_LIBRARY"
 	  DSOEXT=".dll"
-          DSOCOMMAND="dllwrap --export-all --target i386-mingw32 \
+          DSO_COMMAND="dllwrap --export-all --target i386-mingw32 \
 	--implib ../lib/libflek_coredll.1.a \
 	--output-exp ../lib/libflek_coredll.1.exp \
 	--driver-name \$(CXX)"
@@ -659,7 +659,7 @@ cd 	  ;;
           echo "Warning: shared libraries may not be supported.  Trying -shared"
 	  echo "         option with compiler."
 	  DSOEXT=".so.1"
-          DSOCOMMAND="\$(CXX) -Wl,-soname,\$@ -shared $DEBUGFLAG -o"
+          DSO_COMMAND="\$(CXX) -Wl,-soname,\$@ -shared $DEBUGFLAG -o"
 	  ;;
   esac
 fi
@@ -3030,8 +3030,8 @@ s%@DSO_NAME_FLEK_UI@%$DSO_NAME_FLEK_UI%g
 s%@DSO_NAME_FLEK_GL@%$DSO_NAME_FLEK_GL%g
 s%@DSO_NAME_FLEK_XML@%$DSO_NAME_FLEK_XML%g
 s%@DSOEXT@%$DSOEXT%g
-s%@DSOCOMMAND@%$DSOCOMMAND%g
-s%@LIBCOMMAND@%$LIBCOMMAND%g
+s%@DSO_COMMAND@%$DSO_COMMAND%g
+s%@LIB_COMMAND@%$LIB_COMMAND%g
 s%@MAKEDEPEND@%$MAKEDEPEND%g
 s%@DLLCFLAGS@%$DLLCFLAGS%g
 

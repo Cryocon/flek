@@ -10,8 +10,10 @@
 const int FDate::days[] = 
   { 0, 31, 28, 31, 30,  31,  30,  31,  31,  30,  31,  30, 31 };
 
-const int FDate::julian_days[] = 
-  { 0,  0, 31, 59, 90, 120, 151, 181, 212, 243, 273, 304, 334 };
+const int FDate::julian_days[2][13] = {
+    { 0, 0, 31, 59, 90, 120, 151, 181, 212, 243, 273, 304, 334 },
+    { 0, 0, 31, 60, 91, 121, 152, 182, 213, 244, 274, 305, 335 }
+};
 
 const char *FDate::month_name[] = {
   "January",
@@ -57,7 +59,7 @@ FBase::Ptr FDate::copy (void) const {
 }
 
 void FDate::set_date (int y, int m, int d) {
-  if (is_valid (y, m, d)) {
+  if (valid (y, m, d)) {
     Year = y;
     Month = m;
     Day = d;
@@ -107,7 +109,7 @@ bool FDate::leap_year (int y) {
   return false;
 }
 
-bool FDate::is_valid (int y, int m, int d) {
+bool FDate::valid (int y, int m, int d) {
   if (y < 1970 || y > 2035) return false;
   if (m < 1 || m > 12) return false;
   if (d < 1 ) return false;
@@ -195,12 +197,9 @@ void FDate::operator= (const FDate &d) {
 }
 
 double FDate::julian_date () {
-  int days_in_year = 365, julian_day = 0;
-  if (leap_year (Year)) days_in_year++;
-  julian_day = julian_days[Month] + Day;
-  if (leap_year (Year) &&  (Month > 2))
-    julian_day++;
-  return (Year + 1.0 * (julian_day - 1) / days_in_year);
+  int days_in_year = 365;
+  if (leap_year ()) days_in_year++;
+  return (Year + 1.0 * (day_of_year (Year, Month, Day) - 1) / days_in_year);
 }
 
 void FDate::next_month () {
@@ -211,7 +210,19 @@ void FDate::next_month () {
   else
     Month++;
   
-  while ((Day >= 1) && (!is_valid ()))
+  while ((Day >= 1) && (!valid ()))
+    Day--;
+}
+
+void FDate::previous_month () {
+  if (Month == 1) {
+    Month = 12;
+    Year--;
+  }
+  else
+    Month--;
+  
+  while ((Day >= 1) && (!valid ()))
     Day--;
 }
 
@@ -226,6 +237,7 @@ void FDate::next_year () {
     Day = 28;
   Year++;
 }
+
 
 char* FDate::to_string (int fmt) const {
   static char temp[20];
@@ -261,4 +273,48 @@ char* FDate::to_string (int fmt) const {
 
 char* FDate::to_string () const {
   return to_string (Fmt);
+}
+
+int FDate::days_in_month (int month, int leap) {
+  /* Validate the month. */
+  if (month < JANUARY || month > DECEMBER)
+    return -1;
+  
+  /* Return 28, 29, 30, or 31 based on month/leap. */
+  switch (month) {
+   case FEBRUARY:
+    return leap ? 29 : 28;
+   default:
+    return days[month];
+  }
+}
+
+int FDate::day_of_year (int year, int mon, int mday) {
+  /* Return day of year. */
+  return mday + julian_days[leap_year (year) ? 1 : 0][mon];
+}
+
+int FDate::day_of_epoch (int year, int mon, int mday) {
+  int  doe;
+  int  era, cent, quad, rest;
+  
+  /* break down the year into 400, 100, 4, and 1 year multiples */
+  rest = year - 1;
+  quad = rest / 4;        rest %= 4;
+  cent = quad / 25;       quad %= 25;
+  era = cent / 4;         cent %= 4;
+  
+  /* set up doe */
+  doe = day_of_year (year, mon, mday);
+  doe += era * (400 * 365 + 97);
+  doe += cent * (100 * 365 + 24);
+  doe += quad * (4 * 365 + 1);
+  doe += rest * 365;
+  
+  return doe;
+}
+
+int FDate::day_of_week (int year, int mon, int mday)
+{
+  return day_of_epoch (year, mon, mday) % 7;
 }

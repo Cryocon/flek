@@ -4,7 +4,7 @@
 #
 # by James Dean Palmer
 #
-# "$Id: flek-config.in,v 1.10 2000/04/15 20:04:53 jamespalmer Exp $"
+# "$Id: flek-config.in,v 1.11 2000/04/21 13:50:37 jamespalmer Exp $"
 #
 
 MAJOR_VERSION=0
@@ -38,17 +38,11 @@ CXXFLAGS="@CXXFLAGS@ @X_CFLAGS@"
 # LIBNAME="@LIBNAME@"
 LIBCOMMAND="@LIBCOMMAND@"
 RANLIB="@RANLIB@"
-#DSONAME="@DSONAME@"
-DSOCOMMAND="@DSOCOMMAND@"
-
-FLTKDIR="@FLTKDIR@"
-FLTKLIB="@FLTKLIB@"
-FLTKINC="@FLTKINC@"
-
-# programs to make archive and build DSOs
-RANLIB="@RANLIB@"
-DSOCOMMAND="@DSOCOMMAND@"
 EXPORTCOMMAND="@EXPORTCOMMAND@"
+
+FLTK_DIR="@FLTK_DIR@"
+FLTK_LIB="@FLTK_LIB@"
+FLTK_INC="@FLTK_INC@"
 
 usage ()
 {
@@ -147,18 +141,18 @@ LDLIBS=""
 LDSTATIC=""
 LIBS=""
 if test "$use_xml" = "yes"; then
-    LDLIBS="$LDLIBS -lflek_xml @XMLLIB@ -lz"
-    LDSTATIC="$LDSTATIC $prefix/lib/libflek_xml.a @GLLIB@"
+    LDLIBS="$LDLIBS -lflek_xml @XML_LIB@ -lz"
+    LDSTATIC="$LDSTATIC $prefix/lib/libflek_xml.a @XML_LIB@"
     LIBS="$LIBS $prefix/lib/libflek_xml.a"
 fi
 if test "$use_gl" = "yes"; then
-    LDLIBS="$LDLIBS -lflek_gl @GLLIB@"
-    LDSTATIC="$LDSTATIC $prefix/lib/libflek_gl.a @GLLIB@"
+    LDLIBS="$LDLIBS -lflek_gl @GL_LIB@"
+    LDSTATIC="$LDSTATIC $prefix/lib/libflek_gl.a @GL_LIB@"
     LIBS="$LIBS $prefix/lib/libflek_gl.a"
 fi
 if test "$use_ui" = "yes"; then
-    LDLIBS="$LDLIBS @LDFLAGS@ -lflek_ui -lfltk @LIBS@ @LDLIBS@ @X_EXTRA_LIBS@"
-    LDSTATIC="$LDSTATIC @LDFLAGS@ $prefix/lib/libflek_ui.a -lfltk @LIBS@ @LDLIBS@ @X_EXTRA_LIBS@"
+    LDLIBS="$LDLIBS @LDFLAGS@ -lflek_ui $FLTK_LIB @LIBS@ @LDLIBS@ @X_EXTRA_LIBS@"
+    LDSTATIC="$LDSTATIC @LDFLAGS@ $prefix/lib/libflek_ui.a $FLTK_LIB @LIBS@ @LDLIBS@ @X_EXTRA_LIBS@"
     LIBS="$LIBS $prefix/lib/libflek_ui.a"
 fi
 LDLIBS="$LDLIBS -lflek_core -lm"
@@ -180,13 +174,13 @@ fi
 if test "$echo_cflags" = "yes"; then
       includes=-I`echo "$0" | sed 's/\/bin\/flek-config/\/include/
 s/\/flek-config//'`
-      echo $includes $FLTKINC $CFLAGS
+      echo $includes $FLTK_INC $CFLAGS
 fi
 
 if test "$echo_cxxflags" = "yes"; then
       includes=-I`echo "$0" | sed 's/\/bin\/flek-config/\/include/
 s/\/flek-config//'`
-      echo $includes $FLTKINC @XMLINC@ $CXXFLAGS
+      echo $includes $FLTK_INC @XML_INC@ $CXXFLAGS
 fi
 
 if test "$echo_ldflags" = "yes"; then
@@ -201,7 +195,7 @@ if test "$echo_ldflags" = "yes"; then
           fi
         fi
       done
-      echo $libdirs $FLTKLIB $my_libs
+      echo $libdirs $my_libs
 fi
 
 if test "$echo_ldstaticflags" = "yes"; then

@@ -1214,7 +1214,7 @@ void Flv_List::add_selection_style( Flv_Style &s, int R, int  )
 }
 
 static Fl_Cursor last_cursor = FL_CURSOR_DEFAULT;
-static int drag_row=-4, anchor_top;
+//static int drag_row=-4, anchor_top;
 
 bool Flv_List::check_resize(void)
 {

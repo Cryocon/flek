@@ -3,6 +3,7 @@
         - More documentation.
 	- RPM build routine.
 	- Fixed shared library support.
+	- Incorporated Dave Freese's Fl_Date_Input.
 
 2000-04-13  James Dean Palmer <james@tiger-marmalade.com>
 

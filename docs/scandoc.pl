@@ -14,6 +14,9 @@
 require "ctime.pl";
 require "getopts.pl";
 
+# 1 = on (verbose); 0 = off 
+$debug = 0;
+
 # Get the current date
 $date = &ctime(time);
 
@@ -116,7 +119,14 @@ exit;
 # Read a line of input, and remove blank lines and preprocessor directives.
 sub rdln {
   if (defined ($_)) {
-    while (/^(\s*|\#.*)$/ && ($_ = <FILE>)) {$linenumber++; }
+    while (/^(\s*|\#.*)$/ && ($_ = <FILE>)) {$linenumber++; if ($debug) { print STDERR "(0:$srcfile) $linenumber.\n"; } }
+  }
+}
+
+# Don't skip "#"
+sub rdln2 {
+  if (defined ($_)) {
+    while (/^(\s*)$/ && ($_ = <FILE>)) {$linenumber++; if ($debug) { print STDERR "(0:$srcfile) $linenumber.\n"; } }
   }
 }
 
@@ -139,11 +149,12 @@ sub matchRParen		{ &rdln; return (s/^\s*\(//) if defined ($_); return 0; }
 sub matchLParen		{ &rdln; return (s/^\s*\)//) if defined ($_); return 0; }
 sub matchRAngle		{ &rdln; return (s/^\s*\<//) if defined ($_); return 0; }
 sub matchLAngle		{ &rdln; return (s/^\s*\>//) if defined ($_); return 0; }
-sub matchDecl           { &rdln; return (s/^(\s*[\s\w\*\[\]\~\&\n]+)//, $1) if defined ($_); return (0, 0); }
+sub matchDecl           { &rdln; return (s/^(\s*[\s\w\*\[\]\~\&\n\:]+)//, $1) if defined ($_); return (0, 0); }
 sub matchOper		{ &rdln; return (s/^\s*([\~\&\^\>\<\=\!\%\*\+\-\/\|\w]*)// && $1) if defined ($_); return 0; }
 sub matchFuncOper	{ &rdln; return (s/^\s*(\(\))// && $1) if defined ($_); return 0; }
 sub matchAny		{ &rdln; return (s/^\s*(\S+)//, $1) if defined ($_); return (0, 0); }
 sub matchChar		{ &rdln; return (s/^(.)//, $1) if defined ($_); return (0, 0); }
+sub matchChar2	        { &rdln2; return (s/^(.)//, $1) if defined ($_); return (0, 0); }
 sub matchString 	{ &rdln; return (s/^\"(([^\\\"]|(\\.)))*\"//, $1) if defined ($_); return (0, 0); }
 
 # Skip to next semicolon
@@ -176,6 +187,38 @@ sub skipBody {
     }
     else { 
       last if ((($valid,) = &matchKW( "[^\{\}]")) && !$valid);
+    }
+  }
+}
+
+# Skip a string. (multiline)
+sub skipString {
+  local( $char, $lastchar);
+  $lastchar = "\"";
+  
+  for (;;) {
+    ($valid, $char) = &matchChar2;
+    if (($char eq "\"") && ($lastchar ne "\\")) { last; }
+    if ($lastchar eq "\\") { $lastchar = " "; }
+    else { $lastchar = $char; }
+  }
+}
+
+
+# Skip everything in parenthesis.
+sub skipParenBody {
+  local( $nest );
+  
+  $nest = 1;
+  
+  for (;;) {
+    if (&matchRParen) { $nest++; }
+    elsif (&matchLParen) {
+      $nest--;
+      last if !$nest;
+    }
+    else { 
+      last if ((($valid,) = &matchKW( "[^\(\)]")) && !$valid);
     }
   }
 }
@@ -425,7 +468,7 @@ sub parseDeclaration {
   if ($context) { $baseScope = $context . "::"; }
   
   &rdln;
-  
+
   if (!defined ($_)) { return 0; }
   
   if (s|^\s*//\*\s+||) {
@@ -446,7 +489,7 @@ sub parseDeclaration {
     $docTag = 'description';
     
     # Special comment
-    while (!/\*\//) { &handleCommentLine( $_ ); $text .= $_; $_ = <FILE>; $linenumber++; }
+    while (!/\*\//) { &handleCommentLine( $_ ); $text .= $_; $_ = <FILE>; $linenumber++; if ($debug) { print STDERR "(1) $linenumber\n."; }}
     s/\={3,}|\-{3,}|\*{3,}//;			# Eliminate banner strips
     /\*\//;
     &handleCommentLine( $` );
@@ -456,7 +499,7 @@ sub parseDeclaration {
     # Ordinary C comment
     $text = "";
     
-    while (!/\*\//) { $text .= $_; $_ = <FILE>; $linenumber++; }
+    while (!/\*\//) { $text .= $_; $_ = <FILE>; $linenumber++; if ($debug) { print STDERR "(2) $linenumber\n."; }}
     /\*\//;
     $text.= $`; $_ = $';
   }
@@ -514,7 +557,7 @@ sub parseDeclaration {
 	$class = { 'type'    => $tag,
 		   'name'    => $fullName,
 		   'longname'=> "$tag $className",
-		   'fullname'=> "$tag $className", ## JAMES$tmplParams",
+		   'fullname'=> "$tag $className",
 		   'scopename'=> "$tag $fullName",
 		   'uname'   => $fullName,
 		   'bases'   => \@bases,
@@ -568,8 +611,18 @@ sub parseDeclaration {
   #   }
   # }
   elsif ((($valid, $decl) = &matchDecl) && $valid) {
-    return 1 if ($decl =~ /^\s*$/);
+    my ($instanceClass) = "";
     
+    # print STDERR "DECLARATION=$decl, REST=$_, baseScope=$baseScope\n";
+
+    return 1 if ($decl =~ /^\s*$/);
+
+    if (!($class)) {
+      if ($decl =~ s/(\S*\s*)(\S+)\:\:(\S+)\s*$/$1$3/) {
+        $instanceClass = $2;
+      }
+    }
+
     # Eliminate in-line comments
     &removeComment;
     
@@ -663,6 +716,16 @@ sub parseDeclaration {
 	    $entry->{ 'class' } = "$context";
 	    $class->{ 'members' }{ $dbname } = $entry;
 	  }
+	  elsif ($instanceClass) {
+	    $class = &classRecord ($instanceClass);
+	    if (!($class)) {
+	      print STDERR "WARNING: Skipping \"$instanceClass\:\:$decl\".  Class \"$instanceClass\" not declared ($linenumber).\n";
+	    } else {
+	      $entry->{ 'class' } = "$instanceClass";
+	      $class->{ 'members' }{ $dbname } = $entry;
+	      $class = 0;
+	    }
+	  }
 	  else {
 	    $packages{ $packageName }{ 'globals' }{ $dbname } = $entry;
 	  }
@@ -719,9 +782,32 @@ sub parseDeclaration {
 	      $final = 1;
 	      last;
 	    }
+	    
+	    # var = new ... (...)
+	    if ((($valid,)=&matchKW("new")) && $valid) {
+	      &matchKW("[A-Za-z_0-9 ]*");
+	      if (&matchRParen) {
+	        &skipParenBody;
+	      }
+	    }
+	    
+	    # var = (.....) ...
+	    if (&matchRParen) {
+	      &skipParenBody;
+	    }
+	    
+	    # var = ... * ...
+	    &matchKW ("[\/\*\-\+]*");
+	    
+	    # var = "..."
+	    if ((($valid,) = &matchKW ("[\"]")) && $valid) {
+	      &skipString;
+	    }
+	    #&matchString;
+	    
 	    last if /^\s*,/;
 	    #last if !((($valid,)=&matchAny) && $valid);
-	    last if !((($valid,)=&matchKW("[A-Za-z_0-9 ]*")) && $valid);
+	    last if !((($valid,)=&matchKW("[A-Za-z_0-9 \-]*")) && $valid);
 	    if (&matchSemi) {
 	        $final = 1;
 	        last;

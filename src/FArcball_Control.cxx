@@ -1,6 +1,6 @@
 /* -*-C++-*- 
 
-   "$Id: FArcball_Control.cxx,v 1.1 2000/04/14 20:15:38 jamespalmer Exp $"
+   "$Id: FArcball_Control.cxx,v 1.2 2000/04/21 13:50:37 jamespalmer Exp $"
    
    Copyright 1999-2000 by the Flek development team.
    
@@ -28,9 +28,6 @@
 
 #include <Flek/FArcball_Control.H>
 
-/**
- * Establish reasonable initial values for controller.
- */
 FArcball_Control::FArcball_Control ()
 {
   dRadius = 1.0;

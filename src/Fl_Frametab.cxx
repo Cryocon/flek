@@ -143,7 +143,6 @@ Fl_Frametab::Fl_Frametab(int x,int y,int w, int h, char *fname)
   openSize(h<MINFRAMEHEIGHT ? MINFRAMEHEIGHT : h);
 }
 
-////draw the button
 void Fl_Frametab::draw()
 {
   int Hsize =  type() ? MINFRAMEPIXHEIGHT : MINFRAMEHEIGHT;

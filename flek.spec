@@ -14,9 +14,16 @@ Group: System Environment/Libraries
 Source: http://download.sourceforge.net/flek/flek-%{ver}.tar.gz
 BuildRoot: %{buildroot}/flek-root
 Packager: James Dean Palmer <james@tiger-marmalade.com>
+Vendor: Tiger Marmalade Studios
+Distribution: Mandrake
 URL: http://flek.sourceforge.net/
 Prereq: /sbin/install-info
 Docdir: %{prefix}/doc
+
+%changelog
+* Sat Apr 15 2000 James Dean Palmer <james@tiger-marmalade.com>
+
+  - First try at RPM
 
 %description
 FLEK (Fast Light Environment Kit) is a powerful set of libraries and
@@ -48,6 +55,7 @@ Flek applications.
 Summary: Flek library for using OpenGL.
 Group: System Environment/Libraries
 Requires: flek
+Requires: fltk
 
 %description gl
 FLEK (Fast Light Environment Kit) is a powerful set of libraries and
@@ -79,6 +87,7 @@ Flek applications that use OpenGL.
 Summary: Flek library for applications that use libflek_ui.
 Group: System Environment/Libraries
 Requires: flek
+Requires: fltk
 
 %description ui
 FLEK (Fast Light Environment Kit) is a powerful set of libraries and
@@ -109,6 +118,7 @@ Flek applications that use Flek's widgets.
 Summary: Flek library for applications that use libflek_xml.
 Group: System Environment/Libraries
 Requires: flek
+Requires: libxml2
 
 %description xml
 FLEK (Fast Light Environment Kit) is a powerful set of libraries and
@@ -221,9 +231,5 @@ rm -rf $RPM_BUILD_ROOT
 %defattr(-, root, root)
 
 %files docs
-%docs docs/*
+%doc docs/*
 
-%changelog
-* Sat Apr 15 2000 James Dean Palmer <james@tiger-marmalade.com>
-
-- First try at RPM

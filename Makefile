@@ -72,22 +72,24 @@ configure: configure.in
 	autoconf
 
 # This builds rpms.  Use with extreme caution.  Read this section carefully.
-# Also read flek.spec.
+# Also read flek.spec.  Do a make list-headers in src if stuff has changed..
 
-rpm:
-	cd src; \
-	  $(MAKE) list-headers; \
-	  cd ..
-	cd ..; \
-	  rm -rf /tmp/flek-0.1 /tmp/flek-0.1.tar.gz /tmp/flek.spec; \
-	  cp -R ./flek /tmp/flek-0.1
-	cd /tmp; \
-	  cp ./flek-0.1/flek.spec ./flek.spec; \
-	  tar cv flek-0.1 > flek-0.1.tar; \
-	  gzip flek-0.1.tar; \
-	  cp flek-0.1.tar.gz /usr/src/RPM/SOURCES/; \
-	  rpm -ba ./flek.spec
+rpm: 
+	rm -rf /tmp/flek-0.1 /tmp/flek-0.1.tar.gz /tmp/flek.spec
+	cp -R ../flek /tmp/flek-0.1
+	cd /tmp;\
+	rm -rf flek-0.1/CVS;\
+	rm -rf flek-0.1/docs/CVS;\
+	rm -rf flek-0.1/Flek/CVS;\
+	rm -rf flek-0.1/lib/CVS;\
+	rm -rf flek-0.1/src/CVS;\
+	rm -rf flek-0.1/src/pixmaps/CVS;\
+	rm -rf flek-0.1/test/CVS;\
+	tar cv flek-0.1 > flek-0.1.tar;\
+	gzip flek-0.1.tar;\
+	cp flek-0.1.tar.gz /usr/src/RPM/SOURCES/;\
+	rpm -ba --target i386 /tmp/flek-0.1/flek.spec
 
 #
-# End of "$Id: Makefile,v 1.4 2000/04/16 02:05:02 jamespalmer Exp $".
+# End of "$Id: Makefile,v 1.5 2000/04/21 13:50:37 jamespalmer Exp $".
 #

@@ -1,7 +1,7 @@
 # Documentation Makefile
 
 all:
-	perl ./scandoc.pl -itemplate.pl -t4  ../Flek/*.H 
+	perl ./scandoc.pl -itemplate.pl -t4 ../Flek/*.H ../src/*.cxx
 #	\
 #	../Flek/Fl_App_Window.H \
 #	../Flek/Fl_Stock.H \

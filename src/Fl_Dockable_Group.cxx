@@ -2,7 +2,7 @@
 #include <FL/fl_draw.H>
 
 #include <Flek/Fl_Dockable_Group.H>
-#include <Flek/grip_tile.xpm>
+#include "pixmaps/dock_grip_tile.xpm"
 
 long Fl_Dockable_Group::gripper_width = 10;
 Fl_Dockable_Group * Fl_Dockable_Group::current = 0;

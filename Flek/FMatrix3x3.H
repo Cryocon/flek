@@ -1,6 +1,6 @@
 /* -*-C++-*- 
 
-   "$Id: FMatrix3x3.H,v 1.3 2000/04/19 18:30:56 jamespalmer Exp $"
+   "$Id: FMatrix3x3.H,v 1.4 2000/04/21 13:50:37 jamespalmer Exp $"
    
    Copyright 1999-2000 by the Flek development team.
    
@@ -283,6 +283,9 @@ public:
     {
       FVector3 inv[3];
       int i,j,swaprow;
+     
+      for (i=0; i<3; ++i)
+	inv[i][i] = 1.0;
       
       // inv will be identity initially and will become the inverse at the end
       for (i=0; i < 3; ++i)
