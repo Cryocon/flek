@@ -235,11 +235,8 @@ sub handleCommentLine {
     # First, expand tabs.
     $_ = &expand_tabs( $_ );
     
-    # Remove gratuitous \s*\s
+    # Remove gratuitous \s*\s  (james)
     s/\s*\*\s//g;
-
-    #print $_;
-    #print "\n\n";
 
     # If it's one of the standard tags
     if (s/^\s*\@(see|package|version|author|param|return|result|exception|keywords|deffunc|defvar|heading|todo)\s*//)
@@ -292,7 +289,7 @@ sub handleCommentLine {
 		    $class->{ 'members' }{ $dbname } = $entry;
 		}
 		else {
-		    $packages{ $packageName }{ 'globals' }{ $dbname } = $entry;
+		    $packages{ $packageName }{ '.globals' }{ $dbname } = $entry;
 		}
 		$docTag = 'description';
 		&dumpComments( $entry );
@@ -663,7 +660,7 @@ sub parse_declaration {
 			$class->{ 'members' }{ $dbname } = $entry;
 		    }
 		    else {
-			$packages{ $packageName }{ 'globals' }{ $dbname } = $entry;
+			$packages{ $packageName }{ '.globals' }{ $dbname } = $entry;
 		    }
 		    &dumpComments( $entry );
 		}
@@ -756,7 +753,7 @@ sub parse_declaration {
 			$class->{ 'members' }{ $dbname } = $entry;
 		    }
 		    else {
-			$packages{ $packageName }{ 'globals' }{ $dbname } = $entry;
+			$packages{ $packageName }{ '.globals' }{ $dbname } = $entry;
 		    }
 		    &dumpComments( $entry );
 		}
@@ -999,11 +996,11 @@ sub globalvars {
 sub globalfuncs {
     my $self = shift;
     my $globals = $self->{ '.globals' };
-    my $p, @r;
+    my ($p, @r);
 
     foreach $p (sort keys %$globals) {
-	my $m = $globals->{ $p };
-	if ($m->{ 'type' } == 'func') { push @r, $m; }
+        my $m = $globals->{ $p };
+        if ($m->{ 'type' } == 'func') { push @r, $m; }
     }
     @r;
 }
