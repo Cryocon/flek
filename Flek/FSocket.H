@@ -1,6 +1,6 @@
 /* -*-C++-*- 
 
-   "$Id: FSocket.H,v 1.2 2000/05/16 16:51:44 jamespalmer Exp $"
+   "$Id: FSocket.H,v 1.3 2000/05/16 16:58:12 jamespalmer Exp $"
    
    Copyright 1997 GARRET.
    Copyright 1999-2000 by the Flek development team.
@@ -77,7 +77,7 @@ class FSocket {
    * Check the status of the last operation with socket. 
    * @return 1 if the last operation completed successfully, 0 otherwise.
    */
-  virtual int is_ok() = 0; 
+  virtual int valid() = 0; 
   
   /**
    * Get error message text for the last operation. 
@@ -146,7 +146,7 @@ class FSocket {
    * @return This method always create new socket object and returns a 
    * pointer to it. If connection with server was not established, this 
    * socket contains error code describing reason of failure.  So returned 
-   * socket should be first checked by the is_ok() method. 
+   * socket should be first checked by the valid() method. 
    */
   static FSocket* connect(char const* address, 
 			   socket_domain domain = sock_any_domain, 
@@ -160,7 +160,7 @@ class FSocket {
    * @return This method always create new socket object and returns 
    * pointer to it. If socket can not be opened, error code field of 
    * returned socket describes the reason of failure. So returned
-   * socket should be first checked by the is_ok() method. 
+   * socket should be first checked by the valid() method. 
    */
   static FSocket* create_local(char const* address,
 				int listen_queue_size = 
@@ -173,7 +173,7 @@ class FSocket {
    * @return This method always create new socket object and returns 
    * pointer to it. If socket can not be opened, error code field of 
    * returned socket describes the reason of failure. So returned
-   * socket should be first checked by the is_ok() method. 
+   * socket should be first checked by the valid() method. 
    */
   static FSocket* create_global(char const* address,
 				 int listen_queue_size = 

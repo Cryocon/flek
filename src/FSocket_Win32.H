@@ -1,6 +1,6 @@
 /* -*-C++-*- 
 
-   "$Id: FSocket_Win32.H,v 1.1 2000/05/14 02:41:20 jamespalmer Exp $"
+   "$Id: FSocket_Win32.H,v 1.2 2000/05/16 16:58:12 jamespalmer Exp $"
    
    Copyright 1997 GARRET.
    Copyright 1999-2000 by the Flek development team.
@@ -54,7 +54,7 @@ class FSocket_Win32 : public FSocket {
   int read(void* buf, size_t size);
   int write(void const* buf, size_t size);
   
-  int is_ok(); 
+  int valid(); 
   int close();
   int shutdown();
   void get_error_text(char* buf, size_t buf_size);
@@ -122,7 +122,7 @@ class FSocket_Win32_Local : public FSocket {
   int read(void* buf, size_t size);
   int write(void const* buf, size_t size);
 
-  int is_ok(); 
+  int valid(); 
   int close();
   int shutdown();
   void get_error_text(char* buf, size_t buf_size);

@@ -1,13 +1,3 @@
-//-< TESTSOCK.CXX >--------------------------------------------------*--------*
-// SAL                       Version 1.0         (c) 1997  GARRET    *     ?  *
-// (System Abstraction Layer)                                        *   /\|  *
-//                                                                   *  /  \  *
-//                          Created:     24-Oct-97    K.A. Knizhnik  * / [] \ *
-//                          Last update: 21-Nov-98    K.A. Knizhnik  * GARRET *
-//-------------------------------------------------------------------*--------*
-// Program for testing sockets performance
-//-------------------------------------------------------------------*--------*
-
 #include <Flek/FSocket.H>
 #include <time.h>
 #include <stdio.h>
@@ -34,7 +24,7 @@ int main(int argc, char* argv[])
 
     if (*argv[1] == 'l' || *argv[1] == 'L') { // local server
 	FSocket* gate = FSocket::create_local(argv[2]); 
-	if (!gate->is_ok()) { 
+	if (!gate->valid()) { 
 	    gate->get_error_text(errbuf, sizeof errbuf);
 	  printf("Failed to create local socket: %s\n", errbuf);
 	}
@@ -47,7 +37,7 @@ int main(int argc, char* argv[])
 	server = 1;
     } else if (*argv[1] == 'g' || *argv[1] == 'G') { // global server
 	FSocket* gate = FSocket::create_global(argv[2]); 
-	if (!gate->is_ok()) { 
+	if (!gate->valid()) { 
 	    gate->get_error_text(errbuf, sizeof errbuf);
 	    delete gate;
 	    printf("Failed to create global socket: %s\n", errbuf);
@@ -64,7 +54,7 @@ int main(int argc, char* argv[])
 	sock = FSocket::connect(argv[2]); 
 	if (sock == NULL) { 
 	    printf("Failed to connect to server\n");
-	} else if (!sock->is_ok()) { 
+	} else if (!sock->valid()) { 
 	    sock->get_error_text(errbuf, sizeof errbuf);
 	    printf("Connection to server failed: %s\n", errbuf);
 	}

@@ -69,7 +69,7 @@ int win_socket::open(int listen_queue_size)
     return 1;
 }
 
-int win_socket::is_ok()
+int win_socket::valid()
 {
     return errcode == ok;
 }
@@ -733,7 +733,7 @@ int local_win_socket::cancel_accept()
     return 1;
 }    
 
-int local_win_socket::is_ok()
+int local_win_socket::valid()
 {
     return !Error;
 }

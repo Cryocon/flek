@@ -112,7 +112,7 @@ int FSocket_Posix::open(int listen_queue_size) {
   return 1;
 }
 
-int  FSocket_Posix::is_ok() {
+int  FSocket_Posix::valid() {
   return errcode == ok;
 }
 

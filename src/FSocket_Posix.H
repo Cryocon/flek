@@ -1,6 +1,6 @@
 /* -*-C++-*- 
 
-   "$Id: FSocket_Posix.H,v 1.1 2000/05/14 02:41:20 jamespalmer Exp $"
+   "$Id: FSocket_Posix.H,v 1.2 2000/05/16 16:58:12 jamespalmer Exp $"
    
    Copyright 1997 GARRET.
    Copyright 1999-2000 by the Flek development team.
@@ -62,7 +62,7 @@ class FSocket_Posix : public FSocket {
   int read(void* buf, size_t size);
   int write(void const* buf, size_t size);
 
-  int is_ok(); 
+  int valid(); 
   int shutdown();
   int close();
   void get_error_text(char* buf, size_t buf_size);
