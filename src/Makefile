@@ -8,8 +8,11 @@ CPPFILES = \
 	Fl_Toggle_Tree_Base.cxx \
 	Fl_Toggle_Tree.cxx \
 	Fl_Stock.cxx \
-	fMatrix3x3.cxx \
-	fQuaternion.cxx
+	Fl_Gl_Arcball_Window.cxx \
+	fMatrix4x4.cxx \
+	fQuaternion.cxx \
+	fArcball.cxx
+
 #	Fl_Dir.cxx \
 #	Fl_Frametab.cxx \
 #	Fl_NSlider.cxx \
@@ -17,7 +20,7 @@ CPPFILES = \
 #	Fl_Pix_Button.cxx
 #	Fl_Pack_Fu.cxx \
 
-#Fl_File_Dialog.cxx \
+#       Fl_File_Dialog.cxx \
 #	Fl_Input_File.cxx \
 
 

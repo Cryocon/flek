@@ -2,15 +2,9 @@
 
 double & fQuaternion::operator[] (unsigned int i)
 {
-  if (i == 0)
+  if (i == 3)
     return s;
-  else if (i < 4)
-    return v[i-1];
-  else
-    {
-      printf("fQuaternion::operator[] : Out of bounds.\n");
-      return v[0];
-    }
+  return v[i];
 }
 
 fQuaternion & 
@@ -55,10 +49,17 @@ fQuaternion::operator- (const fQuaternion &Q) const
 fQuaternion  
 fQuaternion::operator* (fQuaternion &Q) 
 {
-  fQuaternion result;
-  result.s = (s*Q.s - Q.v*v);
-  result.v = (s*Q.v + Q.s*v + (v % Q.v));
-  return result;
+  //fQuaternion result;
+  //result.s = (s*Q.s - Q.v*v);
+  //result.v = (s*Q.v + Q.s*v + (v % Q.v));
+  //return result;
+  fQuaternion qq;
+  qq.s = s*Q.s - v[0]*Q.v[0] - v[1]*Q.v[1] - v[2]*Q.v[2];
+  qq.v[0] = s*Q.v[0] + v[0]*Q.s + v[1]*Q.v[2] - v[2]*Q.v[1];
+  qq.v[1] = s*Q.v[1] + v[1]*Q.s + v[2]*Q.v[0] - v[0]*Q.v[2];
+  qq.v[2] = s*Q.v[2] + v[2]*Q.s + v[0]*Q.v[1] - v[1]*Q.v[0];
+  return (qq);
+  
 }
 
 fQuaternion  
@@ -87,7 +88,9 @@ fQuaternion::conjugate ()
 {
   fQuaternion result;
   result.s = s;
-  result.v = -1*v;
+  result.v[0] = -1*v[0];
+  result.v[1] = -1*v[1];
+  result.v[2] = -1*v[2];
   return result;
 }
 
@@ -128,7 +131,7 @@ fQuaternion::norm ()
 }
 
 fQuaternion  
-fQuaternion::matrix_to_quaternion (fMatrix3x3 &M)
+fQuaternion::from_matrix (fMatrix4x4 &M)
 {
   fQuaternion result;
   
@@ -189,23 +192,26 @@ fQuaternion::matrix_to_quaternion (fMatrix3x3 &M)
   return result; 
 }
 
-fMatrix3x3 
-fQuaternion::quaternion_to_matrix ()
-{
-  fMatrix3x3 result;
-  result.identity ();
-
-  result (0, 0) = 1 - 2*v[1]*v[1] - 2*v[2]*v[2];
-  result (0, 1) = 2*v[0]*v[1] - 2*s*v[2];
-  result (0, 2) = 2*v[0]*v[2] + 2*s*v[1];
-
-  result (1, 0) = 2*v[0]*v[1] + 2*s*v[2];
-  result (1, 1) = 1-2*v[0]*v[0] - 2*v[2]*v[2];
-  result (1, 2) = 2*v[1]*v[2] - 2*s*v[0];
-
-  result (2, 0) = 2*v[0]*v[2] - 2*s*v[1];
-  result (2, 1) = 2*v[1]*v[2] + 2*s*v[0];
-  result (2, 2) = 1 - 2*v[0]*v[0] - 2*v[1]*v[1];
-
-  return result;
+fMatrix4x4 fQuaternion::to_matrix ()
+{ 
+  fMatrix4x4 out;
+  double Nq = v[0] * v[0] + v[1] * v[1] + v[2] * v[2] + s * s; 
+  double ss = (Nq > 0.0) ? (2.0 / Nq) : 0.0;
+  double xs = v[0]*ss,         ys = v[1]*ss,    zs = v[2]*ss;
+  double wx = (s)*xs,          wy = (s)*ys,     wz = (s)*zs;
+  double xx = v[0]*xs,         xy = v[0]*ys,    xz = v[0]*zs;
+  double yy = v[1]*ys,         yz = v[1]*zs,    zz = v[2]*zs;
+  out.zero ();
+  out.set (0, 0, 1.0 - (yy + zz));
+  out.set (1, 0, xy + wz);
+  out.set (2, 0, xz - wy);
+  out.set (0, 1, xy - wz);
+  out.set (1, 1, 1.0 - (xx + zz));
+  out.set (2, 1, yz + wx);
+  out.set (0, 2, xz + wy);
+  out.set (1, 2, yz - wx);
+  out.set (2, 2, 1.0 - (xx + yy));
+  out.set (3, 3, 1.0);
+  return out;
 }
+
