@@ -16,7 +16,7 @@ typedef unsigned char * ucharPtr;
  * and then work on the copy.
  */
 
-fImage* add (fImage *A, fImage *B, int xo, int yo, float value=1.0)
+fImage* add (fImage *A, fImage *B, int xo, int yo, float value)
 {
   uchar *Apixel;
   uchar *Bpixel;
@@ -46,7 +46,7 @@ fImage* add (fImage *A, fImage *B, int xo, int yo, float value=1.0)
   return A;
 }
 
-fImage* subtract (fImage *A, fImage *B, int xo, int yo, float value=1.0)
+fImage* subtract (fImage *A, fImage *B, int xo, int yo, float value)
 {
   uchar *Apixel;
   uchar *Bpixel;
@@ -76,7 +76,7 @@ fImage* subtract (fImage *A, fImage *B, int xo, int yo, float value=1.0)
   return A;
 }
 
-fImage* difference (fImage *A, fImage *B, int xo, int yo, float value=1.0)
+fImage* difference (fImage *A, fImage *B, int xo, int yo, float value)
 {
   uchar *Apixel;
   uchar *Bpixel;
@@ -106,7 +106,7 @@ fImage* difference (fImage *A, fImage *B, int xo, int yo, float value=1.0)
   return A;
 }
 
-fImage* lightenOnly (fImage *A, fImage *B, int xo, int yo, float value=1.0)
+fImage* lightenOnly (fImage *A, fImage *B, int xo, int yo, float value)
 {
   uchar *Apixel;
   uchar *Bpixel;
@@ -136,7 +136,7 @@ fImage* lightenOnly (fImage *A, fImage *B, int xo, int yo, float value=1.0)
   return A;
 }
 
-fImage* darkenOnly (fImage *A, fImage *B, int xo, int yo, float value=1.0)
+fImage* darkenOnly (fImage *A, fImage *B, int xo, int yo, float value)
 {
   uchar *Apixel;
   uchar *Bpixel;
@@ -166,7 +166,7 @@ fImage* darkenOnly (fImage *A, fImage *B, int xo, int yo, float value=1.0)
   return A;
 }
 
-fImage* divide (fImage *A, fImage *B, int xo, int yo, float value=1.0)
+fImage* divide (fImage *A, fImage *B, int xo, int yo, float value)
 {
   uchar *Apixel;
   uchar *Bpixel;
@@ -210,7 +210,7 @@ fImage* divide (fImage *A, fImage *B, int xo, int yo, float value=1.0)
   return A;
 }
 
-fImage* multiply (fImage *A, fImage *B, int xo, int yo, float value=1.0)
+fImage* multiply (fImage *A, fImage *B, int xo, int yo, float value)
 {
   uchar *Apixel;
   uchar *Bpixel;

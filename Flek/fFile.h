@@ -1,6 +1,6 @@
 /* -*-C++-*- 
 
-   "$Id: fFile.h,v 1.2 2000/03/07 17:00:51 jamespalmer Exp $"
+   "$Id: fFile.h,v 1.3 2000/03/07 18:52:24 jamespalmer Exp $"
    
    Copyright 1999-2000 by the Flek development team.
    
@@ -134,10 +134,10 @@ public:
   inline void putHi (unsigned long c)
     {
       unsigned char t[4];
-      t[0] = ((c >> 24) & 0xff);
-      t[1] = ((c >> 16) & 0xff);
-      t[2] = ((c >> 8) & 0xff);
-      t[3] = (c & 0xff);
+      t[0] = (unsigned char)((c >> 24) & 0xff);
+      t[1] = (unsigned char)((c >> 16) & 0xff);
+      t[2] = (unsigned char)((c >> 8) & 0xff);
+      t[3] = (unsigned char)(c & 0xff);
       int size = fwrite (t, 1, 4, Fd);
       if (size != 4) Error = 1;
     }
@@ -148,10 +148,10 @@ public:
   inline void putHi (long c)
     {
       unsigned char t[4];
-      t[0] = ((c >> 24) & 0xff);
-      t[1] = ((c >> 16) & 0xff);
-      t[2] = ((c >> 8) & 0xff);
-      t[3] = (c & 0xff);
+      t[0] = (unsigned char)((c >> 24) & 0xff);
+      t[1] = (unsigned char)((c >> 16) & 0xff);
+      t[2] = (unsigned char)((c >> 8) & 0xff);
+      t[3] = (unsigned char)(c & 0xff);
       int size = fwrite (t, 1, 4, Fd);
       if (size != 4) Error = 1;
     }
