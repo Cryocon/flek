@@ -22,6 +22,9 @@ Fl_App_Window::~Fl_App_Window() {
 }
 
 void Fl_App_Window::create_app_window(int w, int h, const char* l) {
+#ifdef FL_APP_WINDOW_DEBUG
+    printf("Fl_App_Window::create_app_window win %p %dx%d\n", this, w, h);
+#endif
   // Make room for the list of dockable windows.
   dockable_windows_capacity = 4;
   dockable_windows = (Fl_Dockable_Window**)malloc(
@@ -191,7 +194,7 @@ void Fl_App_Window::hide() {
 
 void Fl_App_Window::flush() {
 #ifdef FL_APP_WINDOW_DEBUG
-  // printf("Fl_App_Window::flush() win %p\n", this);
+  printf("Fl_App_Window::flush() win %p\n", this);
 #endif
 
   make_current();
@@ -208,8 +211,13 @@ void Fl_App_Window::repack() {
   for(int i = 0; i < _pack->children(); i++) {
     if(_pack->child(i) == _contents)
       continue;
-    children_w += _pack->child(i)->w();
+    // HACK: don't consider width since packing is vertical.
+    // children_w += _pack->child(i)->w();
     children_h += _pack->child(i)->h();
+#ifdef FL_APP_WINDOW_DEBUG
+    printf("Fl_App_Window::repack win %p child %d size %dx%d\n",
+	this, i, _pack->child(i)->w(), _pack->child(i)->h());
+#endif
   }
 
   // Make contents fill all remaining space.
@@ -217,11 +225,17 @@ void Fl_App_Window::repack() {
 
   // Resize the pack to fill the window.
   _pack->resize(0, 0, w(), h());
+
+#ifdef FL_APP_WINDOW_DEBUG
+    printf("Fl_App_Window::repack win %p pack %dx%d contents %dx%d\n",
+	this, w(), h(), w() - children_w, h() - children_h);
+#endif
 }
 
 void Fl_App_Window::resize(int X, int Y, int W, int H) {
 #ifdef FL_APP_WINDOW_DEBUG
-  printf("Fl_App_Window::resize() win %p\n", this);
+  printf("Fl_App_Window::resize() win %p %dx%d+%d+%d\n",
+	this, W, H, X, Y);
 #endif
   Fl_Widget::resize(X, Y, W, H);
   repack();
