@@ -1,6 +1,6 @@
 /* -*-C++-*- 
 
-   "$Id: fListIterator.h,v 1.1 2000/02/16 21:23:57 jamespalmer Exp $"
+   "$Id: fListIterator.h,v 1.2 2000/02/17 17:13:16 jamespalmer Exp $"
    
    Copyright 1999-2000 by the Flek development team.
    
@@ -30,7 +30,7 @@
 
 typedef fListNode fLink;
 
-/**
+/** @package libflek_core
  * Generic Iterator for the list
  */
 class fIterator
@@ -171,7 +171,9 @@ private:
 
 };
 
-// Generic Iterator for the list - const version
+/**
+ * Generic Iterator for the list - const version
+ */
 class fConstIterator
 {
 public:

@@ -27,7 +27,7 @@ public:
       return *this;
     }
   
-  virtual fBase * copy (void) const
+  virtual fBase::Ptr copy (void) const
     {
       A * newa = new A (*this);
       return newa;
@@ -62,7 +62,6 @@ void main (void)
   for (p = list.begin (); p != last; p++)
     {
       cout << *((A *)(*p));
-      ++p;
     }
 
   A * a4ptr;
@@ -79,7 +78,19 @@ void main (void)
   for (p = list.begin (); p != last; p++)
     {
       cout << *((A *)(*p));
-      ++p;
     }
+
+  cout << "Testing List Copy" << endl;
+
+  fList list2 = list;
+
+  cout << "..." << endl;
+
+  last = list2.end();
+  for (p = list2.begin (); p != last; p++)
+    {
+      cout << *((A *)(*p));
+    }
+
   cout << "Done" << endl;
 }

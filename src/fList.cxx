@@ -1,4 +1,4 @@
-// $Id: fList.cxx,v 1.1 2000/02/16 21:23:57 jamespalmer Exp $
+// $Id: fList.cxx,v 1.2 2000/02/17 17:13:16 jamespalmer Exp $
 
 // Source code for the generic fList class
 
@@ -9,7 +9,7 @@ fList::fList ()
 {
   // Allocate memory for the control node
   // which will always be at the end of the list
-  node = new fPtrListNode;
+  node = new fListNodePtr;
   node->setPrev(node);  node->setNext(node);
 }
 
@@ -25,14 +25,14 @@ fConstReference fList::front (void) const
 
 fReference fList::back (void)
 {
-  fIterator temp = end();
+  fIterator temp = end ();
   --temp;
   return *temp;
 }
 
 fConstReference fList::back (void) const
 {
-  fConstIterator temp = end();
+  fConstIterator temp = end ();
   --temp;
   return *temp;
 }
@@ -41,21 +41,21 @@ fConstReference fList::back (void) const
 void fList::insertBefore (fIterator& pos, fConstReference data)
 {
   // Create a new node
-  fListNode::Ptr temp = new fPtrListNode;
+  fListNode::Ptr temp = new fListNodePtr;
   // Node referred to by Iterator
   fLink::Ptr itr_node = pos.node;
 
   if (useCopy)
-    temp->setData(data->copy());
+    temp->setData (data->copy());
   else 
-    temp->setData(data);
+    temp->setData (data);
   
-  temp->setNext(itr_node);
-  temp->setPrev(itr_node->prev());
+  temp->setNext (itr_node);
+  temp->setPrev (itr_node->prev());
 
   // Update links of adjacent old nodes
-  (itr_node->prev())->setNext(temp);
-  itr_node->setPrev(temp);
+  (itr_node->prev())->setNext (temp);
+  itr_node->setPrev (temp);
   
   ++length;
 }
@@ -64,11 +64,11 @@ void fList::insertBefore (fIterator& pos, fConstReference data)
 void fList::insertAfter (fIterator& pos, fConstReference data)
 {
   // Create a new node
-  fListNode::Ptr temp = new fPtrListNode;
+  fListNode::Ptr temp = new fListNodePtr;
   // Node referred to by Iterator
   fLink::Ptr itr_node = pos.node;
   
-  if (useCopy) 
+  if (useCopy)
     temp->setData (data->copy());
   else
     temp->setData (data);
@@ -109,6 +109,7 @@ void fList::insertAfter (fIterator& pos, fConstIterator& first, fConstIterator& 
       insertAfter (pos, *last);
       --last;
     }
+  insertAfter (pos, *first);
 }
 
 void fList::push_front (fConstReference data)
@@ -200,7 +201,7 @@ fList::fList (const fList& new_list)
   : node(NULL), length(0), useCopy(new_list.useCopy)
 {
   // Create control node and insert the new list at the beginning
-  node = new fPtrListNode;
+  node = new fListNodePtr;
   node->setPrev (node);  node->setNext (node);
   
   fIterator temp1;
@@ -229,7 +230,8 @@ fList& fList::operator = (const fList& new_list)
       fIterator first1 = begin ();
       fConstIterator first2 = new_list.begin ();
       fConstIterator last2 = new_list.end ();
-      
+      //last2--;
+
       insert (first1, first2, last2);
     }
 

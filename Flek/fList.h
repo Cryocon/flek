@@ -1,6 +1,6 @@
 /* -*-C++-*- 
 
-   "$Id: fList.h,v 1.1 2000/02/16 21:23:57 jamespalmer Exp $"
+   "$Id: fList.h,v 1.2 2000/02/17 17:13:16 jamespalmer Exp $"
    
    Copyright 1999-2000 by the Flek development team.
    
@@ -36,7 +36,7 @@ typedef size_t Size;
 typedef void (*fFunctionPtr)(fReference data);
 typedef void (*fConstFunctionPtr)(fConstReference data);
 
-/**
+/** @package libflek_core
  * The generic fList class. The node is a pointer to a fListNode which is an ABC
  * This list uses the PtrfListNode as the node of the list
  * Derived lists can use some other node derived from fListNode or PtrListNode
@@ -50,130 +50,272 @@ public:
   typedef fList * Ptr;
 
   //--- fList class member functions ---//
+
+  /**
+   * Default constructor.
+   */
+  fList();
+
+  /**
+   * Copy constructor.
+   */
+  fList(const fList& new_list);
+
+  /**
+   * Destructor.
+   */
+  ~fList();
+
+  /**
+   * Assignment operator.
+   */
+  fList& operator = (const fList& new_list);
   
-  fList();                                           // Default constructor
-  fList(const fList& new_list);                       // Copy constructor
-  ~fList();                                          // Destructor
-  fList& operator = (const fList& new_list);          // Assignment operator
-  
-  
-  virtual fBase::Ptr copy(void) const            // Copy function - implement base class fn
+  /**
+   * Copy function - implement base class fn
+   */
+  virtual fBase::Ptr copy(void) const
     {
       Ptr newlist = new fList(*this);
       return newlist;
     }
   
-  void setCopyFlag(void)                            // Set the copy flag to true
+  /**
+   * Set the copy flag to true.
+   */
+  void setCopyFlag(void)
     {
       useCopy = true;
     }
   
-  void resetCopyFlag(void)                          // Reset the copy flag to false
+  /**
+   * Reset the copy flag to false.
+   */
+  void resetCopyFlag(void)
     {
       useCopy = false;
     }
   
-  bool empty(void) const                            // Is list empty
+  /**
+   * Is list empty.
+   */
+  bool empty(void) const
     {
       return length == 0;
     }
   
-  Size size(void) const                             // Size of list
+  /**
+   * Size of list.
+   */
+  Size size(void) const
     {
       return length;
     }
   
-  fIterator begin(void)                              // Beginning of list
+  /**
+   * Beginning of list.
+   */
+  fIterator begin(void)
     {
       return fIterator(node->next());
     }
   
-  fConstIterator begin(void) const                   // Beginning of list
+  /**
+   * Beginning of list.
+   */
+  fConstIterator begin(void) const
     {
       return fConstIterator(node->next());
     }
-  
-  fIterator end(void)                                // End of list
+
+  /**
+   * End of list  
+   */
+  fIterator end (void)
     {
       return fIterator(node);
     }
   
-  fConstIterator end(void) const                     // End of list
+  /**
+   * End of list
+   */
+  fConstIterator end (void) const
     {
-      return fConstIterator(node);
+      return fConstIterator (node);
     }
+
+  /**
+   * Value at front of list
+   */
+  fReference front(void);
+
+  /**
+   * Value at front of list
+   */
+  fConstReference front(void) const;
   
-  fReference front(void);                            // Value at front of list
-  fConstReference front(void) const;                 // Value at front of list
-  
-  fReference back(void);                             // Value at end of list
-  fConstReference back(void) const;                  // Value at end of list
+  /**
+   * Value at end of list
+   */
+  fReference back(void);
+
+  /**
+   * Value at end of list.
+   */
+  fConstReference back(void) const;
   
   //-- Insertion functions --//
   
-  // Insert a single value
-  void insertBefore (fIterator& pos, fConstReference data); // Insertion before
-  void insertAfter (fIterator& pos, fConstReference data); // Insertion after
-  void insert (fIterator& pos, fConstReference data)   // Default insertion
+  /**
+   * Insertion before the iterator position with a single value.
+   */
+  void insertBefore (fIterator& pos, fConstReference data); 
+
+  /**
+   * Insertion after the iterator position with a single value.
+   */
+  void insertAfter (fIterator& pos, fConstReference data);
+
+  /**
+   * Insertion (by default) after the iterator position with a single value.
+   */
+  void insert (fIterator& pos, fConstReference data)
     {
       insertAfter(pos, data);
     }
 
-  // Insert a range of values - assumes last can be reached from first
-  // through finite number of ++ operations
+  /**
+   * Insertion before the iterator position with a range of values.
+   * (Assumes last can be reached from first with a finite number of ++
+   * operations.
+   */
   void insertBefore(fIterator& pos, fConstIterator& first, fConstIterator& last);
+
+  /**
+   * Insertion after the iterator position with a range of values.
+   * (Assumes last can be reached from first with a finite number of ++
+   * operations.
+   */
   void insertAfter(fIterator& pos, fConstIterator& first, fConstIterator& last);
+
+  /**
+   * Insertion (by default) after the iterator position with a range of values.
+   * (Assumes last can be reached from first with a finite number of ++
+   * operations.
+   */
   void insert(fIterator& pos, fConstIterator& first, fConstIterator& last)
     {
       insertAfter (pos,first,last);
     }
   
-  void push_front (fConstReference data);             // Insert at beginning 
-  void push_back (fConstReference data);              // Insert at end
+  /**
+   * Insert at beginning. 
+   */
+  void push_front (fConstReference data);
+
+  /**
+   * Insert at end.
+   */
+  void push_back (fConstReference data);
   
   
   //-- Deletion functions --//
   
-  void erase (fIterator& pos);                        // Erase specified node
-  void erase (fConstReference data);                  // Erase node with specified data
-  void erase (fIterator& first, fIterator& last);      // Erase range of nodes
-  void erase (void);                                 // Erase all nodes
+  /**
+   * Erase specified node.
+   */
+  void erase (fIterator& pos);
+
+  /**
+   * Erase node with specified data.
+   */
+  void erase (fConstReference data);
+
+  /**
+   * Erase range of nodes.
+   */
+  void erase (fIterator& first, fIterator& last);
+
+  /**
+   * Erase all nodes.
+   */
+  void erase (void);
   
-  void pop_front (void);                             // Delete first node
-  void pop_back (void);                              // Delete last node
+  /**
+   * Delete first node.
+   */
+  void pop_front (void);
+
+  /**
+   * Delete last node.
+   */
+  void pop_back (void);
   
-  //-- Search functions --//
+  // Search functions
   
-  fIterator getNode (fConstReference data);            // Get node with specified data
+  /**
+   * Get node with specified data.
+   */
+  fIterator getNode (fConstReference data);
   fConstIterator getNode (fConstReference data) const; // const version
   
-  //-- Array type access functions --//
+  // Array type access functions
+
+  /**
+   * Get i'th element.
+   */
+  fValue get (uint i) const;
+
+  /** 
+   * Set i'th element to given data.
+   */
+  void set (uint i, fConstReference data);
   
-  fValue get (uint i) const;                 // Get i'th element
-  void set (uint i, fConstReference data);            // Set i'th element to given data
+  // Access list as circular list
+
+  /**
+   * Get the next valid node.
+   */
+  fIterator next (fIterator pos);
+
+  /**
+   * Get the next valid node.
+   */
+  fConstIterator next (fConstIterator pos) const;
+
+  /**
+   * Get the previous valid node.
+   */  
+  fIterator prev (fIterator pos);
+
+  /**
+   * Get the previous valid node.
+   */  
+  fConstIterator prev (fConstIterator pos) const;
   
-  //-- Access list as circular list --//
+  // Functions to access whole list
   
-  fIterator next (fIterator pos);                      // Get next valid node
-  fConstIterator next (fConstIterator pos) const;      // const version
-  
-  fIterator prev (fIterator pos);                      // Get prev valid node
-  fConstIterator prev (fConstIterator pos) const;      // const version
-  
-  //-- Functions to access whole list --//
-  
-  void apply (fFunctionPtr func);                     // Apply given function to all elements
-  void apply (fConstFunctionPtr func) const;          // const version
+  /**
+   * Apply given function to all elements.
+   */
+  void apply (fFunctionPtr func);
+
+  /**
+   * Apply given function to all elements.
+   */
+  void apply (fConstFunctionPtr func) const;
 
 protected:
   
-  // List class member data
-  
-  fLink::Ptr node; // Pointer to first node
-  Size length;   // Length of list
-  bool useCopy;  // Flag to indicate if the copy() function
-                 // should be used during insertion
-                 // Default is true
+  // Pointer to first node
+  fLink::Ptr node; 
+
+  // Length of list
+  Size length;
+
+  // Flag to indicate if the copy () function should be used during 
+  // insertion. Default is true
+  bool useCopy;  
 };
 
 #endif

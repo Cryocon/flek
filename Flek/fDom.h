@@ -1,140 +1,218 @@
+#include <Flek/fBase.h>
+#include <Flek/fList.h>
+#include <string.h>
+#include <stdlib.h>
 
-class fString : public fBase {
+class fDomNode;
 
- protected:
-  char *data;
-};
-
-// Listener is a function that fNode can register.
-typedef fDomListener int (f*)(int);
-
-// Listener enumerations:
-
-enum {
-  fDOM_DAMAGE,       // Data in node has changed.
-  fDOM_CONNECT,      // Connect listener to data.
-  fDOM_DISCONNECT    // Disconnect listener to data.
-};
-
-enum {
-  fDOM_NODE,
-  fDOM_GROUP,
-};
-
-class fDomNode : public fBase {
+class fDomListener : public fBase
+{
  public:
 
-  int type () { return fDOM_NODE; }
+  typedef fDomListener * Ptr;
+  
+  typedef int (*Function)(fDomNode *, long, long);
+  
+  fDomListener (Function f) { F = f; }
+
+  int listen (fDomNode *node, long message, long argument)
+    {
+      return (F)(node, message, argument);
+    }
+
+  void set (Function f) { F = f; }
+  
+  Function get () { return F; }
+  
+  fBase::Ptr copy (void) const
+    {
+      return (fBase::Ptr) new fDomListener (F);
+    }
+
+ protected:
+
+  Function F;
+
+};
+
+class fDomAttribute : public fBase
+{
+ public:
+
+  fDomAttribute () 
+    {
+      key = 0;
+      value = 0;
+    }
+
+  typedef fDomAttribute * Ptr;
+
+  fBase::Ptr copy (void) const
+    {
+      Ptr o = new fDomAttribute;
+      o->key = strdup (key);
+      o->value = strdup (value);
+      return o;
+    }
+
+  char *key;
+  char *value; 
+
+};
+
+class fDomNode : public fBase 
+{
+ public:
+
+  typedef fDomNode * Ptr;
+
+  fDomNode ()
+    {
+    }
+
+  int type () { return 1; }
+
+  virtual char * name () { return "node"; }
+
+  enum {
+    DAMAGE = 1,
+    CONNECT = 2,
+    DISCONNECT = 3
+  };
 
   // Listener functions:
-  void addListener (fDomListener);
-  void removeListener (fDomListener);
-  void clearListeners ();
+  void addListener (fDomListener *o)
+    { Listeners.push_back (o); }
 
-  virtual handleListeners ();
+  void removeListener (fDomListener *o)
+    { Listeners.erase (o); }
+
+  void clearListeners ()
+    { Listeners.erase (); }
+
+  void damage (long dmg)
+    { handleListeners (DAMAGE, dmg); }
+
+  virtual void handleListeners (int event, long argument)
+    {
+      fIterator p, last;
+      fDomListener *q;
+      last = Listeners.end ();
+      for (p = Listeners.begin (); p != last; p++)
+	{
+	  q = (fDomListener *)(*p);
+	  q->listen (this, event, argument);
+	}
+    }
+
+  // Attribute functions
+  void readAttributes () {}
+  void writeAttributes () 
+    {
+      fIterator p, last;
+      fDomAttribute *att;
+
+      last = Attributes.end ();
+      for (p = Attributes.begin (); p != last; p++)
+	{
+	  att = ((fDomAttribute *)(*p));
+	  // Need code to escape special characters and quotes..
+	  printf ("%s=\"%s\" ", att->key, att->value);
+	}      
+    }
+
+  void setAttribute (char *key, char *value)
+    {
+      fIterator p, last;
+      fDomAttribute *att;
+      int set = 0;
+      last = Attributes.end ();
+      for (p = Attributes.begin (); p != last; p++)
+	{
+	  att = ((fDomAttribute *)(*p));
+	  if (!strcmp (att->key, key))
+	    {
+	      free (att->value);
+	      att->value = strdup (value);
+	      set = 1;
+	    }
+	}
+      if (!set)
+	{
+	  att = new fDomAttribute;
+	  att->key = strdup (key);
+	  att->value = strdup (value);
+	  Attributes.push_back (att);
+	}
+      damage (0);
+    }
+
+  char * getAttribute (char *key) 
+    {
+      fIterator p, last;
+      fDomAttribute *att;
+      last = Attributes.end ();
+      for (p = Attributes.begin (); p != last; p++)
+	{
+	  att = ((fDomAttribute *)(*p));
+	  if (!strcmp (att->key, key))
+	    {
+	      return att->value;
+	    }
+	}
+      return 0;
+    }
+
+  fBase::Ptr copy (void) const
+    {
+      Ptr o = new fDomNode;
+      // Add children..
+      o->Children = Children;
+      // Add attributes..
+      o->Attributes = Attributes;
+      // Add listeners..
+      o->Listeners = Listeners;
+      return o;
+    }
+
+  // Child functions
+  void add  (fDomNode *child) { Children.push_back (child); }
+  void writeChildren () 
+    {
+      fIterator p, last;
+      fDomNode *node;
+      last = Children.end ();
+      for (p = Children.begin (); p != last; p++)
+	{
+	  node = ((fDomNode *)(*p));
+	  node->write ();
+	}
+    }
+
+  void write ()
+    {
+      printf ("<%s", name ());
+      if (Attributes.size () > 0)
+	{
+	  printf (" ");
+	  writeAttributes ();
+	}
+      if (Children.size () == 0)
+	printf ("/>\n");
+      else
+	{
+	  printf (">\n");
+	  writeChildren ();
+	  printf ("</%s>\n", name ());
+	}
+    }
 
  protected:
 
-  fDomNode* Children[];
-  char* Attributes[];
+  fList Children;    // A list of fDomNodes.
+  fList Attributes;  // A list of strings.
+  fList Listeners;   // A list of listener functions.
 
-  /*
-  fNodeList Child;
-  fStringList Attribute;
-
-  ((fString *)Child[3])->data ();
-  */
 };
 
-// You wouldn't want to attach listeners to every node in a large
-// database so you can have class listeners by overriding handleListeners ().
 
-
-// Reading options from a raytracing file:
-
-<viza::sphere R="33.322">
-  <viza::name>First Sphere<viza::name/>
-</viza::sphere>
-
-class uSphere : public fDomNode 
-{
- public:
-
-  /*
-   * These two procedures provide access to the data:
-   */
-  double radius () const { return Radius; }
-  void radius (double R) 
-    {
-      Radius = R;
-      damage ();  // Notify listeners!
-    }
-
-  /*
-   * This method reads attributes for this object.
-   */
-  void readAttributes (FDOMF *f, char *attribute)
-    {
-      if (!strcmp (attribute, "R"))
-	readDouble (f, Radius);
-      else
-	fDomNode::readAttributes (f, attribute)
-    }
-
-  /* 
-   * This method writes attributes for this object.
-   */
-  void writeAttributes (FDOMF *f)
-    {
-      writeDouble (f, "R", Radius);
-      fDomNode::writeAttributes (f);
-    }
-
-  /*
-   * This method writes any children to the file.
-   */
-  void writeChildren (FDOMF *f)
-    {
-      writeStringNode (f, "name", name);
-      fDomNode::writeChildren (f);
-    }
-
-  void readChild (FDOMF *f, char *tag)
-    {
-      if (!strcmp(tag, "name"))
-	{
-	  name = readStringNode (f, "name");
-	  damage ();
-	}
-      else
-	fDomNode::readChild (f, tag);
-    }
-
- protected:
-
-  double Radius;
-  char *name;
-};
-
-void main ()
-{
-  fDomDocument *document = new fDomDocument ("config.xml");
-
-  for (fNode *i = document->children (); i != 0; i = i->next ())
-    {
-      if (strcmp (i->namespace (), "viza"))
-	{
-	  printf (STDERR, "unrecognized namespace: %s\n", i->namespace ());
-	  continue;
-	}
-      if (strcmp (i->name (), "sphere"))
-	{
-	  printf (STDERR, "unrecognized primitive: %s\n", i->name ());
-	  continue;
-	}
-      
-      // It really is a sphere!!
-      uSphere *j = (uSphere *)i;
-      printf ("The radius of your sphere is %d.\n", i->radius ());
-    }
-}

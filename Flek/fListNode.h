@@ -1,6 +1,6 @@
 /* -*-C++-*- 
 
-   "$Id: fListNode.h,v 1.1 2000/02/16 21:23:57 jamespalmer Exp $"
+   "$Id: fListNode.h,v 1.2 2000/02/17 17:13:16 jamespalmer Exp $"
    
    Copyright 1999-2000 by the Flek development team.
    
@@ -33,7 +33,7 @@ typedef fBase::Ptr fValue;
 typedef fValue& fReference;
 typedef const fValue& fConstReference;
 
-/**
+/** @package libflek_core
  * Class for a node of the list. Declared outside the list class to 
  * allow other classes to be derived from this (which can redefine the 
  * next() and prev() operators
@@ -73,36 +73,36 @@ public:
  * fList node for list of pointers - derived from fListNode ABC
  * This node stores the next and prev pointers separately
  */
-class fPtrListNode : public fListNode
+class fListNodePtr : public fListNode
 {
 public:
 
-  typedef fPtrListNode * Ptr;
+  typedef fListNodePtr * Ptr;
 
   /**
    * Default constructor
    */
-  fPtrListNode ()
+  fListNodePtr ()
     : fListNode (), bopData (NULL), lnpNext (NULL), lnpPrev (NULL)
     {}
 
   /**
    * Copy constructor
    */
-  fPtrListNode (const fPtrListNode& pln)
+  fListNodePtr (const fListNodePtr& pln)
     : fListNode (pln), bopData (pln.bopData), lnpNext (pln.lnpNext), lnpPrev (pln.lnpPrev)
     {}
      
   /**
    * Destructor
    */
-  ~fPtrListNode ()
+  ~fListNodePtr ()
     {}
 
   /**
    * Assignment operator
    */
-  fPtrListNode& operator = (const fPtrListNode& pln)
+  fListNodePtr& operator = (const fListNodePtr& pln)
     {
       fListNode :: operator = (pln);
       bopData = pln.bopData; lnpNext = pln.lnpNext; lnpPrev = pln.lnpPrev;

@@ -1,9 +1,9 @@
 include ../makeinclude
 
 all: arcball calendar stock_buttons dockable_group toggle_tree \
-	flist testlist testtable testtable2 basiclist exercise testedit
+	flist fdom testlist testtable testtable2 basiclist exercise testedit
 
-UICOMPILE=`../flek-config --use-ui --cxxflags` 
+UICOMPILE=`../flek-config --use-ui --cxxflags` -g3
 UILINK=`../flek-config --use-ui --ldflags` 
 
 GLCOMPILE=`../flek-config --use-gl --cxxflags`
@@ -45,9 +45,12 @@ testedit: testedit.cxx
 flist: flist.cxx
 	$(CXX) $(UICOMPILE) $@.cxx $(UILINK) -o $@
 
+fdom: fdom.cxx
+	$(CXX) $(UICOMPILE) $@.cxx $(UILINK) -o $@
+
 clean:
 	rm -f core *.o toggle_tree dockable_group bitmaps filedialog \
 	arcball calendar frametab pixbutton slider pixbutton packfu wtest wtest2 stock_buttons \
-	testlist testtable testtable2 basiclist exercise testedit flist
+	testlist testtable testtable2 basiclist exercise testedit flist fdom
 
 install:
