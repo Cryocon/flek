@@ -1,6 +1,6 @@
 /* -*-C++-*- 
 
-   "$Id: Fl_Calendar.H,v 1.10 2000/10/04 17:03:31 clip Exp $"
+   "$Id: Fl_Calendar.H,v 1.11 2000/10/06 17:22:22 clip Exp $"
    
    Copyright 1999-2000 by the Flek development team.
    
@@ -65,7 +65,9 @@ public:
    * Returns a pointer to the button for the day D in the Fl_Calendar. 
    */
   Fl_Button * day_button (int i);
-  
+  void normal_callback() { cb_return_value = false; }
+  void calendar_value_callback() { cb_return_value = true; }
+  bool cb_return_value;
  protected:
   
   int cal_x;
@@ -118,9 +120,6 @@ class Fl_Calendar : public Fl_Calendar_Base
   int button_value() {return last_button_value;}
   int last_button_value;
 
-  void normal_callback() { cb_return_value = false; }
-  void calendar_value_callback() { cb_return_value = true; }
-  bool cb_return_value;
 
  protected:
   
