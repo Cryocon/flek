@@ -1,6 +1,6 @@
 /* -*-C++-*- 
 
-   "$Id: Fl_Calendar.H,v 1.11 2000/10/06 17:22:22 clip Exp $"
+   "$Id: Fl_Calendar.H,v 1.12 2001/04/12 22:56:13 jamespalmer Exp $"
    
    Copyright 1999-2000 by the Flek development team.
    
@@ -28,6 +28,7 @@
 
 #include <FL/Fl_Group.H>
 #include <FL/Fl_Button.H>
+#include <FL/Fl_Repeat_Button.H>
 #include <FL/Fl_Input.H>
 
 #include <Flek/FDate.H>
@@ -68,6 +69,7 @@ public:
   void normal_callback() { cb_return_value = false; }
   void calendar_value_callback() { cb_return_value = true; }
   bool cb_return_value;
+   
  protected:
   
   int cal_x;
@@ -120,15 +122,14 @@ class Fl_Calendar : public Fl_Calendar_Base
   int button_value() {return last_button_value;}
   int last_button_value;
 
-
  protected:
   
   Fl_Button * weekdays[7];
   Fl_Button * caption;
-  Fl_Button * nxt_month;
-  Fl_Button * prv_month;
-  Fl_Button * nxt_year;
-  Fl_Button * prv_year;
+  Fl_Repeat_Button * nxt_month;
+  Fl_Repeat_Button * prv_month;
+  Fl_Repeat_Button * nxt_year;
+  Fl_Repeat_Button * prv_year;
   
  private:
   int look;
