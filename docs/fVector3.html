@@ -1,0 +1,163 @@
+<HTML>
+  <BODY bgcolor="white">
+    <HR break>
+    <H2><A name="fVector3">class fVector3</A></H2>
+    <HR>
+
+    <H3>Class Hierarchy</H3>
+    <UL>
+<PRE>
+<B>fVector3</B>
+</PRE>
+    </UL>
+    <H3>Include Files</H3>
+    <UL>
+<PRE>
+#include &lt;Flek/fVector3.h&gt;
+</PRE>
+    </UL>
+
+    <H3>Description</H3>
+    <blockquote>
+      A three element vector of doubles and it's associated vector math
+      functions.
+    </blockquote>
+      
+    <H3>Methods</H3>
+    <CENTER>
+      <TABLE width="90%">
+	<TR><TD align=left valign=top>
+	    <LI><A href="#fVector3.fVector3">fVector3</A></LI>
+	    <LI><A href="#fVector3.value">value</A></LI>
+	    <LI><A href="#fVector3.print">print</a></LI>
+	    <LI><A href="#fVector3.set">set</a></LI>
+	    <LI><A href="#fVector3.x">x</a></LI>
+	    <LI><A href="#fVector3.y">y</a></LI>
+	    <LI><A href="#fVector3.z">z</a></LI>
+	    <LI><A href="#fVector3.normalize">normalize</a></LI>
+	    <LI><A href="#fVector3.norm">norm</a></LI>
+	    <LI><A href="#fVector3.length">length</a></LI>
+	    <LI><A href="#fVector3.bisect">bisect</a></LI>
+	    <LI><A href="#fVector3.distance">distance</a></LI>
+	    <LI><A href="#fVector3.operator_acc">operator []</a></LI>
+	    <LI><A href="#fVector3.operator_plus_eq">operator +=</a></LI>
+	    <LI><A href="#fVector3.operator_minus_eq">operator -=</a></LI>
+	    <LI><A href="#fVector3.operator_divide_eq">operator /=</a></LI>
+	    <LI><A href="#fVector3.operator_times_eq">operator *=</a></LI>
+	    <LI><A href="#fVector3.operator_times">operator *</a></LI>
+	    <LI><A href="#fVector3.operator_divide">operator /</a></LI>
+	    <LI><A href="#fVector3.operator_plus">operator +</a></LI>
+	    <LI><A href="#fVector3.operator_minus">operator -</a></LI>
+	    <LI><A href="#fVector3.operator_cross">operator %</a></LI>
+	    <LI><A href="#fVector3.gl_vertex">gl_vertex</a></LI>
+	    <LI><A href="#fVector3.gl_normal">gl_normal</a></LI>
+	    <LI><A href="#fVector3.gl_tex_coord">gl_tex_coord</a></LI>
+	    <LI><A href="#fVector3.gl_color">gl_color</a></LI>
+	    <LI><A href="#fVector3.gl_clear_color">gl_clear_color</a></LI>
+	    <LI><A href="#fVector3.gl_rotate">gl_rotate</a></LI>
+	    <LI><A href="#fVector3.gl_scale">gl_scale</a></LI>
+	    <LI><A href="#fVector3.gl_translate">gl_translate</a></LI>
+
+	  </TD>
+	</TR>
+      </TABLE>
+    </CENTER>
+
+    <H4><A name="fVector3.fVector3">fVector3::fVector3 ();
+	<br>fVector3::fVector3 (const double z);
+	<br>fVector3::fVector3 (const double x, const double y, const double z);</A></H4>
+    <blockquote>The constructor for a 3 dimensional vector.  For efficiency,
+      fVector3 () is uninitialized.  fVector3(const double) takes one initializing argument 
+      (for example fVector3 (0) would initialize the vector to <b>&lt;0, 0, 0&gt;</b>.
+      And the third form initializes each element x, y, and z.</blockquote>
+
+    <H4><A name="fVector3.value">double * fVector3::value ()</A></H4>
+    <blockquote>Returns a pointer to the array of doubles that make up the vector.</blockquote>
+
+    <H4><A name="fVector3.print">void fVector3::print ()</A></H4>
+    <blockquote>Prints the vector to standard out.</blockquote>
+
+    <H4><A name="fVector3.set">void fVector3::set (double x, double y, double z)</A></H4>
+    <blockquote>Set the x, y, and z component of the vector.</blockquote>
+
+    <H4><A name="fVector3.x">double fVector3::x ()<br>void fVector3::x (double X)</A></H4>
+    <blockquote>Get or set the vector's x value (element 0).</blockquote>
+
+    <H4><A name="fVector3.y">double fVector3::y ()<br>void fVector3::y (double Y)</A></H4>
+    <blockquote>Get or set the vector's y value (element 0).</blockquote>
+
+    <H4><A name="fVector3.z">double fVector3::z ()<br>void fVector3::z (double Z)</A></H4>
+    <blockquote>Get or set the vector's z value (element 0).</blockquote>
+
+    <H4><A name="fVector3.normalize">void fVector3::normalize ()</A></H4>
+    <blockquote>Normalize (divide each element by the vector's length) the vector.</blockquote>
+
+    <H4><A name="fVector3.norm">double fVector3::norm ()</A></H4>
+    <blockquote>Returns x^2 + y^2 + z^2, which is equal to length()^2.</blockquote>
+
+    <H4><A name="fVector3.length">double fVector3::length ()</A></H4>
+    <blockquote>Get the length of the vector.</blockquote>
+
+    <H4><A name="fVector3.bisect">static fVector3 fVector3::bisect (fVector3 v1, fVector3 v2)</A></H4>
+    <blockquote>Creates a vector that bisects v1 and v2.</blockquote>
+
+    <H4><A name="fVector3.distance">static double fVector3::distance (fVector3 v1, fVector3 v2)</A></H4>
+    <blockquote>Computes the distance between v1 and v2.</blockquote>
+
+    <H4><A name="fVector3.operator_acc">double& fVector3::operator [] (int i)</A></H4>
+    <blockquote>Returns element i in the vector.  Out of bounds checking is not performed
+      for efficiency.</blockquote>
+
+    <H4><A name="fVector3.operator_plus_eq">void fVector3::operator += (const fVector3& v)</A></H4>
+    <blockquote>Adds v to the vector.</blockquote>
+
+    <H4><A name="fVector3.operator_minus_eq">void fVector3::operator -= (const fVector3& v)</A></H4>
+    <blockquote>Subtracts v from the vector.</blockquote>
+
+    <H4><A name="fVector3.operator_divide_eq">fVector3::operator /= (const double& d)</A></H4>
+    <blockquote>Divides the vector by d.</blockquote>
+
+    <H4><A name="fVector3.operator_times_eq">fVector3::operator *= (const double& d)</A></H4>
+    <blockquote>Multiplies the vector by d.</blockquote>
+
+    <H4><A name="fVector3.operator_times">double fVector3 fVector3::operator * (const fVector3& v1, const fVector3& v2)</A></H4>
+    <blockquote>Multiply (dot or scalar product) the vectors v1 and v2.</blockquote>
+
+    <H4><A name="fVector3.operator_divide">double fVector3 fVector3::operator / (const fVector3& v1, const fVector3& v2)</A></H4>
+    <blockquote>Divide the two vectors.</blockquote>
+
+    <H4><A name="fVector3.operator_plus">fVector3 fVector3 fVector3::operator + (const fVector3& v1, const fVector3& v2)</A></H4>
+    <blockquote>Add the two vectors.</blockquote>
+
+    <H4><A name="fVector3.operator_minus">fVector3 fVector3::operator - (const fVector3& v1, const fVector3& v2)</A></H4>
+    <blockquote>Subtract the two vectors.</blockquote>
+
+    <H4><A name="fVector3.operator_cross">fVector3 fVector3::operator % (const fVector3& v1, const fVector3& v2)</A></H4>
+    <blockquote>Multiply (cross or vector product) the two vectors.</blockquote>
+
+    <H4><A name="fVector3.gl_vertex">void fVector3::gl_vertex ()</A></H4>
+    <blockquote>Inline function that effectively calls glVertex3dv(value());</blockquote>
+
+    <H4><A name="fVector3.gl_normal">void fVector3::gl_normal ()</A></H4>
+    <blockquote>Inline function that effectively calls glNormal3dv(value());</blockquote>
+
+    <H4><A name="fVector3.gl_tex_coord">void fVector3::gl_tex_coord ()</A></H4>
+    <blockquote>Inline function that effectively calls glTexCoord3dv(value());</blockquote>
+
+    <H4><A name="fVector3.gl_color">void fVector3::gl_color ()</A></H4>
+    <blockquote>Inline function that effectively calls glColor3dv(value());</blockquote>
+
+    <H4><A name="fVector3.gl_clear_color">void fVector3::gl_clear_color ()</A></H4>
+    <blockquote>Inline function that effectively calls glClearColor (x(), y(), z(), 1.0);</blockquote>
+
+    <H4><A name="fVector3.gl_rotate">void fVector3::gl_rotate (double angle)</A></H4>
+    <blockquote>Inline function that effectively calls glRotated (angle, x(), y(), z());</blockquote>
+
+    <H4><A name="fVector3.gl_scale">void fVector3::gl_scale ()</A></H4>
+    <blockquote>Inline function that effectively calls glScaled (x(), y(), z());</blockquote>
+
+    <H4><A name="fVector3.gl_translate">void fVector3::gl_translate ()</A></H4>
+    <blockquote>Inline function that effectively calls glTranslated (x(), y(), z());</blockquote>
+
+  </BODY>
+</HTML>
