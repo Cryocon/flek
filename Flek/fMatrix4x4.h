@@ -16,6 +16,21 @@ class fMatrix4x4
   fMatrix4x4 (const fMatrix4x4 &M);
   ~fMatrix4x4 () {}
 
+  void print ();
+
+  inline void set (int i, int j, double value) { data[i][j] = value; }
+  inline double get (int i, int j) { return data[i][j]; }
+  
+  void set_row (int i, fVector3 &V);
+  void set_col (int j, fVector3 &V);
+  void set_row (int i, double array[]);
+  void set_col (int i, double array[]);
+
+  fVector3 get_row_v3 (int i);
+  fVector3 get_col_v3 (int j);
+  double* get_row_array (int i) { return &data[i][0]; }
+  double* value () { return &data[0][0]; }
+
   double & operator () (int i, int j) { return data[i][j]; }
   fMatrix4x4 operator* (fMatrix4x4 &M);
   fMatrix4x4 operator+ (fMatrix4x4 &M1)const;
@@ -34,20 +49,7 @@ class fMatrix4x4
   void rotation (double angle, fVector3 v);
   void rotation (double ax, double ay, double az);
   void translation (fVector3 v);
-  void print ();
 
-  inline void set (int i, int j, double value) { data[i][j] = value; }
-  inline double get (int i, int j) { return data[i][j]; }
-  
-  void set_row (int i, fVector3 &V);
-  void set_col (int j, fVector3 &V);
-  void set_row (int i, double array[]);
-  void set_col (int i, double array[]);
-
-  fVector3 get_row_v3 (int i);
-  fVector3 get_col_v3 (int j);
-  double* get_row_array (int i) { return &data[i][0]; }
-  double* value () { return &data[0][0]; }
   //double* get_col_array (int j);
 
   friend fMatrix4x4 operator* (double scalar, fMatrix4x4 &M);
