@@ -1,6 +1,6 @@
 /* -*-C++-*- 
 
-   "$Id: Fl_App_Window.H,v 1.18 2000/05/14 02:44:10 brad Exp $"
+   "$Id: Fl_App_Window.H,v 1.19 2000/05/15 08:33:07 brad Exp $"
    
    Copyright 1999-2000 by the Flek development team.
    
@@ -78,7 +78,6 @@ private:
   void create_app_window(int w, int h, const char* l);
 
 protected:
-  virtual FL_EXPORT void draw();
   virtual FL_EXPORT void flush();
   int handle(int);
 

@@ -6,46 +6,46 @@
 #include <FL/fl_draw.H>
 
 Fl_App_Window::Fl_App_Window(int x, int y, int w, int h, const char* l) : 
-  Fl_Window (x, y, w, h, l), dockable_windows_size(0) {
+  Fl_Window(x, y, w, h, l), dockable_windows_size(0) {
   create_app_window(w, h, l);
 }
 
 Fl_App_Window::Fl_App_Window(int w, int h, const char* l) : 
-  Fl_Window (w, h, l), dockable_windows_size(0) {
+  Fl_Window(w, h, l), dockable_windows_size(0) {
   create_app_window(w, h, l);
 }
 
 Fl_App_Window::~Fl_App_Window() {
-  free (dockable_windows);
+  free(dockable_windows);
 }
 
 void Fl_App_Window::create_app_window(int w, int h, const char* l) {
+  // Make room for the list of docable windows.
   dockable_windows_capacity = 4;
-  dockable_windows = (Fl_Dockable_Window**)malloc(sizeof(Fl_Dockable_Window*)*dockable_windows_capacity);
+  dockable_windows = (Fl_Dockable_Window**)malloc(
+    sizeof(Fl_Dockable_Window*)*dockable_windows_capacity);
 
   // Create the pack that holds the contents window and docked windows.
+  // Contents window and docked windows will complete obscure the
+  // the pack area, so set it to no box.
   _pack = new Fl_Pack(0, 0, w, h, "Fl_App_Window::pack");
   _pack->type(Fl_Pack::VERTICAL);
+  _pack->box(FL_NO_BOX);
 
   // Create the contents window.
   _contents = new Fl_Window(0, 0, w, h, "Fl_App_Window::contents");
 
-  // Contents window and docked windows will complete obscure the toplevel window
-  // and the pack area, so set them both to no box.
+  // Contents window and docked windows will complete obscure the
+  // toplevel window, so set it to no box.
   Fl_Window::box(FL_NO_BOX);
-  _pack->box(FL_NO_BOX);
 }
 
-int Fl_App_Window::handle (int event) {  
+int Fl_App_Window::handle(int event) {
+  // printf("Fl_App_Window::handle() event %d\n", event);
+ 
   if(event == FL_UNDOCK) {
-    //_pack->draw ();
-    //redraw();
-    //if ((w() != _pack->w()) || (h() != pack->h()))
-    //size (_pack->w(), pack->h());
-    //damage (FL_DAMAGE_ALL);
-    //size (w(), h() - Fl_Dockable_Window::current->h());
     _contents->size(_contents->w(), _contents->h() + Fl_Dockable_Window::current->h());
-    redraw ();
+    redraw();
     return 1;
   }
   
@@ -55,12 +55,12 @@ int Fl_App_Window::handle (int event) {
       // Don't dock it.
       return 1;
 
-    int dx = Fl::event_x_root ();
-    int dy = Fl::event_y_root ();
-    int ex = x_root ();
-    int ey = y_root ();
+    int dx = Fl::event_x_root();
+    int dy = Fl::event_y_root();
+    int ex = x_root();
+    int ey = y_root();
 
-    // printf ("Handling FL_DOCK event!!\n");
+    // printf("Handling FL_DOCK event!!\n");
       
     // Check to see if we can dock along any of 
     // the pack boundaries.
@@ -82,21 +82,19 @@ int Fl_App_Window::handle (int event) {
          && (dy < (ey + FL_DOCK_DELTA + cY))    // ymax
          && (dy > (ey - FL_DOCK_DELTA + cY)) )  // ymin
 	 {
-	 // printf ("DOCK!!!!!!!!!!!!!!!!!!!!!!!!!!!\n");
+	 // printf("DOCK!!!!!!!!!!!!!!!!!!!!!!!!!!!\n");
 	 add_dockable(Fl_Dockable_Window::current, i);
 	 return 1;
       }
     }
     return 0;
   }
-  return Fl_Window::handle (event);
+  return Fl_Window::handle(event);
 }
 
-// Anything added to Fl_App should actually get 
-// added to the contents group.
-
-void Fl_App_Window::add (Fl_Widget *w) {
-  //  w->position(w->x() + x(), w->y() + y());
+void Fl_App_Window::add(Fl_Widget *w) {
+  // Anything added to Fl_App should actually get 
+  // added to the contents group.
   _contents->add(w);
 }
 
@@ -138,10 +136,8 @@ void Fl_App_Window::add_dockable(Fl_Dockable_Window *W, int pos) {
   W->set_docked(1);
   
   if(_pack->horizontal())
-    // Fl_Dockable_Window::current->size(Fl_Dockable_Window::current->w(), h());
     _contents->size(w()-Fl_Dockable_Window::current->w(), h());
   else
-    // Fl_Dockable_Window::current->size(w(), Fl_Dockable_Window::current->h());
     _contents->size(w(), h()-Fl_Dockable_Window::current->h());
   
   if(shown()) {
@@ -151,12 +147,10 @@ void Fl_App_Window::add_dockable(Fl_Dockable_Window *W, int pos) {
 }
 
 void Fl_App_Window::show() {
+  // printf("Fl_App_Window::show() win %x\n", this);
   Fl_Window::show();
-  _pack->show();
-  _contents->show();
   for(int i=0; i < dockable_windows_size; i++)
     dockable_windows[i]->show();
-  redraw();
 }
 
 void Fl_App_Window::hide() {
@@ -165,35 +159,25 @@ void Fl_App_Window::hide() {
   Fl_Window::hide();
 }
 
-
-void 
-Fl_App_Window::draw() {
-  //printf ("Fl_App_Window::draw()\n");
-  // if _pack->w() and pack->h() change...
-  _pack->draw();
-  resize(x(), y(), _pack->w(), _pack->h());
-  Fl_Window::draw ();
-}
-
 void Fl_App_Window::flush() {
-  //Fl_Window::flush();
-  //printf("Fl_App_Window::flush()\n");
+  // printf("Fl_App_Window::flush() win %x\n", this);
   make_current();
   Fl_X *i = Fl_X::i(this);
-  //if (damage() == FL_DAMAGE_EXPOSE && can_boxcheat(box())) fl_boxcheat = this;
   fl_clip_region(i->region); i->region = 0;
-  draw ();
+  // Based on my testing, this draw() is required.  bdl
+  draw();
 }
 
 void Fl_App_Window::resize(int X, int Y, int W, int H) {
+  // printf("Fl_App_Window::resize() win %x\n", this);
+
   int dw = W - w();
   int dh = H - h();
   int dx = X - x();
   int dy = Y - y();
 
-  _pack->resize(0, 0, _pack->w() + dw, _pack->h());
+  _pack->resize(0, 0, _pack->w() + dw, _pack->h() + dh);
   _contents->resize(_contents->x() + dx, _contents->y() + dy,
   _contents->w() + dw, _contents->h() + dh);
   Fl_Widget::resize(X, Y, W, H);
-  redraw();
 }
