@@ -1,5 +1,5 @@
 /* -*-C++-*- 
-   "$Id: math.H,v 1.1 2000/04/15 20:04:53 jamespalmer Exp $"
+   "$Id: math.H,v 1.2 2000/05/11 18:43:34 brad Exp $"
    
    Copyright 1999-2000 by the Flek development team.
    
@@ -281,6 +281,21 @@ inline double min (double x, double y) {
 inline double max (double x, double y) {
   return ( (x > y) ? x : y );
 }
+
+/**
+ * Minimum of two unsigned chars.
+ */
+inline unsigned char min (unsigned char x, unsigned char y) {
+  return ( (x < y) ? x : y );
+}
+
+/**
+ * Maximum of two unsigned chars.
+ */
+inline unsigned char max (unsigned char x, unsigned char y) {
+  return ( (x > y) ? x : y );
+}
+
 
 #endif
 
