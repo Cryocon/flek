@@ -15,7 +15,14 @@ Fl_App_Window::Fl_App_Window(int w, int h, const char* l) :
   create_app_window(w, h, l);
 }
 
+Fl_App_Window::~Fl_App_Window() {
+  free (dockable_windows);
+}
+
 void Fl_App_Window::create_app_window(int w, int h, const char* l) {
+  dockable_windows_capacity = 4;
+  dockable_windows = (Fl_Dockable_Window**)malloc(sizeof(Fl_Dockable_Window*)*dockable_windows_capacity);
+
   // Create the pack that holds the contents window and docked windows.
   _pack = new Fl_Pack(0, 0, w, h, "Fl_App_Window::pack");
   _pack->type(Fl_Pack::VERTICAL);
@@ -70,7 +77,7 @@ int Fl_App_Window::handle (int event) {
          && (dy < (ey + FL_DOCK_DELTA + cY))    // ymax
          && (dy > (ey - FL_DOCK_DELTA + cY)) )  // ymin
 	 {
-	 //printf ("DOCK!!!!!!!!!!!!!!!!!!!!!!!!!!!\n");
+	 // printf ("DOCK!!!!!!!!!!!!!!!!!!!!!!!!!!!\n");
 	 add_dockable(Fl_Dockable_Window::current, i);
 	 return 1;
       }
@@ -88,21 +95,35 @@ void Fl_App_Window::add (Fl_Widget *w) {
   _contents->add(w);
 }
 
-void Fl_App_Window::add_dockable (Fl_Dockable_Window *W, int pos) {
+void Fl_App_Window::accept_dockable (Fl_Dockable_Window *W) {
   // Is this window already in the list?
   for(int i=0; i < dockable_windows_size; i++)
     if(W == dockable_windows[i])
       return;
 
   // Is there room left in the list?
-  if(dockable_windows_size >= dockable_windows_capacity)
-    // Oops, out of space.
-    // TODO: maybe should provide some sort of feedback here.  :-)  bdl
-    return;
-
+  if(dockable_windows_size >= dockable_windows_capacity) {
+    // Out of space.  That's okay.  We'll make more.
+    dockable_windows_capacity *= 2;
+    dockable_windows = (Fl_Dockable_Window **)realloc(dockable_windows, sizeof(Fl_Dockable_Window*)*dockable_windows_capacity);
+  }
+  
   // Add it to the list.
   dockable_windows[dockable_windows_size++] = W;
+}
 
+void Fl_App_Window::add_dockable (Fl_Dockable_Window *W, int pos) {  
+  int i;
+  
+  // Is this window in the list?
+  for(i=0; i < dockable_windows_size; i++)
+    if(W == dockable_windows[i])
+      break;
+
+  // If it's not in the list it can't dock here.
+  if (i >= dockable_windows_size)
+    return;
+  
   Fl_Dockable_Window::current = W;
   Fl_Dockable_Window::current->hide();
   _pack->insert(*W, pos);
@@ -119,15 +140,6 @@ void Fl_App_Window::add_dockable (Fl_Dockable_Window *W, int pos) {
     Fl_Dockable_Window::current->show ();
     redraw();
   }
-
-  // FLTK BUG???  calling redraw() should call draw(), right??  
-  // Not always so we need to pack things here..
-  //_pack->draw ();
-  //if ((w() != _pack->w()) || (h() != pack->h()))
-  //size (_pack->w(), pack->h());
-  //redraw ();
-  //size ((w() > W->w()) ? w() : W->w(), h()+W->h());
-  //flush ();
 }
 
 void Fl_App_Window::show() {

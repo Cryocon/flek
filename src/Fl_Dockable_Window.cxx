@@ -3,6 +3,7 @@
 
 #include <Flek/Fl_Dockable_Window.H>
 #include "pixmaps/dock_grip_tile.xpm"
+#include <stdio.h>
 
 long Fl_Dockable_Window::gripper_width = 10;
 Fl_Dockable_Window * Fl_Dockable_Window::current = 0;
@@ -92,9 +93,10 @@ int Fl_Gripper::handle(int event) {
 			&& (cy < (eh + ey)) )
 		      {
 			// Send the host window a message that we want to dock with it.
-			// printf("Fl_Dockable_Window::dock!!\n");
+			// printf ("Fl_Dockable_Window:: Attempting to dock.\n");
 			if (Fl::handle(FL_DOCK, o))
 			  {
+			    // printf ("Fl_Dockable_Window:: Docking.\n");
 			    // redraw();
 			    if (event != FL_RELEASE) 
 			      {
