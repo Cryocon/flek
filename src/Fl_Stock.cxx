@@ -80,13 +80,16 @@ Fl_Stock_Button::draw_label (int X, int Y, int W, int H,
 #endif
   if (label_)
     {
+
+      // Note: should tw be turned into an int so soon?  bdl
+      // Anyway, I added the (int) to quiet the compiler.
 #ifdef FLTK_2
       fl_font(label_font(), label_size());
-      tw = fl_width(label_);
+      tw = (int)fl_width(label_);
       th = label_size();
 #else
       fl_font(labelfont(), labelsize());
-      tw = fl_width(label_);
+      tw = (int)fl_width(label_);
       th = labelsize();
 #endif
     }

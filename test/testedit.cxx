@@ -122,7 +122,6 @@ void Flvt_Edit::load_editor( Fl_Widget *e, int R, int C )
 void Flvt_Edit::draw_cell( int Offset, int &X, int &Y, int &W, int &H, int R, int C )
 {
 	Flv_Style s;
-	int TX, TY, TW, TH;
 
 	get_style(s, R, C);
 	Flv_Table::draw_cell(Offset,X,Y,W,H,R,C);

@@ -81,7 +81,6 @@ void Flv_Table_Child::get_style( Flv_Style &s, int R, int C )
 void Flv_Table_Child::draw_cell( int Offset, int &X, int &Y, int &W, int &H, int R, int C )
 {
 	Flv_Style s;
-  int x, y, w, h;
 
 	get_style(s,R,C);
 	Flv_Table::draw_cell(Offset,X,Y,W,H,R,C);

@@ -84,7 +84,6 @@ void Flv_Table::draw_row( int Offset, int &X, int &Y, int &, int &H, int R )
 	int c, cw, CX, FW;
 	int dX, dY, dW, dH;
 	int TX, TY, TW, TH;
-	Flv_Style s;
 
 	//	Calculate clipping height
 	client_area(dX,dY,dW,dH);
@@ -446,7 +445,6 @@ void Flv_Table::get_style( Flv_Style &s, int R, int C )
 int Flv_Table::handle(int event)
 {
 	int stat=0, x, y, X,Y,W,H, r, c;
-	Flv_Style s;
 
 	switch(event)
 	{
@@ -889,8 +887,6 @@ int Flv_Table::row(int n)
 
 int Flv_Table::col( int n )
 {
-	Flv_Style s;
-
 	if (n>=vcols)
 		n=vcols-1;
 	if (n<0)
