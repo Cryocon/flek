@@ -20,8 +20,13 @@ Fl_Stock_Button::Fl_Stock_Button (int x, int y, int w, int h, const char *l) :
 void Fl_Stock_Button::draw()
 {
   if (type() == FL_HIDDEN_BUTTON) {box(FL_NO_BOX); return;}
-  Fl_Color lc = draw_button();
-  draw_label (x(), y(), w(), h(), lc, flags()); 
+#ifdef FLTK_2
+  Fl_Color col = draw_button();
+#else
+  Fl_Color col = value() ? selection_color() : color();
+  draw_box(value() ? (down_box()?down_box():down(box())) : box(), col);
+#endif
+  draw_label (x(), y(), w(), h(), col, flags()); 
 }
 
 void
@@ -37,12 +42,22 @@ Fl_Stock_Button::draw_label (int X, int Y, int W, int H,
   const char* label_ = label ();
 
   if (image_)
+#ifdef FLTK_2
     image_->measure(iw, ih);
+#else
+    fl_measure_pixmap(image_->data, iw, ih);
+#endif
   if (label_)
     {
+#ifdef FLTK_2
       fl_font(label_font(), label_size());
       tw = fl_width(label_);
       th = label_size();
+#else
+      fl_font(labelfont(), labelsize());
+      tw = fl_width(label_);
+      th = labelsize();
+#endif
     }
 
   int spacer = 5;
@@ -123,17 +138,24 @@ Fl_Stock_Button::draw_label (int X, int Y, int W, int H,
   int a = 0;
   if (!active_r()) a = FL_INACTIVE;
   if (image_) {
+#ifdef FLTK_2
     fl_color((f&FL_INACTIVE) ? fl_inactive(c) : c);
+#endif
     image_->draw(idx, idy, iw, ih, a);
     //printf ("image = %d, %d, %d, %d\n", idx, idy, iw, ih);
   }
 
   if (label_ && *label_) {
+#ifdef FLTK2
     fl_font(label_font(), label_size());
     //if (flags() & FL_SHORTCUT_LABEL) fl_draw_shortcut = 1;
     //printf ("label = %d, %d, %d, %d\n", tdx, tdy, tw, th);
     label_type()->draw(label_, tdx, tdy, tw, th, c, a);
     //fl_draw_shortcut = 0;
+#else
+    fl_font(labelfont(), labelsize());
+    Fl_Widget::draw_label (tdx, tdy, tw, th, (Fl_Align)a);
+#endif
   }
 
 }
