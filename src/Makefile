@@ -95,7 +95,17 @@ H_FLEK_GL = \
 
 include ../makeinclude
 
-all: flek-core flek-ui flek-gl flek-xml flek-jpeg
+ALL = flek-core flek-ui flek-jpeg
+
+ifdef GL_LIB
+	ALL += flek-gl
+endif
+
+ifdef XML_LIB
+	ALL += flek-xml
+endif
+
+all: $(ALL)
 
 install: flek-core-install flek-ui-install flek-gl-install flek-xml-install flek-jpeg-install
 

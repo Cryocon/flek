@@ -1,7 +1,17 @@
 include ../makeinclude
 
-all: arcball calendar stock_buttons dockable_group toggle_tree image \
-	fxml testlist testtable testtable2 basiclist exercise testedit 
+ALL = calendar stock_buttons dockable_group toggle_tree \
+	testlist testtable testtable2 basiclist exercise testedit 
+
+ifdef GL_LIB
+	ALL += arcball image
+endif
+
+ifdef XML_LIB
+	ALL += fxml
+endif
+
+all: $(ALL)
 
 UICOMPILE=`../flek-config --use-ui --cxxflags` -g3
 UILINK=`../flek-config --use-ui --ldflags` 
