@@ -1,6 +1,6 @@
 /* -*-C++-*- 
 
-   "$Id: fVector3.h,v 1.4 2000/02/06 08:39:17 jamespalmer Exp $"
+   "$Id: fVector2.h,v 1.1 2000/02/06 08:39:17 jamespalmer Exp $"
    
    Copyright 1999-2000 by the Flek development team.
    
@@ -18,88 +18,88 @@
    License along with this library; if not, write to the Free Software
    Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307
    USA.
-   
+  
    Please report all bugs and problems to "flek-devel@sourceforge.net".
-
+   
 */
 
 // The original vector, matrix, and quaternion code was written by
 // Vinod Srinivasan and then adapted for Flek.
 
-#ifndef FVECTOR3_H_
-#define FVECTOR3_H_
+#ifndef FVECTOR2_H_
+#define FVECTOR2_H_
 
 #include <Flek/fVector.h>
 
 /**
- * fVector3 is a 3 dimensional vector represented internally as an array of 
- * doubles.  This class is related to fVector2 and fVector4 which are 
- * 2-D and 4-D versions of this class.  All fVector classes are forward
+ * fVector2 is a 2 dimensional vector represented internally as an array of 
+ * doubles.  This class is related to fVector3 and fVector4 which are 
+ * 3-D and 4-D versions of this class.  All fVector classes are forward
  * declared in fVector.h.
  */
 
-class fVector3 : public fBase
+class fVector2 : public fBase
 {
 public:
 
   friend fGl;
   
-  typedef fVector3* Ptr;
+  typedef fVector2* Ptr;
   
   /**
    * The default constructor sets each element in the vector to 0.
    */
-  fVector3 () 
+  fVector2 ()
     : fBase ()
     {
-      elem[0] = elem[1] = elem[2] = 0.0;
+      elem[0] = elem[1] = 0.0;
     }
-
+  
   /**
    * This one argument constructor intializes all elements in the vector
    * with the given value.
    */
-  fVector3 (double val) 
+  fVector2 (double val)
     : fBase ()
     {
-      elem[0] = elem[1] = elem[2] = val;
-    }
-     
-  /**
-   * This one argument constructor initializes the vector with the first
-   * three elements in the given array.
-   */
-  fVector3 (double * arr)
-    : fBase ()
-    {
-      elem[0] = arr[0]; elem[1] = arr[1]; elem[2] = arr[2];
+      elem[0] = elem[1] = val;
     }
 
   /**
-   * This three argument constructor initializes the vector with the
-   * passed values.
-   */
-  fVector3 (double val1, double val2, double val3=0.0)
+   * This one argument constructor initializes the vector with the first
+   * three elements in the given array.
+   */     
+  fVector2 (double * arr)
     : fBase ()
     {
-      elem[0] = val1; elem[1] = val2; elem[2] = val3;
+      elem[0] = arr[0]; elem[1] = arr[1];
     }
-     
+  
+  /**
+   * This two argument constructor initializes the vector with the
+   * passed values.
+   */
+  fVector2 (double val1, double val2)
+    : fBase ()
+    {
+      elem[0] = val1; elem[1] = val2;
+    }
+
   /**
    * The copy constructor initializes this vector with the contents 
    * of another vector.
-   */
-  fVector3 (const fVector3& vec)
+   */     
+  fVector2 (const fVector2& vec)
     : fBase (vec)
     {
-      elem[0] = vec.elem[0]; elem[1] = vec.elem[1]; elem[2] = vec.elem[2];
+      elem[0] = vec.elem[0]; elem[1] = vec.elem[1];
     }
 
   /**
    * This constructor initializes the vector from the contents of a
-   * fVector2 (a 2D vector).  The third element is set to zero.
+   * fVector3.  The third element in the fVector3 is ignored.
    */
-  fVector3 (const fVector2& vec)
+  fVector2 (const fVector3& vec)
     : fBase ()
     {
       copyFrom (vec);
@@ -109,50 +109,50 @@ public:
    * This constructor initializes the vector from the contents of a
    * fVector4.  The third element in the fVector4 is ignored.
    */
-  fVector3 (const fVector4& vec)
+  fVector2 (const fVector4& vec)
     : fBase ()
     {
       copyFrom (vec);
     }
-     
+
   /**
    * The virtual destructor does nothing.
    */
-  virtual ~fVector3 ()
+  virtual ~fVector2 ()
     {}
 
   /**
-   * Assignment operator from another fVector3.
+   * Assignment operator from another fVector2.
    */
-  fVector3& operator = (const fVector3& vec)
+  fVector2& operator = (const fVector2& vec)
     {
-      elem[0] = vec.elem[0]; elem[1] = vec.elem[1]; elem[2] = vec.elem[2];
+      elem[0] = vec.elem[0]; elem[1] = vec.elem[1];
       return (*this);
     }
-  
+
   /** 
    * Assignment operator from a scalar.  All elements are set to 
    * the scalar value.
    */
-  fVector3& operator = (double scalar)
+  fVector2& operator = (double scalar)
     {
-      elem[0] = elem[1] = elem[2] = scalar;
+      elem[0] = elem[1] = scalar;
       return (*this);
     }
 
-  /** 
-   * Assignment operator from a fVector2.  The third element set to 0.
+  /**
+   * Assignment operator from a fVector3.  Copies first 2 elements.
    */
-  fVector3& operator = (const fVector2& vec)
+  fVector2& operator = (const fVector3& vec)
     {
       copyFrom (vec);
       return (*this);
     }
-  
+
   /**
-   * Assignment operator from a fVector4.  Copies first 3 elements.
+   * Assignment operator from a fVector4.  Copies first 2 elements.
    */
-  fVector3& operator = (const fVector4& vec)
+  fVector2& operator = (const fVector4& vec)
     {
       copyFrom (vec);
       return (*this);
@@ -163,24 +163,24 @@ public:
    */
   virtual fBase::Ptr copy (void) const
     {
-      Ptr vec = new fVector3 (*this);
+      Ptr vec = new fVector2 (*this);
       return vec;
     }
 
   /** 
    * Set each element vector to the given values.
    */
-  void set (double v1, double v2, double v3)
+  void set (double v1, double v2)
     {
-      elem[0] = v1; elem[1] = v2; elem[2] = v3;
+      elem[0] = v1; elem[1] = v2;
     }
-
+  
   /** 
    * Set each element vector to the given value.
    */
   void set (double val)
     {
-      elem[0] = elem[1] = elem[2] = val;
+      elem[0] = elem[1] = val;
     }
      
   /** 
@@ -188,23 +188,23 @@ public:
    */
   void reset (void)
     {
-      set (0.0);
+      set(0.0);
     }
-     
+
   /** 
    * Get the elements of vector into given values.
    */
-  void get (double& v1, double& v2, double& v3) const
+  void get (double& v1, double& v2) const
     {
-      v1 = elem[0]; v2 = elem[1]; v3 = elem[2];
+      v1 = elem[0]; v2 = elem[1];
     }
-     
+
   /**
    * Fill an array with the elements of the vector.
    */
-  void fillArray (double arr[3]) const
+  void fillArray (double arr[2]) const
     {
-      arr[0] = elem[0]; arr[1] = elem[1]; arr[2] = elem[2];
+      arr[0] = elem[0]; arr[1] = elem[1];
     }
      
   /** 
@@ -228,93 +228,79 @@ public:
   /**
    * Arithmetic operator for additive assignment.
    */
-  void operator += (const fVector3& vec)
+  void operator += (const fVector2& vec)
     {
-      elem[0] += vec.elem[0]; elem[1] += vec.elem[1]; elem[2] += vec.elem[2];
+      elem[0] += vec.elem[0]; elem[1] += vec.elem[1];
     }
 
   /**
    * Arithmetic operator for subtractive assignment.
    */
-  void operator -= (const fVector3& vec)
+  void operator -= (const fVector2& vec) 
     {
-      elem[0] -= vec.elem[0]; elem[1] -= vec.elem[1]; elem[2] -= vec.elem[2];
+      elem[0] -= vec.elem[0]; elem[1] -= vec.elem[1];
     }
-
+  
   /**
    * Arithmetic operator for multiplicative (scalar) assignment.
    */
   void operator *= (double scalar)
     {
-      elem[0] *= scalar; elem[1] *= scalar; elem[2] *= scalar;
+      elem[0] *= scalar; elem[1] *= scalar;
     }
-  
+    
   /**
    * Arithmetic operator for divisive (scalar) assignment.
-   */
+   */ 
   void operator /= (double scalar)
     {
-      elem[0] /= scalar; elem[1] /= scalar; elem[2] /= scalar;
+      elem[0] /= scalar; elem[1] /= scalar;
     }
-
+    
   /**
    * Arithmetic operator for addition.
-   */ 
-  fVector3 operator + (const fVector3& vec) const
+   */
+  fVector2 operator + (const fVector2& vec) const
     {
-      fVector3 sum(*this);
+      fVector2 sum(*this);
       sum += vec;
       return sum;
     }
-
+  
   /**
    * Arithmetic operator for subtraction.
    */ 
-  fVector3 operator - (const fVector3& vec) const
+  fVector2 operator - (const fVector2& vec) const
     {
-      fVector3 diff(*this);
+      fVector2 diff(*this);
       diff -= vec;
       return diff;
     }
-
+  
   /**
    * Operator for scalar multiplication (dot product).
    */
-  double operator * (const fVector3& vec) const
+  double operator * (const fVector2& vec) const
     {
-      double dotprod = elem[0]*vec.elem[0] + elem[1]*vec.elem[1] + elem[2]*vec.elem[2];
+      double dotprod = elem[0]*vec.elem[0] + elem[1]*vec.elem[1];
       return dotprod;
     }
 
   /**
-   * Operator for vector multiplication (cross product).
+   * Friend operator for negation.
    */
-  fVector3 operator % (const fVector3& vec) const
+  friend fVector2 operator - (const fVector2& vec)
     {
-      fVector3 crossp;
-      
-      crossp.elem[0] = elem[1]*vec.elem[2] - elem[2]*vec.elem[1];
-      crossp.elem[1] = elem[2]*vec.elem[0] - elem[0]*vec.elem[2];
-      crossp.elem[2] = elem[0]*vec.elem[1] - elem[1]*vec.elem[0];
-      
-      return crossp;
+      fVector2 negv (-vec.elem[0], -vec.elem[1]);
+      return negv;
     }
   
   /**
-   * Friend operator for negation.
-   */
-  friend fVector3 operator - (const fVector3& vec)
-    {
-      fVector3 negv (-vec.elem[0], -vec.elem[1], -vec.elem[2]);
-      return negv;
-    }
-
-  /**
    * Friend operator for scalar pre-multiplication.
    */
-  friend fVector3 operator * (double scalar, const fVector3& vec)
+  friend fVector2 operator * (double scalar, const fVector2& vec)
     {
-      fVector3 prod (vec);
+      fVector2 prod (vec);
       
       prod *= scalar;
       return prod;
@@ -323,9 +309,9 @@ public:
   /**
    * Friend operator for scalar post-multiplication.
    */  
-  friend fVector3 operator * (const fVector3& vec, double scalar)
+  friend fVector2 operator * (const fVector2& vec, double scalar)
     {
-      fVector3 prod (vec);
+      fVector2 prod (vec);
       
       prod *= scalar;
       return prod;
@@ -334,9 +320,9 @@ public:
   /**
    * Friend operator for scalar division.
    */
-  friend fVector3 operator / (const fVector3& vec, double scalar)
+  friend fVector2 operator / (const fVector2& vec, double scalar)
     {
-      fVector3 prod (vec);
+      fVector2 prod (vec);
       
       prod /= scalar;
       return prod;
@@ -344,22 +330,21 @@ public:
 
   /**
    * Friend operator for element-by-element product.
-   */
-  friend fVector3 product(const fVector3& vec1, const fVector3& vec2)
+   */ 
+  friend fVector2 product(const fVector2& vec1, const fVector2& vec2)
     {
-      fVector3 prod (vec1[0]*vec2[0],vec1[1]*vec2[1],vec1[2]*vec2[2]);
+      fVector2 prod(vec1[0]*vec2[0],vec1[1]*vec2[1]);
       
       return prod;
     }
-    
+     
   /**
    * Boolean equality operator.
-   */
-  bool operator == (const fVector3& vec) const
+   */       
+  bool operator == (const fVector2& vec) const
     {
       if ( (fabs(elem[0]-vec.elem[0]) > ZERO) ||
-	   (fabs(elem[1]-vec.elem[1]) > ZERO) ||
-	   (fabs(elem[2]-vec.elem[2]) > ZERO) )
+	   (fabs(elem[1]-vec.elem[1]) > ZERO) )
 	return false;
       return true;
     }
@@ -367,26 +352,24 @@ public:
   /**
    * Boolean ineqality operator.
    */
-  bool operator != (const fVector3& vec) const
+  bool operator != (const fVector2& vec) const
     {
       return !( (*this) == vec );
     }
 
-  // Other functions
-  
   /**
    * Square of the norm of the vector.
-   */
-  friend double normsqr (const fVector3& vec)
+   */ 
+  friend double normsqr(const fVector2& vec)
     {
-      double nsq = sqr (vec.elem[0]) + sqr (vec.elem[1]) + sqr (vec.elem[2]);
+      double nsq = sqr (vec.elem[0]) + sqr (vec.elem[1]);
       return nsq;
     }
-  
+     
   /**
    * Norm of the vector.
    */
-  friend double norm (const fVector3& vec)
+  friend double norm (const fVector2& vec)
     {
       return sqrt (normsqr (vec));
     }
@@ -394,48 +377,47 @@ public:
   /**
    * Normalize.  Returns previous norm.
    */
-  friend double normalize (fVector3& vec)
+  friend double normalize (fVector2& vec)
     {
       double n = norm (vec);
-      if (isNonZero (n) == true) vec /= n;
+      if ( isNonZero (n) == true ) vec /= n;
       return n;
     }
-  
+
   /** 
    * Returns normalized vector.
    */
-  friend fVector3 normalized (const fVector3& vec)
+  friend fVector2 normalized (const fVector2& vec)
     {
-      fVector3 nvec (vec);
+      fVector2 nvec (vec);
       normalize (nvec);
       return nvec;
-    } 
-     
-  /**
-   * Swap the elements of two fVector3s.
-   */
-  friend void swap (fVector3& vec1, fVector3& vec2)
-    {
-      swap (vec1.elem[0], vec2.elem[0]);
-      swap (vec1.elem[1], vec2.elem[1]);
-      swap (vec1.elem[2], vec2.elem[2]);
     }
 
   /**
-   * I/O Stream extraction operator.  Of the form "[ x y z ]". 
+   * Swap the elements of two fVector2s.
+   */     
+  friend void swap (fVector2& vec1, fVector2& vec2)
+    {
+      swap (vec1.elem[0], vec2.elem[0]);
+      swap (vec1.elem[1], vec2.elem[1]);
+    }
+
+  /**
+   * I/O Stream extraction operator.  Of the form "[ x y ]". 
    */ 
-  friend istream& operator >> (istream& i, fVector3& vec)
+  friend istream& operator >> (istream& i, fVector2& vec)
     {
       removeWhiteSpace (i);
       if ( i.peek() == '[' )
 	{
 	  // Correct format
-	  int numread = 0; // No. of elements read
+	  int numread = 0;  // No. of elements read
 	  double val;
 	  char c;
 	  
-	  i >> c;   // Read opening square bracket
-	  while ( numread < 3 )
+	  i >> c;  // Read opening square bracket
+	  while ( numread < 2 )
 	    {
 	      i >> val; vec.elem[numread] = val;
 	      numread++;
@@ -453,8 +435,8 @@ public:
 	  
 	  if ( numread >= 10 )
 	    {
-	      cerr << "operator >> fVector3 : Incorrect format. Closing ']' not"
-		   << " found upto 10 characters after 3rd element of vector"
+	      cerr << "operator >> fVector2 : Incorrect format. Closing ']' not"
+		   << " found upto 10 characters after 2nd element of vector"
 		   << endl;
 	      exit(0);
 	    }
@@ -466,10 +448,10 @@ public:
   /**
    * I/O Stream insertion operator.  Of the form "[ x y z ]". 
    */ 
-  friend ostream& operator << (ostream& o, const fVector3& vec) // Insertion operator
+  friend ostream& operator << (ostream& o, const fVector2& vec)
     {
       // User can set precision from 0 to 6
-      o << setiosflags (ios::fixed) << setiosflags (ios::showpoint);
+      o << setiosflags(ios::fixed) << setiosflags (ios::showpoint);
       
       int oldprec = o.precision ();
       if ( oldprec < 0 ) o << setprecision(0);
@@ -477,28 +459,28 @@ public:
       
       o << "["
 	<< vec.elem[0] << " "
-	<< vec.elem[1] << " "
-	<< vec.elem[2]
+	<< vec.elem[1]
 	<< "]";
       
-      o << setprecision(oldprec);
+      o << setprecision (oldprec);
       return o;
     }
-
- protected:
-     
-     double elem[3];
   
-     /**
-      * Initialize the elements from a fVector2,
-      */
-     void copyFrom (const fVector2& vec);
+protected:
+  
+  double elem[2];
 
-     /**
-      * Initialize the elements from a fVector4,
-      */
-     void copyFrom (const fVector4& vec);
+  /**
+   * Initialize the elements from a fVector3,
+   */
+  void copyFrom (const fVector3& vec);
+
+  /**
+   * Initialize the elements from a fVector4,
+   */
+  void copyFrom (const fVector4& vec);
+
 };
 
-#endif // #ifndef FVECTOR3_H
+#endif // #ifndef FVECTOR2_H_
 
