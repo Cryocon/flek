@@ -193,7 +193,7 @@ bool fDomAttrDate::valueBoolean ()
 void fDomAttrDate::valueBoolean (bool) 
 { }
 
-fDate fDomAttrDate::valueDate ()
+fDate& fDomAttrDate::valueDate ()
 { 
   return Date; 
 }

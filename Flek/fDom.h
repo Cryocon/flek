@@ -1,6 +1,6 @@
 /* -*-C++-*- 
 
-   "$Id: fDom.h,v 1.9 2000/02/26 02:38:36 jamespalmer Exp $"
+   "$Id: fDom.h,v 1.10 2000/02/29 04:25:28 jamespalmer Exp $"
    
    Copyright 1999-2000 by the Flek development team.
    
@@ -23,17 +23,18 @@
 
 */
 
+#ifndef _FDOM_H__
+#define _FDOM_H__
+
 #include <Flek/fBase.h>
-//#include <Flek/fList.h>
 #include <Flek/fDomAttr.h>
-#include <list>
 #include <string.h>
 #include <stdlib.h>
 #include <stdio.h>
 #include <ctype.h>
 
-#ifndef _FDOM_H__
-#define _FDOM_H__
+#include <vector>
+#define collection vector
 
 class fDomNode;
 
@@ -47,6 +48,7 @@ class fDomListener : public fBase
  public:
 
   typedef fDomListener * Ptr;
+  typedef collection<Ptr> Collection;
   
   typedef int (*Function)(fDomNode *, long, long);
 
@@ -161,6 +163,7 @@ class fDomNode : public fBase
  public:
 
   typedef fDomNode * Ptr;
+  typedef collection<Ptr> Collection;
 
   /**
    * Constructor.
@@ -197,7 +200,7 @@ class fDomNode : public fBase
    * Attach a listener to this node.
    */
   void addListener (fDomListener *o) { Listeners.push_back (o); }
-  void addListener (fDomListener &o) { Listeners.push_back (o.copy ()); }
+  void addListener (fDomListener &o) { Listeners.push_back ((fDomListener *)o.copy ()); }
 
   /** 
    * Remove a listener from this node.
@@ -280,7 +283,7 @@ class fDomNode : public fBase
    * Add a daughter node.
    */
   void add  (fDomNode *child) { Children.push_back (child); }
-  void add  (fDomNode &child) { Children.push_back (child.copy ()); }
+  void add  (fDomNode &child) { Children.push_back ((fDomNode *) child.copy ()); }
 
   /**
    * Write this node's children.
@@ -292,11 +295,15 @@ class fDomNode : public fBase
    */
   virtual void write ();
 
+  const Collection & children () const { return Children; }
+  const fDomAttr::Collection & attributes () const { return Attributes; }
+  const fDomListener::Collection & listeners () const { return Listeners; }
+
  protected:
 
-  list<fBase*> Children;   //fList Children;    // A list of fDomNodes.
-  list<fBase*> Attributes; //fList Attributes;  // A list of strings.
-  list<fBase*> Listeners;  //fList Listeners;   // A list of listener functions.
+  Collection Children;
+  fDomAttr::Collection Attributes;
+  fDomListener::Collection Listeners;
 
 };
 
@@ -333,9 +340,9 @@ class fDomTextNode : public fDomNode
   char *text () { return Text; }
 
   fBase::Ptr copy (void) const
-    {
-      return (new fDomTextNode (*this));
-    }
+   {
+     return (new fDomTextNode (*this));
+   }
 
  protected:
   char *Text;

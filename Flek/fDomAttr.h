@@ -1,6 +1,6 @@
 /* -*-C++-*- 
 
-   "$Id: fDomAttr.h,v 1.2 2000/02/26 02:38:36 jamespalmer Exp $"
+   "$Id: fDomAttr.h,v 1.3 2000/02/29 04:25:28 jamespalmer Exp $"
    
    Copyright 1999-2000 by the Flek development team.
    
@@ -28,6 +28,9 @@
 
 #include <Flek/fBase.h>
 
+#include <vector>
+#define collection vector
+
 class fDomNode;
 typedef fDomNode fDomElement;
 
@@ -46,7 +49,8 @@ class fDomAttr : public fBase
  public:
 
   typedef fDomAttr* Ptr;
-
+  typedef collection<Ptr> Collection;
+  
   /**
    * Default constructor.
    */
@@ -212,7 +216,7 @@ class fDomAttrDate : public fDomAttr
   void   valueNumber (double);
   bool   valueBoolean ();
   void   valueBoolean (bool);
-  fDate  valueDate ();
+  fDate& valueDate ();
   void   valueDate (const fDate &);
 
  protected:

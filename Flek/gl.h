@@ -1,6 +1,6 @@
-/* -*-C++-*- 
+/* -*-c++-*- 
 
-   "$Id: gl.h,v 1.3 2000/02/13 01:02:32 jamespalmer Exp $"
+   "$Id: gl.h,v 1.4 2000/02/29 04:25:28 jamespalmer Exp $"
    
    Copyright 1999-2000 by the Flek development team.
    
@@ -203,6 +203,16 @@ inline void glTranslate (const fVector3& v)
 inline void glTranslate (const double &x, const double &y=0, const double &z=0)
 {
   glTranslated (x, y, z);
+}
+
+inline void glRotate (const double &a, const fVector3 &v)
+{
+  glRotated (a, v[0], v[1], v[2]);
+}
+
+inline void glRotate (const double &a, const double &x, const double &y, const double &z)
+{
+  glRotated (a, x, y, z);
 }
 
 #endif

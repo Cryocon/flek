@@ -3,6 +3,8 @@
 //#define DEBUGJ
 
 
+typedef vector<fBase *>::iterator fBaseIterator;
+
 int xmlFile::open (const char *filename, const char *mode)
 {
   fh = fopen (filename, mode);
@@ -104,7 +106,7 @@ int xmlFile::readValue (char *value)
 
 int xmlFile::readText (char *text)
 {
-  int rc, i = 0;
+  int rc = 1, i = 0;
   text[i] = ch;
   while ((ch != '<') && (ch != '>') && (rc = read ())) 
     { i++; text[i] = ch; }
@@ -199,14 +201,10 @@ int xmlFile::readTag (char *tag)
 
 void fDomNode::handleListeners (int event, long argument)
 {
-  list<fBase *>::iterator p, last;
-  fDomListener *q;
-  last = Listeners.end ();
-  for (p = Listeners.begin (); p != last; p++)
-    {
-      q = (fDomListener *)(*p);
-      q->listen (this, event, argument);
-    }
+  fDomListener::Collection::iterator p;
+
+  for (p = Listeners.begin (); p != Listeners.end (); p++)
+    (*p)->listen (this, event, argument);
 }  
 
 /*void fDomNode::xmlPushAttribute (char *key, char *value)
@@ -271,15 +269,12 @@ int fDomNode::xmlRead (xmlFile &xml)
 
 void fDomNode::writeAttributes () 
 {
-  list<fBase *>::iterator p, last;
-  fDomAttr *att;
+  fDomAttr::Collection::iterator p;
   
-  last = Attributes.end ();
-  for (p = Attributes.begin (); p != last; p++)
+  for (p = Attributes.begin (); p != Attributes.end (); p++)
     {
-      att = ((fDomAttr *)(*p));
       // Need code to escape special characters and quotes..
-      printf ("%s=\"%s\" ", att->name (), att->value ());
+      printf ("%s=\"%s\" ", (*p)->name (), (*p)->value ());
     }
 }
 
@@ -290,73 +285,62 @@ fDomAttr * fDomNode::newAttribute (char *)
 
 void fDomNode::setAttribute (char *key, char *value)
 {
-  list<fBase *>::iterator p, last;
-  fDomAttr *att;
+  fDomAttr::Collection::iterator p;
   int set = 0;
-  last = Attributes.end ();
-  for (p = Attributes.begin (); p != last; p++)
+
+  for (p = Attributes.begin (); p != Attributes.end (); p++)
     {
-      att = ((fDomAttr *)(*p));
-      if (!strcmp (att->name (), key ))
+      if (!strcmp ((*p)->name (), key ))
 	{
-	  att->value (value);
+	  (*p)->value (value);
 	  set = 1;
 	}
     }
   if (!set)
     {
-      att = newAttribute (key);
-      att->name (key);
-      att->value (value);
-      Attributes.push_back (att);
+      fDomAttr *new_attr = newAttribute (key);
+      new_attr->name (key);
+      new_attr->value (value);
+      Attributes.push_back (new_attr);
     }
   damage (0);
 }
 
 fDomAttr * fDomNode::getAttribute (char *key) 
 {
-  list<fBase *>::iterator p, last;
-  fDomAttr *att;
-  last = Attributes.end ();
-  for (p = Attributes.begin (); p != last; p++)
+  fDomAttr::Collection::iterator p;
+
+  for (p = Attributes.begin (); p != Attributes.end (); p++)
     {
-      att = ((fDomAttr *)(*p));
-      if (!strcmp (att->name (), key))
-	{
-	  return att;
-	}
+      if (!strcmp ((*p)->name (), key))
+	return *p;
     }
   return 0;
 }
 
 void fDomNode::writeChildren () 
 {
-  list<fBase *>::iterator p, last;
-  fDomNode *node;
-  last = Children.end ();
-  for (p = Children.begin (); p != last; p++)
-    {
-      node = ((fDomNode *)(*p));
-      node->write ();
-    }
+  Collection::iterator p;
+
+  for (p = Children.begin (); p != Children.end (); p++)
+    (*p)->write ();
 }
 
-  void fDomNode::write ()
+void fDomNode::write ()
+{
+  printf ("<%s ", tagName ());
+  
+  writeAttributes ();
+  
+  if (Children.size () == 0)
+    printf ("/>\n");
+  else
     {
-      printf ("<%s ", tagName ());
-
-      writeAttributes ();
-
-      if (Children.size () == 0)
-	printf ("/>\n");
-      else
-	{
-	  printf (">\n");
-	  writeChildren ();
-	  printf ("</%s>\n", tagName ());
-	}
+      printf (">\n");
+      writeChildren ();
+      printf ("</%s>\n", tagName ());
     }
-
+}
 
 static void trim_left (char *text)
 {
