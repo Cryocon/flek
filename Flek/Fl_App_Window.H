@@ -1,6 +1,6 @@
 /* -*-C++-*- 
 
-   "$Id: Fl_App_Window.H,v 1.17 2000/05/14 02:25:57 brad Exp $"
+   "$Id: Fl_App_Window.H,v 1.18 2000/05/14 02:44:10 brad Exp $"
    
    Copyright 1999-2000 by the Flek development team.
    
@@ -34,7 +34,7 @@
 #include <Flek/Fl_Dockable_Window.H>
 
 /** @package libflek_ui
- * Fl_App_Window is a window that can have Fl_Dockable_Groups 
+ * Fl_App_Window is a window that can have Fl_Dockable_Windows
  * "docked" either vertically or horizontally to the contents of the window.
  * An Fl_App_Window starts with a top-level "application" window.
  * Flek creates an Fl_Pack group that fills the application window.
@@ -55,10 +55,10 @@ private:
   Fl_Window* _contents;
 
   /**
-   * Hold a list of pointers to dockable windows that have ever been
-   * docked to this application window.  This is mainly used to provide automatic
-   * showing and hiding of undocked windows when the application windows is shown/hid.
-   * Hack Alert: This list is implemented as a simple fixed-size array.
+   * Holds a list of pointers to dockable windows that have permission to
+   * dock to this window.
+   * This is also used to provide automatic showing and hiding of undocked
+   * windows when the application windows is shown/hid.
    */
   Fl_Dockable_Window** dockable_windows;
 
@@ -129,21 +129,21 @@ public:
   void resize(int x, int y, int w, int h);
   
   /**
-   * Grants permission for the given Fl_Dockable_Window to dock with this
-   * Fl_App_Window.  No actual docking takes place.
-   * Calling this function multiple times with the same dockable window does not
-   * add it again to the dockables_window list.
+   * Grants permission for the dockable window to dock to this window.
+   * This does not cause the dockable window to be docked to this window.
    */  
   void accept_dockable(Fl_Dockable_Window* W);
 
   /**
-   * Determines if a dockable window is in the dockable_windows list.
+   * Determines if a dockable window has permission to dock to this window.
    */  
-  bool is_dockable(Fl_Dockable_Window* W);
+  bool may_dock(Fl_Dockable_Window* W);
   
   /**
-   * Add the dockable window to this window's dockable_windows list and dock
-   * it to this window.
+   * Docks the dockable window to this window, adding it to the specified
+   * position in the pack group.
+   * This also grants permission for the dockable window to dock
+   * to this window.
    * Docking an Fl_Dockable_Window to an Fl_App_Window does not change
    * the size of the Fl_App_Window.  Rather, the size of the contents
    * window is adjusted to accomodate the Fl_Dockable_Window.

@@ -51,7 +51,7 @@ int Fl_App_Window::handle (int event) {
   
   if(event == FL_DOCK) {
     // Isn't it in this windows list of dockable widows?
-    if(!is_dockable(Fl_Dockable_Window::current))
+    if(!may_dock(Fl_Dockable_Window::current))
       // Don't dock it.
       return 1;
 
@@ -100,7 +100,7 @@ void Fl_App_Window::add (Fl_Widget *w) {
   _contents->add(w);
 }
 
-bool Fl_App_Window::is_dockable(Fl_Dockable_Window* W) {
+bool Fl_App_Window::may_dock(Fl_Dockable_Window* W) {
   // Is the dockable window in the dockable_windows list?
   for(int i=0; i < dockable_windows_size; i++)
     if(dockable_windows[i] == W)
@@ -109,8 +109,9 @@ bool Fl_App_Window::is_dockable(Fl_Dockable_Window* W) {
 }
 
 void Fl_App_Window::accept_dockable(Fl_Dockable_Window *W) {
-  // Is the dockable window already in this window's list of dockable windows?
-  if(is_dockable(W))
+  // Does this dockable window already have permission to dock?
+  // In other words, is it already in the list?
+  if(may_dock(W))
     // Already in the list, don't add it again.
     return;
 

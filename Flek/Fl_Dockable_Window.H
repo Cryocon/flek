@@ -1,6 +1,6 @@
 /* -*-C++-*- 
 
-   "$Id: Fl_Dockable_Window.H,v 1.1 2000/05/12 03:01:46 brad Exp $"
+   "$Id: Fl_Dockable_Window.H,v 1.2 2000/05/14 02:44:10 brad Exp $"
    
    Copyright 1999-2000 by the Flek development team.
    
@@ -23,8 +23,8 @@
 
 */
 
-#ifndef _FL_DOCKABLE_GROUP_H_
-#define _FL_DOCKABLE_GROUP_H_
+#ifndef _FL_DOCKABLE_WINDOW_H_
+#define _FL_DOCKABLE_WINDOW_H_
 
 #include <FL/Fl_Button.H>
 #include <FL/Fl_Window.H>
