@@ -50,6 +50,11 @@ int Fl_App_Window::handle (int event) {
   }
   
   if(event == FL_DOCK) {
+    // Isn't it in this windows list of dockable widows?
+    if(!is_dockable(Fl_Dockable_Window::current))
+      // Don't dock it.
+      return 1;
+
     int dx = Fl::event_x_root ();
     int dy = Fl::event_y_root ();
     int ex = x_root ();
@@ -95,35 +100,37 @@ void Fl_App_Window::add (Fl_Widget *w) {
   _contents->add(w);
 }
 
-void Fl_App_Window::accept_dockable (Fl_Dockable_Window *W) {
-  // Is this window already in the list?
+bool Fl_App_Window::is_dockable(Fl_Dockable_Window* W) {
+  // Is the dockable window in the dockable_windows list?
   for(int i=0; i < dockable_windows_size; i++)
-    if(W == dockable_windows[i])
-      return;
+    if(dockable_windows[i] == W)
+      return true;
+  return false;
+}
+
+void Fl_App_Window::accept_dockable(Fl_Dockable_Window *W) {
+  // Is the dockable window already in this window's list of dockable windows?
+  if(is_dockable(W))
+    // Already in the list, don't add it again.
+    return;
 
   // Is there room left in the list?
   if(dockable_windows_size >= dockable_windows_capacity) {
     // Out of space.  That's okay.  We'll make more.
     dockable_windows_capacity *= 2;
-    dockable_windows = (Fl_Dockable_Window **)realloc(dockable_windows, sizeof(Fl_Dockable_Window*)*dockable_windows_capacity);
+    dockable_windows = (Fl_Dockable_Window**)realloc(dockable_windows,
+      sizeof(Fl_Dockable_Window*)*dockable_windows_capacity);
   }
   
   // Add it to the list.
   dockable_windows[dockable_windows_size++] = W;
 }
 
-void Fl_App_Window::add_dockable (Fl_Dockable_Window *W, int pos) {  
-  int i;
-  
-  // Is this window in the list?
-  for(i=0; i < dockable_windows_size; i++)
-    if(W == dockable_windows[i])
-      break;
+void Fl_App_Window::add_dockable(Fl_Dockable_Window *W, int pos) {
+  // Add the dockable window to this window's list of dockable windows.
+  accept_dockable(W);
 
-  // If it's not in the list it can't dock here.
-  if (i >= dockable_windows_size)
-    return;
-  
+  // Dock the dockable window on this window.
   Fl_Dockable_Window::current = W;
   Fl_Dockable_Window::current->hide();
   _pack->insert(*W, pos);

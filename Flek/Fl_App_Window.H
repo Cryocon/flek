@@ -1,6 +1,6 @@
 /* -*-C++-*- 
 
-   "$Id: Fl_App_Window.H,v 1.16 2000/05/13 06:28:04 jamespalmer Exp $"
+   "$Id: Fl_App_Window.H,v 1.17 2000/05/14 02:25:57 brad Exp $"
    
    Copyright 1999-2000 by the Flek development team.
    
@@ -99,7 +99,7 @@ public:
   /**
    * Returns a pointer to the Fl_Pack group, which contains the contents window
    * and any docked groups.
-   * From what I can tell, this is only used by the dockable_group sample.
+   * From what I can tell, this is only used by the docking sample.
    */
   Fl_Pack* tpack() { return _pack; }
 
@@ -129,19 +129,27 @@ public:
   void resize(int x, int y, int w, int h);
   
   /**
-   * Dock an Fl_Dockable_Window to the window.
+   * Grants permission for the given Fl_Dockable_Window to dock with this
+   * Fl_App_Window.  No actual docking takes place.
+   * Calling this function multiple times with the same dockable window does not
+   * add it again to the dockables_window list.
+   */  
+  void accept_dockable(Fl_Dockable_Window* W);
+
+  /**
+   * Determines if a dockable window is in the dockable_windows list.
+   */  
+  bool is_dockable(Fl_Dockable_Window* W);
+  
+  /**
+   * Add the dockable window to this window's dockable_windows list and dock
+   * it to this window.
    * Docking an Fl_Dockable_Window to an Fl_App_Window does not change
    * the size of the Fl_App_Window.  Rather, the size of the contents
    * window is adjusted to accomodate the Fl_Dockable_Window.
    */
   void add_dockable(Fl_Dockable_Window* W, int position = 0);
 
-  /**
-   * Grants permission for the given Fl_Dockable_Window to dock with this
-   * Fl_App_Window.  No actual docking takes place.
-   */  
-  void accept_dockable(Fl_Dockable_Window* W);
-  
   /**
    * Makes the contents window the current group.
    */
