@@ -4,7 +4,7 @@
 #
 # by James Dean Palmer
 #
-# "$Id: flek-config.in,v 1.12 2000/05/01 04:11:05 jamespalmer Exp $"
+# "$Id: flek-config.in,v 1.13 2000/05/14 06:05:52 jamespalmer Exp $"
 #
 
 MAJOR_VERSION=0
@@ -156,8 +156,8 @@ if test "$use_xml" = "yes"; then
     LIBS="$LIBS $prefix/lib/libflek_xml.a"
 fi
 if test "$use_gl" = "yes"; then
-    LDLIBS="$LDLIBS -lflek_gl @GL_LIB@"
-    LDSTATIC="$LDSTATIC $prefix/lib/libflek_gl.a @GL_LIB@"
+    LDLIBS="$LDLIBS -lflek_gl $FLTK_LIB @GL_LIB@"
+    LDSTATIC="$LDSTATIC $prefix/lib/libflek_gl.a $FLTK_LIB @GL_LIB@"
     LIBS="$LIBS $prefix/lib/libflek_gl.a"
 fi
 if test "$use_ui" = "yes"; then

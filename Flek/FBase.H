@@ -1,6 +1,6 @@
 /* -*-C++-*- 
 
-   "$Id: FBase.H,v 1.2 2000/04/15 20:04:53 jamespalmer Exp $"
+   "$Id: FBase.H,v 1.3 2000/05/14 06:05:53 jamespalmer Exp $"
    
    Copyright 1999-2000 by the Flek development team.
    
@@ -48,7 +48,7 @@ class FBase
    * 
    * @param src
    */
-  FBase& operator = (const FBase& src) {
+  FBase& operator = (const FBase&) {
     return *this;
   }
 
@@ -80,7 +80,7 @@ protected:
    * 
    * @param src The class to take initial data from.
    */
-  FBase (const FBase& src) {}
+  FBase (const FBase&) {}
 };
 
 #endif // #ifndef FBASE_H_
