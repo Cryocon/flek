@@ -5,7 +5,10 @@ AC_INIT(Flek/Fl_App_Window.H)
 
 AC_PROG_RANLIB
 
-LIBNAME="libflek_ui"
+LIBNAMECORE="libflek_core"
+LIBNAMEUI="libflek_ui"
+LIBNAMEGL="libflek_gl"
+
 if test "$RANLIB" != ":"; then
   LIBCOMMAND="ar cr"
 else
@@ -14,40 +17,74 @@ fi
 DSOCOMMAND="echo"
 DSONAME=""
 
+uname=`uname`
+uversion=`uname -r | sed -e '1,$s/\.//g'`
+if test "$uname" = "IRIX64"; then
+    uname="IRIX"
+fi
+
+DEBUGFLAG=""
+PICFLAG=0
+CFLAGS="${CFLAGS:=}"
+CXXFLAGS="${CXXFLAGS:=}"
+
+case $uname in
+    CYGWIN*)
+        CFLAGS="$CFLAGS -DWIN32 -mno-cygwin"
+        CXXFLAGS="$CXXFLAGS -DWIN32 -mno-cygwin"
+        uname="CYGWIN"
+        LDLIBS="-lgdi32 -luser32 -lmsvcrt -lwsock32 -mno-cygwin -mwindows"
+        LDDLLLIBS="-lgdi32 -luser32 -lmsvcrt -lwsock32 -lopengl32 -lglu32"
+        EXPORTCOMMAND="dlltool"
+        ;;
+    *)
+        LDLIBS="-lX11 -lXext"
+        ;;
+esac
+
+AC_SUBST(LDLIBS)
+AC_SUBST(LDDLLLIBS)
+
+AC_ARG_ENABLE(debug, [  --enable-debug          turn on debugging [default=no]],[if eval "test x$enable_debug = xyes"; then
+  DEBUGFLAG="-g "
+fi])
+
 AC_ARG_ENABLE(shared, [  --enable-shared         turn on shared libraries [default=no]],[
 if eval "test x$enable_shared = xyes"; then
   PICFLAG=1
-  DSOLIBNAME="libflek_ui"
+  DSOLIBNAMECORE="libflek_core"
+  DSOLIBNAMEUI="libflek_ui"
+  DSOLIBNAMEGL="libflek_gl"
   case $uname in
       SunOS* | UNIX_S*)
-	  DSOEXT=".so.2"
+	  DSOEXT=".so.1"
 	  DSOCOMMAND="\$(CXX) -Wl,-h,\$@ \$(LDLIBS) -G $DEBUGFLAG -o"
 	  ;;
       HP-UX*)
-	  DSOEXT=".s1.2"
+	  DSOEXT=".s1.1"
 	  DSOCOMMAND="ld -b -z +h \$@ $DEBUGFLAG -o"
 	  ;;
       OSF1*)
-	  DSOEXT=".so.2"
+	  DSOEXT=".so.1"
           DSOCOMMAND="\$(CXX) -Wl,-soname,\$@ \$(LDLIBS) -shared $DEBUGFLAG -o"
 cd 	  ;;
       IRIX*)
-	  DSOEXT=".so.2"
+	  DSOEXT=".so.1"
           DSOCOMMAND="\$(CXX) -soname \$@ \$(LDLIBS) -shared $DEBUGFLAG -o"
 	  ;;
       CYGWIN*)
 	  DLLCFLAGS="-DFL_DLL -DFL_LIBRARY"
 	  DSOEXT=".dll"
           DSOCOMMAND="dllwrap --export-all --target i386-mingw32 \
-	--implib ../lib/libflekdll.2.a \
-	--output-exp ../lib/libflekdll.2.exp \
+	--implib ../lib/libflek_coredll.1.a \
+	--output-exp ../lib/libflek_coredll.1.exp \
 	--driver-name \$(CXX)"
 	  PICFLAG=0
 	  ;;
       *)
           echo "Warning: shared libraries may not be supported.  Trying -shared"
 	  echo "         option with compiler."
-	  DSOEXT=".so.2"
+	  DSOEXT=".so.1"
           DSOCOMMAND="\$(CXX) -Wl,-soname,\$@ -shared $DEBUGFLAG -o"
 	  ;;
   esac
@@ -58,10 +95,124 @@ dnl # Check for programs..
 AC_PROG_CC
 AC_PROG_CXX
 
-uname=`uname`
-uversion=`uname -r | sed -e '1,$s/\.//g'`
-if test "$uname" = "IRIX64"; then
-    uname="IRIX"
+AC_HEADER_DIRENT
+AC_CHECK_HEADER(sys/select.h)
+AC_CHECK_FUNCS(scandir,
+    if test "$uname" != "SunOS"; then
+        AC_DEFINE(HAVE_SCANDIR)
+    fi)
+AC_CHECK_FUNCS(vsnprintf,
+    if test "$uname" != "HP-UX"; then
+        AC_DEFINE(HAVE_VSNPRINTF)
+    fi)
+AC_CHECK_FUNCS(snprintf,
+    if test "$uname" != "HP-UX"; then
+        AC_DEFINE(HAVE_SNPRINTF)
+    fi)
+AC_CHECK_FUNCS(atol)
+AC_CHECK_FUNCS(strcasecmp)
+AC_CHECK_FUNCS(vsprintf)
+
+AC_PATH_XTRA
+echo "Ignoring libraries \"$X_PRE_LIBS\" requested by configure."
+dnl# LIBS="$LIBS$X_LIBS$X_PRE_LIBS"
+LIBS="$LIBS$X_LIBS"
+CFLAGS="$CFLAGS $X_CFLAGS"
+CPPFLAGS="$CPPFLAGS $X_CFLAGS"
+
+dnl# My test to see if OpenGL is on this machine:
+GLLIB=
+if test "$uname" = "CYGWIN"
+then
+    GLLIB="-lopengl32 -lglu32"
+    AC_DEFINE(HAVE_GL)
+else
+    AC_CHECK_LIB(GL, glXMakeCurrent, AC_DEFINE(HAVE_GL) GLLIB=" -lGLU -lGL", \
+        AC_CHECK_LIB(MesaGL,glXMakeCurrent, AC_DEFINE(HAVE_GL) GLLIB=" -lMesaGLU -lMesaGL",,\
+            -lX11 -lXext $X_EXTRA_LIBS -lm), \
+        -lX11 -lXext $X_EXTRA_LIBS -lm)
+fi
+
+AC_SUBST(GLLIB)
+
+MAKEDEPEND="\$(CXX) -M"
+
+dnl# add warnings to compiler switches:
+dnl# do this last so messing with switches does not break tests
+if test -n "$GXX"; then
+    CFLAGS="-Wall $CFLAGS"
+    CXXFLAGS="-Wall -Wno-return-type $CXXFLAGS"
+    if test -z "$DEBUGFLAG"; then
+        CFLAGS="-fomit-frame-pointer $CFLAGS"
+        CXXFLAGS="-fno-exceptions -fomit-frame-pointer $CXXFLAGS"
+        DEBUGFLAG="-O2"
+    fi
+    if test $PICFLAG = 1; then
+        CFLAGS="-fPIC $CFLAGS"
+        CXXFLAGS="-fPIC $CXXFLAGS"
+    fi
+else
+    case `(uname) 2>/dev/null` in
+        IRIX*)
+            # Running some flavor of IRIX; see which version and
+            # set things up according...
+            if test "$uversion" -ge 62; then
+                # We are running IRIX 6.2 or higher; uncomment the following
+                # lines if you don't have IDO 7.2 or higher:
+                #
+                #     CXX="CC -n32"
+                #     CC="cc -n32"
+                #     LD="ld -n32"
+                #     MAKEDEPEND="CC -M"
+
+                CFLAGS="-fullwarn $CFLAGS"
+                CXXFLAGS="-fullwarn $CXXFLAGS"
+                if test -z "$DEBUGFLAG"; then
+                    DEBUGFLAG="-O2 -OPT:Olimit=3000"
+                fi
+            else
+                CXXFLAGS="+w +pp $CXXFLAGS"
+                if test -z "$DEBUGFLAG"; then
+                    DEBUGFLAG="-O2 -Olimit=3000"
+                fi
+            fi
+            ;;
+        HP-UX*)
+            # Running HP-UX; these options should work for the HP compilers.
+            if test -z "$DEBUGFLAG"; then
+                DEBUGFLAG="+O2"
+            fi
+            ;;
+        SunOS*)
+            # Solaris
+            if test -z "$DEBUGFLAG"; then
+                DEBUGFLAG="-O"
+            fi
+            if test $PICFLAG = 1; then
+                CFLAGS="-KPIC $CFLAGS"
+                CXXFLAGS="-PIC $CXXFLAGS"
+            fi
+            ;;
+        *)
+            # Running some other operating system; inform the user they
+            # should contribute the necessary options to fltk-bugs@easysw.com...
+            echo "Building FLTK with default compiler optimizations; contact"
+            echo "fltk-bugs@easysw.com with uname and compiler options needed"
+            echo "for your platform, or set the CFLAGS and CXXFLAGS options"
+           echo "before running configure."
+            ;;
+    esac
+fi
+
+CFLAGS="$DEBUGFLAG $CFLAGS"
+CXXFLAGS="$DEBUGFLAG $CXXFLAGS"
+PREFIX=${prefix}
+AC_SUBST(DEBUGFLAG)
+
+if test "$PREFIX" = "NONE"; then
+    AC_DEFINE_UNQUOTED(CONFIGDIR, "${ac_default_prefix}/lib/fltk")
+else
+    AC_DEFINE_UNQUOTED(CONFIGDIR, "${prefix}/lib/fltk")
 fi
 
 dnl All tests done with the C++ compiler...
@@ -76,9 +227,13 @@ AC_ARG_WITH([fltk-dir],
   [ --with-fltk-dir=dir specify the Fltk source dir], 
   [ 
     FLTKDIR="$withval"
-    FLTKLIB="-L$withval/lib"
+    FLTKLIB="-L$withval/lib -lfltk"
     FLTKINC="-I$withval"
-  ], [])
+  ], 
+  [
+    FLTKLIB="-lfltk"
+    AC_CHECK_LIB(fltk,numericsort, AC_DEFINE(HAVE_FLTK) FLTKLIB="-lfltk",,)
+  ])
 
 AC_ARG_WITH([fltk2], 
   [ --with-fltk2], 
@@ -99,97 +254,24 @@ AC_SUBST(FLTKLIB)
 AC_SUBST(FLTKINC)
 AC_SUBST(FLTKFLAGS)
 
-AC_PATH_XTRA
-if test "$X_PRE_LIBS" != ""; then
-        echo "Ignoring libraries \"$X_PRE_LIBS\" requested by configure."
-fi
-if test "$X_LIBS" = " -L/usr/lib"; then
-        echo "Ignoring X library directory \"$X_LIBS\" requested by configure."
-        X_LIBS=""
-fi
+AC_SUBST(LIBNAMECORE)
+AC_SUBST(LIBNAMEUI)
+AC_SUBST(LIBNAMEGL)
 
-AC_CHECK_LIB(fltk,numericsort,X_LIBS="$X_LIBS -lfltk -lX11 -lXext"
-AC_DEFINE(HAVE_LIBFLTK))
+AC_SUBST(DSOLIBNAMECORE)
+AC_SUBST(DSOLIBNAMEUI)
+AC_SUBST(DSOLIBNAMEGL)
 
-dnl Checks for header files.
-AC_HEADER_STDC
-
-dnl Checks for string functions.
-AC_CHECK_FUNCS(strdup)
-AC_CHECK_FUNCS(strcasecmp)
-AC_CHECK_FUNCS(strncasecmp)
-
-LIBS="$LIBS$X_LIBS"
-CFLAGS="$CFLAGS $X_CFLAGS"
-CPPFLAGS="$CPPFLAGS $X_CFLAGS"
-
-MAKEDEPEND="\$(CXX) -M"
-
-dnl# add warnings to compiler switches:
-dnl# do this last so messing with switches does not break tests
-if test -n "$GXX"; then
-    CFLAGS="-Wall $CFLAGS"
-    CXXFLAGS="-Wall -Wno-return-type $CXXFLAGS"
-    if test -z "$DEBUGFLAG"; then
-        CFLAGS="-O2 $CFLAGS"
-        CXXFLAGS="-O2 $CXXFLAGS"
-    fi
-    if test "$PICFLAG" = 1; then
-    	CFLAGS="-fPIC $CFLAGS"
-    	CXXFLAGS="-fPIC $CXXFLAGS"
-    fi
-else
-    case `(uname) 2>/dev/null` in
-        IRIX*)
-	    # Running some flavor of IRIX; see which version and
-	    # set things up according...
-	    if test "$uversion" -ge 62; then
-	        # We are running IRIX 6.2 or higher; uncomment the following
-		# lines if you don't have IDO 7.2 or higher:
-		#
-		#     CXX="CC -n32"
-		#     CC="cc -n32"
-		#     LD="ld -n32"
-		#     MAKEDEPEND="CC -M"
-
-        	# -woff 3322 is necessary due to errors in Xlib headers on IRIX
-        	CFLAGS="-n32 -fullwarn $CFLAGS"
-        	CXXFLAGS="-n32 -fullwarn -woff 3322 $CXXFLAGS"
-	    else
-        	CXXFLAGS="+w +pp $CXXFLAGS"
-	    fi
-	    if test -z "$DEBUGFLAG"; then
-        	CFLAGS="-O2 $CFLAGS"
-        	CXXFLAGS="-O2 $CXXFLAGS"
-	    fi
-	    ;;
-	HP-UX*)
-	    # Running HP-UX; these options should work for the HP compilers.
-	    if test -z "$DEBUGFLAG"; then
-		CFLAGS="+O2 $CFLAGS"
-		CXXFLAGS="+O2 +W336,501,736,740,749,829 $CXXFLAGS"
-	    fi
-	    ;;
-	*)
-	    # Running some other operating system; inform the user they
-	    # should contribute the necessary options to fltk-bugs@easysw.com...
-	    ;;
-    esac
-fi
-
-CFLAGS="$DEBUGFLAG $CFLAGS"
-CXXFLAGS="$DEBUGFLAG $CXXFLAGS"
-
-AC_SUBST(MAKEDEPEND)
 AC_SUBST(DSOEXT)
 AC_SUBST(DSOCOMMAND)
-AC_SUBST(LIBNAME)
-AC_SUBST(DSOLIBNAME)
 AC_SUBST(LIBCOMMAND)
+AC_SUBST(MAKEDEPEND)
+AC_SUBST(DLLCFLAGS)
+
 AC_OUTPUT(makeinclude flek-config)
 
 chmod +x flek-config
 
 dnl#
-dnl# End of "$Id: configure.in,v 1.7 2000/02/10 18:17:02 jamespalmer Exp $".
+dnl# End of "$Id: configure.in,v 1.8 2000/02/11 19:21:47 jamespalmer Exp $".
 dnl#

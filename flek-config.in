@@ -4,10 +4,10 @@
 #
 # by James Dean Palmer
 #
-# "$Id: flek-config.in,v 1.1 2000/02/10 18:17:02 jamespalmer Exp $"
+# "$Id: flek-config.in,v 1.2 2000/02/11 19:21:47 jamespalmer Exp $"
 #
 
-MAJOR_VERSION=2
+MAJOR_VERSION=0
 MINOR_VERSION=0
 PATCH_VERSION=0
 VERSION="$MAJOR_VERSION.$MINOR_VERSION.$PATCH_VERSION"
@@ -35,10 +35,10 @@ CFLAGS="@CFLAGS@"
 CXXFLAGS="@CXXFLAGS@ @X_CFLAGS@"
 
 # program to make the archive:
-LIBNAME="@LIBNAME@"
+# LIBNAME="@LIBNAME@"
 LIBCOMMAND="@LIBCOMMAND@"
 RANLIB="@RANLIB@"
-DSONAME="@DSONAME@"
+#DSONAME="@DSONAME@"
 DSOCOMMAND="@DSOCOMMAND@"
 
 # flags for the linker
@@ -58,17 +58,17 @@ Options:
 	[--version]
 
 options telling what we are doing :
-	[--use-core]      use core library (default) (libflek_core)
-	[--use-ui]        use user interface library (libflek_ui)
-	[--use-gl]        use OpenGL library (libflek_gl)
+	[--use-core]      use core library (default)  (libflek_core)
+	[--use-ui]        use user interface library  (libflek_ui)
+	[--use-gl]        use OpenGL library          (libflek_gl)
 
 options telling what information we request
-	[--cflags]        return flags to compile C using FLTK
-	[--cxxflags]      return flags to compile C++ using FLTK
-	[--ldflags]       return flags to link against FLTK
-	[--ldstaticflags] return flags to link against static FLTK library
-                                          even if there are DSOs installed
-	[--libs]          return FLTK libraries full path for dependencies
+	[--cflags]        return flags to compile C using Flek
+	[--cxxflags]      return flags to compile C++ using Flek
+	[--ldflags]       return flags to link against Flek
+	[--ldstaticflags] return flags to link against static Flek library
+                            even if there are DSOs installed
+	[--libs]          return Flek libraries full path for dependencies
 "
     exit $1
 }
@@ -108,6 +108,7 @@ do
       ;;
     --use-gl)
       use_gl=yes
+      use_ui=yes
       ;;
     --use-core)
       use_core=yes
@@ -141,18 +142,18 @@ done
 LDLIBS=""
 LDSTATIC=""
 LIBS=""
-if test "$use_ui" = "yes"; then
-    LDLIBS="$LDLIBS -lflek_ui"
-    LDSTATIC="$LDSTATIC $prefix/lib/libflek_ui.a"
-    LIBS="$LIBS $prefix/lib/libflek_ui.a"
-fi
 if test "$use_gl" = "yes"; then
     LDLIBS="$LDLIBS -lflek_gl @GLLIB@"
     LDSTATIC="$LDSTATIC $prefix/lib/libflek_gl.a @GLLIB@"
     LIBS="$LIBS $prefix/lib/libflek_gl.a"
 fi
-LDLIBS="$LDLIBS -lflek_core @LDFLAGS@ @LIBS@ @LDLIBS@ @X_EXTRA_LIBS@ -lm"
-LDSTATIC="$LDSTATIC $prefix/lib/libflek_core.a @LDFLAGS@ @LIBS@ @LDLIBS@ @X_EXTRA_LIBS@ -lm"
+if test "$use_ui" = "yes"; then
+    LDLIBS="$LDLIBS -lflek_ui @LDFLAGS@ @LIBS@ @LDLIBS@ @X_EXTRA_LIBS@"
+    LDSTATIC="$LDSTATIC $prefix/lib/libflek_ui.a @LDFLAGS@ @LIBS@ @LDLIBS@ @X_EXTRA_LIBS@"
+    LIBS="$LIBS $prefix/lib/libflek_ui.a"
+fi
+LDLIBS="$LDLIBS -lflek_core -lm"
+LDSTATIC="$LDSTATIC $prefix/lib/libflek_core.a -lm"
 LIBS="$LIBS $prefix/lib/libflek_core.a"
 
 # Answer to user requests
