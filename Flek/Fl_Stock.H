@@ -1,5 +1,30 @@
-#ifndef _FL_STOCK_H
-#define _FL_STOCK_H
+/* -*-C++-*- 
+
+   "$Id: Fl_Stock.H,v 1.6 2000/02/06 20:40:44 jamespalmer Exp $"
+   
+   Copyright 1999-2000 by the Flek development team.
+   
+   This library is free software; you can redistribute it and/or
+   modify it under the terms of the GNU Library General Public
+   License as published by the Free Software Foundation; either
+   version 2 of the License, or (at your option) any later version.
+   
+   This library is distributed in the hope that it will be useful,
+   but WITHOUT ANY WARRANTY; without even the implied warranty of
+   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+   Library General Public License for more details.
+   
+   You should have received a copy of the GNU Library General Public
+   License along with this library; if not, write to the Free Software
+   Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307
+   USA.
+   
+   Please report all bugs and problems to "flek-devel@sourceforge.net".
+
+*/
+
+#ifndef FL_STOCK_H_
+#define FL_STOCK_H_
 
 #include <FL/Fl_Button.H>
 
@@ -17,10 +42,34 @@
 #define FL_TEXT_ALIGN_TOP    0x00400000
 #define FL_TEXT_ALIGN_BOTTOM 0x00800000
 
+/** @package libflek_ui (The Flek User Interface Library)
+ * The base class from which all stock buttons are derived.
+ * These include:
+ * 
+ * Fl_Stock_Button_Ok, Fl_Stock_Button_Cancel,<br>
+ * Fl_Stock_Button_Yes, Fl_Stock_Button_No,<br>
+ * Fl_Stock_Button_Apply, Fl_Stock_Button_Close,<br>
+ * Fl_Stock_Button_Add, Fl_Stock_Button_Remove,<br>
+ * Fl_Stock_Button_New, Fl_Stock_Button_Previous,<br>
+ * Fl_Stock_Button_Left, Fl_Stock_Button_Next,<br>
+ * Fl_Stock_Button_Right, Fl_Stock_Button_Up,<br>
+ * Fl_Stock_Button_Down, Fl_Stock_Button_Top,<br>
+ * Fl_Stock_Button_Bottom, Fl_Stock_Button_Clear,<br>
+ * Fl_Stock_Button_Open, Fl_Stock_Button_Copy,<br>
+ * Fl_Stock_Button_Cut, Fl_Stock_Button_Exec,<br>
+ * Fl_Stock_Button_First, Fl_Stock_Button_Help,<br>
+ * Fl_Stock_Button_Last, Fl_Stock_Button_Save,<br>
+ * Fl_Stock_Button_Search and Fl_Stock_Button_Search_Replace.
+ *<p><img src="Fl_Stock_Button.png">
+ */
 class Fl_Stock_Button : public Fl_Button
 {
 public:
-  FL_EXPORT Fl_Stock_Button (int,int,int,int,const char * = 0);
+  /**
+   * The constructor.  Passing a label to a stock button is usually
+   * ignored.
+   */
+  Fl_Stock_Button (int,int,int,int,const char * = 0);
   void draw_label(int X, int Y, int W, int H, Fl_Color c, Fl_Flags f);
   void draw ();
 #ifndef FLTK_2

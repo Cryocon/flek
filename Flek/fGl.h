@@ -1,6 +1,6 @@
 /* -*-C++-*- 
 
-   "$Id: fGl.h,v 1.1 2000/02/06 08:39:17 jamespalmer Exp $"
+   "$Id: fGl.h,v 1.2 2000/02/06 20:40:44 jamespalmer Exp $"
    
    Copyright 1999-2000 by the Flek development team.
    
@@ -30,6 +30,11 @@
 #include <Flek/fVector3.h>
 #include <Flek/fVector4.h>
 
+/** @package libflek_ui (The Flek User Interface Library)
+ * The fGl class provides a convenient interface for using Flek datatypes
+ * like fVector2, fVector3, fVector4, fMatrix3x3 and fMatrix4x4 with 
+ * OpenGl.
+ */
 class fGl : public fBase 
 {
 public:

@@ -1,6 +1,6 @@
 /* -*-C++-*-
  
-   "$Id: fVector4.h,v 1.2 2000/02/06 08:39:17 jamespalmer Exp $"
+   "$Id: fVector4.h,v 1.3 2000/02/06 20:40:44 jamespalmer Exp $"
    
    Copyright 1999-2000 by the Flek development team.
    
@@ -31,13 +31,12 @@
 
 #include <Flek/fVector.h>
 
-/**
+/** @package libflek_ui (The Flek User Interface Library)
  * fVector4 is a 4 dimensional vector represented internally as an array of 
  * doubles.  This class is related to fVector2 and fVector3 which are 
  * 2-D and 3-D versions of this class.  All fVector classes are forward
  * declared in fVector.h.
  */
-
 class fVector4 : public fBase
 {
 public:

@@ -1,9 +1,9 @@
-// $Id: fBase.h,v 1.1 2000/02/06 08:39:17 jamespalmer Exp $
+// $Id: fBase.h,v 1.2 2000/02/06 20:40:44 jamespalmer Exp $
 
 #ifndef FBASE_H_
 #define FBASE_H_
 
-/** 
+/** @package libflek_ui (The Flek User Interface Library)
  * fBase is the Abstract base class for all f classes.  The fBase
  * class can be used to build container classes which use object 
  * pointers.  The same container class can then be used with any
@@ -12,7 +12,6 @@
  * fBase has no member data.  It only has protected constructors (to 
  * prevent instantiation), virtual destructors and an assignment operator.
  */
-
 class fBase
 {
 public:

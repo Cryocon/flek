@@ -232,8 +232,6 @@ public:
 private:
   boolean      checkingCharacters;
 
-
-
 };
 
 Fl_Dom_Node::Fl_Dom_Node (Fl_Dom_Document *owner, NodeType type)
@@ -295,6 +293,4 @@ Fl_Dom_Node::check (Fl_Dom_Node * child)
 {
   if (ReadOnly)
     return NO_MODIFICATION_ALLOWED_ERR;
-  if 
-
 }

@@ -1,6 +1,6 @@
 /* -*-C++-*- 
 
-   "$Id: fMatrix3x3.h,v 1.2 2000/02/06 08:39:17 jamespalmer Exp $"
+   "$Id: fMatrix3x3.h,v 1.3 2000/02/06 20:40:44 jamespalmer Exp $"
    
    Copyright 1999-2000 by the Flek development team.
    
@@ -32,7 +32,8 @@
 #include <Flek/fBase.h>
 #include <Flek/fVector3.h>
 
-/** Class for a 3x3 matrix. Built from Vector3d
+/** @package libflek_ui (The Flek User Interface Library)
+ * Class for a 3x3 matrix. Built from Vector3d
  * Row-major form is used. (ie) each row of the matrix
  * is a Vector3d. This makes inversion easier, since elementary
  * row operations are simplified

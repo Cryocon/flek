@@ -1,6 +1,6 @@
 /* -*-C++-*- 
 
-   "$Id: fArcball.h,v 1.3 2000/02/06 08:39:17 jamespalmer Exp $"
+   "$Id: fArcball.h,v 1.4 2000/02/06 20:40:44 jamespalmer Exp $"
    
    Copyright 1999-2000 by the Flek development team.
    
@@ -35,6 +35,9 @@
 
 enum AxisSet { CameraAxes=0, BodyAxes=1, NoAxes=2 };
 
+/** @package libflek_ui (The Flek User Interface Library)
+ * The fArcball class provides a convenient 3d rotation controller.
+ */
 class fArcball
 {
 public:

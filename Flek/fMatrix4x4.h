@@ -1,6 +1,6 @@
 /* -*-C++-*- 
    
-   "$Id: fMatrix4x4.h,v 1.6 2000/02/06 08:39:17 jamespalmer Exp $"
+   "$Id: fMatrix4x4.h,v 1.7 2000/02/06 20:40:44 jamespalmer Exp $"
    
    Copyright 1999-2000 by the Flek development team.
    
@@ -33,7 +33,8 @@
 #include <Flek/fVector4.h>
 #include <Flek/fMatrix3x3.h>
 
-/** Class for a 4x4 matrix. Built from Vector4d
+/** @package libflek_ui (The Flek User Interface Library) 
+ * Class for a 4x4 matrix. Built from Vector4d
  * Row-major form is used. (ie) each row of the matrix
  * is a Vector3d. This makes inversion easier, since elementary
  * row operations are simplified
