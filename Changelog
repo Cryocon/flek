@@ -1,3 +1,9 @@
+2000-02-06  James Dean Palmer <james@tiger-marmalade.com>
+
+        - Added documentation for most classes via scandoc.
+	  Documentation is generated on the fly.
+	_ Fixed some fArcball bugs. 
+	
 2000-02-02  James Dean Palmer <james@tiger-marmalade.com>
 
         - Added new utility classes: fVector3, fMatrix4x4, fQuaternion, 

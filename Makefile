@@ -23,7 +23,7 @@
 
 SHELL=/bin/sh
 
-SUBDIRS	=	src test
+SUBDIRS	=	src test docs
 
 # Does this require GNU make?
 DIRS	=	$(SUBDIRS) `if [ ! "$(OSTYPE)" = "cygwin32" ]; then echo $(PLUGINS); fi`
@@ -73,5 +73,5 @@ configure: configure.in
 
 
 #
-# End of "$Id: Makefile,v 1.1 2000/01/25 19:40:48 jamespalmer Exp $".
+# End of "$Id: Makefile,v 1.2 2000/02/06 20:54:54 jamespalmer Exp $".
 #

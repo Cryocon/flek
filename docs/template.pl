@@ -11,8 +11,8 @@ $project_name = 'The Fast Light Environment Kit';
 $project_logo = '<img src="flek.gif">';            # change this to an image tag.
 $copyright = '&copy 2000 the Flek Development team.';
 $image_directory = ""; #"../images/";
-$index_background = $image_directory . "tile.gif";
-$page_background  = $image_directory . "tile.gif";
+#$index_background = $image_directory . "tile.gif";
+#$page_background  = $image_directory . "tile.gif";
 
 # =========================================
 # Begin generating package index file
@@ -21,7 +21,7 @@ file "index.html";
 
 <head>
 <title>$project_name : Documentation</title>
-<BODY BACKGROUND="$page_background" BGCOLOR="#d0d0d0">
+<BODY BGCOLOR="white">
 </head>
 
 <center>
@@ -71,7 +71,7 @@ file "to-do.html";
 
 <head>
 <title>$project_name -- To-Do list</title>
-<BODY BACKGROUND="$page_background" BGCOLOR="#d0d0d0">
+<BODY  BGCOLOR="white">
 </head>
 
 $project_logo
@@ -121,7 +121,7 @@ foreach $c ($p->classes()) {
 
 <head>
 <title>$project_name -- $(p.name)</title>
-<BODY BACKGROUND="$page_background" BGCOLOR="#d0d0d0">
+<BODY BGCOLOR="white">
 </head>
 
 <center>

@@ -1,8 +1,6 @@
 # Documentation Makefile
 
 all:
-
-docs:
 	perl scandoc.pl -itemplate.pl -t4 ../Flek/*.h \
 	../Flek/Fl_App_Window.H \
 	../Flek/Fl_Stock.H \
