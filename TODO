@@ -1,28 +1,30 @@
-[0] Tweak installation and packaging ..
+In no particular order :
 
-[1] Menu Replacement --
+* Tweak installation and packaging ..
 
-  Menus can be torn off.  
-  Items can have a pixmap.
-  Individual items can be hidden.
+* Menu Replacement --
+
+  Should be able to "tear off".  
+  Items should be able to have a pixmap.
+  Individual items can be "hidden".
   More robust.
   Better dynamic API than Fl_Menu.
   
-[2] About Window --
+* About Window --
   
   FltkWindow :: Fl_About (title, version, copyright, authors, comments, logo);
 
-[3] Dock Acceptors --
+* More Dock Acceptors --
 
-  Fl_Tile_Dock
-  Fl_Pack_Dock
+  Fl_Tile
+  Fl_Pack
   Fl_Tabs
   
-[4] Interprocess communication and "swallowed" windows.  see MRPC / tinymico.
+* Interprocess communication and "swallowed" windows.  see MRPC / tinymico.
 
-[5] Fl_Dockable_Group - needs a function to save and load the state of the 
+* Fl_Dockable_Group - needs a function to save and load the state of the 
     floating and docked items.
     
-[6] 2.0 - All labels should include a pixmap *and* text
+* 3D controllers (scale, rotate, translate)  Like Gleem.
 
-
+* Themes and scheme support for Fltk 2.0.

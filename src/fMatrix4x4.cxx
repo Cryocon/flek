@@ -144,11 +144,11 @@ operator* (double &scalar,fMatrix4x4 &m)
 }
 
 fMatrix4x4 & 
-fMatrix4x4::operator= (fMatrix4x4 &m)
+fMatrix4x4::operator= (fMatrix4x4 M)
 {
   for (int i=0; i<COLUMNS; i++)
     for (int j=0; j<ROWS; j++)
-      data[i][j] = m (i,j);
+      data[i][j] = M (i,j);
   
   return *this;   
 }
@@ -314,8 +314,8 @@ fMatrix4x4::rotation (double a, fVector3 v)
   data[2][0] = xzv+ysa;
   data[2][1] = yzv-xsa;
   data[2][2] = z2*va+ca;
-  m34 = m41 = m42 = m43 = 0.0;
-  m44 = 1.0;
+  data[2][3] = data[3][0] = data[3][1] = data[3][2] = 0.0;
+  data[3][3] = 1.0;
 }
 
 void 
@@ -331,16 +331,16 @@ fMatrix4x4::rotation (double ax, double ay, double az)
   data[0][0] = caz*cay;   
   data[0][1] = caz*say*sax - saz*cax;
   data[0][2] = caz*say*cax + saz*sax;
-  m14 = 0.0;
+  data[0][3] = 0.0;
   data[1][0] = saz*cay;
   data[1][1] = saz*say*sax + caz*cax;
   data[1][2] = saz*say*cax - caz*sax;
-  m24 = 0.0;
+  data[1][3] = 0.0;
   data[2][0] = -say;
   data[2][1] = cay*sax;
   data[2][2] = cay*cax;
-  m34 = m41 = m42 = m43 = 0.0;
-  m44 = 1.0;
+  data[2][3] = data[3][0] = data[3][1] = data[3][2] = 0.0;
+  data[3][3] = 1.0;
 }
 
 void 

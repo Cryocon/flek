@@ -1,7 +1,9 @@
 #ifndef QUATERNION_H
 #define QUATERNION_H
 
+#ifndef PI
 #define PI 3.14159265359
+#endif
 
 #define RAD2DEG (180.0/PI)  
 #define DEG2RAD (PI/180.0)

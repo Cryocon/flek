@@ -1,5 +1,5 @@
 /*
-  "$Id: arcball.cxx,v 1.1 2000/02/03 07:37:08 jamespalmer Exp $"
+  "$Id: arcball.cxx,v 1.2 2000/02/03 16:57:03 jamespalmer Exp $"
   
   This program tests fArcball and Fl_Gl_Arcball_Window.
 
@@ -24,7 +24,6 @@
 
 */
 
-#include <config.h>
 #include <FL/Fl.H>
 #include <FL/Fl_Window.H>
 #include <FL/Fl_Toggle_Button.H>

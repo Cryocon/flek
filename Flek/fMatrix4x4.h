@@ -21,7 +21,7 @@ class fMatrix4x4
   fMatrix4x4 operator+ (fMatrix4x4 &M1)const;
   fMatrix4x4 operator- (fMatrix4x4 &M)const;
   fMatrix4x4 operator* (double scalar);
-  fMatrix4x4 & operator= (fMatrix4x4 &M);
+  fMatrix4x4 & operator= (fMatrix4x4 M);
 
   void zero ();
   void identity ();

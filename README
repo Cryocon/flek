@@ -11,8 +11,12 @@ libraries:
   libflek-ui    (in progress)
 
      A collection of useful widgets not in the Fltk distribution.
-     
-  libflek-dom   (fleshing out API)
+
+  libflek-gl    (in progress)
+  
+     Fltk GL interface widgets and 3d controllers.
+
+  libflek-dom   (fleshing out ideas)
   
      A DOM 2 layer built on top of libxml.
 
@@ -30,8 +34,6 @@ COMPILE instructions:
 
   make
 
-If you are using FLTK_2, configure with "--with-fltk2".
-
-Wasn't that easy?
+Wasn't that easy?  Actually, check the INSTALL file for configure options.
 
 james@tiger-marmalade.com

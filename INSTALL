@@ -9,3 +9,4 @@ CONFIGURE OPTIONS
 --with-fltk-dir=...     Specify where Fltk resides.
 --with-fltk2            Use Fltk 2 (cvs) and not Fltk 1.0.7.
                         This is required to get Flek to compile with FLTK_2.
+--with-no-gl            Don't compile OpenGL support.

@@ -144,8 +144,8 @@ fArcball::draw ()
       RIMCOLOR ();
       glBegin (GL_LINE_LOOP);
       for (int i=0; i < 36; i++)
-	glVertex3f (cosf((float)i*2.0*M_PI/36.0),
-		    sinf((float)i*2.0*M_PI/36.0),0.0);
+	glVertex3f (cos ((double)i*2.0*M_PI/36.0),
+		    sin ((double)i*2.0*M_PI/36.0),0.0);
       glEnd ();
       //glScalef (r, r, r);
       // FIXME!! 
@@ -219,8 +219,8 @@ fArcball::drawConstraints ()
     if (axis[2] == 1.0) {
       glBegin (GL_LINE_LOOP);
       for (int i=0; i < 36; i++)
-	glVertex3f (cosf((float)i*2.0*M_PI/36.0),
-		    sinf((float)i*2.0*M_PI/36.0),0.0);
+	glVertex3f (cos ((double)i*2.0*M_PI/36.0),
+		    sin ((double)i*2.0*M_PI/36.0),0.0);
       glEnd ();
     } else {
       drawHalfArc (axis);

@@ -5,7 +5,7 @@
 #include <stdio.h>
 #include <math.h>
 
-#if HAVE_GL
+#ifndef NO_GL
 #include <GL/gl.h>
 #endif
 
@@ -132,56 +132,56 @@ class fVector3
 
   inline void gl_vertex ()
     {
-#if HAVE_GL
+#ifndef NO_GL
       glVertex3dv (data);
 #endif
     }
 
   inline void gl_normal ()
     {
-#if HAVE_GL
+#ifndef NO_GL
       glNormal3dv (data);
 #endif
     }
 
   inline void gl_tex_coord ()
     {
-#if HAVE_GL
+#ifndef NO_GL
       glTexCoord3dv (data);
 #endif
     }
 
   inline void gl_color ()
     {
-#if HAVE_GL
+#ifndef NO_GL
       glColor3dv (data);
 #endif
     }
 
   inline void gl_clear_color ()
     {
-#if HAVE_GL
+#ifndef NO_GL
       glClearColor (data[0], data[1], data[2], 1.0);
 #endif
     }
 
   inline void gl_rotate (double angle)
     {
-#if HAVE_GL
+#ifndef NO_GL
       glRotated (angle, data[0], data[1], data[2]);
 #endif
     }
 
   inline void gl_scale ()
     {
-#if HAVE_GL
+#ifndef NO_GL
       glScaled (data[0], data[1], data[2]);
 #endif
     }
 
   inline void gl_translate ()
     {
-#if HAVE_GL
+#ifndef NO_GL
       glTranslated (data[0], data[1], data[2]);
 #endif
     }
