@@ -2,7 +2,7 @@
 #define _FL_DOCKABLE_GROUP_H
 
 #include <FL/Fl_Button.H>
-#include <Fl/Fl_Window.H>
+#include <FL/Fl_Window.H>
 
 #define FL_UNDOCK     999999999
 #define FL_DOCK       99999999
@@ -39,7 +39,7 @@ class Fl_Dockable_Group : public Fl_Window
   int handle (int);
   void begin () { Fl_Group::current (contents); }
   void end () { Fl_Group::current ((Fl_Group*) parent ()); }
-  void undock (int x, int y);  
+  void undock (int x=-1, int y=-1);  
   short get_docked () { return docked; }
   void  set_docked (short r) { docked = r; }  
   static Fl_Dockable_Group *current;

@@ -5,7 +5,7 @@
 #include <FL/x.H>
 #include <FL/fl_draw.H>
 
-Fl_App_Window::Fl_App_Window (int x, int y, int w, int h, const char *l = 0) : 
+Fl_App_Window::Fl_App_Window (int x, int y, int w, int h, const char *l) : 
   Fl_Window (x, y, w, h, l)
 {
   pack = new Fl_Pack_Fu (0, 0, w, h);
@@ -17,7 +17,7 @@ Fl_App_Window::Fl_App_Window (int x, int y, int w, int h, const char *l = 0) :
   begin ();
 }
 
-Fl_App_Window::Fl_App_Window (int w, int h, const char *l = 0) : 
+Fl_App_Window::Fl_App_Window (int w, int h, const char *l) : 
   Fl_Window (w, h, l)
 {
   pack = new Fl_Pack_Fu (0, 0, w, h);
@@ -93,7 +93,7 @@ void Fl_App_Window::add (Fl_Widget *w)
   contents->add (w);
 }
 
-void Fl_App_Window::add_dockable (Fl_Dockable_Group *W, int pos = 0)
+void Fl_App_Window::add_dockable (Fl_Dockable_Group *W, int pos)
 {
   Fl_Dockable_Group::current = W;
   Fl_Dockable_Group::current->hide ();
@@ -133,7 +133,7 @@ Fl_App_Window::draw ()
   // if pack->w() and pack->h() change...
   pack->draw ();
   resize (x(), y(), pack->w(), pack->h());
-  return Fl_Window::draw ();
+  Fl_Window::draw ();
 }
 
 void Fl_App_Window::flush() {

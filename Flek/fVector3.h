@@ -112,23 +112,23 @@ class fVector3
       data[2] *= v; 
     }
 
-  fVector3 operator + () const;
+  inline fVector3 operator + () const;
 
-  fVector3 operator - () const;
+  inline fVector3 operator - () const;
 
-  friend fVector3 operator + (const fVector3& v1, const fVector3& v2);
+  inline friend fVector3 operator + (const fVector3& v1, const fVector3& v2);
 
-  friend fVector3 operator - (const fVector3& v1, const fVector3& v2);
+  inline friend fVector3 operator - (const fVector3& v1, const fVector3& v2);
 
-  friend double operator * (const fVector3& v1, const fVector3& v2);
+  inline friend double operator * (const fVector3& v1, const fVector3& v2);
 
-  friend fVector3 operator % (const fVector3& v1, const fVector3& v2);
+  inline friend fVector3 operator % (const fVector3& v1, const fVector3& v2);
 
-  friend fVector3 operator * (const fVector3& v, double f);
+  inline friend fVector3 operator * (const fVector3& v, double f);
 
-  friend fVector3 operator * (double f, const fVector3& v);
+  inline friend fVector3 operator * (double f, const fVector3& v);
 
-  friend fVector3 operator / (const fVector3& v, double f);
+  inline friend fVector3 operator / (const fVector3& v, double f);
 
   inline void gl_vertex ()
     {

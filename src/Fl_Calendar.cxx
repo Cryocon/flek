@@ -275,14 +275,16 @@ Fl_Calendar_Base::day_button (int i)
   return 0;
 }
 
-static void fl_calendar_previous_cb (Fl_Button *a, void *b)
+static void 
+fl_calendar_previous_cb (Fl_Button *, void *b)
 {
   Fl_Calendar *c = (Fl_Calendar *)b;
   c->previous_month ();
   c->do_callback(c, (long)0);
 }
 
-static void fl_calendar_next_cb (Fl_Button *a, void *b)
+static void 
+fl_calendar_next_cb (Fl_Button *, void *b)
 {
   Fl_Calendar *c = (Fl_Calendar *)b;
   c->next_month ();
@@ -462,7 +464,6 @@ Fl_Calendar::handle (int event)
 	    } 
 	} 
       return 1;
-      break; 
     }
   return Fl_Group::handle (event);
 }

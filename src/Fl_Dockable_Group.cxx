@@ -45,7 +45,6 @@ int Fl_Gripper::handle (int event)
     x_first = Fl_Dockable_Group::current->x_root();
     y_first = Fl_Dockable_Group::current->y_root();
     return 1;
-    break;
    case FL_DRAG:
    case FL_RELEASE:
       {
@@ -122,14 +121,13 @@ int Fl_Gripper::handle (int event)
 	    // Move the Dock_Group around the screen.
 	    group->position ((x_first + (x_drag - x_down)), (y_first + (y_drag - y_down)));
 	  }
-	return 1;
       }
-    break;
+    return 1;
   }
   return rval;
 }
 
-Fl_Dockable_Group::Fl_Dockable_Group (int x, int y, int w, int h, const char *l = 0) 
+Fl_Dockable_Group::Fl_Dockable_Group (int x, int y, int w, int h, const char *l) 
   : Fl_Window (x,y,(w+gripper_width),h,l)
 {
   usize (w, h);
@@ -142,7 +140,7 @@ Fl_Dockable_Group::Fl_Dockable_Group (int x, int y, int w, int h, const char *l 
   begin ();
 }
 
-Fl_Dockable_Group::Fl_Dockable_Group (int w, int h, const char *l = 0) 
+Fl_Dockable_Group::Fl_Dockable_Group (int w, int h, const char *l) 
   : Fl_Window ((w+gripper_width),h,l)
 {
   usize (w, h);
@@ -188,10 +186,10 @@ int Fl_Dockable_Group::handle (int event)
   return Fl_Window::handle (event);
 }
 
-void Fl_Dockable_Group::undock (int x=-1, int y=-1)
+void Fl_Dockable_Group::undock (int x, int y)
 {
   docked = 0;
-  printf ("undocking..\n");
+  // printf ("undocking..\n");
   if (parent())
     {
       Fl_Group *group = (Fl_Group *) parent ();
@@ -199,7 +197,7 @@ void Fl_Dockable_Group::undock (int x=-1, int y=-1)
       
       group->remove ((Fl_Widget *)this);
       
-      printf ("Let dock handle the event..\n");
+      // printf ("Let dock handle the event..\n");
       // Give the dock an opportunity to handle the event.
       Fl::handle (FL_UNDOCK, group->window ());
       
@@ -208,11 +206,11 @@ void Fl_Dockable_Group::undock (int x=-1, int y=-1)
       if ((x > -1) && (y > -1))
 	position (x, y);
       
-      printf ("positioned x, y = %d,%d", x, y);
+      // printf ("positioned x, y = %d,%d", x, y);
 
       size (uw (), uh ());
 
-      printf ("show me!!\n");
+      // printf ("show me!!\n");
       show ();
     }
 }
