@@ -1,7 +1,7 @@
 makedepend
 calendar
 stock_buttons
-dockable_group
+docking
 toggle_tree
 testlist
 testtable
