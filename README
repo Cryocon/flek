@@ -28,7 +28,8 @@ See the docs/ directory for more information on each widget.
 
 COMPILE instructions:
 
-  ./configure
   make
+
+Wasn't that easy?
 
 james@tiger-marmalade.com
