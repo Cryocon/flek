@@ -1,3 +1,9 @@
+2000-01-29  James Dean Palmer <james@tiger-marmalade.com>
+
+        - Added more Fl_Stock_Buttons.
+	- Docking works most of the time now under Fltk 1.0.7, but
+	  Fltk 2.0 is pretty messed up.
+
 2000-01-28  James Dean Palmer <james@tiger-marmalade.com>
 
 	- Added Fl_Stock_Button_Ok, Fl_Stock_Button_Cancel,

@@ -50,6 +50,7 @@ int Fl_Gripper::handle (int event)
    case FL_RELEASE:
       {
 	Fl_Dockable_Group *group = (Fl_Dockable_Group *)parent ();
+	Fl_Dockable_Group::current = group;
 
 	x_drag = Fl::event_x_root ();
 	y_drag = Fl::event_y_root ();

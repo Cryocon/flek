@@ -350,7 +350,7 @@ Fl_Calendar::Fl_Calendar (int x, int y, int w, int h,
   caption->down_box (FL_THIN_DOWN_BOX);
 #else
   caption->label_type (FL_SYMBOL_LABEL);
-  caption->label_font (3);
+  // caption->label_font (3);
   caption->label_size (10);
 #endif
   

@@ -64,7 +64,6 @@ void
 Fl_Stock_Button::draw_label (int X, int Y, int W, int H,
 			     Fl_Color c, Fl_Flags f)
 {
-  printf ("Drawing with flags == %d\n", f);
   int tw=0, th=0;
   int iw=0, ih=0;
 
@@ -96,7 +95,6 @@ Fl_Stock_Button::draw_label (int X, int Y, int W, int H,
 
   if ((f & FL_TEXT_ALIGN_TOP) || (f & FL_TEXT_ALIGN_BOTTOM))
     {
-      printf("align top\n");
       h = th + ih + spacer;
       w = ((tw > iw) ? tw : iw); // max
     }
@@ -366,7 +364,6 @@ Fl_Stock_Button_Next::Fl_Stock_Button_Next(int x, int y, int w, int h,
     Stock_Button_Next_Image = new Fl_Pixmap(stock_right_arrow_xpm);
   image (Stock_Button_Next_Image);
   set_flag (FL_TEXT_ALIGN_BOTTOM);
-  printf ("Fl_Next flags = %d -- FL_ALIGN_BOTTOM = %d\n", flags(), FL_TEXT_ALIGN_BOTTOM);
 }
 
 static Fl_Pixmap* Stock_Button_New_Image = 0;

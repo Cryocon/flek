@@ -39,7 +39,8 @@ Fl_App_Window::handle (int event)
       //if ((w() != pack->w()) || (h() != pack->h()))
       //size (pack->w(), pack->h());
       //damage (FL_DAMAGE_ALL);
-      redraw ();
+      size (w(), h() - Fl_Dockable_Group::current->h());
+      //redraw ();
       return 1;
     }
   
@@ -112,7 +113,8 @@ void Fl_App_Window::add_dockable (Fl_Dockable_Group *W, int pos = 0)
 //    pack->draw ();
 //    if ((w() != pack->w()) || (h() != pack->h()))
 //      size (pack->w(), pack->h());
-    redraw ();
+    //redraw ();
+    size ((w() > W->w()) ? w() : W->w(), h()+W->h());
     //flush ();
   }
 }
