@@ -118,8 +118,16 @@ exit;
 
 # Read a line of input, and remove blank lines and preprocessor directives.
 sub rdln {
+  my ($skip_next_line) = 0;
   if (defined ($_)) {
-    while (/^(\s*|\#.*)$/ && ($_ = <FILE>)) {$linenumber++; if ($debug) { print STDERR "(0:$srcfile) $linenumber.\n"; } }
+    my ($previous_line) = $_;
+    while ( (/^(\s*|\#.*)$/ || $skip_next_line ) && ($_ = <FILE>)) {
+      if ($previous_line =~ m/\\\s*/) { $skip_next_line = 1; }
+      else { $skip_next_line = 0; }
+      $previous_line = $_;
+      $linenumber++; 
+      if ($debug) { print STDERR "(0:$srcfile) $linenumber.\n"; } 
+    }
   }
 }
 
