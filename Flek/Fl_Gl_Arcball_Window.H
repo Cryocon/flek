@@ -1,6 +1,6 @@
 /* -*-C++-*- 
 
-   "$Id: Fl_Gl_Arcball_Window.H,v 1.8 2000/04/13 13:56:28 jamespalmer Exp $"
+   "$Id: Fl_Gl_Arcball_Window.H,v 1.9 2000/04/14 20:15:38 jamespalmer Exp $"
    
    Copyright 1999-2000 by the Flek development team.
    
@@ -36,8 +36,8 @@
 #include <FL/Fl_Gl_Window.H>
 #include <GL/gl.h>
 #include <GL/glu.h>
-#include <Flek/FArcball.H>
 #include <Flek/FTransformation.H>
+#include <Flek/FArcball_Control.H>
 #include <Flek/FTrans_Control.H>
 #include <Flek/FZoom_Control.H>
 #include <Flek/FDolly_Control.H>
@@ -47,13 +47,15 @@ enum TransformType { None=0, Pan=1, Rotate=2, Zoom=3, Dolly=4 };
 enum ProjectionType { Orthographic=0, Perspective=1 };
 
 /**
+ * @package libflek_gl
+ * 
  * Class for a FLTK GL Arcball window, which handles arcball rotations by default
  */
 class Fl_Gl_Arcball_Window : public Fl_Gl_Window {
   
 protected:
   
-  FArcball arcball;                                  // The arcball controller
+  FArcball_Control arcball;                                  // The arcball controller
   FTrans_Control trcontrol;                           // Translation controller
   FZoom_Control zoomcontrol;                          // Zoom controller
   FDolly_Control dollycontrol;                        // Dolly controller (10.0 scale)
@@ -143,7 +145,7 @@ public:
     if ( event == FL_PUSH ) arcball.begin_drag();
     else if ( event == FL_RELEASE ) {
       arcball.end_drag();
-      transform.rotate(arcball.quat_value());  // Update the combined transformation
+      transform.rotate(arcball.quaternion_value());  // Update the combined transformation
       arcball.reset(); currenttr = None;
     }
   }

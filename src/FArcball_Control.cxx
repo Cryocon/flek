@@ -1,6 +1,6 @@
 /* -*-C++-*- 
 
-   "$Id: FArcball.cxx,v 1.1 2000/04/13 13:56:29 jamespalmer Exp $"
+   "$Id: FArcball_Control.cxx,v 1.1 2000/04/14 20:15:38 jamespalmer Exp $"
    
    Copyright 1999-2000 by the Flek development team.
    
@@ -26,12 +26,12 @@
 // The original vector, matrix, and quaternion code was written by
 // Vinod Srinivasan and then adapted for Flek.
 
-#include <Flek/FArcball.H>
+#include <Flek/FArcball_Control.H>
 
 /**
  * Establish reasonable initial values for controller.
  */
-FArcball::FArcball ()
+FArcball_Control::FArcball_Control ()
 {
   dRadius = 1.0;
   vCenter.set (0, 0, 0);
@@ -55,7 +55,7 @@ FArcball::FArcball ()
   sets[BodyAxes][2] = mNow[2];
 }
 
-FArcball::FArcball (const FArcball& ab)
+FArcball_Control::FArcball_Control (const FArcball_Control& ab)
 {
   // Copy only the center and radius. initialize to same as new arcball
   vCenter = ab.vCenter;
@@ -78,7 +78,7 @@ FArcball::FArcball (const FArcball& ab)
   sets[BodyAxes][2] = mNow[2];
 }
 
-FArcball::FArcball (const FVector3& cen, double rad)
+FArcball_Control::FArcball_Control (const FVector3& cen, double rad)
 {
   vCenter = cen;
   dRadius = rad;
@@ -97,13 +97,13 @@ FArcball::FArcball (const FVector3& cen, double rad)
   sets[BodyAxes][2] = mNow[2];
 }
 
-FArcball::~FArcball ()
+FArcball_Control::~FArcball_Control ()
 {
   delete [] sets[CameraAxes];
   delete [] sets[BodyAxes];
 }
 
-FArcball& FArcball::operator = (const FArcball& ab)
+FArcball_Control& FArcball_Control::operator = (const FArcball_Control& ab)
 {
   // Copy only the center and radius. Reset rest to same as new arcball
   vCenter = ab.vCenter;
@@ -131,7 +131,7 @@ FArcball& FArcball::operator = (const FArcball& ab)
 /**
  * Using vDown, vNow, dragging, and asAxisSet, compute rotation etc.
  */
-void FArcball::update (void)
+void FArcball_Control::update (void)
 {
   vFrom = mouseOnSphere (vDown, vCenter, dRadius);
   vTo = mouseOnSphere (vNow, vCenter, dRadius);
@@ -161,7 +161,7 @@ void FArcball::update (void)
   mNow = to_matrix4 (conjugate (qNow));
 }
 
-FVector3 FArcball::mouseOnSphere (const FVector3& mouse, const FVector3& center, double radius)
+FVector3 FArcball_Control::mouseOnSphere (const FVector3& mouse, const FVector3& center, double radius)
 {
   FVector3 ballMouse;
   register double magsqr;
@@ -186,7 +186,7 @@ FVector3 FArcball::mouseOnSphere (const FVector3& mouse, const FVector3& center,
 /**
  * Construct a unit quaternion from two points on unit sphere
  */
-FQuaternion FArcball::quatFromBallPoints (const FVector3& from, const FVector3& to)
+FQuaternion FArcball_Control::quatFromBallPoints (const FVector3& from, const FVector3& to)
 {
   return FQuaternion (from % to, from * to);
 }
@@ -195,7 +195,7 @@ FQuaternion FArcball::quatFromBallPoints (const FVector3& from, const FVector3& 
  * Convert a unit quaternion to two points on unit sphere
  * Assumes that the given quaternion is a unit quaternion
  */
-void FArcball::quatToBallPoints (const FQuaternion& q, FVector3& arcFrom, FVector3& arcTo)
+void FArcball_Control::quatToBallPoints (const FQuaternion& q, FVector3& arcFrom, FVector3& arcTo)
 {
   double s;
   s = sqrt (sqr (q[0]) + sqr (q[1]));
@@ -214,7 +214,7 @@ void FArcball::quatToBallPoints (const FQuaternion& q, FVector3& arcFrom, FVecto
 /**
  * Force sphere point to be perpendicular to axis.
  */
-FVector3 FArcball::constrainToAxis (const FVector3& loose, const FVector3& axis)
+FVector3 FArcball_Control::constrainToAxis (const FVector3& loose, const FVector3& axis)
 {
   FVector3 onPlane;
   register float norm;
@@ -240,7 +240,7 @@ FVector3 FArcball::constrainToAxis (const FVector3& loose, const FVector3& axis)
 /**
  * Find the index of nearest arc of axis set.
  */
-int FArcball::nearestConstraintAxis (const FVector3& loose, FVector3 * axes, int nAxes)
+int FArcball_Control::nearestConstraintAxis (const FVector3& loose, FVector3 * axes, int nAxes)
 {
   FVector3 onPlane;
   register float max, dot;

@@ -1,5 +1,4 @@
 CORECPPFILES = \
-	FArcball.cxx \
 	FDate.cxx \
 	FXml.cxx \
 	FFile.cxx \
@@ -32,6 +31,7 @@ UICPPFILES = \
 
 GLCPPFILES = \
 	gl.cxx \
+	FArcball_Control.cxx \
 	Fl_Gl_Arcball_Window.cxx \
 
 #	Fl_Dir.cxx \

@@ -11,6 +11,7 @@ $project_name = 'The Fast Light Environment Kit';
 $project_logo = '<img src="flek.gif">';            # change this to an image tag.
 $copyright = '&copy 2000 the Flek Development team.';
 $image_directory = ""; #"../images/";
+$key_color = "#AA0000";
 #$index_background = $image_directory . "tile.gif";
 #$page_background  = $image_directory . "tile.gif";
 
@@ -257,15 +258,27 @@ foreach $p (packages()) {
 	<<
       }
       
+      
       # Output class member index
+      $Mcnt = 0;
       if ($c->members()) {
         print "<h2>Methods</h2>\n";
+	print "<table><tr><td valign=\"top\">";
 	print "<ul>";
+	$last_member = "";
 	foreach $m ($c->members()) {
-	  >><li><a href="$(m.url)">$(m.name)</a>
-	  <<
+	  if ($Mcnt > 9) {
+	    $Mcnt = 0;
+	    print "</ul></td><td valign=\"top\"><ul>\n";
+	  }
+	  if ($m->name() ne $last_member) {
+	    >><li><a href="\#$(m.name)">$(m.name)</a>
+	    <<
+	    $last_member = $m->name();
+	    $Mcnt++;
+	  }
 	}
-	>></ul><hr><<
+	>></ul></td></tr></table><hr><<
       }
       
       # Output class member variable documentation
@@ -279,7 +292,18 @@ foreach $p (packages()) {
       if ($c->memberfuncs()) {
         print "<h3>Method Descriptions</h3>\n";
 	print "\n";
-	foreach $m ($c->memberfuncs()) { &function( $m ); }
+	$last_member = "";
+	foreach $m ($c->memberfuncs()) { 
+	  if ($last_member ne $m->name()) {
+	    if ($last_member ne "") { print "</blockquote>\n"; }
+	    $last_member = $m->name();
+	    print "<a name=\"" . $m->name() . "\"></a>\n";
+	    print "<h3><font color=\"red\">$last_member</font></h3>\n";
+	    print "<blockquote>\n";
+	  }
+	  &function( $m ); 
+	}
+	if ($last_member ne "") { print "</blockquote>\n"; }
       }
       
       >>
@@ -354,17 +378,13 @@ sub function {
    } 
 
 	>>
-	<a name="$(f.anchor)"></a>
-	<dl>
-	<dt>
 	<h4>$jamesname;</h4>
-	<dd>
+	<blockquote>
 	<<print &processDescription( $f->description() );>>
-	<p>
 	<<
 	if ($f->params()) {
 		>>
-		<p><font color="red"><b>Parameters</b></font><dd>
+		<p><font color="$key_color"><b>Parameters</b></font><dd>
 		<table>
 		<<
 		foreach $a ($f->params()) {
@@ -380,7 +400,7 @@ sub function {
 	}
 	
 	if ($f->returnValue()) {
-		>><p><font color="red"><b>Return Value</b></font>
+		>><p><font color="$key_color"><b>Return Value</b></font>
 		<br><<
 		print &processDescription( $f->returnValue() );>>
 		</p>
@@ -417,7 +437,7 @@ sub function {
 		>><p>
 		<<
 	}
-	>></dl></dl>
+	>></blockquote>
 	<<
 }
 
@@ -432,7 +452,7 @@ sub global_function {
    $jamesname = $f->fullname();
 
 	>>
-	<a name="$(f.anchor)"></a>
+	<a name="$(f.name)"></a>
 	<dl>
 	<dt>
 	<h4>$jamesname;</h4>

@@ -1,6 +1,6 @@
 /* -*-C++-*- 
 
-   "$Id: FDolly_Control.H,v 1.2 2000/04/13 14:56:04 jamespalmer Exp $"
+   "$Id: FDolly_Control.H,v 1.3 2000/04/14 20:15:38 jamespalmer Exp $"
    
    Copyright 1999-2000 by the Flek development team.
    
@@ -26,11 +26,14 @@
 #ifndef _FDOLLY_CONTROL_H_
 #define _FDOLLY_CONTROL_H_
 
-// Class for a translation controller
-
 #include <Flek/FVector3.H>
 #include <Flek/FMatrix4x4.H>
 
+/**
+ * @package libflek_gl
+ * 
+ * Class for a dolly controller.
+ */
 class FDolly_Control {
 
 protected:

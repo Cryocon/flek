@@ -1,6 +1,6 @@
 /* -*-C++-*- 
 
-   "$Id: FXml.H,v 1.1 2000/04/13 13:56:28 jamespalmer Exp $"
+   "$Id: FXml.H,v 1.2 2000/04/14 20:15:38 jamespalmer Exp $"
    
    Copyright 1999-2000 by the Flek development team.
    
@@ -27,6 +27,10 @@
 #define _FXML_H__
 
 #include <gnome-xml/parser.h>
+
+/**
+ * @package libflek_xml
+ */
 
 typedef enum {
   FXmlElementNode = XML_ELEMENT_NODE,
@@ -71,6 +75,9 @@ typedef enum {
 class FXmlDocument;
 class FXmlNode;
 
+/**
+ * Attribute
+ */
 class FXmlAttr {
 
  public:
@@ -100,6 +107,9 @@ class FXmlAttr {
 
 };
 
+/**
+ * Node.
+ */
 class FXmlNode {
 
  public:
@@ -140,6 +150,9 @@ class FXmlNode {
 
 };
 
+/**
+ * Document
+ */
 class FXmlDocument {
 
  public:

@@ -1,6 +1,6 @@
 /* -*-C++-*- 
 
-   "$Id: Fl_Gl_Arcball_Window.cxx,v 1.8 2000/04/13 13:56:29 jamespalmer Exp $"
+   "$Id: Fl_Gl_Arcball_Window.cxx,v 1.9 2000/04/14 20:15:38 jamespalmer Exp $"
    
    Copyright 1999-2000 by the Flek development team.
    
@@ -146,14 +146,14 @@ static void drawHalfArc(const FVector3& n)
  */
 void Fl_Gl_Arcball_Window::drawConstraints (void) const
 {
-  if ( arcball.axisSet () == NoAxes ) return;
+  if ( arcball.axis () == NoAxes ) return;
   
   FVector3 axis;
   int i;
   
   for (i=0; i < 3; ++i)
     {
-      if ( arcball.axisIndex () != i)
+      if ( arcball.axis_index () != i)
 	{
 	  if (arcball.dragging ()) continue;
 	  glColor (far_color_);
@@ -161,7 +161,7 @@ void Fl_Gl_Arcball_Window::drawConstraints (void) const
       else 
 	glColor (near_color_);
       
-      axis = arcball.sets[arcball.axisSet ()][i];
+      axis = arcball.sets[arcball.axis ()][i];
       if ( fabs(axis[2]-1.0) < 1.0e-5 )
 	unitCircle();
       else

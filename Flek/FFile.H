@@ -1,6 +1,6 @@
 /* -*-C++-*- 
 
-   "$Id: FFile.H,v 1.1 2000/04/13 14:40:08 jamespalmer Exp $"
+   "$Id: FFile.H,v 1.2 2000/04/14 20:15:38 jamespalmer Exp $"
    
    Copyright 1999-2000 by the Flek development team.
    
@@ -46,31 +46,34 @@ enum FFileMode {
 };
 
 /** @package libflek_core
- * fFile provides efficient file io routines in a c++ encapsulation.  On most
- * systems it should perform better than c++ io streams.
+ * fFile provides efficient file io routines in a c++ encapsulation.  
+ * On most systems it should perform better than c++ io streams.
+ * This class was much influenced by Ruby's file class:
+ * http://www.ruby-lang.org/en/man-1.4/File.html
  */
 class FFile {
 
  public:
 
   /**
-   * The constructor can take a filename, and a mode.  The mode should be 
-   * one of the standard fopen modes:
+   * The Constructor.
+   *
+   * @param filename The name of the file to open.
+   * @param mode The mode the file should be opened in:
    * <ul>
-   * <li><b>"r"</b> -- Open  text  file  for reading.  The stream is 
-   * positioned at the beginning of the file.</li>
-   * <li><b>"r+"</b> -- Open for reading and writing.  The stream is 
-   * positioned at the beginning of the file.</li>
-   * <li><b>"w"</b> -- Truncate file to zero length or create text file
-   * for writing.   The  stream  is  positioned  at  the
-   * beginning of the file.</li>
-   * <li><b>"w+"</b> -- Open  for reading and writing.  The file is created
-   * if it does not exist, otherwise  it  is  truncated.
-   * The  stream  is  positioned at the beginning of the
-   * file.</li>
-   * <li><b>"a"</b> -- Open for writing.  The file is created if  it  does
+   * <li><b>FFileRead</b> - Open  text  file  for reading.  The stream is 
+   *     positioned at the beginning of the file.</li>
+   * <li><b>FFileReadPlus</b> - Open for reading and writing.  The stream is 
+   *     positioned at the beginning of the file.</li>
+   * <li><b>FFileWrite</b> - Truncate file to zero length or create text file
+   *     for writing.   The stream is positioned at the
+   *     beginning of the file.</li>
+   * <li><b>FFileWritePlus</b> - Open  for reading and writing.  The file is created
+   *     if it does not exist, otherwise  it  is  truncated.
+   *     The  stream  is  positioned at the beginning of the file.</li>
+   * <li><b>FFileAppend</b> - Open for writing.  The file is created if  it  does
    * not  exist.  The stream is positioned at the end of the file.</li>
-   * <li><b>"a+"</b> -- Open for reading and writing.  The file is  created
+   * <li><b>FFileAppendPlus</b> - Open for reading and writing.  The file is  created
    * if  it does not exist.  The stream is positioned at
    * the end of the file.</li>
    *</ul>
@@ -122,6 +125,13 @@ class FFile {
     if (size != 1) Error = 1;
   }
 
+  /**
+   * Put a single unsigned short into the file stream using Hi (MSB) byte order.
+   */
+  inline void put_hi (short c) {
+    put_hi ((unsigned short) c)
+  }
+  
   /**
    * Put a single unsigned long into the file stream using Hi (MSB) byte order.
    */
@@ -249,6 +259,13 @@ class FFile {
 
   char* expand (char* name);
 
+  /**
+   * Checks to see if the file exists.
+   */
+  static bool exists (const char* name) {
+    
+  }
+  
 protected:
 
   FILE *Fd;

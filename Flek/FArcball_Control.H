@@ -1,6 +1,6 @@
 /* -*-C++-*- 
 
-   "$Id: FArcball.H,v 1.3 2000/04/14 16:39:20 jamespalmer Exp $"
+   "$Id: FArcball_Control.H,v 1.1 2000/04/14 20:15:38 jamespalmer Exp $"
    
    Copyright 1999-2000 by the Flek development team.
    
@@ -26,8 +26,8 @@
 // The original vector, matrix, and quaternion code was written by
 // Vinod Srinivasan and then adapted for Flek.
 
-#ifndef _FARCBALL_H_
-#define _FARCBALL_H_
+#ifndef _FARCBALL_CONTROL_H_
+#define _FARCBALL_CONTROL_H_
 
 #include <Flek/FVector3.H>
 #include <Flek/FQuaternion.H>
@@ -35,12 +35,14 @@
 
 enum AxisSet { CameraAxes=0, BodyAxes=1, NoAxes=2 };
 
-/** @package libflek_core
- * The FArcball class provides a convenient 3d rotation controller.
+/** 
+ * @package libflek_gl
+ * 
+ * The FArcball_Control class provides a convenient 3d rotation Control.
  * This class is used by <a href="Fl_Gl_Arcball_Window.html">Fl_Gl_Arcball_Window</a>
  * to provide a user friendly rotation manipulator.
  */
-class FArcball
+class FArcball_Control
 {
 public:
 
@@ -49,46 +51,44 @@ public:
   /**
    * Default constructor.
    */
-  FArcball ();
+  FArcball_Control ();
 
   /**
    * Copy constructor.  This constructor copies the values from another
-   * FArcball.
+   * FArcball_Control.
    *
-   * @param ab The FArcball that this FArcball should copy it's values from.
+   * @param ab The FArcball_Control that this FArcball_Control should copy it's values from.
    */
-  FArcball (const FArcball& ab);
+  FArcball_Control (const FArcball_Control& ab);
 
   /**
    * Two argument constructor.  This constructor sets the initial center
    * and radius of the arcball.
    *
-   * @param cen The center for all subsequent rotation, zoom, pan, and 
-   *   dolly operations.
+   * @param cen The center for all subsequent rotation operations.
    * @param radius The radius of the sphere used for determining where
    *   the user sweeps a rotation arc.  The radius is relative to the
    *   window, where the value 1.0 would be the size of the window.
    */
-  FArcball (const FVector3& cen, double rad);
+  FArcball_Control (const FVector3& cen, double rad);
 
   /**
    * The destructor.
    */
-  ~FArcball ();
+  ~FArcball_Control ();
 
   /**
    * The assignment operator.  This method assigns the values contained
    * in this arcball to that of another.
    *
-   * @param ab The FArcball that this FArcball should copy it's values from.
+   * @param ab The FArcball_Control that this FArcball_Control should copy it's values from.
    */
-  FArcball& operator = (const FArcball& ab);
+  FArcball_Control& operator = (const FArcball_Control& ab);
   
   /**
    * Sets the center of the arcball and it's radius.
    *
-   * @param cen The center for all subsequent rotation, zoom, pan, and 
-   *   dolly operations.
+   * @param cen The center for all subsequent rotation operations.
    * @param radius The radius of the sphere used for determining where
    *   the user sweeps a rotation arc.  The radius is relative to the
    *   window, where the value 1.0 would be the size of the window.
@@ -100,8 +100,7 @@ public:
   /**
    * Sets the center of the arcball.
    *
-   * @param cen The center for all subsequent rotation, zoom, pan, and 
-   *   dolly operations.
+   * @param cen The center for all subsequent rotation operations.
    */  
   void center (const FVector3& cen) {
     vCenter = cen;
@@ -110,12 +109,9 @@ public:
   /**
    * Sets the center of the arcball.
    *
-   * @param x The x coordinate center for all subsequent rotation, zoom,
-   *   pan, and dolly operations.
-   * @param y The y coordinate center for all subsequent rotation, zoom,
-   *   pan, and dolly operations.
-   * @param z The z coordinate center for all subsequent rotation, zoom,
-   *   pan, and dolly operations.
+   * @param x The x coordinate center for all subsequent rotation operations.
+   * @param y The y coordinate center for all subsequent rotation operations.
+   * @param z The z coordinate center for all subsequent rotation operations.
    */    
   void center (double x, double y, double z) {
     vCenter.set (x, y, z);
@@ -140,17 +136,9 @@ public:
     vNow.set (x, y, 0);
   }
 
-  void reset (void) {
+  void reset () {
     qDown.reset(); qNow.reset(); mNow.reset();
   }
-
-  /**
-   * Set the axis to use.
-   */
-  void useSet (AxisSet set)
-    {
-      if ( !bDragging ) asAxisSet = set;
-    }
 
   /**
    * Update the arcball transformation matrix.
@@ -162,40 +150,36 @@ public:
    *
    * @return The current arcball transforamtion matrix.
    */  
-  FMatrix4x4 value(void) const
-    {
-      return mNow;
-    }
+  FMatrix4x4 value () const {
+    return mNow;
+  }
 
   /**
    * Gets the rotation quaternion.
    *
    * @return The current arcball quaternion.
    */  
-  FQuaternion quat_value(void) const
-    {
-      return qNow;
-    }
+  FQuaternion quaternion_value () const {
+    return qNow;
+  }
   
   /**
    * Start dragging the mouse.
    */  
-  void begin_drag (void)
-    {
-      bDragging = true; vDown = vNow;
-    }
+  void begin_drag () {
+    bDragging = true; vDown = vNow;
+  }
 
   /**
    * End dragging the mouse.
    */    
-  void end_drag (void)
-    {
-      bDragging = false; qDown = qNow;
-      sets[BodyAxes][0] = mNow[0];
-      sets[BodyAxes][1] = mNow[1];
-      sets[BodyAxes][2] = mNow[2];
-    }
-
+  void end_drag () {
+    bDragging = false; qDown = qNow;
+    sets[BodyAxes][0] = mNow[0];
+    sets[BodyAxes][1] = mNow[1];
+    sets[BodyAxes][2] = mNow[2];
+  }
+  
   /**
    * Gets wether or not we are currently dragging the mouse.
    *
@@ -204,18 +188,25 @@ public:
   bool dragging () const { return bDragging; }
 
   /**
-   * Gets the axis.  
+   * Gets the current axis.
    * 
    * @return The current axis.  Possible values include CameraAxes, BodyAxes and NoAxes.
    */
-  AxisSet axisSet () const { return asAxisSet; }
+  AxisSet axis () const { return asAxisSet; }
+
+  /**
+   * Sets the current axis.
+   */
+  void axis (AxisSet set) { // was use_set
+    if ( !bDragging ) asAxisSet = set;
+  }
 
   /**
    * Gets the axis index.
    *
    * @return The axis index.
    */
-  int axisIndex () const { return iAxisIndex; }
+  int axis_index () const { return iAxisIndex; }
 
   Axes sets[2];
 
@@ -269,4 +260,4 @@ private:
     
 };
 
-#endif // #ifndef FArcBALL_H_
+#endif

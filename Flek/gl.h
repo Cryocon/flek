@@ -1,6 +1,6 @@
 /* -*-c++-*- 
 
-   "$Id: gl.h,v 1.8 2000/04/13 13:56:29 jamespalmer Exp $"
+   "$Id: gl.h,v 1.9 2000/04/14 20:15:38 jamespalmer Exp $"
    
    Copyright 1999-2000 by the Flek development team.
    
@@ -31,7 +31,7 @@
 #include <Flek/FVector4.H>
 #include <Flek/FMatrix4x4.H>
 #include <Flek/FMatrix3x3.H>
-#include <Flek/FArcball.H>
+#include <Flek/FArcball_Control.H>
 #include <Flek/FImage.H>
 
 #include <GL/gl.h>
@@ -48,7 +48,7 @@ void glMultMatrix (const FMatrix4x4& M);
  * Multiply the current GL matrix by an arcball rotation 
  * matrix.
  */
-inline void glMultMatrix (const FArcball& a)
+inline void glMultMatrix (const FArcball_Control& a)
 {
   glMultMatrix (a.value ());
 }

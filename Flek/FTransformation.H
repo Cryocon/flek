@@ -1,6 +1,6 @@
 /* -*-C++-*- 
 
-   "$Id: FTransformation.H,v 1.1 2000/04/13 14:10:02 jamespalmer Exp $"
+   "$Id: FTransformation.H,v 1.2 2000/04/14 20:15:38 jamespalmer Exp $"
    
    Copyright 1999-2000 by the Flek development team.
    
@@ -33,6 +33,8 @@
 #include <GL/gl.h>
 
 /**
+ * @package libflek_core
+ *
  * Class for transformations (translation, scaling, rotation).
  */
 class FTransformation {
