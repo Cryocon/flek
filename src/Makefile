@@ -116,6 +116,7 @@ DSO_FLEK_CORE = ../lib/$(DSO_NAME_FLEK_CORE)$(DSOEXT)
 OBJ_FLEK_CORE = $(CPP_FLEK_CORE:.cxx=.o) 
 $(LIB_FLEK_CORE).a: $(OBJ_FLEK_CORE)
 	rm -f $@
+	mkdir -p ../lib
 	$(LIB_COMMAND) $@ $(OBJ_FLEK_CORE)
 	$(RANLIB) $@
 ../lib/libflek_core.so.1 ../lib/libflek_core.sl.1: $(OBJ_FLEK_CORE)
@@ -126,6 +127,7 @@ DSO_FLEK_UI = ../lib/$(DSO_NAME_FLEK_UI)$(DSOEXT)
 OBJ_FLEK_UI = $(CPP_FLEK_UI:.cxx=.o) 
 $(LIB_FLEK_UI).a: $(OBJ_FLEK_UI)
 	rm -f $@
+	mkdir -p ../lib
 	$(LIB_COMMAND) $@ $(OBJ_FLEK_UI)
 	$(RANLIB) $@
 ../lib/libflek_ui.so.1 ../lib/libflek_ui.sl.1: $(OBJ_FLEK_UI)
@@ -136,6 +138,7 @@ DSO_FLEK_GL = ../lib/$(DSO_NAME_FLEK_GL)$(DSOEXT)
 OBJ_FLEK_GL = $(CPP_FLEK_GL:.cxx=.o) 
 $(LIB_FLEK_GL).a: $(OBJ_FLEK_GL)
 	rm -f $@
+	mkdir -p ../lib
 	$(LIB_COMMAND) $@ $(OBJ_FLEK_GL)
 	$(RANLIB) $@
 ../lib/libflek_gl.so.1 ../lib/libflek_gl.sl.1: $(OBJ_FLEK_GL)
@@ -146,6 +149,7 @@ DSO_FLEK_XML = ../lib/$(DSO_NAME_FLEK_XML)$(DSOEXT)
 OBJ_FLEK_XML = $(CPP_FLEK_XML:.cxx=.o) 
 $(LIB_FLEK_XML).a: $(OBJ_FLEK_XML)
 	rm -f $@
+	mkdir -p ../lib
 	$(LIB_COMMAND) ../lib/$@ $(OBJ_FLEK_XML)
 	$(RANLIB) $@
 ../lib/libflek_xml.so.1 ../lib/libflek_xml.sl.1: $(OBJ_FLEK_XML)
@@ -156,6 +160,7 @@ DSO_FLEK_JPEG = ../lib/$(DSO_NAME_FLEK_JPEG)$(DSOEXT)
 OBJ_FLEK_JPEG = $(CPP_FLEK_JPEG:.cxx=.o) 
 $(LIB_FLEK_JPEG).a: $(OBJ_FLEK_JPEG)
 	rm -f $@
+	mkdir -p ../lib
 	$(LIB_COMMAND) ../lib/$@ $(OBJ_FLEK_JPEG)
 	$(RANLIB) $@
 ../lib/libflek_jpeg.so.1 ../lib/libflek_jpeg.sl.1: $(OBJ_FLEK_JPEG)
@@ -179,7 +184,8 @@ flek-jpeg: $(LIB_FLEK_JPEG).a $(DSO_FLEK_JPEG)
 ################################################################
 
 clean :
-	-@ rm -f *.o *.do ../libs/*.a ../libs/*.so*core *~ ../include/*~ makedepend o
+	-@ rm -f *.o *.do *~ ../include/*~ makedepend o
+	-@ rm -rf ../lib
 
 distclean: clean
 	-@ rm -f config.* makeinclude

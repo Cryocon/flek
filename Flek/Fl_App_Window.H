@@ -1,6 +1,6 @@
 /* -*-C++-*- 
 
-   "$Id: Fl_App_Window.H,v 1.9 2000/05/11 17:46:43 brad Exp $"
+   "$Id: Fl_App_Window.H,v 1.10 2000/05/11 18:55:09 brad Exp $"
    
    Copyright 1999-2000 by the Flek development team.
    
@@ -36,10 +36,11 @@
 /** @package libflek_ui
  * Fl_App_Window is a window that can have Fl_Dockable_Groups 
  * "docked" either vertically or horizontally to the contents of the window.
- * An Fl_App_Window starts with a top-level window. Inside the top-level window,
- * an Fl_Pack group is created, that contains a child "contents" window and any
+ * An Fl_App_Window starts with a top-level "application" window.
+ * Flek creates an Fl_Pack group that fills the application window.
+ * The pack group contains the child "contents" window and any
  * "docked" groups.
- * Think of the contents window as the "client" area of the application.
+ * You might think of the contents window as the "client" area of the application.
  */
 class Fl_App_Window : public Fl_Window {
 private:
@@ -54,9 +55,14 @@ protected:
 
 public:
   /**
-   * Construct an empty Fl_App_Window.
+   * Construct an Fl_App_Window.
    */
   Fl_App_Window(int w, int h, const char *l = 0);
+
+  /**
+   * Construct an Fl_App_Window, forcing a specific position.
+   * This probably isn't what you want.  Try the other constructor instead.
+   */
   Fl_App_Window(int x, int y, int w, int h, const char *l = 0);
 
   /**
@@ -91,25 +97,20 @@ public:
    * Dock an Fl_Dockable_Group to the window.
    * Docking an Fl_Dockable_Group to an Fl_App_Window does not change
    * the size of the Fl_App_Window.  Rather, the size of the contents
-   * window is adjust to accomodate the Fl_Dockable_Group.
+   * window is adjusted to accomodate the Fl_Dockable_Group.
    */
-  void add_dockable (Fl_Dockable_Group *W, int position = 0);
-
-  void pack_dock() { 
-    // _pack->pack(); 
-    if ((_pack->w() != w()) || (_pack->h() != h()))
-      size (_pack->w(), _pack->h());
-  }
-
-  void show();
-  void hide();
+  void add_dockable(Fl_Dockable_Group* W, int position = 0);
 
   /**
-   * Make the contents child window the current group.
+   * Makes the contents window the current group.
    */
   void begin() { Fl_Group::current(_contents); }
 
-  void end() { Fl_Group::current((Fl_Group*)parent()); }
+  /**
+   * Show or hide the application window.
+   */
+  void show();
+  void hide();
 };
 
 #endif

@@ -1,5 +1,5 @@
 #include <Flek/FFile.H>
-#include <Fl/filename.h>
+#include <FL/filename.H>
 #include <string.h>
 #include <stdlib.h>
 #include <unistd.h> // realpath

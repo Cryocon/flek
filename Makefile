@@ -23,7 +23,7 @@
 
 SHELL=/bin/sh
 
-SUBDIRS	=	src test docs
+SUBDIRS	=	src test
 
 # Does this require GNU make?
 DIRS	=	$(SUBDIRS) `if [ ! "$(OSTYPE)" = "cygwin32" ]; then echo $(PLUGINS); fi`
@@ -36,6 +36,10 @@ all: makeinclude
 		fi;\
 		(cd $$dir;$(MAKE));\
 	done
+
+# I'm baffled as to why I can't call this rule just "docs".  bdl
+scandocs:
+	$(MAKE) -C docs
 
 install: makeinclude
 	@for dir in $(DIRS); do\
@@ -56,7 +60,8 @@ depend: makeinclude
 	done
 
 clean:
-	-@ rm -f core config.cache *.o *.bck lib/*
+	-@ rm -f core config.cache *.o *.bck
+	-@ rm -rf lib
 	@for dir in $(DIRS); do\
 		echo "=== cleaning $$dir ===";\
 		(cd $$dir;$(MAKE) clean);\
@@ -91,5 +96,5 @@ rpm:
 	rpm -ba --target i386 /tmp/flek-0.1/flek.spec
 
 #
-# End of "$Id: Makefile,v 1.5 2000/04/21 13:50:37 jamespalmer Exp $".
+# End of "$Id: Makefile,v 1.6 2000/05/11 18:55:09 brad Exp $".
 #
