@@ -15,17 +15,21 @@
 
 int Flve_Input::handle(int event)
 {
-	int stat = Fl_Input::handle(event);
-	if (event==FL_KEYBOARD)
+  int stat = Fl_Input::handle(event);
+  if (event==FL_KEYBOARD)
+    {
+      //if (stat)
+      //{
+      //damage(FL_DAMAGE_CHILD);
+      //draw();
+      //}
+      if ( !stat && owner )
 	{
-		if (!stat)
-		{
-			if (owner)
-				if ( owner->handle(FL_SHORTCUT) )
-					return 1;
-		}
+	  if ( owner->handle(FL_SHORTCUT) )
+	    return 1;
 	}
-	return stat;
+    }
+  return stat;
 }
 
 

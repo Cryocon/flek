@@ -22,6 +22,14 @@
 #define ADDSIZE 10
 #define BUTTON_WIDTH 17
 
+#ifdef WIN32
+#define STRCASECMP  stricmp
+#define STRNCASECMP strncmpi
+#else
+#define STRCASECMP  strcasecmp
+#define STRNCASECMP strncasecmp
+#endif
+
 char *get_value( int R )
 {
 	static char buf[20];
@@ -108,13 +116,20 @@ int Flvw_Drop::handle(int event)
 			}
 			switch( Fl::event_key())
 			{
+			  // modified behavior of escape key to restore original value
+			  // of the input widget.
+			  // TAB and Enter both accept the new value
+			  // D.Freese (dfreese@intrepid.net)
 				case FL_Escape:
+			            key = 0;
+			            hide();
+			            return 1;
 				case FL_Enter:
 				case FL_Tab:
 					combo->item.index(drop_list->row());
 					key = Fl::event_key();
-					if (key==FL_Escape)
-						key = 0;
+					//if (key==FL_Escape)
+					//	key = 0;
 					hide();
 					return 1;
 			}
@@ -169,71 +184,70 @@ void Flvt_Input::draw(void)
 		Fl::focus_ = f;
 }
 
-int Flvt_Input::handle(int event)
-{
-	int stat, t, i;
-	Flve_Combo *w;
-
-	w = (Flve_Combo *)parent();
-	if (w)
-		i = w->item.index();
-	switch(event)
+int Flvt_Input::handle(int event) {
+  int stat, t, i=0;
+  Flve_Combo *w;
+  
+  w = (Flve_Combo *)parent();
+  if (w)
+    i = w->item.index();
+  switch(event)
+    {
+     case FL_FOCUS:
+     case FL_UNFOCUS:
+      Fl_Input::handle(event);
+      return 0;
+    }
+  t = (position()==mark());
+  stat = Fl_Input::handle(event);
+  if (event!=FL_KEYBOARD)
+    return stat;
+  switch( Fl::event_key() )
+    {
+     case FL_BackSpace:
+      //	If nothing was selected, Backspace already worked
+      if (t)
+	break;
+      Fl_Input::handle(event);
+      break;
+     case FL_Pause:
+     case FL_Scroll_Lock:
+     case FL_Num_Lock:
+     case FL_Caps_Lock:
+     case FL_Shift_L:
+     case FL_Shift_R:
+     case FL_Control_L:
+     case FL_Control_R:
+     case FL_Meta_L:
+     case FL_Meta_R:
+     case FL_Alt_L:
+     case FL_Alt_R:
+      return stat;
+    }
+  
+  if (!w)
+    return stat;
+  if (!w->incremental_search())
+    return stat;
+  
+  if ( w->item.findi( value() )>-1 )
+    {
+      t = position();
+      if (w->list)
 	{
-		case FL_FOCUS:
-		case FL_UNFOCUS:
-			Fl_Input::handle(event);
-			return 0;
+	  ((Flvw_Drop *)w->list)->drop_list->row( w->item.index() );
+	  ((Flvw_Drop *)w->list)->drop_list->last_row =
+	    ((Flvw_Drop *)w->list)->drop_list->row();
 	}
-	t = (position()==mark());
-	stat = Fl_Input::handle(event);
-	if (event!=FL_KEYBOARD)
-		return stat;
-	switch( Fl::event_key() )
-	{
-		case FL_BackSpace:
-			//	If nothing was selected, Backspace already worked
-			if (t)
-				break;
-			Fl_Input::handle(event);
-			break;
-		case FL_Pause:
-		case FL_Scroll_Lock:
-		case FL_Num_Lock:
-		case FL_Caps_Lock:
-		case FL_Shift_L:
-		case FL_Shift_R:
-		case FL_Control_L:
-		case FL_Control_R:
-		case FL_Meta_L:
-		case FL_Meta_R:
-		case FL_Alt_L:
-		case FL_Alt_R:
-			return stat;
-	}
-
-	if (!w)
-		return stat;
-	if (!w->incremental_search())
-		return stat;
-
-	if ( w->item.findi( value() )>-1 )
-	{
-		t = position();
-		if (w->list)
-		{
-			((Flvw_Drop *)w->list)->drop_list->row( w->item.index() );
-			((Flvw_Drop *)w->list)->drop_list->last_row =
-					((Flvw_Drop *)w->list)->drop_list->row();
-		}
-		value( w->item[w->item.index()].item() );
+      value( w->item[w->item.index()].item() );
 		position(t,size());
-	} else if (w->list_only())
+    } else if (w->list_only())
 	{
-		t = position();
-		value( w->item[i].item() );
-		position((t?t-1:t), size() );
+	  t = position();
+	  value( w->item[i].item() );
+	  position((t?t-1:t), size() );
 	}
-	return stat;
+  return stat;
 }
 
 Flve_Combo::Flve_Combo(int x, int y, int w, int h, const char *l ) :
@@ -355,11 +369,16 @@ int Flve_Combo::handle(int event)
 void Flve_Combo::draw(void)
 {
 
-	int X,Y,W,H,bx;
-	if (*(input->value())==0)
-		input->value( item[item.index()].item() );
-
-	if ( (damage()&FL_DAMAGE_ALL)!=0 )
+  int X,Y,W,H,bx;
+  
+  // modified to allow a zero length string string in input widget
+  //  if input widget is modifiable
+      
+  if (list_only()== true)
+    if (*(input->value())==0)
+      input->value( item[item.index()].item() );
+  
+  if ( (damage()&FL_DAMAGE_ALL)!=0 )
 		draw_box();
 
 	X = x() + (Fl::box_dx(box()));
@@ -400,8 +419,20 @@ void Flve_Combo::open_list()
 	list->set_modal();
 	lst->drop_list->combo = this;
 	lst->combo = this;
-	lst->drop_list->row(item.index());	//***
-	win = window();
+  
+  // highlight the present contents of the input widget
+  // if input contains a value and it can be found in the list
+  // added by Dave Freese (dfreese@intrepid.net)
+  
+  if (item.findi (input->value()) > -1)
+        lst->drop_list->row( item.index() );
+    else
+      lst->drop_list->row(0);
+    lst->drop_list->last_row = lst->drop_list->row();
+  
+  // end hightlight code
+  
+  win = window();
 	if (win)
 		list->position(win->x()+x(),win->y()+y()+h()-3);
 
@@ -411,12 +442,15 @@ void Flve_Combo::open_list()
 		Fl::wait();
 	Fl::grab(0);
 	take_focus();
-	value( item[item.index()].item() );
-	if (win && ((Flvw_Drop *)list)->key)
-		Fl::handle(FL_KEYBOARD,win);
+  // ****
+  //  if (((Flvw_Drop *)list)->key)
+  value( item[item.index()].item() );
 
-	delete list;
-	list = 0;
+  if (win && ((Flvw_Drop *)list)->key)
+    Fl::handle(FL_KEYBOARD,win);
+  
+  delete list;
+  list = 0;
 }
 
 const char *Flve_Combo::value()
@@ -487,6 +521,7 @@ Flv_Combo_Items::Flv_Combo_Items()
 	vcount = 0;
 	vallocated = 0;
 	vcurrent = 0;
+  nodups = true;
 }
 
 Flv_Combo_Items::~Flv_Combo_Items()
@@ -502,11 +537,15 @@ void Flv_Combo_Items::add( const char *item, long v )
 		make_room_for(vallocated+10);
 	if (vcount==vallocated)
 		return;
-
-	i = new Flv_Combo_Item();
-	i->item(item);
-	i->value(v);
-	list[vcount++] = i;
+  if (strlen (item) == 0)
+    return;
+  if (nodups)
+    if (find (item) != -1) return;
+  
+  i = new Flv_Combo_Item();
+  i->item(item);
+  i->value(v);
+  list[vcount++] = i;
 }
 
 void Flv_Combo_Items::insert( int index, const char *item, long v )
@@ -518,7 +557,11 @@ void Flv_Combo_Items::insert( int index, const char *item, long v )
 		make_room_for(vallocated+10);
 	if (vcount==vallocated)
 		return;
-
+  if (strlen (item) == 0)
+      return;
+    if (nodups)
+      if (find (item) != -1) return;
+  
 	i = new Flv_Combo_Item();
 	i->item(item);
 	i->value(v);
@@ -574,11 +617,17 @@ void Flv_Combo_Items::change( int i, long v )
 
 static int cmp( const void *a, const void *b )
 {
-	int stat;
-	stat = strcmp(C(a)->item(), C(b)->item());
-	if (stat)
-		return stat;
-	return C(a)->value() - C(b)->value();
+  Flv_Combo_Item *ai = *((Flv_Combo_Item **)(a)),
+  *bi = *((Flv_Combo_Item **)(b));
+  const char *a_item = ai->item(),
+  *b_item = bi->item();
+  long a_value = ai->value(),
+  b_value = bi->value();
+  
+  int status = STRCASECMP(a_item, b_item);
+  if (status)
+    return status;
+  return (a_value - b_value);
 }
 
 void Flv_Combo_Items::sort(void)									//	Sort list
@@ -611,10 +660,13 @@ void Flv_Combo_Items::index(int i)								//	Set current index
 int Flv_Combo_Items::findi( const char *v )				//	Find text return index (-1 not found)
 {
 	int t;
-	for (t=0;	t<vcount;	t++ )
+  // added for case where v is zero length
+  if (*v == 0) 
+    return -1;
+  for (t=0;	t<vcount;	t++ )
+    {
+      if (STRNCASECMP(list[t]->item(),v, strlen(v))==0)
 	{
-		if (strncmp(list[t]->item(),v, strlen(v))==0)
-		{
 			vcurrent = t;
 			return t;
 		}
@@ -625,9 +677,12 @@ int Flv_Combo_Items::findi( const char *v )				//	Find text return index (-1 not
 int Flv_Combo_Items::find( const char *v )				//	Find text return index (-1 not found)
 {
 	int t;
+  // added for case where v is zero length
+    if (*v == 0) 
+      return -1;
 	for (t=0;	t<vcount;	t++ )
 	{
-		if (strcmp(list[t]->item(),v)==0)
+		if (STRCASECMP(list[t]->item(),v)==0)
 		{
 			vcurrent = t;
 			return t;

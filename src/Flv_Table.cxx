@@ -219,8 +219,10 @@ bool Flv_Table::get_cell_bounds( int &X, int &Y, int &W, int &H, int R, int C )
 			break;
 	}
 	rh = col_width(r);
-	if (r!=C || cx+rh<x)
-		return false;
+	if (r!=C || cx+rh<x) {
+	  X = Y = W = H = 0;
+	  return false;
+	}
 
 	X = cx;
 	if (X<x)
@@ -269,9 +271,10 @@ void Flv_Table::draw(void)
 	}
 
 	//	Make sure we have an editor if editing!
-	if (!veditor && vediting)
-		switch_editor(row(),col());
-
+  /* DF patch
+   if (!veditor && vediting)
+   switch_editor(row(),col());
+   */
 	//	We need to know what the row width will be
 	//	so we'll calculate that and then let normal drawing
 	//	take over.
@@ -403,10 +406,11 @@ int Flv_Table::col_width(int C)					//	Get column width
 
 int Flv_Table::col_width(int n, int c)	//	Set column width
 {
-	if (c<-3)	c=-3;
+  int cw = col_width(c);
+  if (c<-3)	c=-3;
   if (c>=vcols) c=vcols-1;
   if (n<0) n=0;
-	if (n!=vcol_width)
+	if (n!=cw)
 	{
   	col_style[c].width(n);
 		damage(FL_DAMAGE_CHILD);
@@ -444,8 +448,8 @@ void Flv_Table::get_style( Flv_Style &s, int R, int C )
 
 int Flv_Table::handle(int event)
 {
-	int stat=0, x, y, X,Y,W,H, r, c;
-
+  int stat=0, x, y, X,Y,W,H, r, c;
+  
 	switch(event)
 	{
 		case FL_RELEASE:
@@ -491,7 +495,7 @@ int Flv_Table::handle(int event)
 			stat = veditor->handle(event);
 			if (stat)
 			{
-				veditor->redraw();
+				veditor->draw();
 				return 1;
 			}
 			break;
@@ -501,7 +505,9 @@ int Flv_Table::handle(int event)
 	{
 		if (Fl::event_key()==FL_Enter)
 		{
-			end_edit();													//	Save editor/ quit editing
+		  end_edit();
+		  Fl::focus(this);
+		  //      take_focus();
 			internal_handle(FL_KEYBOARD);
 			damage(FL_DAMAGE_CHILD);
 			return 1;
@@ -546,7 +552,8 @@ int Flv_Table::handle(int event)
 							stat = veditor->handle(event);
 							if (stat)
 							{
-								veditor->take_focus();
+							  Fl::focus(veditor);
+								// veditor->take_focus();
 								return 1;
 							}
 						}
@@ -556,18 +563,20 @@ int Flv_Table::handle(int event)
 		}
 	}
 
-//	if (vediting && veditor && Fl::focus()==this)
-//	{
-//		Fl::focus(veditor);
+	if (vediting && veditor && Fl::focus()==this)
+	{
+		Fl::focus(veditor);
 //		veditor->take_focus();
-//		veditor->handle(FL_FOCUS);
-//	}
+		veditor->handle(FL_FOCUS);
+	}
+    if (stat && veditor)
+        veditor->draw();
 	return stat;
 }
 
 int Flv_Table::internal_handle(int event)
 {
-	int TX, TY, r, c, cd, rd;
+	int TX, TY, r=0, c, cd, rd;
 	Flv_Style s;
 	static int LX, LY;
 
@@ -628,7 +637,8 @@ int Flv_Table::internal_handle(int event)
 			if (r==0)
 			{
 				vclicks = 0;
-				return Fl_Group::handle(event);
+			  return 0;
+			  //return Fl_Group::handle(event);
 			}
 
 
@@ -637,7 +647,7 @@ int Flv_Table::internal_handle(int event)
 			TX = Fl::event_x();
 			r = get_row(TX,TY);
 			c = get_col(TX,TY);
-			if (r==-4 && c==-4)
+			if ( (r==-4 && c< 0) || (r<0 && c==-4) )
 			{
 				vclicks = 0;
 				return Fl_Group::handle(event);
@@ -738,6 +748,8 @@ int Flv_Table::internal_handle(int event)
 					get_style(s,r,c);
 					if (!s.locked())
 					{
+					  if (r!=row() || c!=col())
+					    vclicks=0;
 						row(r);
 						col(c);
 						break;
@@ -830,14 +842,14 @@ int Flv_Table::internal_handle(int event)
 		case FL_Home:
 			//	Adjust rows before columns so we redraw everything
 			if (Fl::event_state(FL_CTRL))
-				move_row(-row());
-			move_col(-col());
+				move_row(-rows());
+			move_col(-cols());
 			break;
 		case FL_End:
 			//	Adjust rows before columns so we redraw everything
 			if (Fl::event_state(FL_CTRL))
 				move_row(rows());
-			move_row(cols());
+			move_col(cols());
 			break;
 
 		case FL_Right:
@@ -880,19 +892,21 @@ int Flv_Table::row(int n)
 		n=0;
 	if (n!=vrow)
 	{
-		vrow = n;
-		client_area(X,Y,W,H);
-		update_top_row(H);
-		switch_editor( row(), col() );
-		cancel_edit();
-		vlast_row = vrow;
-		if (DOcb(FLVEcb_ROW_CHANGED))
-		{
-			vwhy_event = FLVE_ROW_CHANGED;
-			do_callback(this, user_data());
-			vwhy_event = 0;
-		}
-		damage(FL_DAMAGE_CHILD);
+	  vrow = n;
+	  client_area(X,Y,W,H);
+	  update_top_row(H);
+	  end_edit();
+	  if (edit_when()==FLV_EDIT_ALWAYS)
+	    switch_editor( row(), col() );
+	  //cancel_edit();
+	  vlast_row = vrow;
+	  if (DOcb(FLVEcb_ROW_CHANGED))
+	    {
+	      vwhy_event = FLVE_ROW_CHANGED;
+	      do_callback(this, user_data());
+	      vwhy_event = 0;
+	    }
+	  damage(FL_DAMAGE_CHILD);
 	}
 	return vrow;
 }
@@ -906,8 +920,10 @@ int Flv_Table::col( int n )
 	if (n!=vcol)
 	{
 		vcol = n;
+	      end_edit();
+	      if (edit_when()==FLV_EDIT_ALWAYS)
 		switch_editor( row(), col() );
-		cancel_edit();
+	  //cancel_edit();
 
 		adjust_for_cell();
 		if (DOcb(FLVEcb_COL_CHANGED))
@@ -1466,6 +1482,7 @@ bool Flv_Table::move_col( int amount )
 
 int Flv_Table::edit_when( int v )
 {
+  int wfocused = (Fl::focus()==veditor);
 	if (v!=vedit_when)
 	{
 		vedit_when = v;
@@ -1474,13 +1491,19 @@ int Flv_Table::edit_when( int v )
 		else
 			start_edit();
 	}
-	return vedit_when;
+  if (wfocused && !vediting)
+    {
+      Fl::focus(this);
+      //    take_focus();
+      redraw();
+    }
+  return vedit_when;
 }
 
 
 void Flv_Table::start_edit(void)											//	Start editing
 {
-	if (edit_row!=row() || edit_col!=col())
+  if (!vediting)
 	{
 		vediting = true;
 		switch_editor( row(), col() );
@@ -1489,7 +1512,15 @@ void Flv_Table::start_edit(void)											//	Start editing
 
 void Flv_Table::end_edit(void)
 {
-	switch_editor(-1,-1);
+  int wfocused = (Fl::focus()==veditor);
+  if (veditor)
+    switch_editor(-1,-1);
+  if (wfocused && !vediting)
+    {
+      Fl::focus(this);
+      //    take_focus();
+      redraw();
+    }
 }
 
 void Flv_Table::cancel_edit(void)											//	Cancel editing
@@ -1509,8 +1540,10 @@ void Flv_Table::cancel_edit(void)											//	Cancel editing
 void Flv_Table::switch_editor( int nr, int nc )
 {
 	Flv_Style s;
-	int x, y, w, h;
-
+	int x, y, w, h, wfocused;
+  
+  wfocused = (Fl::focus()==veditor);
+  
 	if (veditor)
 	{
 		if (edit_row>-1 && edit_col>-1)
@@ -1518,11 +1551,16 @@ void Flv_Table::switch_editor( int nr, int nc )
 		edit_row=-1;
 		edit_col=-1;
 		veditor->hide();
-		veditor->redraw();
+		veditor->draw();
 		veditor = NULL;
 	}
-	if (edit_when()==FLV_EDIT_ALWAYS)
+	if (edit_when()==FLV_EDIT_ALWAYS) {
 		vediting = true;
+	      if (nr<0)
+	          nr = row();
+	      if (nc<0)
+	          nc = col();
+	}
 	if (nr>-1 && nc>-1 && vediting)
 	{
 		get_style( s, nr, nc );
@@ -1533,20 +1571,30 @@ void Flv_Table::switch_editor( int nr, int nc )
 			{
 				edit_row = nr;
 				edit_col = nc;
+			  veditor->hide();
 				get_cell_bounds(x,y,w,h,nr,nc);
-				load_editor( veditor, nr, nc );
 				position_editor(veditor, x,y,w,h, s);
+				load_editor( veditor, nr, nc );
 				veditor->show();
-				veditor->take_focus();
+			  Fl::focus(veditor);
+				//veditor->take_focus();
 				veditor->handle(FL_FOCUS);
+			  veditor->damage(FL_DAMAGE_ALL);
 				veditor->redraw();
 			}
 		}
 	}
-	if (!veditor && Fl::focus()!=this)
+	if (!veditor)
 	{
-		take_focus();
-		handle(FL_FOCUS);
+	      vediting=false;
+	      edit_row=-1;
+	      edit_col=-1;
 	}
+    if (!veditor && wfocused)
+    {
+      Fl::focus(this);
+      //    take_focus();
+          handle(FL_FOCUS);
+     }
 }
 

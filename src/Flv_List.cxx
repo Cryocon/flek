@@ -679,7 +679,7 @@ int Flv_List::select_start_row(int n)			//	Set first selected row
 //================================================================
 void Flv_List::client_area( int &X, int &Y, int &W, int &H )
 {
-	signed char sv=0, sh=0;
+	char sv=0, sh=0;
 	int th, v, rw;
 
 	X = x(); Y = y(); W = w(); H = h();
@@ -813,7 +813,7 @@ void Flv_List::draw_border(Flv_Style &s, int &X, int &Y, int &W, int &H )
 //	them if nessasary, also update X,Y,W,H to be inside box
 void Flv_List::draw_scrollbars(int &X, int &Y, int &W, int &H )
 {
-	signed char sv=0, sh=0;
+	char sv=0, sh=0;
 	int th, x, rw;
 
 
@@ -1319,7 +1319,9 @@ void Flv_List::check_cursor(void)
 
 	switch( move )
 	{
-		case MOVE_Y:	cursor = FL_CURSOR_NS;			break;
+		case MOVE_Y:
+	  cursor = FL_CURSOR_NS;
+	  break;
 		default:
 			drag_row = -4;
 			cursor = FL_CURSOR_DEFAULT;
