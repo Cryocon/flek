@@ -162,7 +162,7 @@ class xmlFile
 
   int readKey (char *key)
     {
-      int rc, i = 0;
+      int rc = 1, i = 0;
       key[i] = ch;
       while ((ch != '=') && (!isSpace ()) && (rc = read ())) { i++; key[i] = ch; }
       key[i] = 0;
@@ -201,9 +201,10 @@ class xmlFile
   int readText (char *text)
     {
       int rc, i = 0;
+      text[i] = ch;
       while ((ch != '<') && (ch != '>') && (rc = read ())) 
 	{ i++; text[i] = ch; }
-      text[i+1] = 0;
+      text[i] = 0;
     }
 
   int readAttribute (char *key, char *value)
@@ -433,7 +434,7 @@ class fDomNode : public fBase
 
   int xmlPushTag (xmlFile &xml, char *tag);
   
-  void writeAttributes () 
+  virtual void writeAttributes () 
     {
       fIterator p, last;
       fDomAttribute *att;
@@ -447,7 +448,7 @@ class fDomNode : public fBase
 	}      
     }
 
-  void setAttribute (char *key, char *value)
+  virtual void setAttribute (char *key, char *value)
     {
       fIterator p, last;
       fDomAttribute *att;
@@ -473,7 +474,7 @@ class fDomNode : public fBase
       damage (0);
     }
 
-  char * getAttribute (char *key) 
+  virtual char * getAttribute (char *key) 
     {
       fIterator p, last;
       fDomAttribute *att;
@@ -496,7 +497,8 @@ class fDomNode : public fBase
 
   // Child functions
   void add  (fDomNode *child) { Children.push_back (child); }
-  void writeChildren () 
+
+  virtual void writeChildren () 
     {
       fIterator p, last;
       fDomNode *node;
@@ -508,7 +510,7 @@ class fDomNode : public fBase
 	}
     }
 
-  void write ()
+  virtual void write ()
     {
       printf ("<%s", name ());
       if (Attributes.size () > 0)
@@ -542,6 +544,15 @@ class fDomTextNode : public fDomNode
     {
       Text = strdup (n.Text);
     }
+
+  char * name () { return "__text__"; }
+
+  void write ()
+    {
+      printf (Text);
+      printf ("\n");
+    }
+
   void text (char *t) { if (Text) free (Text); Text = strdup (t); }
   char *text () { return Text; }
 
@@ -574,15 +585,49 @@ class fDomDynamicNode : public fDomNode
   char *Name;
 };
 
+static void trim_left (char *text)
+{
+  int j = 0;
+  int first = 1;
+  for (unsigned int i=0; i<strlen(text); i++)
+    {
+      text[j] = text[i];
+      if (!isspace (text[i]))
+	first = 0;
+
+      if (!first) j++;
+    }
+}
+
+static void trim_right (char *text)
+{
+  for (int i=strlen(text)-1; i>=0; i--)
+    {
+      if (isspace (text[i])) text[i] = 0;
+      else return;
+    }
+}
+
+static void trim (char *text)
+{
+  trim_right (text);
+  trim_left (text);
+}
+
 int fDomNode::xmlPushText (xmlFile &xml)
 {
   char text[1024];
-  fDomTextNode t;
   
   xml.readText (text);
   
-  t.text (text);
-  Children.push_back (&t);
+  trim (text);
+
+  if (strlen (text) > 0)
+    {
+      fDomTextNode t;
+      t.text (text);
+      Children.push_back (&t);
+    }
 }
 
 int fDomNode::xmlPushTag (xmlFile &xml, char *tag)
@@ -592,11 +637,11 @@ int fDomNode::xmlPushTag (xmlFile &xml, char *tag)
   // Use a node with a static tag if available, otherwise use a dynamic tag.
   t.name (tag);
   Children.push_back (&t);
-  printf ("reading attributes\n");
+
   rc = ((fDomDynamicNode *)(Children.back ()))->xmlReadAttributes (xml);
   if (rc == xmlFile::END_OF_UNPAIRED_TAG)
     return rc;
-  printf ("reading more of file..\n");
+
   ((fDomDynamicNode *)(Children.back ()))->xmlRead (xml);
-  printf ("read it..\n");
 }
+
