@@ -1,6 +1,6 @@
 /* -*-C++-*- 
 
-   "$Id: FSGI.H,v 1.1 2000/04/13 13:56:28 jamespalmer Exp $"
+   "$Id: FSGI.H,v 1.2 2000/05/12 14:15:28 jamespalmer Exp $"
    
    Copyright 1999-2000 by the Flek development team.
    
@@ -29,7 +29,8 @@
 #include <Flek/FImage.H>
 
 /** @package libflek_image
- * The fSGI class provides static methods that read, write and test SGI images.
+ * The fSGI class provides static methods that read, write and test SGI images,
+ * which are also refered to as "RGB" or "Iris" images.
  */
 class FSGI {
  public:
@@ -42,18 +43,17 @@ class FSGI {
   };
 
   /**
-   * Check the PBM/PGM/PPM magic number to see if this image matches any of
-   * the recognized formats.
+   * Check to see if this seems to be a valid SGI format image.
    */
   static bool valid (char *filename);
 
   /**
-   * Read a PPM from disk and return a new fImage object.
+   * Read an SGI Image from disk and return a new FImage object.
    */
   static FImage * read (char *filename);
 
   /**
-   * Write a PPM to disk from an fImage object.
+   * Write an SGI Image to disk from an FImage object.
    */  
   static int write (char *filename, FImage* img, int compression = RLE, int channels=3);
 

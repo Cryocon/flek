@@ -1,6 +1,6 @@
 /* -*-C++-*- 
 
-   "$Id: FJPEG.H,v 1.1 2000/05/01 04:12:09 jamespalmer Exp $"
+   "$Id: FJPEG.H,v 1.2 2000/05/12 14:15:28 jamespalmer Exp $"
    
    Copyright 1999-2000 by the Flek development team.
    
@@ -28,25 +28,25 @@
 
 #include <Flek/FImage.H>
 
-/** @package libflek_image
- * The fJPEG class provides static methods that read, write and test JPEG images.
+/** @package libflek_jpeg
+ * The FJPEG class provides static methods that read, write and test JPEG images.
  */
 class FJPEG {
  public:
 
-  /**
+  /*
    * Check the PBM/PGM/PPM magic number to see if this image matches any of
    * the recognized formats.
    */
   //static bool valid (char *filename);
 
   /**
-   * Read a PPM from disk and return a new fImage object.
+   * Read a JPEG from disk and return a new fImage object.
    */
   static FImage * read (char *filename);
 
   /**
-   * Write a PPM to disk from an fImage object.
+   * Write a JPEG to disk from an fImage object.
    */  
   static int write (char *filename, FImage* img, int qaulity);
 
