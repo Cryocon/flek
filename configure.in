@@ -70,6 +70,7 @@ AC_LANG_CPLUSPLUS
 FLTKDIR=""
 FLTKLIB=""
 FLTKINC=""
+FLTKFLAGS=""
 
 AC_ARG_WITH([fltk-dir], 
   [ --with-fltk-dir=dir specify the Fltk source dir], 
@@ -79,9 +80,16 @@ AC_ARG_WITH([fltk-dir],
     FLTKINC="-I$withval"
   ], [])
 
+AC_ARG_WITH([fltk2], 
+  [ --with-fltk2], 
+  [ 
+    FLTKFLAGS="-DFLTK_2"
+  ], [])
+
 AC_SUBST(FLTKDIR)
 AC_SUBST(FLTKLIB)
 AC_SUBST(FLTKINC)
+AC_SUBST(FLTKFLAGS)
 
 AC_PATH_XTRA
 if test "$X_PRE_LIBS" != ""; then
@@ -173,5 +181,5 @@ AC_SUBST(LIBCOMMAND)
 AC_OUTPUT(makeinclude)
 
 dnl#
-dnl# End of "$Id: configure.in,v 1.1 2000/01/25 19:40:50 jamespalmer Exp $".
+dnl# End of "$Id: configure.in,v 1.2 2000/01/30 04:00:36 jamespalmer Exp $".
 dnl#

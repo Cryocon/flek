@@ -30,6 +30,8 @@ COMPILE instructions:
 
   make
 
+If you are using FLTK_2, configure with "--with-fltk2".
+
 Wasn't that easy?
 
 james@tiger-marmalade.com

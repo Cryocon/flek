@@ -3,3 +3,9 @@ The usual thing:
 ./configure
 make
 make install
+
+CONFIGURE OPTIONS
+
+--with-fltk-dir=...     Specify where Fltk resides.
+--with-fltk2            Use Fltk 2 (cvs) and not Fltk 1.0.7.
+                        This is required to get Flek to compile with FLTK_2.
