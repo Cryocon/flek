@@ -4,7 +4,7 @@
 #
 # by James Dean Palmer
 #
-# "$Id: flek-config.in,v 1.3 2000/02/11 19:47:14 jamespalmer Exp $"
+# "$Id: flek-config.in,v 1.4 2000/02/11 19:57:27 jamespalmer Exp $"
 #
 
 MAJOR_VERSION=0
@@ -41,8 +41,9 @@ RANLIB="@RANLIB@"
 #DSONAME="@DSONAME@"
 DSOCOMMAND="@DSOCOMMAND@"
 
-# flags for the linker
-LD_PLUGIN_FLAGS="@LD_PLUGIN_FLAGS@"
+FLTKDIR=@FLTKDIR@
+FLTKLIB=@FLTKLIB@
+FLTKINC=@FLTKINC@
 
 # programs to make archive and build DSOs
 RANLIB="@RANLIB@"
@@ -171,13 +172,13 @@ fi
 if test "$echo_cflags" = "yes"; then
       includes=-I`echo "$0" | sed 's/\/bin\/flek-config/\/include/
 s/\/flek-config//'`
-      echo $includes $CFLAGS
+      echo $includes $FLTKINC $CFLAGS
 fi
 
 if test "$echo_cxxflags" = "yes"; then
       includes=-I`echo "$0" | sed 's/\/bin\/flek-config/\/include/
 s/\/flek-config//'`
-      echo $includes $CXXFLAGS
+      echo $includes $FLTKINC $CXXFLAGS
 fi
 
 if test "$echo_ldflags" = "yes"; then
@@ -192,7 +193,7 @@ if test "$echo_ldflags" = "yes"; then
           fi
         fi
       done
-      echo $libdirs $my_libs
+      echo $libdirs $FLTKLIB $my_libs
 fi
 
 if test "$echo_ldstaticflags" = "yes"; then
