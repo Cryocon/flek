@@ -1,5 +1,5 @@
 /*
-  "$Id: arcball.cxx,v 1.4 2000/02/08 20:22:52 jamespalmer Exp $"
+  "$Id: arcball.cxx,v 1.5 2000/02/09 22:33:20 jamespalmer Exp $"
   
   This program tests fArcball and Fl_Gl_Arcball_Window.
 
@@ -31,6 +31,7 @@
 
 #include <Flek/Fl_Gl_Arcball_Window.H>
 #include <GL/gl.h>
+#include <GL/glu.h>
 
 class arcball_window : public Fl_Gl_Arcball_Window 
 {
@@ -85,11 +86,16 @@ void arcball_window::draw()
 {
   if (!valid ()) {
     valid (1);
-    glLoadIdentity ();
     glViewport (0, 0, w (), h ());
+
+    glMatrixMode(GL_PROJECTION);
+    glLoadIdentity();
     glEnable (GL_DEPTH_TEST);
-    glFrustum (-1, 1, -1, 1, 2, 10000);
-    glTranslatef (0, 0, -10);
+    glFrustum (-0.5, 0.5, -0.5, 0.5, 1, 10000);
+
+    glMatrixMode(GL_MODELVIEW);
+    glLoadIdentity();
+    gluLookAt (0,0,5,0,0,0,0,1,0);
   }
 
   glClear (GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -98,18 +104,19 @@ void arcball_window::draw()
   arcball_draw ();
 
   glMatrixMode (GL_MODELVIEW); 
-  glLoadIdentity ();
-
+  glPushMatrix ();
+  
   // Multiply by the arcball transformation.
   arcball_transform ();
   { 
     // Make the cube a little smaller :
-    glScalef (0.5, 0.5, 0.5);
+    //glScalef (0.5, 0.5, 0.5);
     // Center the cube :
     glTranslatef (-.5, -.5, -.5);
     // Draw the cube :
     drawcube (0);
   }
+  glPopMatrix ();
 }
 
 #include <stdio.h>

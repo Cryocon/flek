@@ -1,5 +1,5 @@
 /* -*-C++-*- 
-   "$Id: math.h,v 1.1 2000/02/06 08:43:40 jamespalmer Exp $"
+   "$Id: math.h,v 1.2 2000/02/09 22:33:20 jamespalmer Exp $"
    
    Copyright 1999-2000 by the Flek development team.
    
@@ -22,6 +22,9 @@
 
 */
 
+#ifndef _INLINES_HH_ // Here for Vinod!
+#define _INLINES_HH_
+
 #ifndef FMATH_H_
 #define FMATH_H_
 
@@ -32,6 +35,31 @@
  * To change the values of some of these macros, define them before including
  * this file. Or dont include this file at all and define them on your own
  */
+
+/**
+ * Returns the absolute value.
+ */
+inline int Abs(int x)
+{
+  return (x < 0) ? -x : x;
+}
+
+/**
+ * Returns the absolute value.
+ */
+inline float Abs(float x)
+{
+  return (x < 0.0) ? -x : x;
+}
+
+/**
+ * Returns the absolute value.
+ */
+inline double Abs(double x)
+{
+  return (x < 0.0) ? -x : x;
+}
+
 
 /**
  * Zero '0' value to be used for comparison and assignment
@@ -339,3 +367,4 @@ inline int cofsign (uint i, uint j)
 }
 
 #endif // #ifndef FMATH_H_
+#endif // #ifndef _INLINES_HH_

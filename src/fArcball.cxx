@@ -1,6 +1,6 @@
 /* -*-C++-*- 
 
-   "$Id: fArcball.cxx,v 1.4 2000/02/06 08:40:51 jamespalmer Exp $"
+   "$Id: fArcball.cxx,v 1.5 2000/02/09 22:33:20 jamespalmer Exp $"
    
    Copyright 1999-2000 by the Flek development team.
    
@@ -135,14 +135,14 @@ void fArcball::update (void)
 	  vTo = constrainToAxis (vTo, sets[axisSet][axisIndex]);
 	}
       
-      vnFrom[0] = -vFrom[0];
-      vnFrom[1] = -vFrom[1];
-      vnFrom[2] = vFrom[2];
-      vnTo[0] = -vTo[0];
-      vnTo[1] = -vTo[1];
-      vnTo[2] = vTo[2];
+      //vnFrom[0] = -vFrom[0];
+      //vnFrom[1] = -vFrom[1];
+      //vnFrom[2] = vFrom[2];
+      //vnTo[0] = -vTo[0];
+      //vnTo[1] = -vTo[1];
+      //vnTo[2] = vTo[2];
       
-      qDrag = quatFromBallPoints (vnFrom, vnTo);
+      qDrag = quatFromBallPoints (vFrom, vTo);
       qNow = qDrag * qDown;
     }
   else
@@ -181,7 +181,7 @@ static void drawCircle (const fVector3& center, const fVector3& normal, double r
   
   // Circle will be on the XY plane, defined by the axis system 
   // just computed 
-  fVector3 pts[CIRCSEGS+1], temp;
+  fVector3 pts[CIRCSEGS+1];
   double theta = 0.0, dtheta = M_PI/HALFCIRCSEGS;
   double costheta, sintheta;
   for (int i=0; i < (HALFCIRCSEGS >> 2); ++i )
@@ -206,7 +206,7 @@ static void drawCircle (const fVector3& center, const fVector3& normal, double r
  * Draw the controller with all its arcs. Parameter is the vector from 
  * the eye point to the center of interest. Default is -ve Z axis
  */
-void fArcball::draw(const fVector3& dir) const
+void fArcball::draw(const fVector3&) const
 {
   glMatrixMode(GL_PROJECTION);
   glPushMatrix();
