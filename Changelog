@@ -1,0 +1,20 @@
+2000-01-25  James Dean Palmer <james@tiger-marmalade.com>
+
+        - Added Fl_Toggle_Tree.  Lots of name changes.
+        - Lots of bug fixes.
+	- Better packaging.
+
+2000-01-04  James Dean Palmer <james@tiger-marmalade.com>
+
+        - Fl_Dockable_Group stores it's "undocked" width and
+	  height, so they can be restored after an undock
+	  operation has taken place.
+	- Improved FL_DOCK and FL_UNDOCK events.
+	- Fixed packing problem with a new pack class Fl_Pack_2
+	- Integrated Larry Charlton's Fl_Calendar::handle method
+	  which adds keyboard navigation to the Calendar.
+
+1999-12-14  James Dean Palmer <james@tiger-marmalade.com>
+
+	- Second release.  Added Fl_Calendar.
+	

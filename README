@@ -1,0 +1,34 @@
+FLEK  (The Fast Light Environment Kit)
+
+Flek intends to provide a layer of standard widgets and libraries that 
+provide similar capabilities to and can be integrated with other 
+"Environment Kits" like Gnome and KDE.  Right now it only includes a
+few additional widgets.
+
+Flek is still in development but in the short term it should include these
+libraries:
+
+  libflek-ui    (in progress)
+
+     A collection of useful widgets not in the Fltk distribution.
+     
+  libflek-dom   (fleshing out API)
+  
+     A DOM 2 layer built on top of libxml.
+
+libflek-ui currently includes :
+
+Fl_App
+Fl_Dockable_Group
+Fl_Pack_Fu
+Fl_Toggle_Tree
+Fl_Calendar
+
+See the docs/ directory for more information on each widget.
+
+COMPILE instructions:
+
+  ./configure
+  make
+
+james@tiger-marmalade.com
