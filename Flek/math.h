@@ -1,5 +1,5 @@
 /* -*-C++-*- 
-   "$Id: math.h,v 1.3 2000/02/13 01:02:32 jamespalmer Exp $"
+   "$Id: math.h,v 1.4 2000/02/15 22:16:36 jamespalmer Exp $"
    
    Copyright 1999-2000 by the Flek development team.
    
@@ -22,11 +22,8 @@
 
 */
 
-#ifndef _INLINES_HH_ // Here for Vinod!
+#ifndef _INLINES_HH_
 #define _INLINES_HH_
-
-#ifndef FMATH_H_
-#define FMATH_H_
 
 #include <math.h>
 
@@ -35,6 +32,9 @@
  * To change the values of some of these macros, define them before including
  * this file. Or dont include this file at all and define them on your own
  */
+
+#ifndef _INLINE_ABS_
+#define _INLINE_ABS_
 
 /** @package libflek_core
  * Returns the absolute value.
@@ -60,6 +60,7 @@ inline double Abs(double x)
   return (x < 0.0) ? -x : x;
 }
 
+#endif
 
 /**
  * Zero '0' value to be used for comparison and assignment
@@ -84,6 +85,9 @@ inline double Abs(double x)
 
 typedef unsigned int uint;
 
+#ifndef _INLINE_ZERO_CHECKS_
+#define _INLINE_ZERO_CHECKS_
+
 /**
  * Check if passed number is non-zero.
  */
@@ -101,6 +105,27 @@ inline bool isNonZero (double num)
   if ( (num < -ZERO) || (num > ZERO) ) return true;
   return false;
 }
+
+#endif
+
+#ifndef _INLINE_FP_EQUAL_
+#define _INLINE_FP_EQUAL_
+
+inline bool areEqual(float x1, float x2)
+{
+  return ( ( Abs(x1-x2) < ZERO ) ? true : false );
+}
+
+inline bool areEqual(double x1, double x2)
+{
+  return ( ( Abs(x1-x2) < ZERO ) ? true : false );
+}
+
+#endif // #ifndef _INLINE_FP_EQUAL_
+
+
+#ifndef _INLINE_ODD_EVEN_
+#define _INLINE_ODD_EVEN_
 
 /**
  * Check if passed number is odd.
@@ -137,6 +162,11 @@ inline bool isEven (uint num)
   if ( num % 2 ) return false;
   return true;
 }
+
+#endif
+
+#ifndef _INLINE_MATH_
+#define _INLINE_MATH_
 
 /**
  * Square the number.
@@ -202,6 +232,11 @@ inline double cube (double x)
   return x*x*x;
 }
 
+#endif
+
+#ifndef _INLINE_MIN_MAX_
+#define _INLINE_MIN_MAX_
+
 /**
  * Minimum of two numbers.
  */
@@ -266,6 +301,12 @@ inline double max (double x, double y)
   return ( (x > y) ? x : y );
 }
 
+#endif
+
+
+#ifndef _INLINE_SWAP_
+#define _INLINE_SWAP_
+
 /**
  * Swap two numbers.
  */
@@ -302,6 +343,11 @@ inline void swap (double& x, double& y)
   x = y; y = t;
 }
 
+#endif
+
+#ifndef _INLINE_DEG_RAD_
+#define _INLINE_DEG_RAD_
+
 /**
  * Degrees to radians.
  */
@@ -333,6 +379,11 @@ inline double rad2deg (double rad)
 {
   return rad*180.0/M_PI;
 }
+
+#endif
+
+#ifndef _INLINE_SIGN_
+#define _INLINE_SIGN_
 
 /**
  * Return the sign of a number.  1, 0, or -1.
@@ -366,5 +417,6 @@ inline int cofsign (uint i, uint j)
   return ( ((i+j)%2) ? -1 : 1 );
 }
 
-#endif // #ifndef FMATH_H_
+#endif
+
 #endif // #ifndef _INLINES_HH_
