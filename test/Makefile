@@ -16,6 +16,9 @@ all: $(ALL)
 UICOMPILE=`../flek-config --use-ui --cxxflags` -g3
 UILINK=`../flek-config --use-ui --ldflags` 
 
+IMGCOMPILE=`../flek-config --use-ui --use-jpeg --cxxflags` -g3
+IMGLINK=`../flek-config --use-ui --use-jpeg --ldflags` 
+
 GLCOMPILE=`../flek-config --use-gl --cxxflags`
 GLLINK=`../flek-config --use-gl --ldflags`
 
@@ -26,7 +29,7 @@ calendar: calendar.cxx
 	$(CXX) $(UICOMPILE) $@.cxx $(UILINK) -o $@
 
 image: image.cxx
-	$(CXX) -g3 $(GLCOMPILE) $@.cxx $(GLLINK) -ljpeg -o $@
+	$(CXX) -g3 $(IMGCOMPILE) $@.cxx $(IMGLINK) -ljpeg -o $@
 
 stock_buttons: stock_buttons.cxx
 	$(CXX) $(UICOMPILE) $@.cxx $(UILINK) -o $@
@@ -59,8 +62,8 @@ fxml: fxml.cxx
 	$(CXX) `../flek-config --use-xml --cxxflags` -g3 $@.cxx `../flek-config --use-xml --ldflags` -o $@
 
 clean:
-	rm -f core *.o toggle_tree docking bitmaps filedialog \
-	arcball calendar frametab pixbutton slider pixbutton packfu wtest wtest2 stock_buttons \
-	testlist testtable testtable2 basiclist exercise testedit fdom
+	rm -f core *.o calendar stock_buttons docking toggle_tree \
+	testlist testtable testtable2 basiclist exercise testedit \
+	arcball image fxml
 
 install:
