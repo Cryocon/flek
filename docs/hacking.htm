@@ -33,78 +33,24 @@
     <a name="FlekStyle">
     <h2>Flek Style</h2>
 
-    <p>Flek attempts to follow the GNU coding guidelines but also 
-      incorporates a javadoc style documentation scheme (flekdoc) and  
+    <p>Flek follows most of the same conventions that Fltk does and most of
+      the GNU coding guidelines.  Flek also 
+      incorporates a JavaDoc style documentation scheme (ScanDoc) and  
       standard class and method naming conventions.  For more information on
       the GNU coding guidelines, see the <a href="">online documentation</a>.
     </p>
     <blockquote>
       <h3>Naming Conventions</h3>
-      <p>While Flek builds heavily on Fltk, the Flek developers chose not
-	to use Fltk's class and method naming conventions for non-gui 
-	elements.  Instead non-gui elements use the following conventions:
-      <ol>
-	<li>Method names begin in lower case and continue in mixed case.
-	  For example:
-<blockquote>
-<pre>
-X.size ();
-X.insertNode ();
-X.thisIsALongExample ();
-</pre>
-</blockquote>
-</li>
-<li>Class variables begin in capital letters so that we can have like
-named methods that begin in lower case:
-<blockquote>
-<pre>
-int Size;                    // variables begin in uppercase
-int size () { return Size; } // methods begin in lowercase
-</pre>
-</blockquote>
-</li>
-<li>Class names begin with a lowercase prefix and then continue
-in mixed case.  In particular, non-gui flek classes always begin
-with an "f" prefix:
-<blockquote>
-<pre>
-class fVector2;
-class fVector3;
-class fMatrix4x4;
-class fList;
-</pre>
-</blockquote>
-	</li>
-      </ol>
-      <h3>Naming Conventions from Fltk</h3>
-      <p>Through a convenient set of defines in <tt>&lt;Flek/Flek.h&gt;</tt>,
-	Flek users can use Fltk classes with Flek style class names
-	(See Naming Convention 3).
-	For example,
-      <blockquote>
-<pre>
-flWindow
-flButton
-flGlWindow
-etc..
-</pre>
-      </blockquote>
-      <p>Since Fltk encapsulates (hides) most of it's data in classes, 
-	violations of naming convention number 2 are rarely visible to
-	Flek users.  Unfortunately, you will notice that Fltk classes use 
-	a different method naming scheme from Flek (naming convention 1).  
-	Instead of naming
-	methods <b>likeThis ()</b>, Fltk names methods <b>like_this ()</b>.
-	Fortunately, a good number of Fltk method names are only one 
-	word long and in that case match our first naming convention.
-    </blockquote>
+      <p>Flek uses most of the same naming conventions as Fltk.  Methods are
+      named like_this (and not likeThis), and widget are named like
+      "Fl_My_Widget".  But Flek datatypes use a prefix of "F" instead of
+      "Fl_" to distinguish them from widgets.
 
     <a name="FlekDoc">
-    <h2>FlekDoc (Documentation Conventions)</h2>
+    <h2>ScanDoc (Documentation Conventions)</h2>
     
-    <p>FlekDoc is an enhanced version of <a href="http://www.sylvantech.com/~talin/">Talin</a>'s <a href="http://www.sylvantech.com/~talin/projects/scandoc/scandoc.html">ScanDoc</a>.
-      ScanDoc comments are a superset of javadoc.  In addition
-      to javadoc comment markup, HTML markup is also allowed.  All Flek
+    <p>ScanDoc comments are a superset of javadoc.  In addition
+      to JavaDoc comment markup, HTML markup is also allowed.  All Flek
       documentation is maintained in HTML form and then converted to other
       convenient formats like PostScript and PDF.
     </p>
