@@ -1,6 +1,6 @@
 /* -*-C++-*- 
 
-   "$Id: Fl_App_Window.H,v 1.10 2000/05/11 18:55:09 brad Exp $"
+   "$Id: Fl_App_Window.H,v 1.11 2000/05/11 23:17:33 brad Exp $"
    
    Copyright 1999-2000 by the Flek development team.
    
@@ -81,6 +81,7 @@ public:
    * Set the box type and color for the contents window.
    */
   void box(Fl_Boxtype b) { _contents->box(b); }
+  void color(Fl_Color a) { _contents->color(a); }
   void color(Fl_Color a, Fl_Color b) { _contents->color(a, b); }
 
   /**
