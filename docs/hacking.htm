@@ -22,7 +22,10 @@
     <h2>Flek Zen</h2>
     <p>Flek adopts a minimalist C++ philosophy.  Flek is written 
       in a subset of the ISO C++ standard in order to maximize 
-      portability, minimize excessive memory usage and code complexity.  
+      portability, minimize excessive memory usage and code complexity.
+
+    <p>Flek source code should not use any templates, including the STL.
+
     <p>As an application developer, you may choose to use 
       every standard c++ features ever conceived in your application if that's
       your perogative.  
@@ -34,11 +37,28 @@
     <h2>Flek Style</h2>
 
     <p>Flek follows most of the same conventions that Fltk does and most of
-      the GNU coding guidelines.  Flek also 
-      incorporates a JavaDoc style documentation scheme (ScanDoc) and  
-      standard class and method naming conventions.  For more information on
+      the GNU coding guidelines.  For more information on
       the GNU coding guidelines, see the <a href="">online documentation</a>.
-    </p>
+
+    <p>Some basic tips:
+      <ul>
+        <li>indent using double space (no tabs)
+        <li>put open brack on same line as scope opener
+        <li>don't put space between function names and ()
+        <li>don't put space between for, if, switch, etc. and ()
+      </ul>
+
+    <p>For example:
+      <blockquote>
+<pre>void my_function() {
+  // Do it in style.
+  for(int i = 0; i < n; i++) {
+    do_something(i);
+    if(m[i] == q)
+      do_something_else(i, true);
+  }
+}</PRE>
+      </blockquote>
 
       <h3>Naming Conventions</h3>
       <p>Flek uses most of the same naming conventions as Fltk.  Methods are
@@ -49,6 +69,9 @@
     <a name="FlekDoc">
     <h2>ScanDoc (Documentation Conventions)</h2>
     
+    <p>Flek incorporates a JavaDoc style documentation scheme (ScanDoc) and  
+      standard class and method naming conventions.
+
     <p>ScanDoc comments are a superset of javadoc.  In addition
       to JavaDoc comment markup, HTML markup is also allowed.  All Flek
       documentation is maintained in HTML form and then converted to other
