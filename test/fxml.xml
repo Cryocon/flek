@@ -1,0 +1,7 @@
+<?xml version="1.0"?>
+<j:transactions>
+  <j:transaction number="10" date="2000-03-12" amount="34" />
+  <j:transaction amount="23" number="5."/>
+  <j:transaction number="2" amount="56.12" />
+  <j:transaction amount="56" number="7.000"/>
+</j:transactions>
