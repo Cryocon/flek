@@ -1,6 +1,6 @@
 /* -*-C++-*- 
 
-   "$Id: fVector2.h,v 1.5 2000/02/11 14:10:38 jamespalmer Exp $"
+   "$Id: fVector2.h,v 1.6 2000/02/13 01:02:32 jamespalmer Exp $"
    
    Copyright 1999-2000 by the Flek development team.
    
@@ -31,7 +31,7 @@
 
 #include <Flek/fVector.h>
 
-/** @package libflek_ui (The Flek User Interface Library)
+/** @package libflek_core
  * fVector2 is a 2 dimensional vector represented internally as an array of 
  * doubles.  This class is related to fVector3 and fVector4 which are 
  * 3-D and 4-D versions of this class.  All fVector classes are forward

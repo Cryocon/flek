@@ -1,6 +1,6 @@
 /* -*-C++-*- 
 
-   "$Id: Fl_Dockable_Group.H,v 1.3 2000/02/06 20:40:44 jamespalmer Exp $"
+   "$Id: Fl_Dockable_Group.H,v 1.4 2000/02/13 01:02:32 jamespalmer Exp $"
    
    Copyright 1999-2000 by the Flek development team.
    
@@ -52,7 +52,7 @@ class Fl_Gripper : public Fl_Button
   int y_first;
 };
 
-/** @package libflek_ui (The Flek User Interface Library)
+/** @package libflek_ui
  * Fl_Dockable_Group is a window that can be docked onto a window 
  * that accepts Fl_Dockable_Groups, have Fl_Dockable_Groups, such
  * as Fl_App_Window. 

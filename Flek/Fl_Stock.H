@@ -1,6 +1,6 @@
 /* -*-C++-*- 
 
-   "$Id: Fl_Stock.H,v 1.6 2000/02/06 20:40:44 jamespalmer Exp $"
+   "$Id: Fl_Stock.H,v 1.7 2000/02/13 01:02:32 jamespalmer Exp $"
    
    Copyright 1999-2000 by the Flek development team.
    
@@ -42,7 +42,7 @@
 #define FL_TEXT_ALIGN_TOP    0x00400000
 #define FL_TEXT_ALIGN_BOTTOM 0x00800000
 
-/** @package libflek_ui (The Flek User Interface Library)
+/** @package libflek_ui
  * The base class from which all stock buttons are derived.
  * These include:
  * 

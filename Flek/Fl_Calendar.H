@@ -1,6 +1,6 @@
 /* -*-C++-*- 
 
-   "$Id: Fl_Calendar.H,v 1.2 2000/02/06 20:40:44 jamespalmer Exp $"
+   "$Id: Fl_Calendar.H,v 1.3 2000/02/13 01:02:32 jamespalmer Exp $"
    
    Copyright 1999-2000 by the Flek development team.
    
@@ -61,7 +61,7 @@ extern char * month_name[12];
 #define	YEAR_MIN	1
 #define	YEAR_MAX	9999
 
-/** @package libflek_ui (The Flek User Interface Library)
+/** @package libflek_ui
  * Fl_Calendar_Base is a widget that allows a user to select a date
  * (day, month, and year) with a wall style calendar. 
  */
@@ -206,7 +206,7 @@ public:
   Fl_Button * days[(6*7)];
 };
 
-/** @package libflek_ui (The Flek User Interface Library)
+/** @package libflek_ui
  * Fl_Calendar is a subclass of Fl_Calendar.  This widget adds 
  * day labels and controllers to the base calendar class.
  * <p><img src="Fl_Calendar.png">

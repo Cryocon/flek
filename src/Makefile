@@ -11,14 +11,14 @@ UICPPFILES = \
 	Fl_Toggle_Node_Base.cxx \
 	Fl_Toggle_Node.cxx \
 	Fl_Toggle_Tree_Base.cxx \
-	Fl_Toggle_Tree.cxx \
-	Flv_CStyle.cxx \
-	Flv_Style.cxx \
-	Flv_List.cxx \
-	Flv_Table.cxx \
-	Flve_Check_Button.cxx \
-	Flve_Input.cxx \
-	Flve_Combo.cxx
+	Fl_Toggle_Tree.cxx 
+#	Flv_CStyle.cxx \
+#	Flv_Style.cxx \
+#	Flv_List.cxx \
+#	Flv_Table.cxx \
+#	Flve_Check_Button.cxx \
+#	Flve_Input.cxx \
+#	Flve_Combo.cxx
 
 GLCPPFILES = \
 	gl.cxx \

@@ -1,6 +1,6 @@
 /* -*-C++-*- 
 
-   "$Id: Fl_Gl_Arcball_Window.H,v 1.6 2000/02/11 14:10:38 jamespalmer Exp $"
+   "$Id: Fl_Gl_Arcball_Window.H,v 1.7 2000/02/13 01:02:32 jamespalmer Exp $"
    
    Copyright 1999-2000 by the Flek development team.
    
@@ -27,7 +27,7 @@
 #include <Flek/fArcball.h>
 #include <Flek/gl.h>
 
-/** @package libflek_ui (The Flek User Interface Library)
+/** @package libflek_gl
  * Fl_Gl_Arcball_Window is a subclass of Fl_Gl_Window that provides an arcball 3d rotation controller. What is arcball? From the
  * comp.graphics.algorithms FAQ: 
  * <blockquote>
@@ -35,7 +35,7 @@
  *  behavior, easy implementation, cheap execution, and optional axis constraints. A Macintosh demo and electronic version of the original
  *  paper (Microsoft Word format) may be obtained from ftp::/ftp.cis.upenn.edu/pub/graphics. 
  * </blockquote>
- * See the arcball demo in the test directory. 
+ * See the <a href="arcball.txt">arcball code</a> in the test directory. 
  * <p><img src="Fl_Gl_Arcball_Window.png">
  */
 class Fl_Gl_Arcball_Window : public Fl_Gl_Window
@@ -48,12 +48,12 @@ public:
    */
   Fl_Gl_Arcball_Window(int x, int y, int w, int h, const char *l=0) :
      Fl_Gl_Window (x, y, w, h, l),
+     origin_ (0., 0., 0.),
+     radius_ (1),
      rim_color_ (1., 1., 1.),
      far_color_ (195./255., 127./255., 31./255.),
      near_color_ (1., 1., 63./255.),
-     drag_color_ (127./255., 1., 1.),
-     origin_ (0., 0., 0.),
-     radius_ (1)
+     drag_color_ (127./255., 1., 1.)
     {
       arcball.place (origin_, radius_);
     }
@@ -65,7 +65,6 @@ public:
 
   void drawDragArc (void);
   void drawConstraints (void) const;
-
 		 
   /**
    * Multiply the current Gl matrix by the arcball transformation
@@ -95,14 +94,44 @@ public:
    */
   double radius () { return radius_; }
 
+  /**
+   * Gets the arcball rim color.
+   */
   fVector3 rim_color () { return rim_color_; }
+
+  /**
+   * Gets the arcball far color.
+   */
   fVector3 far_color () { return far_color_; }
+
+  /**
+   * Gets the arcball near color.
+   */
   fVector3 near_color () { return near_color_; }
+
+  /**
+   * Gets the arcball drag color.
+   */
   fVector3 drag_color () { return drag_color_; }
 
+  /**
+   * Sets the arcball rim color.
+   */
   void rim_color (const fVector3 &v) { rim_color_ = v; }
+
+  /**
+   * Sets the arcball far color.
+   */
   void far_color (const fVector3 &v) { far_color_ = v; }
+
+  /**
+   * Sets the arcball near color.
+   */
   void near_color (const fVector3 &v) { near_color_ = v; }
+
+  /**
+   * Gets the arcball drag color.
+   */
   void drag_color (const fVector3 &v) { drag_color_ = v; }
 
 protected:

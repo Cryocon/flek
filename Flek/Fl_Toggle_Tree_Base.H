@@ -1,6 +1,6 @@
 /* -*-C++-*- 
 
-   "$Id: Fl_Toggle_Tree_Base.H,v 1.2 2000/02/06 20:40:44 jamespalmer Exp $"
+   "$Id: Fl_Toggle_Tree_Base.H,v 1.3 2000/02/13 01:02:32 jamespalmer Exp $"
    
    Copyright 1999-2000 by the Flek development team.
    
@@ -38,7 +38,7 @@ enum sort_order {
   REVERSE_SORT = 1
 };
 
-/** @package libflek_ui (The Flek User Interface Library)
+/** @package libflek_ui
  * This is the base class for Fl_Toggle_Tree. It could conceivably be 
  * used to create other tree-like widgets. 
  *

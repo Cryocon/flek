@@ -1,6 +1,6 @@
 /* -*-C++-*- 
 
-   "$Id: fQuaternion.h,v 1.6 2000/02/06 20:40:44 jamespalmer Exp $"
+   "$Id: fQuaternion.h,v 1.7 2000/02/13 01:02:32 jamespalmer Exp $"
   
    Copyright 1999-2000 by the Flek development team.
    
@@ -33,7 +33,7 @@
 #include <Flek/fVector3.h>
 #include <Flek/fMatrix4x4.h>
 
-/** @package libflek_ui (The Flek User Interface Library)
+/** @package libflek_core
  * The Quaternion class.
  */
 class fQuaternion : public fBase

@@ -1,6 +1,6 @@
 /* -*-C++-*- 
 
-   "$Id: fArcball.h,v 1.5 2000/02/10 16:55:35 jamespalmer Exp $"
+   "$Id: fArcball.h,v 1.6 2000/02/13 01:02:32 jamespalmer Exp $"
    
    Copyright 1999-2000 by the Flek development team.
    
@@ -35,8 +35,10 @@
 
 enum AxisSet { CameraAxes=0, BodyAxes=1, NoAxes=2 };
 
-/** @package libflek_ui (The Flek User Interface Library)
+/** @package libflek_core
  * The fArcball class provides a convenient 3d rotation controller.
+ * This class is used by <a href="Fl_Gl_Arcball_Window.html">Fl_Gl_Arcball_Window</a>
+ * to provide a user friendly rotation manipulator.
  */
 class fArcball
 {
@@ -50,33 +52,54 @@ public:
   
   fArcball& operator = (const fArcball& ab);
   
+  /**
+   * Place the center of the ball and set it's radius.
+   */
   void place (const fVector3& cen, double rad)
     {
       vCenter = cen; dRadius = rad;
     }
-  
+
+  /**
+   * Register an x-y mouse event.
+   */
   void mouse (const fVector3& pos)
     {
       vNow = pos;
     }
-  
+
+  /**
+   * Set the axis to use.
+   */
   void useSet (AxisSet set)
     {
       if ( !bDragging ) asAxisSet = set;
     }
-  
+
+  /**
+   * Update the arcball transformation matrix.
+   */
   void update (void);
-  
+
+  /**
+   * Return the arcball transformation matrix.
+   */  
   fMatrix4x4 value(void) const
     {
       return mNow;
     }
-  
+
+  /**
+   * Start dragging the mouse.
+   */  
   void beginDrag (void)
     {
       bDragging = true; vDown = vNow;
     }
-  
+
+  /**
+   * End dragging the mouse.
+   */    
   void endDrag (void)
     {
       bDragging = false; qDown = qNow;
@@ -90,6 +113,9 @@ public:
    */
   void draw (const fVector3& dir = fVector3 (0.0, 0.0, 1.0)) const;
 
+  /**
+   * Returns if we are currently dragging the mouse.
+   */
   bool dragging () const { return bDragging; }
   
   AxisSet axisSet () const { return asAxisSet; }
@@ -100,20 +126,21 @@ public:
 
   fVector3 & from () { return vFrom; }
   fVector3 & to () { return vTo; }
-  
+
+  /**
+   * Get the arcball radius.
+   */
   double radius () { return dRadius; }
+
+  /** 
+   * Set the arcball radius.
+   */
   void radius (const double r) { dRadius = r; }
   
  protected:
-  /** 
-   * Center of the ball.
-   */
   fVector3 vCenter;
-
-  /**
-   * Radius of the ball.
-   */
   double dRadius;
+
   fQuaternion qNow, qDown, qDrag;
   fVector3 vNow, vDown, vFrom, vTo;
   fMatrix4x4 mNow;

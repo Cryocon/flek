@@ -856,7 +856,11 @@ void Flv_List::draw_scrollbars(int &X, int &Y, int &W, int &H )
 	//	Place scrollbars where they should be
 	if (sv>0)
 	{
-		scrollbar.damage_resize(X+W,Y,vscrollbar_width,H);
+#ifdef FLTK_2
+	  scrollbar.resize (X+W, Y,vscrollbar_width,H);
+#else
+	  scrollbar.damage_resize(X+W,Y,vscrollbar_width,H);
+#endif
 		scrollbar.value( top_row(), page_size()+1,	0, vrows );	//	Fake out page size
 		scrollbar.linesize( 1 );
 		scrollbar.minimum(0);
@@ -884,7 +888,11 @@ void Flv_List::draw_scrollbars(int &X, int &Y, int &W, int &H )
 
 	if (sh>0)
 	{
+#ifdef FLTK_2
+	  hscrollbar.resize(X,Y+H,W,vscrollbar_width);
+#else
 		hscrollbar.damage_resize(X,Y+H,W,vscrollbar_width);
+#endif
 		hscrollbar.value( vrow_offset, 50,	0, vrow_width );	//	Fake out page size
 		hscrollbar.linesize( 10 );
 		hscrollbar.minimum(0);
@@ -1396,8 +1404,8 @@ static void revert(Fl_Style* s) {
 	s->color = FL_GRAY_RAMP+1;
 }
 
-Fl_Style* Flv_List::default_style =
-		new Fl_Named_Style("Browser", revert, &Flv_List::default_style);
+//Fl_Style* Flv_List::default_style =
+//		new Fl_Named_Style("Browser", revert, &Flv_List::default_style);
 #endif
 
 

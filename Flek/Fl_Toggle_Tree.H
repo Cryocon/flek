@@ -1,6 +1,6 @@
 /* -*-C++-*- 
 
-   "$Id: Fl_Toggle_Tree.H,v 1.2 2000/02/06 20:40:44 jamespalmer Exp $"
+   "$Id: Fl_Toggle_Tree.H,v 1.3 2000/02/13 01:02:32 jamespalmer Exp $"
    
    Copyright 1999-2000 by the Flek development team.
    
@@ -43,7 +43,7 @@ enum Fl_ToggleState {
 
 class Fl_Input;
 
-/** @package libflek_ui (The Flek User Interface Library)
+/** @package libflek_ui
  * Fl_Toggle_Tree is a tree widget that allows branch visibility to 
  * be toggled on and off, similar to a collapsible list widget that is 
  * found in most widget tool kits. 

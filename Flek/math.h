@@ -1,5 +1,5 @@
 /* -*-C++-*- 
-   "$Id: math.h,v 1.2 2000/02/09 22:33:20 jamespalmer Exp $"
+   "$Id: math.h,v 1.3 2000/02/13 01:02:32 jamespalmer Exp $"
    
    Copyright 1999-2000 by the Flek development team.
    
@@ -30,13 +30,13 @@
 
 #include <math.h>
 
-/**
+/*
  * Predefined constants, and macros
  * To change the values of some of these macros, define them before including
  * this file. Or dont include this file at all and define them on your own
  */
 
-/**
+/** @package libflek_core
  * Returns the absolute value.
  */
 inline int Abs(int x)

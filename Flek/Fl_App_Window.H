@@ -1,6 +1,6 @@
 /* -*-C++-*- 
 
-   "$Id: Fl_App_Window.H,v 1.4 2000/02/06 20:40:44 jamespalmer Exp $"
+   "$Id: Fl_App_Window.H,v 1.5 2000/02/13 01:02:32 jamespalmer Exp $"
    
    Copyright 1999-2000 by the Flek development team.
    
@@ -32,7 +32,7 @@
 #include <Flek/Fl_Dockable_Group.H>
 #include <Flek/Fl_Pack_Fu.H>
 
-/** @package libflek_ui (The Flek User Interface Library)
+/** @package libflek_ui
  * Fl_App_Window is a window that can have Fl_Dockable_Groups 
  * "docked" either vertically or horizontally to the contents of the window.
  */
@@ -44,6 +44,7 @@ public:
    * The constructor for an empty Fl_App_Window.
    */
   Fl_App_Window (int x, int y, int w, int h, const char *l = 0);
+
   /**
    * The constructor for an empty Fl_App_Window.
    */
@@ -57,6 +58,7 @@ public:
    * Dock the Fl_Dockable_Group W to the window.
    */
   void add_dockable (Fl_Dockable_Group *W, int position = 0);
+
   void pack_dock () 
     { 
       /// pack->pack(); 
