@@ -233,6 +233,7 @@ void Fl_Time::input_changed_cb(Fl_Widget* widget, void* data) {
 		}
 		t->minute(m);
 	}
+	t->do_callback();
 }
 
 void Fl_Time::button_cb(Fl_Widget* widget, void* data) {
@@ -251,6 +252,7 @@ void Fl_Time::button_cb(Fl_Widget* widget, void* data) {
 		t->hour(t->hour()+1);
 	}
 	t->redisplay();
+	t->do_callback();
 }
 
 void Fl_Time::labelsize(int size) {
