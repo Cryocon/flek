@@ -200,6 +200,7 @@ Fl_Stock_Button_Ok::Fl_Stock_Button_Ok(int x, int y, int w, int h,
   if (!Stock_Button_Ok_Image)
     Stock_Button_Ok_Image = new Fl_Pixmap(stock_button_ok_xpm);
   image (Stock_Button_Ok_Image);
+  box (FL_THIN_UP_BOX);
 }
 
 static Fl_Pixmap* Stock_Button_Cancel_Image = 0;
@@ -211,6 +212,7 @@ Fl_Stock_Button_Cancel::Fl_Stock_Button_Cancel(int x, int y, int w, int h,
   if (!Stock_Button_Cancel_Image)
     Stock_Button_Cancel_Image = new Fl_Pixmap(stock_button_cancel_xpm);
   image (Stock_Button_Cancel_Image);
+  box (FL_THIN_UP_BOX);
 }
 
 static Fl_Pixmap* Stock_Button_Yes_Image = 0;
@@ -222,6 +224,7 @@ Fl_Stock_Button_Yes::Fl_Stock_Button_Yes(int x, int y, int w, int h,
   if (!Stock_Button_Yes_Image)
     Stock_Button_Yes_Image = new Fl_Pixmap(stock_button_yes_xpm);
   image (Stock_Button_Yes_Image);
+  box (FL_THIN_UP_BOX);
 }
 
 static Fl_Pixmap* Stock_Button_No_Image = 0;
@@ -233,6 +236,7 @@ Fl_Stock_Button_No::Fl_Stock_Button_No(int x, int y, int w, int h,
   if (!Stock_Button_No_Image)
     Stock_Button_No_Image = new Fl_Pixmap(stock_button_no_xpm);
   image (Stock_Button_No_Image);
+  box (FL_THIN_UP_BOX);
 }
 
 static Fl_Pixmap* Stock_Button_Close_Image = 0;
@@ -244,6 +248,7 @@ Fl_Stock_Button_Close::Fl_Stock_Button_Close(int x, int y, int w, int h,
   if (!Stock_Button_Close_Image)
     Stock_Button_Close_Image = new Fl_Pixmap(stock_button_close_xpm);
   image (Stock_Button_Close_Image);
+  box (FL_THIN_UP_BOX);
 }
 
 static Fl_Pixmap* Stock_Button_Apply_Image = 0;
@@ -255,6 +260,7 @@ Fl_Stock_Button_Apply::Fl_Stock_Button_Apply(int x, int y, int w, int h,
   if (!Stock_Button_Apply_Image)
     Stock_Button_Apply_Image = new Fl_Pixmap(stock_button_apply_xpm);
   image (Stock_Button_Apply_Image);
+  box (FL_THIN_UP_BOX);
 }
 
 
