@@ -2,7 +2,7 @@ include ../makeinclude
 
 ALL = calendar stock_buttons docking toggle_tree \
 	testlist testtable testtable2 basiclist testedit testcombo \
-	socket
+	socket time
 # excercise
 
 ifdef GL_LIB
@@ -31,6 +31,9 @@ arcball: arcball.cxx
 	$(CXX) $(GLCOMPILE) $@.cxx $(GLLINK) -o $@
 
 calendar: calendar.cxx
+	$(CXX) $(UICOMPILE) $@.cxx $(UILINK) -lstdc++ -o $@
+
+time: time.cxx
 	$(CXX) $(UICOMPILE) $@.cxx $(UILINK) -lstdc++ -o $@
 
 image: image.cxx

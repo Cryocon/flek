@@ -59,10 +59,20 @@ Fl_Calendar_Base::Fl_Calendar_Base (int x, int y, int w, int h,
 void Fl_Calendar_Base::csize (int cx, int cy, int cw, int ch)
 {
   int i;
+  int oi = (cw-(7*(int)(cw/7)))/2;
+  int of = (cw-(7*(int)(cw/7))) - oi;
+  int xi, wxi;
+   
   for (i = 0; i<(7*6); i++) {
-    days[i]->resize ((cw/7)*(i%7) + cx,
+   if ((i%7)==0) xi = 0;
+    else xi = oi;
+    if ((i%7)==0) wxi = oi;
+    else if ((i%7)==6) wxi = of;
+    else wxi = 0;
+
+    days[i]->resize ((cw/7)*(i%7) + cx + xi,
 		     (ch/6)*(i/7) + cy,
-		     (cw/7),
+		     (cw/7) + wxi,
 		     (ch/6));
   }
 }
@@ -163,10 +173,22 @@ Fl_Calendar::Fl_Calendar (int x, int y, int w, int h,
 
   int title_height = h / 8;
   int i;
+   
+  // If the Calendar width isn't divisible by 7 there will be an ugly gap. 
+  // So we will distribute this gap between Sunday and Saturday
+  int oi = (w-(7*(int)(w/7)))/2;
+  int of = (w-(7*(int)(w/7))) - oi;
+  int xi, wxi;
+   
   for (i = 0; i<7; i++) {
-    weekdays[i] = new Fl_Button ((w/7)*(i%7) + x,
+    if (i==0) xi = 0;
+    else xi = oi;
+    if (i==0) wxi = oi;
+    else if (i==6) wxi = of;
+    else wxi = 0;
+    weekdays[i] = new Fl_Box ((w/7)*(i%7) + x + xi,
 				 ((h - title_height)/7)*((i/7)) + y + title_height,
-				 (w/7),
+				 (w/7) + wxi,
 				 ((h - title_height)/7));
     weekdays[i]->box (FL_THIN_UP_BOX);  
 #ifndef FLEK_FLTK_2
@@ -176,7 +198,7 @@ Fl_Calendar::Fl_Calendar (int x, int y, int w, int h,
 #endif
     weekdays[i]->color (52);  
   }
-  
+   
   weekdays[SUNDAY]->label ("S");
   weekdays[MONDAY]->label ("M");
   weekdays[TUESDAY]->label ("T");
@@ -184,75 +206,75 @@ Fl_Calendar::Fl_Calendar (int x, int y, int w, int h,
   weekdays[THURSDAY]->label ("R");
   weekdays[FRIDAY]->label ("F");
   weekdays[SATURDAY]->label ("S");
-  
-  prv_year = new Fl_Repeat_Button (x, y, (w/10), (h/8), "@#<<");
+   
+  prv_year = new Fl_Repeat_Button ((x - of + w - (int)(w/7) * 4), y, (w/7), (h/8), "Y-");
 #ifdef AGENDA
   prv_year->repeat (1000,500);
 #endif
   prv_year->box (FL_THIN_UP_BOX);
 #ifndef FLEK_FLTK_2
-  prv_year->labeltype (FL_SYMBOL_LABEL);
+//  prv_year->labeltype (FL_SYMBOL_LABEL);
   prv_year->labelsize (10);
   prv_year->down_box (FL_THIN_DOWN_BOX);
 #else
-  prv_year->label_type (FL_SYMBOL_LABEL);
+//  prv_year->label_type (FL_SYMBOL_LABEL);
   prv_year->label_size (10);
 #endif
   prv_year->callback ((Fl_Callback*)&fl_calendar_prv_year_cb, (void *)this);  
   
-  prv_month = new Fl_Repeat_Button (x + (w/10), y, (w/10), (h/8), "@#<");
+  prv_month = new Fl_Repeat_Button (x - of + w - (int)(w/7) * 3, y, (w/7), (h/8), "M-");
 #ifdef AGENDA
   prv_month->repeat (1000,500);
 #endif
   prv_month->box (FL_THIN_UP_BOX);
 #ifndef FLEK_FLTK_2
-  prv_month->labeltype (FL_SYMBOL_LABEL);
+  //prv_month->labeltype (FL_SYMBOL_LABEL);
   prv_month->labelsize (10);
   prv_month->down_box (FL_THIN_DOWN_BOX);
 #else
-  prv_month->label_type (FL_SYMBOL_LABEL);
+  //prv_month->label_type (FL_SYMBOL_LABEL);
   prv_month->label_size (10);
 #endif
   prv_month->callback ((Fl_Callback*)&fl_calendar_prv_month_cb, (void *)this);  
 
-  nxt_month = new Fl_Repeat_Button (x + (w/10)*8, y, (w/10), (h/8), "@#>");
+  nxt_month = new Fl_Repeat_Button (x - of + w - (int)(w/7) * 2, y, (w/7), (h/8), "M+");
 #ifdef AGENDA
   nxt_month->repeat (1000,500);
 #endif
   nxt_month->box (FL_THIN_UP_BOX);
 #ifndef FLEK_FLTK_2
-  nxt_month->labeltype (FL_SYMBOL_LABEL);
+  //nxt_month->labeltype (FL_SYMBOL_LABEL);
   nxt_month->labelsize (10);
   nxt_month->down_box (FL_THIN_DOWN_BOX);
 #else
-  nxt_month->label_type (FL_SYMBOL_LABEL);
+  //nxt_month->label_type (FL_SYMBOL_LABEL);
   nxt_month->label_size (10);
 #endif
   nxt_month->callback ((Fl_Callback*)&fl_calendar_nxt_month_cb, (void *)this);
   
-  nxt_year = new Fl_Repeat_Button (x + (w/10)*9, y, (w/10), (h/8), "@#>>");
+  nxt_year = new Fl_Repeat_Button (x - of + w - (int)(w/7) * 1, y, (w/7) + of, (h/8), "Y+");
 #ifdef AGENDA
   nxt_year->repeat (1000,500);
 #endif
   nxt_year->box (FL_THIN_UP_BOX);
 #ifndef FLEK_FLTK_2
-  nxt_year->labeltype (FL_SYMBOL_LABEL);
+  //nxt_year->labeltype (FL_SYMBOL_LABEL);
   nxt_year->labelsize (10);
   nxt_year->down_box (FL_THIN_DOWN_BOX);
 #else
-  nxt_year->label_type (FL_SYMBOL_LABEL);
+  //nxt_year->label_type (FL_SYMBOL_LABEL);
   nxt_year->label_size (10);
 #endif
   nxt_year->callback ((Fl_Callback*)&fl_calendar_nxt_year_cb, (void *)this);
 
-  caption = new Fl_Box (x + (w/10)*2, y, (w/10)*6, (h/8));
+  caption = new Fl_Box (x, y, (w/7)*3 + oi, (h/8));
   caption->box (FL_THIN_UP_BOX);
 #ifndef FLEK_FLTK_2
-  caption->labeltype (FL_SYMBOL_LABEL);
-  caption->labelfont (3);
+  //caption->labeltype (FL_SYMBOL_LABEL);
+  caption->labelfont (FL_HELVETICA_BOLD);
   caption->labelsize (10);
 #else
-  caption->label_type (FL_SYMBOL_LABEL);
+  //caption->label_type (FL_SYMBOL_LABEL);
   // caption->label_font (3);
   caption->label_size (10);
 #endif
@@ -265,12 +287,21 @@ Fl_Calendar::Fl_Calendar (int x, int y, int w, int h,
 void Fl_Calendar::csize (int cx, int cy, int cw, int ch)
 {
   int i;
-  for (i = 0; i<7; i++)
-    {
-      weekdays[i] = new Fl_Button ((cw/7)*(i%7) + cx,
-				   (ch/8)*((i/7)+1) + cy,
-				   (cw/7),
-				   (ch/8));
+  int oi = (cw-(7*(int)(cw/7)))/2;
+  int of = (cw-(7*(int)(cw/7))) - oi;
+  int xi, wxi;
+
+  for (i = 0; i<7; i++) {
+     if (i==0) xi = 0;
+     else xi = oi;
+     if (i==0) wxi = oi;
+     else if (i==6) wxi = of;
+     else wxi = 0;
+
+      weekdays[i] = new Fl_Box ((cw/7)*(i%7) + cx + xi,
+				(ch/8)*((i/7)+1) + cy,
+				(cw/7) + wxi,
+				(ch/8));
     }
 
   prv_month->resize (cx + (cw/10), cy, (cw/10), (ch/8));
@@ -539,25 +570,22 @@ Fl_Agenda_Calendar::Fl_Agenda_Calendar (int x, int y, int w, int h,
 
   int i;
   for (i = 0; i<7; i++) {
-    weekdays[i]->resize((w/7)*(i%7) + x,
-			((h - title_height)/7)*((i/7)) + y + title_height,
-			(w/7),
-			((h - title_height)/7));
+    weekdays[i]->size(weekdays[i]->w(), (h - title_height)/7);
   }
   
-  prv_year->resize((int)(x + (int)(w/7) * 3), y, (int)(w/7), title_height);
+  prv_year->size(prv_year->w(), title_height);
   prv_year->label("Y-");
 
-  prv_month->resize((int)(x + (int)(w/7) * 4), y, (int)(w/7), title_height);
+  prv_month->size(prv_month->w(), title_height);
   prv_month->label("M-");
   
-  nxt_month->resize ((int)(x + (int)(w/7) * 5), y, (int)(w/7), title_height);
+  nxt_month->size(nxt_month->w(), title_height);
   nxt_month->label("M+");
   
-  nxt_year->resize ((int)(x + (int)(w/7) * 6), y, (int)(w/7), title_height);
+  nxt_year->size(nxt_year->w(), title_height);
   nxt_year->label("Y+");
   
-  caption->resize (x, y, 3*(int)(w/7), title_height);
+  caption->size(caption->w(), title_height);
   
   Fl_Calendar_Base::csize (x, y + title_height + (h - title_height) / 7, w, h - title_height - (h - title_height) / 7);
   calendar_value_callback();

@@ -1,6 +1,6 @@
 # -*- sh -*-
 # Note that this is NOT a relocatable package
-%define ver       0.1
+%define ver       0.2
 %define rel       1
 %define prefix    /usr
 %define buildroot /tmp/build

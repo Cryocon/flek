@@ -1,6 +1,6 @@
 /* -*-C++-*- 
 
-   "$Id: Fl_Calendar.H,v 1.13 2001/05/13 23:22:53 jamespalmer Exp $"
+   "$Id: Fl_Calendar.H,v 1.14 2001/05/14 22:13:41 jamespalmer Exp $"
    
    Copyright 1999-2000 by the Flek development team.
    
@@ -118,7 +118,7 @@ class Fl_Calendar : public Fl_Calendar_Base
 
  protected:
   
-  Fl_Button * weekdays[7];
+  Fl_Box * weekdays[7];
   Fl_Box * caption;
   Fl_Repeat_Button * nxt_month;
   Fl_Repeat_Button * prv_month;

@@ -30,13 +30,6 @@
 #define FL_TIME_24HOUR 0
 #define FL_TIME_12HOUR 1
 
-#ifndef FL_LOOK_CLASSIC
-#define FL_LOOK_CLASSIC 0
-#endif
-#ifndef FL_LOOK_MODERN
-#define FL_LOOK_MODERN 1
-#endif
-
 class Fl_Time : public Fl_Group {
 private:
 	Fl_Repeat_Button* button_decrease_hour;
@@ -56,7 +49,7 @@ private:
 	static void button_cb(Fl_Widget* widget, void* data);
 
 public:
-	Fl_Time(int x, int y, int w, int h, int look = FL_LOOK_CLASSIC); 
+	Fl_Time(int x, int y, int w, int h, char *l=0); 
 	~Fl_Time();
 
 	int hour();
@@ -73,6 +66,20 @@ public:
 	void refresh();
 
 	void labelsize(int size);
+	void labelfont(Fl_Font);
+	void labelcolor(Fl_Color);
+
+	void textsize(int size);
+	void textfont(Fl_Font);
+	void textcolor(Fl_Color);
+
+	int labelsize();
+	Fl_Font labelfont();
+	Fl_Color labelcolor();
+
+	int textsize();
+	Fl_Font textfont();
+	Fl_Color textcolor();
 
 	bool valid();	
 };

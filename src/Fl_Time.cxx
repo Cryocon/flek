@@ -19,28 +19,35 @@
 
 #include <stdio.h>
 #include <string.h>
+#include <time.h>
 
 #include <Flek/Fl_Time.H>
 
-Fl_Time::Fl_Time(int x, int y, int w, int h, int look) : Fl_Group(x, y, w, h) {
-	int button_width = (int)(h * 1.2);
+Fl_Time::Fl_Time(int x, int y, int w, int h, char *l) : Fl_Group(x, y, w, h, l) {
+	int button_width = (int)w/7; //(int)(h * 1.2);
 
-	if(look == FL_LOOK_MODERN) {
+//	if(look == FL_LOOK_MODERN) {
 		input_time = new Fl_Input(x, y, w - button_width * 4, h, 0);
 		input_time->callback(input_changed_cb, this);
 		input_time->when(FL_WHEN_CHANGED);
-
+		input_time->textsize(10);
+	   
 		button_decrease_hour = new Fl_Repeat_Button(x + w - 4 * button_width, y, button_width, h, "h-");
 		button_decrease_hour->callback(button_cb, this);
+		button_decrease_hour->labelsize(10);
+	   
+		button_increase_hour = new Fl_Repeat_Button(x + w - 3 * button_width, y, button_width, h, "h+");
+		button_increase_hour->callback(button_cb, this);
+	        button_increase_hour->labelsize(10);
 	
 		button_decrease_minute = new Fl_Repeat_Button(x + w - 2 * button_width, y, button_width, h, "m-");
 		button_decrease_minute->callback(button_cb, this);
-
+		button_decrease_minute->labelsize(10);
+	   
 		button_increase_minute = new Fl_Repeat_Button(x + w - button_width, y, button_width, h, "m+");
 		button_increase_minute->callback(button_cb, this);
-
-		button_increase_hour = new Fl_Repeat_Button(x + w - 3 * button_width, y, button_width, h, "h+");
-		button_increase_hour->callback(button_cb, this);
+		button_increase_minute->labelsize(10);
+   /*
 	}
 	else {
 		button_width = w / 10;
@@ -69,7 +76,7 @@ Fl_Time::Fl_Time(int x, int y, int w, int h, int look) : Fl_Group(x, y, w, h) {
 		button_increase_hour->callback(button_cb, this);
 		button_increase_hour->box(FL_THIN_UP_BOX);
 	}
-	
+*/	
 	end();
 	
 	type(FL_TIME_12HOUR);
@@ -251,11 +258,62 @@ void Fl_Time::button_cb(Fl_Widget* widget, void* data) {
 	t->do_callback();
 }
 
+void Fl_Time::textsize(int size) {
+   input_time->textsize(size);
+}
+
 void Fl_Time::labelsize(int size) {
-	button_decrease_hour->labelsize(size);
-	button_decrease_minute->labelsize(size);
-	input_time->textsize(size);
-	button_increase_minute->labelsize(size);
-	button_increase_hour->labelsize(size);
-	Fl_Group::labelsize(size);
+   button_decrease_hour->labelsize(size);
+   button_decrease_minute->labelsize(size);
+   button_increase_minute->labelsize(size);
+   button_increase_hour->labelsize(size);
+   Fl_Group::labelsize(size);
+}
+
+void Fl_Time::textfont(Fl_Font font) {
+   input_time->textfont(font);
+}
+
+void Fl_Time::labelfont(Fl_Font font) {
+   button_decrease_hour->labelfont(font);
+   button_decrease_minute->labelfont(font);
+   button_increase_minute->labelfont(font);
+   button_increase_hour->labelfont(font);
+   Fl_Group::labelfont(font);
+}
+
+void Fl_Time::textcolor(Fl_Color color) {
+   input_time->textcolor(color);
+}
+
+void Fl_Time::labelcolor(Fl_Color color) {
+   button_decrease_hour->labelcolor(color);
+   button_decrease_minute->labelcolor(color);
+   button_increase_minute->labelcolor(color);
+   button_increase_hour->labelcolor(color);
+   Fl_Group::labelcolor(color);
+}
+
+int Fl_Time::textsize() {
+   return input_time->textsize();
+}
+
+int Fl_Time::labelsize() {
+   return button_decrease_hour->labelsize();
+}
+
+Fl_Font Fl_Time::labelfont() {
+   return button_decrease_hour->labelfont();
+}
+
+Fl_Font Fl_Time::textfont() {
+   return input_time->textfont();
+}
+
+Fl_Color Fl_Time::labelcolor() {
+   return button_decrease_hour->labelcolor();
+}
+
+Fl_Color Fl_Time::textcolor() {
+   return input_time->textcolor();
 }
