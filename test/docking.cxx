@@ -18,6 +18,7 @@ Fl_App_Window* application_window;
 void new_dockable(Fl_Widget* w, void* d) {
   Fl_Dockable_Window* dockable_window = new Fl_Dockable_Window(0, 0, 200, 30, "Dockable Window");
   new Fl_Button(0, 0, 75, 30, "Newer");
+  application_window->accept_dockable(dockable_window);
   application_window->add_dockable(dockable_window);
 }
 
@@ -44,6 +45,7 @@ void main() {
   new Fl_Button(75, 0, 75, 30, "About");
 
   // Dock it to the application window.
+  application_window->accept_dockable(dockable_window);
   application_window->add_dockable(dockable_window);
 
   // Print some diagnostics.
