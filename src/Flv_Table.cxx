@@ -264,9 +264,10 @@ void Flv_Table::draw(void)
 		if (c==cols())
 		{
 			c = 0;
-			r++;
 			if (r==rows())
 				break;
+			else
+				r++;
 		}
 	}
 

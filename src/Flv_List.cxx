@@ -1069,9 +1069,10 @@ void Flv_List::draw()
 			row(r);
 			break;
 		}
-		r++;
 		if (r==rows())
 			break;
+		else
+			r++;
 	}
 	//	Make sure we have an editor if editing!
 	if (vediting && !veditor)
