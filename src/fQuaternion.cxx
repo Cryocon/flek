@@ -70,7 +70,7 @@ fQuaternion::operator* (double scalar)
   return result;
 }
 
-fQuaternion  
+fQuaternion
 fQuaternion::inverse ()
 {
   fQuaternion result;
