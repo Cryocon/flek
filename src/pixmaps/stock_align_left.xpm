@@ -1,5 +1,5 @@
 /* XPM */
-static char *magick[] = {
+static char *stock_align_left_xpm[] = {
 /* columns rows colors chars-per-pixel */
 "24 24 2 1",
 "  c Gray0",

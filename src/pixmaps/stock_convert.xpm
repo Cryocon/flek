@@ -1,5 +1,5 @@
 /* XPM */
-static char *magick[] = {
+static char *stock_convert_xpm[] = {
 /* columns rows colors chars-per-pixel */
 "24 24 27 1",
 "  c Gray0",
