@@ -1,6 +1,6 @@
 /* -*-C++-*- 
 
-   "$Id: FImage.H,v 1.1 2000/04/13 13:56:28 jamespalmer Exp $"
+   "$Id: FImage.H,v 1.2 2000/04/19 18:30:56 jamespalmer Exp $"
    
    Copyright 1999-2000 by the Flek development team.
    
@@ -87,7 +87,7 @@ class FImageIterator {
 };
 
 
-/** @package libflek_image
+/** @package libflek_core
  * FImage provides four 8 bit channels (Red, Green, Blue and Alpha).
  * The image is stored internally as an array of unsigned chars in
  * RGBA order.  The internal representation can be used directly by

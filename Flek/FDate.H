@@ -1,6 +1,6 @@
 /* -*-C++-*- 
 
-   "$Id: FDate.H,v 1.2 2000/04/15 20:04:53 jamespalmer Exp $"
+   "$Id: FDate.H,v 1.3 2000/04/19 18:30:56 jamespalmer Exp $"
    
    Copyright 1999-2000 by the Flek development team.
    
@@ -261,15 +261,15 @@ class FDate : public FBase
    * @param d The day, 1 through the numbers of days in that month.
    * @return True if the year, month and day make a valid date.  False otherwise.
    */
-  static bool is_valid (int y, int m, int d);
+  static bool valid (int y, int m, int d);
 
   /**
    * Gets wether the current date is valid.
    * 
    * @return True if the year, month and day make a valid date.  False otherwise.
    */
-  bool is_valid ()
-    { return is_valid (Year, Month, Day); }
+  bool valid ()
+    { return valid (Year, Month, Day); }
 
   /**
    * Gets the number of days in the month for a given month and leap value.
@@ -383,7 +383,7 @@ class FDate : public FBase
    * An array of total days since the beginning of the year for
    * each month, 1-12.  (0 is ignored.)
    */
-  static const int julian_days[];
+  static const int julian_days[2][13];
 
   /**
    * An array of month names.

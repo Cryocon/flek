@@ -1,6 +1,6 @@
 /* -*-C++-*- 
 
-   "$Id: Fl_Toggle_Tree.H,v 1.4 2000/04/13 13:56:28 jamespalmer Exp $"
+   "$Id: Fl_Toggle_Tree.H,v 1.5 2000/04/19 18:30:56 jamespalmer Exp $"
    
    Copyright 1999-2000 by the Flek development team.
    
@@ -502,5 +502,25 @@ protected:
 
   Fl_Input *edit_input_;
 };
+
+/**
+ * A file (peice of paper) xpm image.
+ */
+extern char * tt_file_small_xpm[];
+
+/**
+ * A file folder xpm image.
+ */
+extern char * tt_folder_small_xpm[];
+
+/**
+ * An open toggle xpm image.
+ */
+extern char * tt_open_icon_xpm[];
+
+/**
+ * A closed toggle xpm image.
+ */
+extern char * tt_closed_icon_xpm[];
 
 #endif

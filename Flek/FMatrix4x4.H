@@ -1,6 +1,6 @@
 /* -*-C++-*- 
    
-   "$Id: FMatrix4x4.H,v 1.2 2000/04/15 20:04:53 jamespalmer Exp $"
+   "$Id: FMatrix4x4.H,v 1.3 2000/04/19 18:30:56 jamespalmer Exp $"
    
    Copyright 1999-2000 by the Flek development team.
    
@@ -345,7 +345,7 @@ public:
   /** 
    * Find the inverse of a given matrix using elementary row operations
    */
-  friend FMatrix4x4 inverse(const FMatrix4x4& mat)
+  friend FMatrix4x4 invert (const FMatrix4x4& mat)
     {
       FMatrix4x4 inv (mat); inv.invert ();
       return inv;

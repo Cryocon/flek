@@ -1,6 +1,6 @@
 /* -*-C++-*- 
 
-   "$Id: FMatrix3x3.H,v 1.2 2000/04/15 20:04:53 jamespalmer Exp $"
+   "$Id: FMatrix3x3.H,v 1.3 2000/04/19 18:30:56 jamespalmer Exp $"
    
    Copyright 1999-2000 by the Flek development team.
    
@@ -347,7 +347,7 @@ public:
    * @param mat The source matrix.
    * @return The inverse of the source matrix.
    */
-  friend FMatrix3x3 inverse (const FMatrix3x3& mat)
+  friend FMatrix3x3 invert (const FMatrix3x3& mat)
     {
       FMatrix3x3 inv (mat); inv.invert ();
       return inv;

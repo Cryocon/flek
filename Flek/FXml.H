@@ -1,6 +1,6 @@
 /* -*-C++-*- 
 
-   "$Id: FXml.H,v 1.2 2000/04/14 20:15:38 jamespalmer Exp $"
+   "$Id: FXml.H,v 1.3 2000/04/19 18:30:56 jamespalmer Exp $"
    
    Copyright 1999-2000 by the Flek development team.
    
@@ -26,7 +26,7 @@
 #ifndef _FXML_H__
 #define _FXML_H__
 
-#include <gnome-xml/parser.h>
+#include <libxml/parser.h>
 
 /**
  * @package libflek_xml

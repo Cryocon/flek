@@ -1,6 +1,6 @@
 /* -*-C++-*- 
 
-   "$Id: Fl_Calendar.H,v 1.5 2000/04/13 13:56:28 jamespalmer Exp $"
+   "$Id: Fl_Calendar.H,v 1.6 2000/04/19 18:30:56 jamespalmer Exp $"
    
    Copyright 1999-2000 by the Flek development team.
    
@@ -28,33 +28,9 @@
 
 #include <FL/Fl_Group.H>
 #include <FL/Fl_Button.H>
+#include <FL/Fl_Input.H>
 
-typedef enum {
-  SUNDAY,
-    MONDAY,
-    TUESDAY,
-    WEDNESDAY,
-    THURSDAY,
-    FRIDAY,
-    SATURDAY
-} weekday_t;
-
-typedef enum {
-  JANUARY = 1,
-    FEBRUARY,
-    MARCH,
-    APRIL,
-    MAY,
-    JUNE,
-    JULY,
-    AUGUST,
-    SEPTEMBER,
-    OCTOBER,
-    NOVEMBER,
-    DECEMBER
-} month_t;
-
-extern char * month_name[12];
+#include <Flek/FDate.H>
 
 #define	DOE_MIN		1		/* January 1, 1 */
 #define	DOE_MAX		3652059		/* December 31, 9999 */
@@ -65,8 +41,8 @@ extern char * month_name[12];
  * Fl_Calendar_Base is a widget that allows a user to select a date
  * (day, month, and year) with a wall style calendar. 
  */
-class Fl_Calendar_Base : public Fl_Group 
-{
+class Fl_Calendar_Base : public Fl_Group, public FDate {
+  
 public:
   /**
    * The constructor for an empty Fl_Calendar_Base.
@@ -74,117 +50,7 @@ public:
   Fl_Calendar_Base (int x, int y, int w = (7*20), int h = (6*20),   
 		    const char *l = 0);
 
-  /**
-   * Set the calendar date to y/m/d.
-   */
-  short set_date (int y, int m, int d);
-
-  /** 
-   * Set the month to M (valid range 1-12).
-   */
-  short set_month (int m);  
-
-  /** 
-   * Get the month (valid range 1-12).
-   */
-  int get_month () { return month; }
-
-  /** 
-   * Set the year to Y.
-   */
-  short set_year (int y);  
-
-  /** 
-   * Get the year.
-   */
-  int get_year () { return year; }
-
-  /** 
-   * Set the day to D.
-   */
-  short set_day (int d);
-
-  /** 
-   * Get the day.
-   */
-  int get_day () { return mday; }
-
-  /**
-   * Move forward to the next month.
-   */  
-  void next_month ();
-
-  /**
-   * Move backward to the previous month.
-   */  
-  void previous_month ();
-
-  /**
-   * Determines if any specified year is a leap year.
-   */  
-  static short isleapyear (int year);
-
-  /**
-   * Determines the number of days in the month based on the month and 
-   * wether or not it is a leap year.
-   */  
-  static int daysinmonth (int month, short leap);
-
-  /**
-   * Determines if the date Y/M/D is valid.
-   */  
-  static short datevalid (int year, int mon, int mday);
-
-  /**
-   * Determines what day of the year it is for the date Y-M-D.
-   */  
-  static int dayofyear (int year, int mon, int mday);
-
-  /**
-   * Determines what day of the epoch it is for the date Y-M-D. 
-   */  
-  static int dayofepoch (int year, int mon, int mday);
-
-  /**
-   * Determines what day of the week it is for the date Y-M-D.
-   */  
-  static int dayofweek (int year, int mon, int mday);
-
-  /**
-   * Determines if the currently selected year is a leap year.
-   */
-  short isleapyear () { return isleapyear (year); }
-
-  /**
-   * Determines the number of days in the month for the currently 
-   * selected month and year.
-   */
-  int daysinmonth () { return daysinmonth (month, isleapyear (year)); }
-
-  /**
-   * Determines if the currently selected date is valid.
-   */
-  short datevalid () { return datevalid (year, month, mday); }
-
-  /**
-   * Determines what the day of the year is for the
-     currently selected date.
-   */
-  int dayofyear () { return dayofyear (year, month, mday); }
-
-  /**
-   * Determines what the day of the epoch is for
-     the currently selected date.
-   */
-  int dayofepoch () { return dayofepoch (year, month, mday); }
-
-  /**
-   * Determines what the day of the week is for the
-     currently selected date.
-   */
-  int dayofweek () { return dayofweek (year, month, mday); }
-  
-  virtual void update ();
+  void update ();
 
   void csize (int cx, int cy, int cw, int ch);
 
@@ -194,10 +60,7 @@ public:
   Fl_Button * day_button (int i);
   
  protected:
-  int year;
-  int month;
-  int mday;
-
+  
   int cal_x;
   int cal_y;
   int cal_w;
@@ -206,29 +69,94 @@ public:
   Fl_Button * days[6*7];
 };
 
-/** @package libflek_ui
+/**
  * Fl_Calendar is a subclass of Fl_Calendar.  This widget adds 
  * day labels and controllers to the base calendar class.
  * <p><img src="Fl_Calendar.png">
  */
 class Fl_Calendar : public Fl_Calendar_Base 
 {
-public:
+
+ public:
+  
   /**
    * The constructor for an empty Fl_Calendar.
    */
   Fl_Calendar (int x, int y, int w = (7*20), int h = (8*20), 
   		    const char *l = 0);
- 
+
+  void previous_month ();
+  void next_month ();
+  void previous_year ();
+  void next_year ();
+  
   void update ();
   void csize (int cx, int cy, int cw, int ch);
   int  handle (int);
 
-protected:
+ protected:
+  
   Fl_Button * weekdays[7];
   Fl_Button * caption;
-  Fl_Button * next;
-  Fl_Button * previous;
+  Fl_Button * nxt_month;
+  Fl_Button * prv_month;
+  Fl_Button * nxt_year;
+  Fl_Button * prv_year;
+  
 };
+
+/**
+ * An input for getting and setting a date.
+ */
+class Fl_Date_Input : public Fl_Group  {
+
+ protected:
+  
+  Fl_Input   Input;
+  Fl_Button  Btn;
+  
+  int xpos;
+  int ypos;
+  int width;
+  int height;
+  int popcalfmt;
+  
+ public:
+
+  /**
+   * Default constructor.
+   * 
+   * @param x The x coordinate.
+   * @param y The y coordinate.
+   * @param w The width of this widget.
+   * @param h The height of this widget.
+   * @param l The label.
+   */
+  Fl_Date_Input (int x, int y, int w, int h, char * = 0);
+  
+  void format (int);
+  
+  /**
+   * Gets the date value.
+   * 
+   * @return The date string.
+   */
+  const char *value ();
+
+  /**
+   * Sets the date value.
+   * 
+   * @param date The date string.
+   */
+  void value (const char* date);
+
+  void text_font (int);
+  
+  void text_size (int);
+  
+  void btnDate_Input_cb_i ();
+  
+};
+
 
 #endif

@@ -1,6 +1,6 @@
 /* -*-C++-*-
  
-   "$Id: FVector4.H,v 1.2 2000/04/15 20:04:53 jamespalmer Exp $"
+   "$Id: FVector4.H,v 1.3 2000/04/19 18:30:56 jamespalmer Exp $"
    
    Copyright 1999-2000 by the Flek development team.
    
@@ -203,7 +203,7 @@ public:
   /**
    * Fill an array with the elements of the vector.
    */
-  void fillArray (double arr[4]) const
+  void fill_array (double arr[4]) const
     {
       arr[0] = elem[0]; arr[1] = elem[1]; arr[2] = elem[2]; arr[3] = elem[3];
     }
