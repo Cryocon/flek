@@ -203,8 +203,8 @@ else
                 #     LD="ld -n32"
                 #     MAKEDEPEND="CC -M"
 
-                CFLAGS="-fullwarn $CFLAGS"
-                CXXFLAGS="-fullwarn $CXXFLAGS"
+                CFLAGS="-fullwarn $CFLAGS -Wl,-dont_warn_unused"
+                CXXFLAGS="-fullwarn $CXXFLAGS -Wl,-dont_warn_unused"
                 if test -z "$DEBUGFLAG"; then
                     DEBUGFLAG="-O2 -OPT:Olimit=3000"
                 fi
@@ -335,5 +335,5 @@ AC_OUTPUT(makeinclude flek-config)
 chmod +x flek-config
 
 dnl#
-dnl# End of "$Id: configure.in,v 1.14 2000/05/01 04:11:05 jamespalmer Exp $".
+dnl# End of "$Id: configure.in,v 1.15 2000/05/14 05:51:12 jamespalmer Exp $".
 dnl#

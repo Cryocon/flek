@@ -2731,8 +2731,8 @@ else
                 #     LD="ld -n32"
                 #     MAKEDEPEND="CC -M"
 
-                CFLAGS="-fullwarn $CFLAGS"
-                CXXFLAGS="-fullwarn $CXXFLAGS"
+                CFLAGS="-fullwarn $CFLAGS -Wl,-dont_warn_unused"
+                CXXFLAGS="-fullwarn $CXXFLAGS -Wl,-dont_warn_unused"
                 if test -z "$DEBUGFLAG"; then
                     DEBUGFLAG="-O2 -OPT:Olimit=3000"
                 fi
