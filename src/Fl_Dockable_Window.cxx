@@ -67,6 +67,9 @@ int Fl_Gripper::handle(int event) {
 
       if((_grippertype & FL_SHOVABLE) && (event & FL_RELEASE)
         && (group->parent()) && (x_up <= w() + 2) && (y_up <= h() + 2)) {
+
+#if 0
+	// Apparently there is a bug somewhere in this algorithm.  bdl
         for(int i = 0; i < parent->children(); i++) {
           if (parent->child(i)->type() != FL_WINDOW) {
             content_location = i;    
@@ -75,6 +78,15 @@ int Fl_Gripper::handle(int event) {
 
         int group_location = parent->find(group);
         int new_location = content_location + (content_location - group_location) + 1;
+#else
+	// Simpler algorithm.  bdl
+	// Shove it down until it hits the bottom, then shove it
+	// up to the top.
+	int new_location = parent->find(group) + 1;
+	if(new_location >= parent->children())
+		new_location = 0;
+#endif
+
         parent->insert(*((Fl_Widget*)group), new_location);	  
         parent->redraw();
         return 1;

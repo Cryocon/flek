@@ -47,12 +47,17 @@ void main() {
   Fl_Dockable_Window* dw;
   dw = new_dockable("Dragable", FL_DRAGABLE);
   application_window->add_dockable(dw);
+
+#if 1
+  // Enable this section of code to demonstrate
+  // the various gripper styles.
   dw = new_dockable("Shovable", FL_SHOVABLE);
   application_window->add_dockable(dw);
   dw = new_dockable("Drag/Shov", FL_DRAGABLE | FL_SHOVABLE);
   application_window->add_dockable(dw);
   dw = new_dockable("Fixed", 0);
   application_window->add_dockable(dw);
+#endif
 
   // Show the application window.
   // This automatically shows any docked windows.
