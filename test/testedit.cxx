@@ -133,10 +133,11 @@ void Flvt_Edit::draw_cell( int Offset, int &X, int &Y, int &W, int &H, int R, in
 		case 1:
 			switch( R )
 			{
-				case 2:
-					draw_flve_check_button( X-Offset, Y, W, H,
-																		(Flve_Check_Button *)s.editor(),
-																	get_value(R,C) );
+			 case 2:
+			  draw_flve_check_button( X-Offset-s.x_margin()+1, Y-s.y_margin()+1, W, H,
+						 (Flve_Check_Button *)s.editor(),
+						 get_value(R,C) );
+			  
 					break;
 					
 				default:
@@ -154,7 +155,8 @@ void Flvt_Edit::position_editor( Fl_Widget *e, int x, int y, int w, int h, Flv_S
 //	e->resize( 10, 10, 200, 20 );
 
 //	In cell
-	Flv_Table::position_editor(e,x+s.x_margin(),y,w-s.x_margin(),h,s);
+//	Flv_Table::position_editor(e,x+s.x_margin(),y,w-s.x_margin(),h,s);
+  Flv_Table::position_editor(e,x,y,w,h,s);
 }
 
 int main(int argc, char **argv)
@@ -166,6 +168,9 @@ int main(int argc, char **argv)
 	w->end();
 	Flv_Style s;
 
+  
+    i->hide();
+    j->hide();
 	i->down_box(FL_DOWN_BOX);
 	i->owner = l;
 	j->owner = l;

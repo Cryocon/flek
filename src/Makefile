@@ -5,6 +5,7 @@
 
 CPP_FLEK_CORE = \
 	FDate.cxx \
+	FSocket.cxx \
 	FFile.cxx \
 	FVector.cxx \
 	FImage.cxx \
@@ -13,6 +14,7 @@ CPP_FLEK_CORE = \
 
 H_FLEK_CORE = \
 	FBase.H \
+	FSocket.H \
 	FDate.H \
 	FFile.H \
 	FImage.H \
@@ -95,7 +97,15 @@ H_FLEK_GL = \
 
 include ../makeinclude
 
-ALL = flek-core flek-ui flek-jpeg
+ALL = flek-core 
+
+ifdef FLTK_LIB
+	ALL += flek-ui
+endif
+
+ifdef JPEG_LIB
+	ALL += flek-jpeg
+endif
 
 ifdef GL_LIB
 	ALL += flek-gl

@@ -1,6 +1,6 @@
 /* -*-C++-*- 
 
-   "$Id: Fl_Toggle_Tree.H,v 1.5 2000/04/19 18:30:56 jamespalmer Exp $"
+   "$Id: Fl_Toggle_Tree.H,v 1.6 2000/05/14 02:41:20 jamespalmer Exp $"
    
    Copyright 1999-2000 by the Flek development team.
    
@@ -26,10 +26,10 @@
 #ifndef _FL_TOGGLE_TREE_H_
 #define _FL_TOGGLE_TREE_H_
 
-#include <FL/Fl_Pixmap.H>
-
 #include <Flek/Fl_Toggle_Tree_Base.H>
 #include <Flek/Fl_Toggle_Node.H>
+#include <FL/Fl_Pixmap.H>
+
 
 enum Fl_ToggleState {
   FL_TOGGLE_NONE = 0,

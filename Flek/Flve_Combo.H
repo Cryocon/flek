@@ -87,6 +87,7 @@ private:
 	int vcount;														//	# of item pointers defined
 	int vallocated;												//	# of item pointers allocated
 	int vcurrent;													//	Current item index
+	bool nodups;
 };
 
 
@@ -118,6 +119,11 @@ public:
 	
 	Flv_Combo_Items item;
 	Fl_Window *list;
+	
+	  void end () {}
+	  void textfont (int) {}
+	  void textsize (int) {}
+	  
 protected:
 	bool vincremental_search;
 	bool vlist_only;

@@ -1,8 +1,9 @@
 include ../makeinclude
 
 ALL = calendar stock_buttons docking toggle_tree \
-	testlist testtable testtable2 basiclist exercise testedit 
-
+	testlist testtable testtable2 basiclist exercise testedit testcombo \
+	socket
+	
 ifdef GL_LIB
 	ALL += arcball image
 endif
@@ -12,6 +13,9 @@ ifdef XML_LIB
 endif
 
 all: $(ALL)
+
+CORECOMPILE=`../flek-config --use-core --cxxflags` -g3
+CORELINK=`../flek-config --use-core --ldflags` 
 
 UICOMPILE=`../flek-config --use-ui --cxxflags` -g3
 UILINK=`../flek-config --use-ui --ldflags` 
@@ -43,6 +47,9 @@ toggle_tree: toggle_tree.cxx
 testlist: testlist.cxx
 	$(CXX) $(UICOMPILE) $@.cxx $(UILINK) -o $@
 
+testcombo: testcombo.cxx
+	$(CXX) $(UICOMPILE) $@.cxx $(UILINK) -o $@
+
 testtable: testtable.cxx
 	$(CXX) $(UICOMPILE) $@.cxx $(UILINK) -o $@
 
@@ -57,6 +64,9 @@ exercise: exercise.cxx
 
 testedit: testedit.cxx
 	$(CXX) $(UICOMPILE) $@.cxx $(UILINK) -o $@
+
+socket: socket.cxx
+	$(CXX) $(CORECOMPILE) $@.cxx $(CORELINK) -o $@
 
 fxml: fxml.cxx
 	$(CXX) `../flek-config --use-xml --cxxflags` -g3 $@.cxx `../flek-config --use-xml --ldflags` -o $@
