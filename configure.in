@@ -131,6 +131,18 @@ AC_ARG_WITH([gl],
     GLINCPATH=""
   ])
 
+AC_ARG_WITH([xml], 
+  [ --with-xml=dir specify the base xml dir if non-default (like /usr/X11R6/], 
+  [ 
+    XMLLIBPATH="-L$withval/lib"
+    XMLINCPATH="-I$withval/include"
+  ], 
+  [
+    XMLLIBPATH=""
+    XMLINCPATH=""
+  ])
+
+
 dnl# My test to see if OpenGL is on this machine:
 GLLIB=
 if test "$uname" = "CYGWIN"
@@ -263,6 +275,9 @@ AC_SUBST(HAVEGL)
 AC_SUBST(GLLIBPATH)
 AC_SUBST(GLINCPATH)
 
+AC_SUBST(XMLLIBPATH)
+AC_SUBST(XMLINCPATH)
+
 AC_SUBST(FLTKDIR)
 AC_SUBST(FLTKLIB)
 AC_SUBST(FLTKINC)
@@ -287,5 +302,5 @@ AC_OUTPUT(makeinclude flek-config)
 chmod +x flek-config
 
 dnl#
-dnl# End of "$Id: configure.in,v 1.9 2000/04/07 17:08:33 jamespalmer Exp $".
+dnl# End of "$Id: configure.in,v 1.10 2000/04/07 19:52:52 jamespalmer Exp $".
 dnl#
