@@ -1,6 +1,6 @@
 /* -*-C++-*- 
 
-   "$Id: Fl_Gl_Arcball_Window.cxx,v 1.5 2000/02/10 16:55:35 jamespalmer Exp $"
+   "$Id: Fl_Gl_Arcball_Window.cxx,v 1.6 2000/02/10 17:03:42 jamespalmer Exp $"
    
    Copyright 1999-2000 by the Flek development team.
    
@@ -206,7 +206,7 @@ void Fl_Gl_Arcball_Window::drawConstraints (void) const
 /**
  *  Draw "rubber band" arc during dragging.
  */
-void Fl_Gl_Arcball_Window::drawDragArc (void) const
+void Fl_Gl_Arcball_Window::drawDragArc (void)
 {
   if ( arcball.dragging () )
     {

@@ -1,6 +1,6 @@
 /* -*-C++-*- 
 
-   "$Id: Fl_Gl_Arcball_Window.H,v 1.4 2000/02/10 16:55:35 jamespalmer Exp $"
+   "$Id: Fl_Gl_Arcball_Window.H,v 1.5 2000/02/10 17:03:42 jamespalmer Exp $"
    
    Copyright 1999-2000 by the Flek development team.
    
@@ -61,7 +61,7 @@ public:
    */
   void arcball_draw ();
 
-  void drawDragArc (void) const;
+  void drawDragArc (void);
   void drawConstraints (void) const;
 
 		 
