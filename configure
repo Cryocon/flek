@@ -2800,8 +2800,6 @@ if test "${with_fltk_dir+set}" = set; then
   
 else
   
-#    FLTK_LIB=""
-#    AC_CHECK_LIB(fltk,numericsort, AC_DEFINE(HAVE_FLTK) FLTK_LIB="-lfltk","** Fltk not found.  You will not be able to build libflek_ui or libflek_gl.",)
 
 # Check whether --with-fltk or --without-fltk was given.
 if test "${with_fltk+set}" = set; then
@@ -2814,16 +2812,17 @@ if test "${with_fltk+set}" = set; then
 else
   
     FLTK_LIB=""
+
     echo $ac_n "checking for numericsort in -lfltk""... $ac_c" 1>&6
-echo "configure:2819: checking for numericsort in -lfltk" >&5
+echo "configure:2818: checking for numericsort in -lfltk" >&5
 ac_lib_var=`echo fltk'_'numericsort | sed 'y%./+-%__p_%'`
 if eval "test \"`echo '$''{'ac_cv_lib_$ac_lib_var'+set}'`\" = set"; then
   echo $ac_n "(cached) $ac_c" 1>&6
 else
   ac_save_LIBS="$LIBS"
-LIBS="-lfltk  $LIBS"
+LIBS="-lfltk $GL_LIB -lX11 -lXext $X_EXTRA_LIBS -lm $LIBS"
 cat > conftest.$ac_ext <<EOF
-#line 2827 "configure"
+#line 2826 "configure"
 #include "confdefs.h"
 /* Override any gcc2 internal prototype to avoid an error.  */
 #ifdef __cplusplus
@@ -2837,7 +2836,7 @@ int main() {
 numericsort()
 ; return 0; }
 EOF
-if { (eval echo configure:2841: \"$ac_link\") 1>&5; (eval $ac_link) 2>&5; } && test -s conftest${ac_exeext}; then
+if { (eval echo configure:2840: \"$ac_link\") 1>&5; (eval $ac_link) 2>&5; } && test -s conftest${ac_exeext}; then
   rm -rf conftest*
   eval "ac_cv_lib_$ac_lib_var=yes"
 else
@@ -2863,8 +2862,6 @@ fi
 
   
 fi
-
-
 
 
   

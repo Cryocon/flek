@@ -269,8 +269,6 @@ AC_ARG_WITH([fltk-dir],
     FLTK_INC="-I$withval"
   ], 
   [
-#    FLTK_LIB=""
-#    AC_CHECK_LIB(fltk,numericsort, AC_DEFINE(HAVE_FLTK) FLTK_LIB="-lfltk","** Fltk not found.  You will not be able to build libflek_ui or libflek_gl.",)
 
 AC_ARG_WITH([fltk], 
   [  --with-fltk=dir         specify the directory where fltk is installed. ], 
@@ -281,10 +279,13 @@ AC_ARG_WITH([fltk],
   ], 
   [
     FLTK_LIB=""
-    AC_CHECK_LIB(fltk,numericsort, AC_DEFINE(HAVE_FLTK) FLTK_LIB="-lfltk","** Fltk not found.  You will not be able to build libflek_ui or libflek_gl.",)
+
+    AC_CHECK_LIB(fltk, 
+                 numericsort, 
+		 AC_DEFINE(HAVE_FLTK) FLTK_LIB="-lfltk",
+		 "** Fltk not found.  You will not be able to build libflek_ui or libflek_gl.", 
+		 $GL_LIB -lX11 -lXext $X_EXTRA_LIBS -lm)
   ])
-
-
 
   ])
 
@@ -338,5 +339,5 @@ AC_OUTPUT(makeinclude flek-config)
 chmod +x flek-config
 
 dnl#
-dnl# End of "$Id: configure.in,v 1.16 2000/09/29 21:49:34 clip Exp $".
+dnl# End of "$Id: configure.in,v 1.17 2001/04/12 22:32:58 jamespalmer Exp $".
 dnl#
