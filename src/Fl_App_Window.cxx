@@ -75,7 +75,7 @@ Fl_App_Window::handle (int event)
 		 && (dy < (ey + FL_DOCK_DELTA + cY))    // ymax
 		 && (dy > (ey - FL_DOCK_DELTA + cY)) )  // ymin
 	    {
-	      printf ("DOCK!!!!!!!!!!!!!!!!!!!!!!!!!!!\n");
+	      //printf ("DOCK!!!!!!!!!!!!!!!!!!!!!!!!!!!\n");
 	      add_dockable (Fl_Dockable_Group::current, i);
 	      return 1;
 	    }
@@ -129,7 +129,7 @@ void Fl_App_Window::show ()
 void 
 Fl_App_Window::draw ()
 {
-  printf ("Fl_App_Window::draw()\n");
+  //printf ("Fl_App_Window::draw()\n");
   // if pack->w() and pack->h() change...
   pack->draw ();
   resize (x(), y(), pack->w(), pack->h());
@@ -138,7 +138,7 @@ Fl_App_Window::draw ()
 
 void Fl_App_Window::flush() {
   //Fl_Window::flush();
-  printf("Fl_App_Window::flush()\n");
+  //printf("Fl_App_Window::flush()\n");
   make_current();
   Fl_X *i = Fl_X::i(this);
   //if (damage() == FL_DAMAGE_EXPOSE && can_boxcheat(box())) fl_boxcheat = this;
