@@ -10,7 +10,7 @@
 #include <stdio.h>
 #include <math.h>
 #include <Flek/fVector3.h>
-#include <Flek/fMatrix3x3.h>
+#include <Flek/fMatrix4x4.h>
 
 class fQuaternion
 {
@@ -26,15 +26,20 @@ class fQuaternion
       v[2] = 0;
     }
 
-  fQuaternion (double S, double x, double y, double z)
+  fQuaternion (double x, double y, double z, double w)
     {
-      s = S;
+      set (x, y, z, w);
+    }
+
+  ~fQuaternion () {};
+
+  set (double x, double y, double z, double w)
+    {
+      s = w;
       v[0] = x;
       v[1] = y;
       v[2] = z;
     }
-
-  ~fQuaternion () {};
 
   fQuaternion inverse ();
 
@@ -48,9 +53,9 @@ class fQuaternion
 
   void normalize ();
 
-  fQuaternion matrix_to_quaternion (fMatrix3x3 &M);
+  fQuaternion from_matrix (fMatrix4x4 &M);
 
-  fMatrix3x3 quaternion_to_matrix ();
+  fMatrix4x4 to_matrix ();
 
   double & operator[] (unsigned int i);
 
