@@ -154,7 +154,7 @@ Fl_Calendar::Fl_Calendar (int x, int y, int w, int h,
   weekdays[FRIDAY]->label ("F");
   weekdays[SATURDAY]->label ("S");
   
-  prv_year = new Fl_Button (x, y, (w/10), (h/8), "@<<");
+  prv_year = new Fl_Button (x, y, (w/10), (h/8), "@#<<");
   prv_year->box (FL_THIN_UP_BOX);
 #ifndef FLTK_2
   prv_year->labeltype (FL_SYMBOL_LABEL);
@@ -166,7 +166,7 @@ Fl_Calendar::Fl_Calendar (int x, int y, int w, int h,
 #endif
   prv_year->callback ((Fl_Callback*)&fl_calendar_prv_year_cb, (void *)this);  
 
-  prv_month = new Fl_Button (x + (w/10), y, (w/10), (h/8), "@<");
+  prv_month = new Fl_Button (x + (w/10), y, (w/10), (h/8), "@#<");
   prv_month->box (FL_THIN_UP_BOX);
 #ifndef FLTK_2
   prv_month->labeltype (FL_SYMBOL_LABEL);
@@ -178,7 +178,7 @@ Fl_Calendar::Fl_Calendar (int x, int y, int w, int h,
 #endif
   prv_month->callback ((Fl_Callback*)&fl_calendar_prv_month_cb, (void *)this);  
 
-  nxt_month = new Fl_Button (x + (w/10)*8, y, (w/10), (h/8), "@>");
+  nxt_month = new Fl_Button (x + (w/10)*8, y, (w/10), (h/8), "@#>");
   nxt_month->box (FL_THIN_UP_BOX);
 #ifndef FLTK_2
   nxt_month->labeltype (FL_SYMBOL_LABEL);
@@ -190,7 +190,7 @@ Fl_Calendar::Fl_Calendar (int x, int y, int w, int h,
 #endif
   nxt_month->callback ((Fl_Callback*)&fl_calendar_nxt_month_cb, (void *)this);
   
-  nxt_year = new Fl_Button (x + (w/10)*9, y, (w/10), (h/8), "@>>");
+  nxt_year = new Fl_Button (x + (w/10)*9, y, (w/10), (h/8), "@#>>");
   nxt_year->box (FL_THIN_UP_BOX);
 #ifndef FLTK_2
   nxt_year->labeltype (FL_SYMBOL_LABEL);
@@ -406,34 +406,7 @@ static datestruct * fl_popcal(int popcalfmt)
   return &seldate;
 }
 
-
-/* XPM Calendar Label */
-static char *cal_16[] = {
-/* width height num_colors chars_per_pixel */
-"    16    16        3            1",
-/* colors */
-". c #000000",
-"d c none",
-"e c #ffffff",
-/* pixels */
-"dddddddddddddddd",
-"...............d",
-".eeeeeeeeeeeee.d",
-"...............d",
-".e.e.e.e.e.e.e.d",
-"...............d",
-".e.e.e.e.e.e.e.d",
-"...............d",
-".e.e.e.e.e.e.e.d",
-"...............d",
-".e.e.e.e.e.e.e.d",
-"...............d",
-".e.e.e.e.e.e.e.d",
-"...............d",
-"dddddddddddddddd",
-"dddddddddddddddd",
-};
-
+#include "pixmaps/calendar.xpm"
 
 void Fl_Date_Input::btnDate_Input_cb_i ()
 {
@@ -463,7 +436,7 @@ Fl_Date_Input::Fl_Date_Input (int X,int Y,int W,int H, char *L)
   width = W; 
   height = H;
 
-  (new Fl_Pixmap (cal_16))->label (&Btn);
+  (new Fl_Pixmap (calendar_xpm))->label (&Btn);
   Btn.callback ((Fl_Callback *)btnDate_Input_cb, 0);
   popcalfmt = 0;
   end();
