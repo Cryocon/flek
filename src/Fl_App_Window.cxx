@@ -5,22 +5,28 @@
 #include <FL/x.H>
 #include <FL/fl_draw.H>
 
-Fl_App_Window::Fl_App_Window (int x, int y, int w, int h, const char *l) : 
-  Fl_Window (x, y, w, h, l)
-{
-  _pack = new Fl_Pack (0, 0, w, h);
-  _pack->type(Fl_Pack::VERTICAL);
-  _contents = new Fl_Window(0, 0, w, h, "Fl_App_Window::contents");
-  begin ();
+Fl_App_Window::Fl_App_Window(int x, int y, int w, int h, const char* l) : 
+  Fl_Window (x, y, w, h, l) {
+  create_app_window(w, h, l);
 }
 
-Fl_App_Window::Fl_App_Window (int w, int h, const char *l) : 
-  Fl_Window (w, h, l)
-{
+Fl_App_Window::Fl_App_Window(int w, int h, const char* l) : 
+  Fl_Window (w, h, l) {
+  create_app_window(w, h, l);
+}
+
+void Fl_App_Window::create_app_window(int w, int h, const char* l) {
+  // Create the pack that holds the contents window and docked windows.
   _pack = new Fl_Pack(0, 0, w, h, "Fl_App_Window::pack");
   _pack->type(Fl_Pack::VERTICAL);
+
+  // Create the contents window.
   _contents = new Fl_Window(0, 0, w, h, "Fl_App_Window::contents");
-  begin ();
+
+  // Contents window and docked windows will complete obscure the toplevel window
+  // and the pack area, so set them both to no box.
+  Fl_Window::box(FL_NO_BOX);
+  _pack->box(FL_NO_BOX);
 }
 
 int Fl_App_Window::handle (int event) {  

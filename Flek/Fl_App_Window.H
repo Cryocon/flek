@@ -1,6 +1,6 @@
 /* -*-C++-*- 
 
-   "$Id: Fl_App_Window.H,v 1.11 2000/05/11 23:17:33 brad Exp $"
+   "$Id: Fl_App_Window.H,v 1.12 2000/05/12 02:14:11 brad Exp $"
    
    Copyright 1999-2000 by the Flek development team.
    
@@ -47,6 +47,7 @@ private:
   Fl_Pack* _pack;
   Fl_Window* _contents;
   vector<Fl_Dockable_Group*> dockable_groups;
+  void create_app_window(int w, int h, const char* l);
 
 protected:
   virtual FL_EXPORT void draw();
@@ -79,10 +80,13 @@ public:
 
   /**
    * Set the box type and color for the contents window.
+   * Include uchar signatures that make fluid happy.
    */
   void box(Fl_Boxtype b) { _contents->box(b); }
   void color(Fl_Color a) { _contents->color(a); }
   void color(Fl_Color a, Fl_Color b) { _contents->color(a, b); }
+  void color(uchar a) { _contents->color(a); }
+  void color(uchar a, uchar b) { _contents->color(a, b); }
 
   /**
    * Add a widget to the contents window.
