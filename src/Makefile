@@ -1,19 +1,23 @@
 CPPFILES = \
+	fArcball.cxx \
+	fVector.cxx \
 	Fl_App_Window.cxx \
-	Fl_Dockable_Group.cxx \
 	Fl_Better_Window.cxx \
 	Fl_Calendar.cxx \
+	Fl_Dockable_Group.cxx \
+	Fl_Gl_Arcball_Window.cxx \
+	Fl_Stock.cxx \
 	Fl_Toggle_Node_Base.cxx \
 	Fl_Toggle_Node.cxx \
 	Fl_Toggle_Tree_Base.cxx \
 	Fl_Toggle_Tree.cxx \
-	Fl_Stock.cxx \
-	Fl_Gl_Arcball_Window.cxx \
-	fVector.cxx \
-	fArcball.cxx
-#	fMatrix4x4.cxx \
-#	fQuaternion.cxx \
-
+	Flv_CStyle.cxx \
+	Flv_Style.cxx \
+	Flv_List.cxx \
+	Flv_Table.cxx \
+	Flve_Check_Button.cxx \
+	Flve_Input.cxx \
+	Flve_Combo.cxx
 
 #	Fl_Dir.cxx \
 #	Fl_Frametab.cxx \
@@ -21,7 +25,6 @@ CPPFILES = \
 #	Fl_Pix_Box.cxx \
 #	Fl_Pix_Button.cxx
 #	Fl_Pack_Fu.cxx \
-
 #       Fl_File_Dialog.cxx \
 #	Fl_Input_File.cxx \
 

@@ -1,0 +1,1903 @@
+# data file for the FLTK User Interface Designer (FLUID)
+version 2.0000 
+images_dir ./ 
+header_name {.h} 
+code_name {.cxx} 
+gridx 5 
+gridy 5 
+snap 3
+decl {\#include <FL/fl_draw.h>} {} 
+
+decl {\#include <string.h>} {} 
+
+decl {\#include <stdio.h>} {} 
+
+declblock {\#ifdef FLTK_2} {after {\#endif}
+} {
+  decl {\#include <FL/Fl_Color_Chooser.H>} {}
+  decl {\#include <FL/Fl_Font.H>} {}
+  decl {\#else} {}
+  decl {\#include <FL/fl_show_colormap.H>} {}
+  decl {\#include <FL/Enumerations.H>} {}
+  decl {\#define FL_NORMAL_BOX FL_DOWN_BOX} {}
+  decl {\#define FL_THIN_BOX FL_THIN_DOWN_BOX} {}
+  decl {\#define glyph_box down_box} {}
+} 
+
+decl {char row_head[3][50];} {} 
+
+decl {char col_head[2][50];} {} 
+
+decl {char cell_text[50];} {} 
+
+decl {int style=-1;} {} 
+
+decl {int style_section=0;} {} 
+
+decl {int last_style_section=0;} {} 
+
+decl {Fl_Boxtype box_list[] = {FL_FLAT_BOX,FL_UP_BOX,FL_DOWN_BOX,FL_NORMAL_BOX,FL_THIN_UP_BOX,FL_THIN_DOWN_BOX,FL_THIN_BOX,FL_ENGRAVED_BOX,FL_BORDER_BOX,FL_ROUND_UP_BOX,FL_ROUND_DOWN_BOX,FL_DIAMOND_UP_BOX,FL_DIAMOND_DOWN_BOX,FL_DIAMOND_BOX,FL_SHADOW_BOX,FL_ROUNDED_BOX,FL_OVAL_BOX};} {} 
+
+decl {Fl_Align alignment_list[] = {Fl_Align(FL_ALIGN_TOP | FL_ALIGN_LEFT),FL_ALIGN_TOP,Fl_Align(FL_ALIGN_TOP | FL_ALIGN_RIGHT),FL_ALIGN_LEFT,Fl_Align(0),FL_ALIGN_RIGHT,Fl_Align(FL_ALIGN_BOTTOM | FL_ALIGN_LEFT),FL_ALIGN_BOTTOM,Fl_Align(FL_ALIGN_BOTTOM | FL_ALIGN_RIGHT)};} {} 
+
+decl {Fl_Font font_list[] = {FL_HELVETICA,FL_HELVETICA_BOLD,FL_HELVETICA_ITALIC,FL_HELVETICA_BOLD_ITALIC,FL_COURIER,FL_COURIER_BOLD,FL_COURIER_ITALIC,FL_COURIER_BOLD_ITALIC,FL_TIMES,FL_TIMES_BOLD,FL_TIMES_ITALIC,FL_TIMES_BOLD_ITALIC,FL_SYMBOL,FL_SCREEN,FL_SCREEN_BOLD,FL_ZAPF_DINGBATS};} {} 
+
+class Flv_List2 {: {public Flv_List} private
+} {
+  Function {Flv_List2(int x, int y, int w, int h, const char *l=0) : Flv_List(x,y,w,h,l)} {open
+  } {}
+  Function {draw_row(int Offset, int &X, int &Y, int &W, int &H, int R)} {return_type void
+  } {
+    code {char *buf[] = 
+	{	"Global","Title/label","Row footer",
+		"Row header",
+		"Current row",
+		"Column footer", "Column header",
+		"Current column", "Current cell"
+	};
+	Flv_List::draw_row(Offset,X,Y,W,H,R);
+	fl_draw(buf[R], X-Offset, Y, W, H, FL_ALIGN_LEFT );} {}
+  }
+} 
+
+class Flv_ListE {: {public Flv_List} private
+} {
+  Function {Flv_ListE(int x, int y, int w, int h, const char *l=0) : Flv_List(x,y,w,h,l)} {open
+  } {}
+  Function {draw_row(int Offset, int &X, int &Y, int &W, int &H, int R)} {return_type void
+  } {
+    code {Flv_Style s;
+	char *p;
+
+	if (R<0)
+		p = row_head[R+3];
+	else
+		p = cell_text;
+	get_style(s,R);
+	Flv_List::draw_row(Offset,X,Y,W,H,R);
+	fl_draw(p, X-Offset, Y, W, H, s.align() );} {}
+  }
+} 
+
+class Flv_TableE {: {public Flv_Table} private
+} {
+  Function {Flv_TableE(int x, int y, int w, int h, const char *l=0) : Flv_Table(x,y,w,h,l)} {open
+  } {}
+  Function {draw_cell(int Offset, int &X, int &Y, int &W, int &H, int R, int C)} {return_type void
+  } {
+    code {Flv_Style s;
+	char *p;
+
+	if (R<0 && C>-1)	//	Row header
+		p = row_head[R+3];
+	else if (C<0 && R>-1)	//	Column header
+		p = col_head[C+2];
+	else if (C<0 || R<0)		//	Corner
+		p = "";
+	else					//	Cell text
+		p = cell_text;
+	get_style(s,R,C);
+	Flv_Table::draw_cell(Offset,X,Y,W,H,R, C);
+	fl_draw(p, X-Offset, Y, W, H, s.align() );} {}
+  }
+} 
+
+class Flv_List_Alignment {: {public Flv_List} private
+} {
+  Function {Flv_List_Alignment(int x, int y, int w, int h, const char *l=0) : Flv_List(x,y,w,h,l)} {open
+  } {}
+  Function {draw_row(int Offset, int &X, int &Y, int &W, int &H, int R)} {open return_type void
+  } {
+    code {char *buf[] = 
+	{	"Top Left","Top Center","Top Right",
+		"Center Left","Center Center","Center Right",
+		"Bottom Left","Bottom Center","Bottom Right"
+	};
+
+	Flv_List::draw_row(Offset,X,Y,W,H,R);
+	fl_draw(buf[R], X-Offset, Y, W, H, FL_ALIGN_LEFT );} {}
+  }
+} 
+
+class Flv_List_Font {: {public Flv_List} private
+} {
+  Function {Flv_List_Font(int x, int y, int w, int h, const char *l=0) : Flv_List(x,y,w,h,l)} {open
+  } {}
+  Function {draw_row(int Offset, int &X, int &Y, int &W, int &H, int R)} {return_type void
+  } {
+    code {char *buf[] = 
+	{	"Helvetica",
+		"Helvetica bold",
+		"Helvetica italic",
+		"Helvetica bold italic",
+		"Courier",
+		"Courier bold",
+		"Courier italic",
+		"Courier bold italic",
+		"Times New Roman",
+		"Times New Roman bold",
+		"Times New Roman italic",
+		"Times New Roman bold italic",
+		"Symbol",
+		"Screen",
+		"Screen bold",
+		"Zapf Dingbats"
+	};
+
+	Flv_List::draw_row(Offset,X,Y,W,H,R);
+	fl_draw(buf[R], X-Offset, Y, W, H, FL_ALIGN_LEFT );} {}
+  }
+} 
+
+class Flv_List_Frame {: {public Flv_List} private
+} {
+  Function {Flv_List_Frame(int x, int y, int w, int h, const char *l=0) : Flv_List(x,y,w,h,l)} {open
+  } {}
+  Function {draw_row(int Offset, int &X, int &Y, int &W, int &H, int R)} {open return_type void
+  } {
+    code {char *buf[] = 
+	{
+		"Flat box",
+		"Up box",
+		"Down box",
+		"Normal box",
+		"Thin up box",
+		"Thin down box",
+		"Thin box",
+		"Engraved box",
+		"Border box",
+		"Round up box",
+		"Round down box",
+		"Diamond up box",
+		"Diamond down box",
+		"Diamond box",
+		"Shadow box",
+		"Rounded box",
+		"Oval box",
+	};
+
+	Flv_List::draw_row(Offset,X,Y,W,H,R);
+	fl_draw(buf[R], X-Offset, Y, W, H, FL_ALIGN_LEFT );} {}
+  }
+} 
+
+class Flv_List_Style_Section {: {public Flv_List}
+} {
+  Function {Flv_List_Style_Section( int x, int y, int w, int h, const char *l=0 ) : Flv_List(x,y,w,h,l)} {open
+  } {}
+  Function {draw_row(int Offset, int &X, int &Y, int &W, int &H, int R)} {return_type void
+  } {
+    code {char *buf[] = 
+	{
+		"Color",
+		"Font",
+		"Frame",
+		"Alignment",
+		"Size",
+		"Misc",
+		"Border"
+	};
+
+	Flv_List::draw_row(Offset,X,Y,W,H,R);
+	fl_draw(buf[R], X-Offset, Y, W, H, FL_ALIGN_LEFT );} {}
+  }
+} 
+
+Function {make_window()} {} {
+  Fl_Window win {
+    label {Widget exerciser}
+    xywh {350 74 641 445} visible
+  } {
+    Fl_Group {} {
+      label {Row }
+      xywh {70 10 90 70} align 4 box THIN_DOWN_BOX
+      code0 {o->label_size(12);}
+    } {
+      Fl_Check_Button {} {
+        label header
+        callback row_header_callback
+        xywh {75 15 75 20} box FLAT_BOX glyph_box THIN_DOWN_BOX
+        code0 {o->label_size(12);}
+      }
+      Fl_Check_Button {} {
+        label footer
+        callback row_footer_callback
+        xywh {75 35 75 20} box FLAT_BOX glyph_box THIN_DOWN_BOX
+        code0 {o->label_size(12);}
+      }
+      Fl_Check_Button {} {
+        label divider
+        callback row_divider_callback
+        xywh {75 55 75 20} box FLAT_BOX glyph_box THIN_DOWN_BOX
+        code0 {o->label_size(12);}
+      }
+    }
+    Fl_Group {} {
+      label {Cols }
+      xywh {205 10 90 70} align 4 box THIN_DOWN_BOX
+      code0 {o->label_size(12);}
+    } {
+      Fl_Check_Button {} {
+        label header
+        callback col_header_callback
+        xywh {210 15 75 20} box FLAT_BOX glyph_box THIN_DOWN_BOX
+        code0 {o->label_size(12);}
+      }
+      Fl_Check_Button {} {
+        label footer
+        callback col_footer_callback
+        xywh {210 35 75 20} box FLAT_BOX glyph_box THIN_DOWN_BOX
+        code0 {o->label_size(12);}
+      }
+      Fl_Check_Button {} {
+        label divider
+        callback col_divider_callback
+        xywh {210 55 75 20} box FLAT_BOX glyph_box THIN_DOWN_BOX
+        code0 {o->label_size(12);}
+      }
+    }
+    Fl_Group {} {
+      label {Scroll bars}
+      xywh {370 10 90 70} align 4 box THIN_DOWN_BOX
+      code0 {o->label_size(12);}
+    } {
+      Fl_Check_Button {} {
+        label { vertical}
+        callback vertical_callback
+        xywh {375 15 75 20} box FLAT_BOX glyph_box THIN_DOWN_BOX
+        code0 {o->label_size(12);}
+      }
+      Fl_Check_Button {} {
+        label { horizontal}
+        callback horizontal_callback
+        xywh {375 35 75 20} box FLAT_BOX glyph_box THIN_DOWN_BOX
+        code0 {o->label_size(12);}
+      }
+      Fl_Check_Button {} {
+        label { always}
+        callback always_callback
+        xywh {375 55 75 20} box FLAT_BOX glyph_box THIN_DOWN_BOX
+        code0 {o->label_size(12);}
+      }
+    }
+    Fl_Roller {} {
+      label {Rows }
+      callback rows_callback
+      xywh {70 90 90 20} type Horizontal align 4 maximum 80 step 0.5 value 10
+      code0 {o->label_size(12);}
+    }
+    Fl_Group Rows_Value {
+      label 10
+      xywh {165 90 30 20} align 0 box THIN_DOWN_BOX
+      code0 {o->label_size(12);}
+    } {}
+    Fl_Roller {} {
+      label {Cols }
+      callback cols_callback
+      xywh {70 110 90 20} type Horizontal align 4 maximum 80 step 0.5 value 10
+      code0 {o->label_size(12);}
+    }
+    Fl_Group Cols_Value {
+      label 10
+      xywh {165 110 30 20} align 0 box THIN_DOWN_BOX
+      code0 {o->label_size(12);}
+    } {}
+    Fl_Roller {} {
+      label {Row width }
+      callback row_width_callback
+      xywh {70 140 90 20} type Horizontal align 4 maximum 300 step 1
+      code0 {o->label_size(12);}
+    }
+    Fl_Group Row_Width_Value {
+      label 0
+      xywh {165 140 30 20} align 0 box THIN_DOWN_BOX
+      code0 {o->label_size(12);}
+    } {}
+    Fl_Check_Button {} {
+      label {Multi-select}
+      callback multi_select_callback
+      xywh {340 85 20 20} align 524292 glyph_box THIN_DOWN_BOX
+      code0 {o->label_size(12);}
+    }
+    Fl_Check_Button {} {
+      label {Row select}
+      callback row_select_callback
+      xywh {340 105 20 20} align 524292 glyph_box THIN_DOWN_BOX
+      code0 {o->label_size(12);}
+    }
+    Fl_Check_Button {} {
+      label {Persistant selection }
+      callback persist_select_callback
+      xywh {340 125 20 20} align 525316 glyph_box THIN_DOWN_BOX value 1
+      code0 {o->label_size(12);}
+    }
+    Fl_Check_Button {} {
+      label {Full widget area resizing}
+      callback full_resize_callback
+      xywh {340 145 20 20} align 524292 glyph_box THIN_DOWN_BOX
+      code0 {o->label_size(12);}
+    }
+    Fl_Input title {
+      label {Title }
+      callback {if (title->value() && *(title->value()))
+	{
+		strcpy( row_head[0], title->value() );
+		wintable->label(row_head[0]);
+		winlist->label(row_head[0]);
+	} else
+	{
+		wintable->label(0);
+		winlist->label(0);
+	}
+	wintable->damage(FL_DAMAGE_CHILD);
+	winlist->damage(FL_DAMAGE_CHILD);}
+      xywh {540 10 90 20} when 1
+      code0 {o->label_size(12);}
+    }
+    Fl_Input row_header {
+      label {Row header}
+      callback {if (row_header->value() && *(row_header->value()))
+		strcpy( row_head[2], row_header->value() );
+	else
+		row_head[2][0] = 0;
+	wintable->damage(FL_DAMAGE_CHILD);
+	winlist->damage(FL_DAMAGE_CHILD);}
+      xywh {540 35 90 20} when 1
+      code0 {o->label_size(12);}
+    }
+    Fl_Input row_footer {
+      label {Row footer}
+      callback {if (row_footer->value() && *(row_footer->value()))
+		strcpy( row_head[1], row_footer->value() );
+	else
+		row_head[1][0] = 0;
+	wintable->damage(FL_DAMAGE_CHILD);
+	winlist->damage(FL_DAMAGE_CHILD);}
+      xywh {540 60 90 20} when 1
+      code0 {o->label_size(12);}
+    }
+    Fl_Input col_header {
+      label {Col header}
+      callback {if (col_header->value() && *(col_header->value()))
+		strcpy( col_head[1], col_header->value() );
+	else
+		col_head[1][0] = 0;
+	wintable->damage(FL_DAMAGE_CHILD);
+	winlist->damage(FL_DAMAGE_CHILD);}
+      xywh {540 85 90 20} when 1
+      code0 {o->label_size(12);}
+    }
+    Fl_Input col_footer {
+      label {Col footer}
+      callback {if (col_footer->value() && *(col_footer->value()))
+		strcpy( col_head[0], col_footer->value() );
+	else
+		col_head[0][0] = 0;
+	wintable->damage(FL_DAMAGE_CHILD);
+	winlist->damage(FL_DAMAGE_CHILD);}
+      xywh {540 110 90 20} when 1
+      code0 {o->label_size(12);}
+    }
+    Fl_Input cell {
+      label Cell
+      callback {if (cell->value() && *(cell->value()))
+		strcpy( cell_text, cell->value() );
+	else
+		cell_text[0] = 0;
+	wintable->damage(FL_DAMAGE_CHILD);
+	winlist->damage(FL_DAMAGE_CHILD);}
+      xywh {540 135 90 20} when 1
+      code0 {o->label_size(12);}
+    }
+    Fl_Output table_loc {
+      label Table
+      xywh {585 160 45 20}
+      code0 {o->label_size(12);}
+    }
+    Fl_Output list_loc {
+      label List
+      xywh {495 160 45 20}
+      code0 {o->label_size(12);}
+    }
+    Fl_Group {} {
+      label FLVW
+      xywh {370 95 90 90} align 17 box EMBOSSED_BOX labeltype ENGRAVED_LABEL
+    } {
+      Fl_Group {} {
+        label {0.0.1}
+        xywh {375 165 75 15} align 0
+        code0 {o->label_size(12);}
+      } {}
+      Fl_Group {} {
+        label Exerciser
+        xywh {375 115 75 15} align 0
+        code0 {o->label_size(12);}
+      } {}
+      Fl_Group {} {
+        label Program
+        xywh {375 130 80 15} align 0
+        code0 {o->label_size(12);}
+      } {}
+      Fl_Group {} {
+        label version
+        xywh {375 145 80 15} align 0
+        code0 {o->label_size(12);}
+      } {}
+    }
+    Fl_Group Style_Type {
+      label {Style Type}
+      callback style_type_callback
+      xywh {10 205 165 185} align 17 box THIN_DOWN_BOX
+      code0 {o->rows(9);}
+      code1 {o->has_scrollbar(FLVS_VERTICAL);}
+      code2 {o->label("Style type");}
+      class Flv_List2
+    } {}
+    Fl_Group Style_Section {
+      label {Style Section}
+      callback style_section_callback
+      xywh {185 205 165 185} align 17 box THIN_DOWN_BOX
+      code0 {o->rows(7);}
+      code1 {o->has_scrollbar(FLVS_VERTICAL);}
+      code2 {o->label("Styles section");}
+      class Flv_List_Style_Section
+    } {}
+    Fl_Group Color_Group {
+      xywh {360 205 265 185} box THIN_DOWN_BOX
+    } {
+      Fl_Button {} {
+        label {&Foreground}
+        callback Foreground_callback
+        xywh {370 215 95 25}
+        code0 {o->label_size(12);}
+      }
+      Fl_Button Foreground_Style_Clear {
+        label Clear
+        callback {Flv_Style *s = read_table_style();
+
+	if (s)
+	{
+		s->clear_foreground();
+		s = read_list_style();
+		if (s)
+			s->clear_foreground();
+		wintable->row_style.compact();
+		wintable->col_style.compact();
+		update_style_info();
+		wintable->redraw();
+		winlist->redraw();
+	}}
+        xywh {370 245 45 25}
+        code0 {o->label_size(12);}
+      }
+      Fl_Group Foreground_Style_Defined {
+        label U open
+        xywh {420 245 20 25} align 0 box DOWN_BOX labeltype ENGRAVED_LABEL
+        code0 {o->label_size(12);}
+      } {}
+      Fl_Group Foreground_Style_Value {open
+        xywh {445 245 20 25} box THIN_DOWN_BOX
+        code0 {o->label_size(12);}
+      } {}
+      Fl_Button {} {
+        label {&Background}
+        callback {int c;
+	Fl_Color nc;
+	Flv_Style *s;
+
+	nc = Background_Style_Value->color();
+//\#ifndef FLTK_2
+	nc = fl_show_colormap(nc);
+	c = 1;
+//\#else
+	c = fl_color_chooser( "Background", nc );
+//\#endif
+	if (c)
+	{
+		Background_Style_Value->color(nc);
+		s = write_table_style();
+		if (s)
+			s->background(nc);
+		s  = write_list_style();
+		if (s)
+			s->background(nc);
+		wintable->redraw();
+		winlist->redraw();
+		update_style_info();
+	}}
+        xywh {370 325 95 25}
+        code0 {o->label_size(12);}
+      }
+      Fl_Button Background_Style_Clear {
+        label Clear
+        callback {Flv_Style *s = read_table_style();
+
+	if (s)
+	{
+		s->clear_background();
+		s = read_list_style();
+		if (s)
+			s->clear_background();
+		wintable->row_style.compact();
+		wintable->col_style.compact();
+		update_style_info();
+		wintable->redraw();
+		winlist->redraw();
+	}}
+        xywh {370 355 45 25}
+        code0 {o->label_size(12);}
+      }
+      Fl_Group Background_Style_Defined {
+        label U open
+        xywh {420 355 20 25} align 0 box DOWN_BOX labeltype ENGRAVED_LABEL
+        code0 {o->label_size(12);}
+      } {}
+      Fl_Group Background_Style_Value {open
+        xywh {445 355 20 25} box THIN_DOWN_BOX
+        code0 {o->label_size(12);}
+      } {}
+    }
+    Fl_Group Font_Group {
+      xywh {360 205 270 185} hide box THIN_DOWN_BOX
+    } {
+      Fl_Group Font_Style {
+        label Font
+        callback font_style_callback open
+        xywh {370 215 165 140} align 17 box THIN_DOWN_BOX
+        code0 {o->rows(16);}
+        code1 {o->has_scrollbar(FLVS_VERTICAL);}
+        code2 {o->label("Font List");}
+        code3 {o->label_size(12);}
+        class Flv_List_Font
+      } {}
+      Fl_Button Font_Style_Clear {
+        label Clear
+        callback {Flv_Style *s = read_table_style();
+
+	if (style<0)
+		return;
+	if (s)
+	{
+		s->clear_font();
+		s = read_list_style();
+		if (s)
+			s->clear_font();
+		winlist->redraw();
+		wintable->row_style.compact();
+		wintable->col_style.compact();
+		update_style_info();
+		wintable->redraw();
+	}}
+        xywh {370 360 45 25}
+        code0 {o->label_size(12);}
+      }
+      Fl_Group Font_Style_Defined {
+        label U open
+        xywh {420 360 20 25} align 0 box DOWN_BOX labeltype ENGRAVED_LABEL
+        code0 {o->label_size(12);}
+      } {}
+      Fl_Roller Font_Size_Style {
+        label {Font size}
+        callback font_size_callback
+        xywh {555 225 25 70} align 1 minimum 8 maximum 18 step 1
+        code0 {o->label_size(12);}
+      }
+      Fl_Group Font_Size_Style_Value {
+        label 0 open
+        xywh {585 245 35 25} align 16 box THIN_DOWN_BOX
+        code0 {o->label_size(12);}
+      } {}
+      Fl_Button Font_Size_Style_Clear {
+        label Clear
+        callback {Flv_Style *s = read_table_style();
+
+	if (style<0)
+		return;
+	if (s)
+	{
+		s->clear_font_size();
+		s = read_list_style();
+		if (s)
+			s->clear_font_size();
+		winlist->redraw();
+		wintable->row_style.compact();
+		wintable->col_style.compact();
+		update_style_info();
+		wintable->redraw();
+	}}
+        xywh {555 300 45 25}
+        code0 {o->label_size(12);}
+      }
+      Fl_Group Font_Size_Style_Defined {
+        label U open
+        xywh {605 300 20 25} align 0 box DOWN_BOX labeltype ENGRAVED_LABEL
+        code0 {o->label_size(12);}
+      } {}
+    }
+    Fl_Group Frame_Group {
+      xywh {360 205 270 185} hide box THIN_DOWN_BOX
+    } {
+      Fl_Button Frame_Style_Clear {
+        label Clear
+        callback {Flv_Style *s = read_table_style();
+
+	if (style<0)
+		return;
+	if (s)
+	{
+		s->clear_frame();
+		s = read_list_style();
+		if (s)
+			s->clear_frame();
+		winlist->redraw();
+		wintable->row_style.compact();
+		wintable->col_style.compact();
+		update_style_info();
+		wintable->redraw();
+	}}
+        xywh {370 360 45 25}
+        code0 {o->label_size(12);}
+      }
+      Fl_Group Frame_Style_Defined {
+        label U open
+        xywh {420 360 20 25} align 0 box DOWN_BOX labeltype ENGRAVED_LABEL
+        code0 {o->label_size(12);}
+      } {}
+      Fl_Group Frame_Style {
+        label Frame
+        callback frame_style_callback open
+        xywh {370 215 165 140} align 17 box THIN_DOWN_BOX
+        code0 {o->rows(17);}
+        code1 {o->has_scrollbar(FLVS_VERTICAL);}
+        code2 {o->label_size(12);}
+        class Flv_List_Frame
+      } {}
+    }
+    Fl_Group Alignment_Group {
+      xywh {360 205 270 185} hide box THIN_DOWN_BOX
+    } {
+      Fl_Button Alignment_Style_Clear {
+        label Clear
+        callback {Flv_Style *s = read_table_style();
+
+	if (style<0)
+		return;
+
+	if (s)
+	{
+		s->clear_align();
+		s = read_list_style();
+		if (s)
+			s->clear_align();
+		winlist->redraw();
+		update_style_info();
+		wintable->redraw();
+	}}
+        xywh {370 355 45 25}
+        code0 {o->label_size(12);}
+      }
+      Fl_Group Alignment_Style_Defined {
+        label U open
+        xywh {420 355 20 25} align 0 box DOWN_BOX labeltype ENGRAVED_LABEL
+        code0 {o->label_size(12);}
+      } {}
+      Fl_Group Alignment_Style {
+        label Alignment
+        callback alignment_style_callback open
+        xywh {370 215 165 135} align 17 box THIN_DOWN_BOX
+        code0 {o->label_size(12);}
+        code1 {o->has_scrollbar(FLVS_VERTICAL);}
+        code2 {o->rows(9);}
+        class Flv_List_Alignment
+      } {}
+    }
+    Fl_Group Size_Group {
+      xywh {360 205 270 185} hide box THIN_DOWN_BOX
+    } {
+      Fl_Roller Width_Style {
+        label Width
+        callback width_style_callback
+        xywh {410 215 85 25} type Horizontal align 4 maximum 100 step 1
+        code0 {o->label_size(12);}
+      }
+      Fl_Button Width_Style_Clear {
+        label Clear
+        callback {Flv_Style *s = read_table_style();
+
+	if (style<0)
+		return;
+	if (s)
+	{
+		s->clear_width();
+		s = read_list_style();
+		if (s)
+			s->clear_width();
+		winlist->redraw();
+		wintable->row_style.compact();
+		wintable->col_style.compact();
+		update_style_info();
+		wintable->redraw();
+	}}
+        xywh {410 245 45 25}
+        code0 {o->label_size(12);}
+      }
+      Fl_Group Width_Style_Value {
+        label 0 open
+        xywh {500 215 35 25} align 16 box THIN_DOWN_BOX
+        code0 {o->label_size(12);}
+      } {}
+      Fl_Group Width_Style_Defined {
+        label U open
+        xywh {460 245 20 25} align 0 box DOWN_BOX labeltype ENGRAVED_LABEL
+        code0 {o->label_size(12);}
+      } {}
+      Fl_Group Height_Style_Defined {
+        label U open
+        xywh {460 320 20 25} align 0 box DOWN_BOX labeltype ENGRAVED_LABEL
+        code0 {o->label_size(12);}
+      } {}
+      Fl_Roller Height_Style {
+        label Height
+        callback height_style_callback
+        xywh {410 290 85 25} type Horizontal align 4 maximum 100 step 1
+        code0 {o->label_size(12);}
+      }
+      Fl_Button Height_Style_Clear {
+        label Clear
+        callback {Flv_Style *s = read_table_style();
+
+	if (style<0)
+		return;
+	if (s)
+	{
+		s->clear_height();
+		s = read_list_style();
+		if (s)
+			s->clear_height();
+		winlist->redraw();
+		wintable->row_style.compact();
+		wintable->col_style.compact();
+		update_style_info();
+		wintable->redraw();
+	}}
+        xywh {410 320 45 25}
+        code0 {o->label_size(12);}
+      }
+      Fl_Group Height_Style_Value {
+        label 0 open
+        xywh {500 290 35 25} align 16 box THIN_DOWN_BOX
+        code0 {o->label_size(12);}
+      } {}
+    }
+    Fl_Group Misc_Group {
+      xywh {360 205 270 185} hide box THIN_DOWN_BOX
+    } {
+      Fl_Group Resizable_Style_Defined {
+        label U open
+        xywh {510 240 20 25} align 0 box DOWN_BOX labeltype ENGRAVED_LABEL
+        code0 {o->label_size(12);}
+      } {}
+      Fl_Check_Button Locked_Style {
+        label Locked
+        callback locked_style_callback
+        xywh {440 215 20 20} align 524292 box FLAT_BOX glyph_box THIN_DOWN_BOX
+        code0 {o->label_size(12);}
+      }
+      Fl_Check_Button Resizable_Style {
+        label Resizable
+        callback resizable_style_callback
+        xywh {440 235 20 20} align 524292 box FLAT_BOX glyph_box THIN_DOWN_BOX
+        code0 {o->label_size(12);}
+      }
+      Fl_Button Resizable_Style_Clear {
+        label Clear
+        callback {Flv_Style *s = read_table_style();
+
+	if (style<0)
+		return;
+	if (s)
+	{
+		s->clear_resizable();
+		s = read_list_style();
+		if (s)
+			s->clear_resizable();
+		winlist->redraw();
+		wintable->row_style.compact();
+		wintable->col_style.compact();
+		update_style_info();
+		wintable->redraw();
+	}}
+        xywh {460 240 45 25}
+        code0 {o->label_size(12);}
+      }
+      Fl_Button Locked_Style_Clear {
+        label Clear
+        callback {Flv_Style *s = read_table_style();
+
+	if (style<0)
+		return;
+	if (s)
+	{
+		s->clear_locked();
+		wintable->row_style.compact();
+		wintable->col_style.compact();
+		update_style_info();
+		wintable->redraw();
+	}}
+        xywh {460 215 45 25}
+        code0 {o->label_size(12);}
+      }
+      Fl_Group Locked_Style_Defined {
+        label U open
+        xywh {510 215 20 25} align 4096 hide box DOWN_BOX labeltype ENGRAVED_LABEL
+        code0 {o->label_size(12);}
+      } {}
+    }
+    Fl_Group Border_Group {
+      xywh {360 205 270 185} hide box THIN_DOWN_BOX
+    } {
+      Fl_Group {} {open
+        xywh {380 225 70 60} box BORDER_BOX
+      } {}
+      Fl_Group {} {open
+        xywh {395 240 40 30} box BORDER_BOX
+      } {}
+      Fl_Check_Button Border_Inner_Left_Style {
+        label { }
+        callback border_style_callback
+        xywh {385 245 20 20} glyph_box THIN_DOWN_BOX
+      }
+      Fl_Check_Button Border_Inner_Bottom_Style {
+        label { }
+        callback border_style_callback
+        xywh {405 260 20 20} glyph_box THIN_DOWN_BOX
+      }
+      Fl_Check_Button Border_Inner_Right_Style {
+        label { }
+        callback border_style_callback
+        xywh {425 245 20 20} glyph_box THIN_DOWN_BOX
+      }
+      Fl_Check_Button Border_Top_Style {
+        label { }
+        callback border_style_callback
+        xywh {405 215 20 20} glyph_box THIN_DOWN_BOX
+      }
+      Fl_Check_Button Border_Inner_Top_Style {
+        label { }
+        callback border_style_callback
+        xywh {405 230 20 20} glyph_box THIN_DOWN_BOX
+      }
+      Fl_Check_Button Border_Right_Style {
+        label { }
+        callback border_style_callback
+        xywh {440 245 20 20} glyph_box THIN_DOWN_BOX
+      }
+      Fl_Check_Button Border_Bottom_Style {
+        label { }
+        callback border_style_callback
+        xywh {405 275 20 20} glyph_box THIN_DOWN_BOX
+      }
+      Fl_Check_Button Border_Left_Style {
+        label { }
+        callback border_style_callback
+        xywh {370 245 20 20} glyph_box THIN_DOWN_BOX
+      }
+      Fl_Group Border_Color_Style_Value {open
+        xywh {445 355 20 25} box THIN_DOWN_BOX
+        code0 {o->label_size(12);}
+      } {}
+      Fl_Button Border_Color_Style {
+        label {&Border}
+        callback {int c;
+	Fl_Color nc;
+	Flv_Style *s;
+
+	nc = Border_Color_Style_Value->color();
+//\#ifndef FLTK_2
+	nc = fl_show_colormap(nc);
+	c = 1;
+//\#else
+	c = fl_color_chooser( "Border", nc );
+//\#endif
+	if (c)
+	{
+		Border_Color_Style_Value->color(nc);
+		s = write_table_style();
+		if (s)
+			s->border_color(nc);
+		s = write_list_style();
+		if (s)
+			s->border_color(nc);
+		update_style_info();
+		wintable->redraw();
+		winlist->redraw();
+	}}
+        xywh {370 325 95 25}
+        code0 {o->label_size(12);}
+      }
+      Fl_Button Border_Color_Style_Clear {
+        label Clear
+        callback {Flv_Style *s = read_table_style();
+
+	if (s)
+	{
+		s->clear_border_color();
+		s = read_list_style();
+		if (s)
+			s->clear_border_color();
+		winlist->redraw();
+		wintable->row_style.compact();
+		wintable->col_style.compact();
+		update_style_info();
+		wintable->redraw();
+	}}
+        xywh {370 355 45 25}
+        code0 {o->label_size(12);}
+      }
+      Fl_Group Border_Color_Style_Defined {
+        label U open
+        xywh {420 355 20 25} align 0 box DOWN_BOX labeltype ENGRAVED_LABEL
+        code0 {o->label_size(12);}
+      } {}
+      Fl_Button Border_Style_Clear {
+        label Clear
+        callback {Flv_Style *s = read_table_style();
+
+	if (s)
+	{
+		s->clear_border();
+		s = read_list_style();
+		if (s)
+			s->clear_border();
+		winlist->redraw();
+		wintable->row_style.compact();
+		wintable->col_style.compact();
+		update_style_info();
+		wintable->redraw();
+	}}
+        xywh {460 245 45 25}
+        code0 {o->label_size(12);}
+      }
+      Fl_Group Border_Style_Defined {
+        label U open
+        xywh {510 245 20 25} align 0 box DOWN_BOX labeltype ENGRAVED_LABEL
+        code0 {o->label_size(12);}
+      } {}
+      Fl_Roller Border_Spacing_Style {
+        label Spacing
+        callback border_spacing_style_callback
+        xywh {555 215 25 80} maximum 100 step 1
+        code0 {o->label_size(12);}
+      }
+      Fl_Button Border_Spacing_Style_Clear {
+        label Clear
+        callback {Flv_Style *s = read_table_style();
+
+	if (style<0)
+		return;
+	if (s)
+	{
+		s->clear_border_spacing();
+		s = read_list_style();
+		if (s)
+			s->clear_border_spacing();
+		winlist->redraw();
+		wintable->row_style.compact();
+		wintable->col_style.compact();
+		update_style_info();
+		wintable->redraw();
+	}}
+        xywh {550 315 45 25}
+        code0 {o->label_size(12);}
+      }
+      Fl_Group Border_Spacing_Style_Value {
+        label 0 open
+        xywh {585 240 35 25} align 16 box THIN_DOWN_BOX
+        code0 {o->label_size(12);}
+      } {}
+      Fl_Group Border_Spacing_Style_Defined {
+        label U open
+        xywh {600 315 20 25} align 0 box DOWN_BOX labeltype ENGRAVED_LABEL
+        code0 {o->label_size(12);}
+      } {}
+    }
+    Fl_Button {} {
+      label {Clear &This}
+      callback {Flv_Style *s = read_table_style();
+
+	if (s)
+	{
+		s->clear_all();
+		wintable->row_style.compact();
+		wintable->col_style.compact();
+		update_style_info();
+		wintable->redraw();
+	}}
+      xywh {10 395 65 25}
+      code0 {o->label_size(12);}
+    }
+    Fl_Button {} {
+      label {&Clear all}
+      callback {wintable->global_style.clear_all();
+	wintable->row_style.release();
+	wintable->col_style.release();
+	update_style_info();
+	wintable->redraw();}
+      xywh {80 395 65 25}
+      code0 {o->label_size(12);}
+    }
+    Fl_Group Style_Type_Defined {
+      label U
+      xywh {155 395 20 25} align 0 box DOWN_BOX labeltype ENGRAVED_LABEL
+      code0 {o->label_size(12);}
+    } {}
+    Fl_Button {} {
+      label {&Done}
+      callback {if (win_table)
+		delete win_table;
+	win_table = 0;
+	if (win_list)
+		delete win_list;
+	win_list = 0;
+	if (win)
+		delete win;
+	win = 0;}
+      xywh {185 395 50 25}
+      code0 {o->label_size(12);}
+    }
+    Fl_Group {} {
+      label U
+      xywh {360 395 20 25} align 0 box DOWN_BOX labeltype ENGRAVED_LABEL
+      code0 {o->label_size(12);}
+    } {}
+    Fl_Group {} {
+      label {= Undefined}
+      xywh {380 395 75 25} align 20
+      code0 {o->label_size(12);}
+    } {}
+    Fl_Group {} {
+      label D
+      xywh {555 395 20 25} align 0 box DOWN_BOX labeltype ENGRAVED_LABEL
+      code0 {o->label_size(12);}
+    } {}
+    Fl_Group {} {
+      label {= Defined}
+      xywh {575 395 55 25} align 20
+      code0 {o->label_size(12);}
+    } {}
+  }
+  Fl_Window win_table {
+    label Flv_Table
+    xywh {731 231 179 154} hide
+  } {
+    Fl_Group wintable {
+      callback table_callback open
+      xywh {5 10 165 135} box THIN_DOWN_BOX
+      code0 {init_table();}
+      code1 {win_table->resizable(wintable);}
+      class Flv_TableE
+    } {}
+  }
+  Fl_Window win_list {
+    label Flv_List
+    xywh {729 38 180 157} hide
+  } {
+    Fl_Group winlist {
+      callback list_callback open
+      xywh {5 10 165 135} box THIN_DOWN_BOX
+      code0 {init_list();}
+      code1 {win_list->resizable(winlist);}
+      class Flv_ListE
+    } {}
+  }
+  code {style = 0;} {}
+} 
+
+Function {init_table()} {return_type void
+} {
+  code {//	Set-up row/col stuff
+	wintable->rows(10);
+	wintable->cols(10);
+	wintable->col_width(0,40);
+	wintable->has_scrollbar(FLVS_NONE);} {}
+} 
+
+Function {init_list()} {return_type void
+} {
+  code {winlist->rows(10);
+	winlist->has_scrollbar(FLVS_NONE);
+	winlist->feature(FLVF_FULL_RESIZE);} {}
+} 
+
+Function {row_header_callback(Fl_Check_Button*n, void*)} {return_type void
+} {
+  code {if (n->value())
+	{
+		wintable->feature_add(FLVF_ROW_HEADER);
+		winlist->feature_add(FLVF_ROW_HEADER);
+	} else
+	{
+		wintable->feature_remove(FLVF_ROW_HEADER);
+		winlist->feature_remove(FLVF_ROW_HEADER);
+	}} {}
+} 
+
+Function {row_footer_callback(Fl_Check_Button*n, void*)} {return_type void
+} {
+  code {if( n->value() )
+	{
+		wintable->feature_add(FLVF_ROW_FOOTER);
+		winlist->feature_add(FLVF_ROW_FOOTER);
+	} else
+	{
+		wintable->feature_remove(FLVF_ROW_FOOTER);
+		winlist->feature_remove(FLVF_ROW_FOOTER);
+	}} {}
+} 
+
+Function {row_divider_callback(Fl_Check_Button *n, void *)} {return_type void
+} {
+  code {if (n->value())
+	{
+		wintable->feature_add( FLVF_ROW_DIVIDER );
+		winlist->feature_add( FLVF_ROW_DIVIDER );
+	} else
+	{
+		wintable->feature_remove( FLVF_ROW_DIVIDER );
+		winlist->feature_remove( FLVF_ROW_DIVIDER );
+	}} {}
+} 
+
+Function {rows_callback(Fl_Roller *n, void *)} {return_type void
+} {
+  code {static char buf[10];
+	wintable->rows( n->value() );
+	winlist->rows( n->value() );
+	sprintf( buf, "%d", (int)n->value() );
+	Rows_Value->label( buf );
+	Rows_Value->redraw();} {}
+} 
+
+Function {row_select_callback(Fl_Check_Button *n, void *)} {return_type void
+} {
+  code {if (n->value())
+		wintable->feature_add(FLVF_ROW_SELECT);
+	else
+		wintable->feature_remove(FLVF_ROW_SELECT);} {}
+} 
+
+Function {row_width_callback(Fl_Roller *n, void *)} {return_type void
+} {
+  code {static char buf[10];
+	winlist->row_width( n->value() );
+	sprintf( buf, "%d", (int)n->value() );
+	Row_Width_Value->label( buf );
+	Row_Width_Value->redraw();} {}
+} 
+
+Function {col_header_callback(Fl_Check_Button *n, void *)} {return_type void
+} {
+  code {if (n->value())
+		wintable->feature_add(FLVF_COL_HEADER);
+	else
+		wintable->feature_remove(FLVF_COL_HEADER);} {}
+} 
+
+Function {col_footer_callback(Fl_Check_Button *n, void *)} {return_type void
+} {
+  code {if (n->value())
+		wintable->feature_add(FLVF_COL_FOOTER);
+	else
+		wintable->feature_remove(FLVF_COL_FOOTER);} {}
+} 
+
+Function {col_divider_callback(Fl_Check_Button *n, void *)} {return_type void
+} {
+  code {if (n->value())
+		wintable->feature_add(FLVF_COL_DIVIDER);
+	else
+		wintable->feature_remove(FLVF_COL_DIVIDER);} {}
+} 
+
+Function {cols_callback(Fl_Roller *n, void *)} {return_type void
+} {
+  code {static char buf[10];
+
+	wintable->cols( n->value() );
+	sprintf( buf, "%d", (int)n->value() );
+	Cols_Value->label( buf );
+	Cols_Value->redraw();} {}
+} 
+
+Function {vertical_callback(Fl_Check_Button *n, void*)} {return_type void
+} {
+  code {if (n->value())
+	{
+		wintable->has_scrollbar( Flv_ShowScrollbar(wintable->has_scrollbar()|FLVS_VERTICAL) );
+		winlist->has_scrollbar( Flv_ShowScrollbar(wintable->has_scrollbar()|FLVS_VERTICAL) );
+	} else
+	{
+		wintable->has_scrollbar( Flv_ShowScrollbar(wintable->has_scrollbar() & (~FLVS_VERTICAL)) );
+		winlist->has_scrollbar( Flv_ShowScrollbar(wintable->has_scrollbar() & (~FLVS_VERTICAL)) );
+	}} {}
+} 
+
+Function {horizontal_callback(Fl_Check_Button *n, void *)} {return_type void
+} {
+  code {if (n->value())
+	{
+		wintable->has_scrollbar( Flv_ShowScrollbar(wintable->has_scrollbar()|FLVS_HORIZONTAL) );
+		winlist->has_scrollbar( Flv_ShowScrollbar(wintable->has_scrollbar()|FLVS_HORIZONTAL) );
+	} else
+	{
+		wintable->has_scrollbar( Flv_ShowScrollbar(wintable->has_scrollbar() & (~FLVS_HORIZONTAL)) );
+		winlist->has_scrollbar( Flv_ShowScrollbar(wintable->has_scrollbar() & (~FLVS_HORIZONTAL)) );
+	}} {}
+} 
+
+Function {always_callback(Fl_Check_Button *n, void *)} {return_type void
+} {
+  code {if (n->value())
+	{
+		wintable->has_scrollbar( Flv_ShowScrollbar(wintable->has_scrollbar()|FLVS_ALWAYS) );
+		winlist->has_scrollbar( Flv_ShowScrollbar(wintable->has_scrollbar()|FLVS_ALWAYS) );
+	} else
+	{
+		wintable->has_scrollbar( Flv_ShowScrollbar(wintable->has_scrollbar() & (~FLVS_ALWAYS)) );
+		winlist->has_scrollbar( Flv_ShowScrollbar(wintable->has_scrollbar() & (~FLVS_ALWAYS)) );
+	}} {}
+} 
+
+Function {multi_select_callback(Fl_Check_Button *n, void *)} {return_type void
+} {
+  code {if (n->value())
+	{
+		wintable->feature_add(FLVF_MULTI_SELECT);
+		winlist->feature_add(FLVF_MULTI_SELECT);
+	} else
+	{
+		wintable->feature_remove(FLVF_MULTI_SELECT);
+		winlist->feature_remove(FLVF_MULTI_SELECT);
+	}} {}
+} 
+
+Function {persist_select_callback(Fl_Check_Button *n, void *)} {return_type void
+} {
+  code {if (n->value())
+	{
+		wintable->feature_add(FLVF_PERSIST_SELECT);
+		winlist->feature_add(FLVF_PERSIST_SELECT);
+	} else
+	{
+		wintable->feature_remove(FLVF_PERSIST_SELECT);
+		winlist->feature_remove(FLVF_PERSIST_SELECT);
+	}} {}
+} 
+
+Function {table_callback(Flv_TableE *n, void *)} {return_type void
+} {
+  code {static char buf[10];
+
+	switch( n->why_event() )
+	{
+		case FLVE_ROW_CHANGED:
+		case FLVE_COL_CHANGED:
+			if (style<0)
+				return;
+			sprintf( buf, "(%d,%d)", n->row(), n->col() );
+			table_loc->value(buf);
+			update_style_info();
+			break;
+	}} {}
+} 
+
+Function {list_callback(Flv_ListE *n, void *)} {return_type void
+} {
+  code {static char buf[10];
+
+	switch( n->why_event() )
+	{
+		case FLVE_ROW_CHANGED:
+			sprintf( buf, "(%d)", n->row() );
+			list_loc->value(buf);
+			break;
+	}} {}
+} 
+
+Function {style_type_callback( Flv_List2 *n, void *)} {return_type void
+} {
+  code {if (style<0)
+		return;
+
+	style = n->row();
+	update_style_info();} {}
+} 
+
+Function {full_resize_callback(Fl_Check_Button *n, void *)} {return_type void
+} {
+  code {if (n->value())
+		wintable->feature_add(FLVF_FULL_RESIZE);
+	else
+		wintable->feature_remove(FLVF_FULL_RESIZE);} {}
+} 
+
+Function {style_section_callback(Flv_List_Style_Section *n, void *)} {return_type void
+} {
+  code {if (n->why_event()==FLVE_ROW_CHANGED)
+	{
+		style_section = n->row();
+		change_style_group(style_section,true);
+		change_style_group(last_style_section,false);
+		last_style_section = style_section;
+	}} {}
+} 
+
+Function {change_style_group( int style, bool visible )} {return_type void
+} {
+  code {Fl_Group *g=0;
+
+	switch( style )
+	{
+	  case 0:	g = Color_Group;	break;
+	  case 1:	g = Font_Group;	break;
+	  case 2:	g = Frame_Group;	break;
+	  case 3:	g = Alignment_Group;	break;
+	  case 4:	g = Size_Group;	break;
+	  case 5:	g = Misc_Group;	break;
+	  case 6:	g = Border_Group;	break;
+	}
+
+	if (g)
+	{
+		if (visible)		g->show();
+		else			g->hide();
+	}} {}
+} 
+
+decl {Flv_Style table_label_style;} {} 
+
+decl {Flv_Style list_label_style;} {} 
+
+Function {read_table_style()} {return_type {Flv_Style *}
+} {
+  code {Flv_Style *rows;
+
+	switch( style )
+	{
+		case 0: // Global
+			return	&(wintable->global_style);
+		case 1: // Title/label
+			return &table_label_style;
+		case 2: // Row footer
+			return wintable->row_style.find(-2);
+		case 3:	// Row header
+			return wintable->row_style.find(-1);
+		case 4: // Current row
+			return wintable->row_style.find(wintable->row());
+		case 5: //	Column footer
+			return wintable->col_style.find(-2);
+		case 6: // Column header
+			return wintable->col_style.find(-1);
+		case 7: // Current column
+			return wintable->col_style.find(wintable->col());
+		case 8: // Current Cell
+			rows = wintable->row_style.find(wintable->row());
+		  if (!rows)
+		  	return 0;
+		  return rows->cell_style.find(wintable->col());
+	}
+	return	&(wintable->global_style);} {}
+} 
+
+Function {write_table_style()} {return_type {Flv_Style *}
+} {
+  code {switch( style )
+	{
+		case 0: // Global
+			return &wintable->global_style;
+		case 1: // Title/label
+			return &table_label_style;
+		case 2: // Row footer
+			return &(wintable->row_style[-2]);
+		case 3:	// Row header
+			return &(wintable->row_style[-1]);
+		case 4: // Current row
+			return &(wintable->row_style[wintable->row()]);
+		case 5: //	Column footer
+			return &(wintable->col_style[-2]);
+		case 6: // Column header
+			return &(wintable->col_style[-1]);
+		case 7: // Current column
+			return &(wintable->col_style[wintable->col()]);
+		case 8: // Current Cell
+			return &(wintable->row_style[wintable->row()].cell_style[wintable->col()]);
+	}
+	return &wintable->global_style;} {}
+} 
+
+Function {read_list_style()} {return_type {Flv_Style *}
+} {
+  code {Flv_Style *rows;
+
+	switch( style )
+	{
+		case 0: // Global
+			return	&(winlist->global_style);
+		case 1: // Title/label
+			return &list_label_style;
+		case 2: // Row footer
+			return winlist->row_style.find(-2);
+		case 3:	// Row header
+			return winlist->row_style.find(-1);
+		case 4: // Current row
+			return winlist->row_style.find(winlist->row());
+		case 8: // Current Cell
+			rows = winlist->row_style.find(winlist->row());
+			if (!rows)
+				return 0;
+			return rows->cell_style.find(0);
+	}
+	return NULL;} {}
+} 
+
+Function {write_list_style()} {return_type {Flv_Style *}
+} {
+  code {switch( style )
+	{
+		case 0: // Global
+			return &winlist->global_style;
+		case 1: // Title/label
+			return &list_label_style;
+		case 2: // Row footer
+			return &(winlist->row_style[-2]);
+		case 3:	// Row header
+			return &(winlist->row_style[-1]);
+		case 4: // Current row
+			return &(winlist->row_style[winlist->row()]);
+		case 8: // Current Cell
+			return &(winlist->row_style[winlist->row()].cell_style[0]);
+	}
+	return NULL;} {}
+} 
+
+Function {font_size_callback(Fl_Roller *n, void *)} {return_type void
+} {
+  code {Flv_Style *s = write_table_style();
+
+	if (style<0)
+		return;
+	if (s)
+	{
+		s->font_size( n->value() );
+		s = write_list_style();
+		if (s)
+			s->font_size( n->value() );
+		update_style_info();
+		wintable->redraw();
+		winlist->redraw();
+	}} {}
+} 
+
+Function {font_style_callback(Flv_List_Font *n, void *)} {return_type void
+} {
+  code {Flv_Style *s = write_table_style();
+
+	if (style<0)
+		return;
+
+	if (n->why_event()==FLVE_ROW_CHANGED && s)
+	{
+		s->font( font_list[n->row()] );
+		s = write_list_style();
+		if (s)
+			s->font( font_list[n->row()] );
+		update_style_info();
+		wintable->redraw();
+		winlist->redraw();
+	}} {}
+} 
+
+Function {frame_style_callback(Flv_List_Frame *n, void *)} {return_type void
+} {
+  code {Flv_Style *s = write_table_style();
+
+	if (style<0)
+		return;
+
+
+	if (n->why_event()==FLVE_ROW_CHANGED && s )
+	{
+		s->frame( box_list[n->row()] );
+		s = write_list_style();
+		if (s)
+			s->frame( box_list[n->row()] );
+		update_style_info();
+		wintable->redraw();
+		winlist->redraw();
+	}} {}
+} 
+
+Function {alignment_style_callback(Flv_List_Alignment *n, void *)} {return_type void
+} {
+  code {Flv_Style *s = write_table_style();
+
+	if (style<0)
+		return;
+
+	if (s && n->why_event()==FLVE_ROW_CHANGED)
+	{
+		s->align( alignment_list[ n->row() ] );
+		s = write_list_style();
+		if (s)
+			s->align( alignment_list[ n->row() ] );
+		update_style_info();
+		wintable->redraw();
+		winlist->redraw();
+	}} {}
+} 
+
+Function {width_style_callback(Fl_Roller *n, void *)} {return_type void
+} {
+  code {Flv_Style *s = write_table_style();
+
+	if (style<0)
+		return;
+	if (s)
+	{
+		s->width( n->value() );
+		s = write_list_style();
+		if (s)
+			s->width( n->value() );
+		update_style_info();
+		wintable->redraw();
+		winlist->redraw();
+	}} {}
+} 
+
+Function {height_style_callback(Fl_Roller *n, void *)} {return_type void
+} {
+  code {Flv_Style *s = write_table_style();
+
+	if (style<0)
+		return;
+	if (s)
+	{
+		s->height( n->value() );
+		s = write_list_style();
+		if (s)
+			s->height( n->value() );
+		winlist->redraw();
+		update_style_info();
+		wintable->redraw();
+	}} {}
+} 
+
+Function {locked_style_callback(Fl_Check_Button *n, void *)} {return_type void
+} {
+  code {Flv_Style *s = write_table_style();
+
+	if (style<0)
+		return;
+	if (s && s->locked()!=n->value())
+	{
+		s->locked( n->value() );
+		s = write_list_style();
+		if (s)
+			s->locked( n->value() );
+		winlist->redraw();
+		update_style_info();
+		wintable->redraw();
+	}} {}
+} 
+
+Function {resizable_style_callback(Fl_Check_Button *n, void *)} {return_type void
+} {
+  code {Flv_Style *s = write_table_style();
+
+	if (style<0)
+		return;
+	if (s && s->resizable()!=n->value())
+	{
+		s->resizable( n->value() );
+		s = write_list_style();
+		if (s)
+			s->resizable( n->value() );
+		winlist->redraw();
+		update_style_info();
+		wintable->redraw();
+	}} {}
+} 
+
+Function {border_style_callback( Fl_Check_Button *, void *)} {return_type void
+} {
+  code {Flv_Style *s = write_table_style();
+	int bs=0;
+
+	if (style<0)
+		return;
+
+	if (s)
+	{
+		bs |= Border_Left_Style->value()?FLVB_LEFT:0;
+		bs |= Border_Top_Style->value()?FLVB_TOP:0;
+		bs |= Border_Right_Style->value()?FLVB_RIGHT:0;
+		bs |= Border_Bottom_Style->value()?FLVB_BOTTOM:0;
+		bs |= Border_Inner_Left_Style->value()?FLVB_INNER_LEFT:0;
+		bs |= Border_Inner_Top_Style->value()?FLVB_INNER_TOP:0;
+		bs |= Border_Inner_Right_Style->value()?FLVB_INNER_RIGHT:0;
+		bs |= Border_Inner_Bottom_Style->value()?FLVB_INNER_BOTTOM:0;
+		s->border(bs);
+		s = write_list_style();
+		if (s)
+			s->border(bs);
+		winlist->redraw();
+		update_style_info();
+		wintable->redraw();
+	}} {}
+} 
+
+Function {border_spacing_style_callback(Fl_Roller *n, void *)} {return_type void
+} {
+  code {Flv_Style *s = write_table_style();
+
+	if (style<0)
+		return;
+	if (s)
+	{
+		s->border_spacing( n->value() );
+		s = write_list_style();
+		if (s)
+			s->border_spacing( n->value() );
+		winlist->redraw();
+		update_style_info();
+		wintable->redraw();
+	}} {}
+} 
+
+Function {Foreground_callback(Fl_Button *, void *)} {return_type void
+} {
+  code {int c;
+	Fl_Color nc;
+	Flv_Style *s;
+
+	nc = Foreground_Style_Value->color();
+//\#ifndef FLTK_2
+	nc = fl_show_colormap(nc);
+	c = 1;
+//\#else
+	c = fl_color_chooser( "Foreground", nc );
+//\#endif
+	if (c)
+	{
+		Foreground_Style_Value->color(nc);
+		s = write_table_style();
+		if (s)
+			s->foreground(nc);
+		s = write_list_style();
+		if (s)
+			s->foreground(nc);
+		wintable->redraw();
+		winlist->redraw();
+		update_style_info();
+	}} {}
+} 
+
+Function {update_style_info(void)} {return_type void
+} {
+  code {Flv_Style *s = read_table_style();
+	int t;
+
+
+	Style_Type_Defined->label("U");
+	Foreground_Style_Defined->label("U");
+ 	Background_Style_Defined->label("U");
+	Font_Style_Defined->label("U");
+	Font_Size_Style_Defined->label("U");
+	Font_Size_Style_Value->label("");
+	Frame_Style_Defined->label("U");
+	Alignment_Style_Defined->label("U");
+	Width_Style_Defined->label("U");
+	Width_Style_Value->label("");
+	Height_Style_Defined->label("U");
+	Height_Style_Value->label("");
+	Locked_Style_Defined->label("U");
+	Resizable_Style_Defined->label("U");
+	Border_Style_Defined->label("U");
+	Border_Spacing_Style_Defined->label("U");
+	Border_Color_Style_Defined->label("U");
+
+	if (s)
+	{
+		Style_Type_Defined->label("D");
+		if (s->foreground_defined())
+		{
+			Foreground_Style_Defined->label("D");
+			Foreground_Style_Value->color(s->foreground());
+		}
+
+		if (s->background_defined())
+		 {
+			Background_Style_Defined->label("D");
+			Background_Style_Value->color(s->background());
+		}
+		if (s->font_defined())
+		{
+			Font_Style_Defined->label("D");
+			for (t=0;	t<16;	t++ )
+			{
+				if (s->font()==font_list[t])
+				{
+					Font_Style->row(t);
+					break;
+				}
+			}
+		}
+		if (s->font_size_defined())
+		{
+			static char font_size[10];
+			sprintf( font_size, "%d", s->font_size() );
+			Font_Size_Style_Value->label(font_size);
+			Font_Size_Style_Defined->label("D");
+		}
+		if (s->frame_defined())
+		{
+			Frame_Style_Defined->label("D");
+			for (t=0;	t<17;	t++ )
+			{
+				if (s->frame()==box_list[t])
+				{
+					Frame_Style->row(t);
+					break;
+				}
+			}
+		}
+		if (s->align_defined())
+		{
+			Alignment_Style_Defined->label("D");
+			for (t=0;	t<9;	t++ )
+			{
+				if (s->align()==alignment_list[t])
+				{
+					Alignment_Style->row(t);
+					break;
+				}
+			}
+		}
+		if (s->width_defined())
+		{
+			static char width[10];
+			sprintf( width, "%d", s->width() );
+			Width_Style_Value->label(width);
+			Width_Style_Defined->label("D");
+		}
+		if (s->height_defined())
+		{
+			static char height[10];
+			sprintf( height, "%d", s->height() );
+			Height_Style_Value->label(height);
+			Height_Style_Defined->label("D");
+		} 
+		if (s->locked_defined())
+		{
+			Locked_Style_Defined->label("D");
+			Locked_Style->value(s->locked());
+		} else
+			Locked_Style->value(0);
+
+		if (s->resizable_defined())
+		{
+			Resizable_Style_Defined->label("D");
+			Resizable_Style->value(s->resizable());
+		} else
+			Resizable_Style->value(0);
+
+		if (s->border_defined())
+		{
+			Border_Style_Defined->label("D");
+			int bs = s->border();
+			Border_Left_Style->value( (bs&FLVB_LEFT)!=0 );
+			Border_Top_Style->value( (bs&FLVB_TOP)!=0 );
+			Border_Right_Style->value( (bs&FLVB_RIGHT)!=0 );
+			Border_Bottom_Style->value( (bs&FLVB_BOTTOM)!=0 );
+			Border_Inner_Left_Style->value( (bs&FLVB_INNER_LEFT)!=0 );
+			Border_Inner_Top_Style->value( (bs&FLVB_INNER_TOP)!=0 );
+			Border_Inner_Right_Style->value( (bs&FLVB_INNER_RIGHT)!=0 );
+			Border_Inner_Bottom_Style->value( (bs&FLVB_INNER_BOTTOM)!=0 );
+		} else
+		{
+			Border_Left_Style->value( 0 );
+			Border_Top_Style->value( 0 );
+			Border_Right_Style->value( 0 );
+			Border_Bottom_Style->value( 0 );
+			Border_Inner_Left_Style->value( 0 );
+			Border_Inner_Top_Style->value( 0 );
+			Border_Inner_Right_Style->value( 0 );
+			Border_Inner_Bottom_Style->value( 0 );
+		}
+		if (s->border_spacing_defined())
+		{
+			static char border_spacing[10];
+			sprintf( border_spacing, "%d", s->border_spacing() );
+			Border_Spacing_Style_Defined->label("D");
+			Border_Spacing_Style_Value->label(border_spacing);
+			Border_Spacing_Style->value( s->border_spacing() );
+		}
+		if (s->border_color_defined())
+		 {
+			Border_Color_Style_Defined->label("D");
+			Border_Color_Style_Value->color(s->border_color() );
+		}
+	} else
+	{
+	 	Foreground_Style_Value->color(win->color());
+	 	Background_Style_Value->color(win->color());
+		Border_Color_Style_Value->color(win->color());
+		Border_Left_Style->value( 0 );
+		Border_Top_Style->value( 0 );
+		Border_Right_Style->value( 0 );
+		Border_Bottom_Style->value( 0 );
+		Border_Inner_Left_Style->value( 0 );
+		Border_Inner_Top_Style->value( 0 );
+		Border_Inner_Right_Style->value( 0 );
+		Border_Inner_Bottom_Style->value( 0 );
+		Resizable_Style->value(0);
+		Locked_Style->value(0);
+	}
+	if (Color_Group->visible())
+		Color_Group->redraw();
+	if (Frame_Group->visible())
+		Frame_Group->redraw();
+	if (Font_Group->visible())
+		Font_Group->redraw();
+	if (Alignment_Group->visible())
+		Alignment_Group->redraw();
+	if (Size_Group->visible())
+		Size_Group->redraw();
+	if (Misc_Group->visible())
+		Misc_Group->redraw();
+	if (Border_Group->visible())
+		Border_Group->redraw();
+
+//	win->redraw();} {}
+} 
+
+Function {} {open
+} {
+  code {row_head[0][0]=0;
+	row_head[1][0]=0;
+	row_head[2][0]=0;
+	col_head[0][0]=0;
+	col_head[1][0]=0;
+	cell_text[0]=0;
+
+	make_window();
+	wintable->row(1);
+	wintable->row(0);
+	winlist->row(1);
+	winlist->row(0);
+	win->show(argc, argv);
+	win_table->show(argc, argv);
+	win_list->show(argc, argv);
+	update_style_info();} {selected
+  }
+} 
