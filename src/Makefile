@@ -89,7 +89,7 @@ gllib: $(GLLIBRARY).a $(GLDSONAME)
 .SUFFIXES:	.cxx .h .o
 
 .cxx.o :
-	$(CXX) -I.. $(FLTKINC) $(CXXFLAGS) -c $< -o $(<:.cxx=.o)
+	$(CXX) -I.. $(XMLINC) $(FLTKINC) $(CXXFLAGS) -c $< -o $(<:.cxx=.o)
 .c.o :
 	$(CC) -I. $(CFLAGS) -c -o $@ $<
 
