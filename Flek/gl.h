@@ -1,6 +1,6 @@
 /* -*-C++-*- 
 
-   "$Id: gl.h,v 1.1 2000/02/10 16:55:35 jamespalmer Exp $"
+   "$Id: gl.h,v 1.2 2000/02/11 14:10:38 jamespalmer Exp $"
    
    Copyright 1999-2000 by the Flek development team.
    
@@ -34,6 +34,7 @@
 #include <Flek/fArcball.h>
 
 #include <GL/gl.h>
+#include <FL/gl.h>
 
 /** @package libflek_ui (The Flek User Interface Library)
  * The fGl class provides a convenient interface for using Flek datatypes
@@ -126,6 +127,16 @@ inline void glScale (const fVector3& v)
 inline void glScale (const double &x, const double &y=1, const double &z=1)
 {
   glScaled (x, y, z);
+}
+
+inline void glTranslate (const fVector3& v)
+{
+  glTranslated (v[0], v[1], v[2]);
+}
+
+inline void glTranslate (const double &x, const double &y=1, const double &z=1)
+{
+  glTranslated (x, y, z);
 }
 
 #endif

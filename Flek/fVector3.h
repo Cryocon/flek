@@ -1,6 +1,6 @@
 /* -*-C++-*- 
 
-   "$Id: fVector3.h,v 1.7 2000/02/10 16:55:35 jamespalmer Exp $"
+   "$Id: fVector3.h,v 1.8 2000/02/11 14:10:38 jamespalmer Exp $"
    
    Copyright 1999-2000 by the Flek development team.
    
@@ -389,6 +389,14 @@ public:
       return sqrt (normsqr (vec));
     }
 
+  /** 
+   * Length (norm) of the vector.
+   */
+  double length ()
+    {
+      return norm (*this);
+    }
+  
   /**
    * Normalize.  Returns previous norm.
    */
@@ -408,7 +416,14 @@ public:
       normalize (nvec);
       return nvec;
     } 
-     
+
+  friend double distance (const fVector3& v1, const fVector3& v2)
+    {
+      fVector3 t;
+      t = v1 - v2;
+      return t.length ();
+    }
+  
   /**
    * Swap the elements of two fVector3s.
    */

@@ -1,6 +1,6 @@
 /* -*-C++-*- 
 
-   "$Id: fVector2.h,v 1.4 2000/02/10 16:55:35 jamespalmer Exp $"
+   "$Id: fVector2.h,v 1.5 2000/02/11 14:10:38 jamespalmer Exp $"
    
    Copyright 1999-2000 by the Flek development team.
    
@@ -372,6 +372,14 @@ public:
       return sqrt (normsqr (vec));
     }
 
+  /** 
+   * Length (norm) of the vector.
+   */
+  double length ()
+    {
+      return norm (*this);
+    }
+  
   /**
    * Normalize.  Returns previous norm.
    */

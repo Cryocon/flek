@@ -1,6 +1,6 @@
 /* -*-C++-*- 
 
-   "$Id: Fl_Gl_Arcball_Window.H,v 1.5 2000/02/10 17:03:42 jamespalmer Exp $"
+   "$Id: Fl_Gl_Arcball_Window.H,v 1.6 2000/02/11 14:10:38 jamespalmer Exp $"
    
    Copyright 1999-2000 by the Flek development team.
    
@@ -51,7 +51,9 @@ public:
      rim_color_ (1., 1., 1.),
      far_color_ (195./255., 127./255., 31./255.),
      near_color_ (1., 1., 63./255.),
-     drag_color_ (127./255., 1., 1.)
+     drag_color_ (127./255., 1., 1.),
+     origin_ (0., 0., 0.),
+     radius_ (1)
     {
       arcball.place (origin_, radius_);
     }
