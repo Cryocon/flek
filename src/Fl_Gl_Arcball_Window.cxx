@@ -1,6 +1,6 @@
 /* -*-C++-*- 
 
-   "$Id: Fl_Gl_Arcball_Window.cxx,v 1.6 2000/02/10 17:03:42 jamespalmer Exp $"
+   "$Id: Fl_Gl_Arcball_Window.cxx,v 1.7 2000/02/17 18:26:29 jamespalmer Exp $"
    
    Copyright 1999-2000 by the Flek development team.
    
@@ -73,7 +73,7 @@ static void unitCircle (void)
   
   glBegin (GL_LINE_LOOP);
   for (int i=0; i < 32; ++i)
-    glVertex (cosf (i*dtheta), sinf (i*dtheta), 0.0);
+    glVertex (cos (i*dtheta), sin (i*dtheta), 0.0);
   glEnd ();
 }
 
