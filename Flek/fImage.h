@@ -1,6 +1,6 @@
 /* -*-C++-*- 
 
-   "$Id: fImage.h,v 1.3 2000/03/03 17:19:32 jamespalmer Exp $"
+   "$Id: fImage.h,v 1.4 2000/03/04 01:39:00 jamespalmer Exp $"
    
    Copyright 1999-2000 by the Flek development team.
    
@@ -28,59 +28,59 @@
 
 typedef unsigned char uchar;
 
-class fImageRGBA;
+class fImage;
 
-class fImageRGBAIterator {
+class fImageIterator {
 
-  friend class fImageRGBA;
+  friend class fImage;
 
-  fImageRGBAIterator (uchar *p) : ptr (p)
+  fImageIterator (uchar *p) : ptr (p)
     {
     }
 
  public:
 
-  fImageRGBAIterator () : ptr (0)
+  fImageIterator () : ptr (0)
     {
     }
 
-  bool operator == (fImageRGBAIterator &p) const
+  bool operator == (fImageIterator &p) const
     {
       return (ptr == p.ptr);
     }
 
-  bool operator != (fImageRGBAIterator &p) const
+  bool operator != (fImageIterator &p) const
     {
       return (ptr != p.ptr);
     }
 
-  fImageRGBAIterator operator++ ()
+  fImageIterator operator++ ()
     {
       ptr += 4;
       return *this;
     }
 
-  fImageRGBAIterator operator++ (int)
+  fImageIterator operator++ (int)
     {
-      fImageRGBAIterator tmp = *this;
+      fImageIterator tmp = *this;
       ptr += 4;
       return tmp;
     }
 
-  fImageRGBAIterator operator-- ()
+  fImageIterator operator-- ()
     {
       ptr -= 4;
       return *this;
     }
 
-  fImageRGBAIterator operator-- (int)
+  fImageIterator operator-- (int)
     {
-      fImageRGBAIterator tmp = *this;
+      fImageIterator tmp = *this;
       ptr -= 4;
       return tmp;
     }
 
-  fImageRGBAIterator& operator = (const fImageRGBAIterator &p)
+  fImageIterator& operator = (const fImageIterator &p)
     {
       ptr = p.ptr;
       return *this;
@@ -97,21 +97,21 @@ class fImageRGBAIterator {
 
 
 /** @package libflek_core
- * fImageRGBA provides four 8 bit channels (Red, Green, Blue and Alpha).
+ * fImage provides four 8 bit channels (Red, Green, Blue and Alpha).
  * The image is stored internally as an array of unsigned chars in
  * RGBA order.  The internal representation can be used directly by
  * OpenGL with the GL_RGBA format and the GL_UNSIGNED_BYTE type.
  */
-class fImageRGBA
+class fImage
 {
  public:
 
-  typedef fImageRGBAIterator iterator;
+  typedef fImageIterator iterator;
 
   /**
    * The default constructor does not allocate any space for the image.
    */
-  fImageRGBA ()
+  fImage ()
     {
       Data = 0;
       W = 0;
@@ -121,7 +121,7 @@ class fImageRGBA
   /**
    * This constructor allocated W*H pixels for storing the image.
    */
-  fImageRGBA (int w, int h)
+  fImage (int w, int h)
     {
       W = w;
       H = h;
@@ -131,7 +131,7 @@ class fImageRGBA
   /** 
    * The destructor deallocated any allocated memory.
    */
-  ~fImageRGBA ()
+  ~fImage ()
     {
       if (Data) delete[] Data;
     }
@@ -197,18 +197,18 @@ class fImageRGBA
 
 };
 
-fImageRGBA* add (fImageRGBA *A, fImageRGBA *B, int xo=0, int yo=0, bool inplace=false);
+fImage* add (fImage *A, fImage *B, int xo=0, int yo=0, float o=1.0);
 
-fImageRGBA* subtract (fImageRGBA *A, fImageRGBA *B, int xo=0, int yo=0, bool inplace=false);
+fImage* subtract (fImage *A, fImage *B, int xo=0, int yo=0);
 
-fImageRGBA* difference (fImageRGBA *A, fImageRGBA *B, int xo=0, int yo=0, bool inplace=false);
+fImage* difference (fImage *A, fImage *B, int xo=0, int yo=0);
 
-fImageRGBA* lightenOnly (fImageRGBA *A, fImageRGBA *B, int xo=0, int yo=0, bool inplace=false);
+fImage* lightenOnly (fImage *A, fImage *B, int xo=0, int yo=0);
 
-fImageRGBA* darkenOnly (fImageRGBA *A, fImageRGBA *B, int xo=0, int yo=0, bool inplace=false);
+fImage* darkenOnly (fImage *A, fImage *B, int xo=0, int yo=0);
 
-fImageRGBA* divide (fImageRGBA *A, fImageRGBA *B, int xo=0, int yo=0, bool inplace=false);
+fImage* divide (fImage *A, fImage *B, int xo=0, int yo=0);
 
-fImageRGBA* multiply (fImageRGBA *A, fImageRGBA *B, int xo=0, int yo=0, bool inplace=false);
+fImage* multiply (fImage *A, fImage *B, int xo=0, int yo=0);
 
 #endif

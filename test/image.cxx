@@ -6,11 +6,11 @@
 
 void main ()
 {
-  fImageRGBA *imgA, *imgB; 
+  fImage *imgA, *imgB; 
 //  uchar *pixel;
 
-  imgA = fPNM::readRGBA ("test1.ppm");
-  imgB = fPNM::readRGBA ("test2.ppm");
+  imgA = fPNM::read ("test1.ppm");
+  imgB = fPNM::read ("test2.ppm");
 
   int test = 0;
 
@@ -30,10 +30,13 @@ void main ()
     }
 */
 
-  fImageRGBA *result = add (imgA, imgB);   
-  fPNM::writeRGBA ("out_add.ppm", result);
-  delete result;
+  fImage *result;
   
+  result = add (imgA, imgB, 500, 250, .10);   
+  fPNM::write ("out_add.ppm", result);
+  //delete result;
+
+  /*
   result = subtract (imgA, imgB);   
   fPNM::writeRGBA ("out_subtract.ppm", result);
   delete result;
@@ -49,7 +52,7 @@ void main ()
   result = darkenOnly (imgA, imgB);
   fPNM::writeRGBA ("out_darkenOnly.ppm", result);
   delete result;
-
+*/
   /*
   result = divide (imgA, imgB);
   fPNM::writeRGBA ("out_divide.ppm", result);
