@@ -1,6 +1,6 @@
 /* -*-C++-*- 
 
-   "$Id: Fl_App_Window.H,v 1.8 2000/05/11 05:28:25 brad Exp $"
+   "$Id: Fl_App_Window.H,v 1.9 2000/05/11 17:46:43 brad Exp $"
    
    Copyright 1999-2000 by the Flek development team.
    
@@ -26,6 +26,7 @@
 #ifndef _FL_APP_WINDOW_H_
 #define _FL_APP_WINDOW_H_
 
+#include <vector>
 #include <FL/Fl_Widget.H>
 #include <FL/Fl_Window.H>
 #include <FL/Fl_Pack.H>
@@ -40,11 +41,11 @@
  * "docked" groups.
  * Think of the contents window as the "client" area of the application.
  */
-class Fl_App_Window : public Fl_Window
-{
+class Fl_App_Window : public Fl_Window {
 private:
   Fl_Pack* _pack;
   Fl_Window* _contents;
+  vector<Fl_Dockable_Group*> dockable_groups;
 
 protected:
   virtual FL_EXPORT void draw();
@@ -101,6 +102,7 @@ public:
   }
 
   void show();
+  void hide();
 
   /**
    * Make the contents child window the current group.
