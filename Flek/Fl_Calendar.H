@@ -1,6 +1,6 @@
 /* -*-C++-*- 
 
-   "$Id: Fl_Calendar.H,v 1.14 2001/05/14 22:13:41 jamespalmer Exp $"
+   "$Id: Fl_Calendar.H,v 1.15 2001/05/15 17:08:06 jamespalmer Exp $"
    
    Copyright 1999-2000 by the Flek development team.
    
@@ -54,15 +54,21 @@ public:
 
   void update ();
 
+  /**
+   * Resize the buttons contained in Fl_Calendar_Base to
+   * fit in the passed dimensions.
+   *
+   * @param cx The calendar x position.
+   * @param cy The calendar y position.
+   * @param cw The calendar width.
+   * @param ch The calendar height.
+   */
   void csize (int cx, int cy, int cw, int ch);
 
   /**
    * Returns a pointer to the button for the day D in the Fl_Calendar. 
    */
   Fl_Button * day_button (int i);
-  void normal_callback() { cb_return_value = false; }
-  void calendar_value_callback() { cb_return_value = true; }
-  bool cb_return_value;
    
  protected:
   
@@ -90,15 +96,48 @@ class Fl_Calendar : public Fl_Calendar_Base
   Fl_Calendar (int x, int y, int w = (7*20), int h = (8*20), 
   		    const char *l = 0);
 
+  /**
+   * Sets the value of the widget back by one month. 
+   */
   void previous_month ();
+
+  /**
+   * Sets the value of the widget forward by one month. 
+   */
   void next_month ();
+
+  /**
+   * Sets the value of the widget back by one year. 
+   */
   void previous_year ();
+
+  /**
+   * Sets the value of the widget forward by one year. 
+   */
   void next_year ();
-  
+
+  /**
+   * Updates the widget after values have been changed.
+   */  
   void update ();
+
+  /**
+   * Resize the buttons contained in Fl_Calendar_Base to
+   * fit in the passed dimensions.
+   *
+   * @param cx The calendar x position.
+   * @param cy The calendar y position.
+   * @param cw The calendar width.
+   * @param ch The calendar height.
+   */
   void csize (int cx, int cy, int cw, int ch);
   int  handle (int);
 
+  /**
+   * Sets the Calendar's selection color.
+   *
+   * @param color The calendar's selection color.
+   */  
   void selection_color(Fl_Color c) {
 	Fl_Widget::selection_color(c);
 	for(int i = 0; i < 6*7; i++) {
@@ -109,12 +148,31 @@ class Fl_Calendar : public Fl_Calendar_Base
 	}
   }
 
+  /**
+   * Gets the Calendar's selection color.
+   *
+   * @return The calendar's selection color.
+   */  
   Fl_Color selection_color() const {
-	return 	Fl_Group::selection_color();
+    return Fl_Group::selection_color();
   }
 
-  int button_value() {return last_button_value;}
-  int last_button_value;
+  /**
+   * Gets the user selected day.  This method differs
+   * from the day() method in that if a user has not
+   * selected a day the return value is zero.
+   *
+   * @return The selected day if the user has selected a day, 0 otherwise.
+   */
+  int selected_day() {return selected_day_;}
+
+  /**
+   * Sets the user selected day.  If d is non zero, this
+   * method also sets the day.
+   *
+   * @return The selected day if the user has selected a day, 0 otherwise.
+   */
+  int selected_day(int d) {selected_day_ = d; if (d) day(d); }
 
  protected:
   
@@ -124,13 +182,17 @@ class Fl_Calendar : public Fl_Calendar_Base
   Fl_Repeat_Button * prv_month;
   Fl_Repeat_Button * nxt_year;
   Fl_Repeat_Button * prv_year;
+  int selected_day_;
   
 };
+
+
+// Is Fl_Agenda_Calendar really necessary?  I don't see how title_height
+// makes the widget look any better.  - James
 
 /**
  * Fl_Agenda_Calendar is a subclass of Fl_Calendar.  This widget has a
  * slightly different user interface used for Agenda PDA.
- * <p><img src="Fl_Agenda_Calendar.png">
  */
 class Fl_Agenda_Calendar : public Fl_Calendar
 {

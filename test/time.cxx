@@ -1,5 +1,5 @@
 /*
-  "$Id: time.cxx,v 1.1 2001/05/14 22:13:41 jamespalmer Exp $"
+  "$Id: time.cxx,v 1.2 2001/05/15 17:08:06 jamespalmer Exp $"
   
   This program tests Fl_Calendar.
 
@@ -30,33 +30,6 @@
 #include <Flek/Fl_Time.H>
 #include <stdio.h>
 #include <stdlib.h>
-
-/*int main (int argc, char **argv) 
-{
-  Fl_Window window (300, 370);
-  
-  Fl_Agenda_Calendar *calendar = new Fl_Agenda_Calendar (10, 10, window.w()-20, window.h()-20);
-  window.resizable (calendar);
-
-  window.end ();
-  window.show (argc,argv);
-  
-  return Fl::run ();
-}
-*/
-/*
-void calendar_cb (Fl_Calendar *c, void *) {
-  for (int i = 0; i < 5; i++) {
-    c->set_format (i);
-    printf("%s\n", c->to_string());
-//    cout << *c << endl;
-  }
-}
-*/
-
-void exit_cb (Fl_Button *b, void *) {
-  exit(0);
-}
 
 int main (int argc, char **argv) {
   

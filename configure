@@ -654,7 +654,7 @@ cd 	  ;;
 	--driver-name \$(CXX)"
 	  PICFLAG=0
 	  ;;
-      LINUX*)
+      Linux*)
 	  DSOEXT=".so.1"
           DSO_COMMAND="\$(CXX) -Wl,-soname,\$@ -shared $DEBUGFLAG -o"
 	  ;;

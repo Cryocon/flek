@@ -30,58 +30,187 @@
 #define FL_TIME_24HOUR 0
 #define FL_TIME_12HOUR 1
 
+/** @package libflek_ui
+ * Fl_Time is a widget that allows a user to select a time
+ * (hour and minute). 
+ * <p><img src="Fl_Time.png">
+ */
 class Fl_Time : public Fl_Group {
+
 private:
-	Fl_Repeat_Button* button_decrease_hour;
-	Fl_Repeat_Button* button_decrease_minute;
-	Fl_Input*  input_time;
-	Fl_Repeat_Button* button_increase_minute;
-	Fl_Repeat_Button* button_increase_hour;
-
-	struct timeval current_tv;
-	struct timeval display_tv;
-	char time_string[20];
-	bool last_valid;
-	
-	int look_;
-
-	static void input_changed_cb(Fl_Widget* widget, void* data);
-	static void button_cb(Fl_Widget* widget, void* data);
-
+  Fl_Repeat_Button* button_decrease_hour;
+  Fl_Repeat_Button* button_decrease_minute;
+  Fl_Input*  input_time;
+  Fl_Repeat_Button* button_increase_minute;
+  Fl_Repeat_Button* button_increase_hour;
+  
+  struct timeval current_tv;
+  struct timeval display_tv;
+  char time_string[20];
+  bool last_valid;
+  
+  int look_;
+  
+  static void input_changed_cb(Fl_Widget* widget, void* data);
+  static void button_cb(Fl_Widget* widget, void* data);
+  
 public:
-	Fl_Time(int x, int y, int w, int h, char *l=0); 
-	~Fl_Time();
+  /**
+   * The constructor for an empty Fl_Time widget.
+   */
+  Fl_Time(int x, int y, int w, int h, char *l=0); 
 
-	int hour();
-	void hour(int value);
+  /**
+   * Gets the hour.
+   *
+   * @return The hour associated with this widget.
+   */  
+  int hour();
 
-	int minute();
-	void minute(int value);
+  /**
+   * Sets the hour.
+   *
+   * @param hour The hour associated with this widget.
+   */  
+  void hour(int value);
+  
+  /**
+   * Gets the minute.
+   *
+   * @return The minute associated with this widget.
+   */  
+  int minute();
 
-	// Be sure to run this after using hour and min to change the clock value.
-	void redisplay();
+  /**
+   * Sets the minute.
+   *
+   * @param minute The minute associated with this widget.
+   */  
+  void minute(int value);
+  
+  // Be sure to run this after using hour and min to change the clock value.
+  void redisplay();
+  
+  /**
+   * Sets the minute and hour at the same time.
+   *
+   * @param minute The minute associated with this widget.
+   * @param hour The hour associated with this widget.
+   */  
+  void value(int h, int m);
 
-	void value(int h, int m);
-	void current_time();
-	void refresh();
+  /**
+   * Sets the minute and hour to the system minute and hour.
+   */
+  void current_time();
 
-	void labelsize(int size);
-	void labelfont(Fl_Font);
-	void labelcolor(Fl_Color);
+  /**
+   * Refreshes the widget.
+   */
+  void refresh();
 
-	void textsize(int size);
-	void textfont(Fl_Font);
-	void textcolor(Fl_Color);
+  /**
+   * Sets the size of the label text which is used for the M+,
+   * M-, Y+, and Y- labels.
+   *
+   * @param size The size of the label font.
+   */  
+  void labelsize(int size);
 
-	int labelsize();
-	Fl_Font labelfont();
-	Fl_Color labelcolor();
+  /**
+   * Sets the label font which is used for the M+,
+   * M-, Y+, and Y- labels.
+   *
+   * @param font The label font.
+   */  
+  void labelfont(Fl_Font font);
 
-	int textsize();
-	Fl_Font textfont();
-	Fl_Color textcolor();
+  /**
+   * Sets the label color which is used for the M+,
+   * M-, Y+, and Y- labels.
+   *
+   * @param font The label color.
+   */  
+  void labelcolor(Fl_Color color);
 
-	bool valid();	
+  /**
+   * Sets the size of the text which is used to display
+   * the set time.
+   *
+   * @param size The size of the text font.
+   */  
+  void textsize(int size);
+
+  /**
+   * Sets the font of the text which is used to display
+   * the set time.
+   *
+   * @param font The font of the text font.
+   */  
+  void textfont(Fl_Font);
+
+  /**
+   * Sets the color of the text which is used to display
+   * the set time.
+   *
+   * @param color The color of the text font.
+   */  
+  void textcolor(Fl_Color);
+  
+  /**
+   * Gets the size of the label text which is used for the M+,
+   * M-, Y+, and Y- labels.
+   *
+   * @return The size of the label font.
+   */  
+  int labelsize();
+
+  /**
+   * Gets the label font which is used for the M+,
+   * M-, Y+, and Y- labels.
+   *
+   * @return The label font.
+   */  
+  Fl_Font labelfont();
+
+  /**
+   * Gets the label color which is used for the M+,
+   * M-, Y+, and Y- labels.
+   *
+   * @return The label color.
+   */  
+  Fl_Color labelcolor();
+  
+  /**
+   * Gets the size of the text which is used to display
+   * the set time.
+   *
+   * @return The size of the text font.
+   */  
+  int textsize();
+
+  /**
+   * Gets the font of the text which is used to display
+   * the set time.
+   *
+   * @return The font of the text font.
+   */  
+  Fl_Font textfont();
+
+  /**
+   * Gets the color of the text which is used to display
+   * the set time.
+   *
+   * @return The color of the text font.
+   */
+  Fl_Color textcolor();
+
+  /**
+   * Determines if the entered time is a recognized format.
+   *
+   * @return True if it is a valid time format, otherwise false.
+   */  
+  bool valid();	
 };
 
 #endif

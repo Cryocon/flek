@@ -86,7 +86,7 @@ cd 	  ;;
 	--driver-name \$(CXX)"
 	  PICFLAG=0
 	  ;;
-      LINUX*)
+      Linux*)
 	  DSOEXT=".so.1"
           DSO_COMMAND="\$(CXX) -Wl,-soname,\$@ -shared $DEBUGFLAG -o"
 	  ;;
@@ -344,5 +344,5 @@ AC_OUTPUT(makeinclude flek-config)
 chmod +x flek-config
 
 dnl#
-dnl# End of "$Id: configure.in,v 1.19 2001/05/14 16:50:32 jamespalmer Exp $".
+dnl# End of "$Id: configure.in,v 1.20 2001/05/15 17:08:06 jamespalmer Exp $".
 dnl#
