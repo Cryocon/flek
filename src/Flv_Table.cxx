@@ -40,7 +40,7 @@
 #include <FL/fl_draw.H>
 #include <stdio.h>
 
-#ifndef FLTK_2
+#ifndef FLEK_FLTK_2
 #define text_color() FL_BLACK
 #define text_font() FL_HELVETICA
 #define text_size() 12
@@ -152,6 +152,7 @@ void Flv_Table::draw_row( int Offset, int &X, int &Y, int &, int &H, int R )
 	fl_pop_clip();
 }
 
+#include <FL/Fl_Box.H>
 //	You will certainly want to override this
 void Flv_Table::draw_cell( int Offset, int &X, int &Y, int &W, int &H, int R, int C )
 {
@@ -174,9 +175,13 @@ void Flv_Table::draw_cell( int Offset, int &X, int &Y, int &W, int &H, int R, in
 
   fl_color( s.background() );
   fl_rectf(X,Y,W,H );
-#ifdef FLTK_2
-	bt->draw(X,Y,W,H,s.background());
-	//	Normally you would use the next line to get the client area to draw
+#ifdef FLEK_FLTK_2
+// CET - FIXME - this is completely lame.  Need to fix FLTK2
+        Fl_Box *box = new Fl_Box(X, Y, W, H);
+        box->color(s.background());
+        box->box(bt);
+        ((Fl_Widget*)box)->draw(); // cast to make sure draw is public
+        delete box;
 	bt->inset( X, Y, W, H );
 #else
 	draw_box( bt, X, Y, W, H, s.background() );
@@ -474,7 +479,7 @@ int Flv_Table::handle(int event)
 				break;
 
 		case FL_PUSH:
-#ifndef FLTK_2
+#ifndef FLEK_FLTK_2
 	             if (Fl::event_button1()==0)
 #else
 	             if (Fl::event_state()&FL_BUTTON1==0)
@@ -640,7 +645,7 @@ int Flv_Table::internal_handle(int event)
 				return 1;
 			}
 			r = 0;
-#ifndef FLTK_2
+#ifndef FLEK_FLTK_2
 	  if (Fl::event_button1() && (buttons() & FLV_BUTTON1)) r=1;
 	  if (Fl::event_button2() && (buttons() & FLV_BUTTON2)) r=1;
 	  if (Fl::event_button3() && (buttons() & FLV_BUTTON3)) r=1;

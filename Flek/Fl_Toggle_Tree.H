@@ -1,6 +1,6 @@
 /* -*-C++-*- 
 
-   "$Id: Fl_Toggle_Tree.H,v 1.6 2000/05/14 02:41:20 jamespalmer Exp $"
+   "$Id: Fl_Toggle_Tree.H,v 1.7 2000/09/29 21:49:35 clip Exp $"
    
    Copyright 1999-2000 by the Flek development team.
    
@@ -223,19 +223,19 @@ public:
   /**
    * Sets the default text font for the lines in the browser. 
    */
-  void textfont(uchar s) {
+  void textfont(Fl_Font s) {
     textfont_ = s;
   }
 
   /**
    * Gets the default text size for the lines in the browser. 
    */
-  uchar textsize() const {return textsize_; }
+  unsigned textsize() const {return textsize_; }
 
   /**
    * Sets the default text size for the lines in the browser. 
    */
-  void textsize(uchar s) {
+  void textsize(unsigned s) {
     textsize_ = s;
   }
 
@@ -247,7 +247,7 @@ public:
   /**
    * Sets the default text color for the lines in the browser. 
    */
-  void textcolor(uchar n) {
+  void textcolor(Fl_Color n) {
     textcolor_ = n;
   }
 
@@ -488,7 +488,9 @@ protected:
   const int* column_widths_;
   char column_char_;
 
-  uchar textfont_, textsize_, textcolor_;
+  Fl_Font textfont_;
+  unsigned textsize_;
+  Fl_Color textcolor_;
 
   Fl_ToggleState state_;
   Fl_Pixmap* opened_pixmap_;

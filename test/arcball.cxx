@@ -1,7 +1,7 @@
 #include <Flek/FVector3.H>
 #include <Flek/Fl_Gl_Arcball_Window.H>
 //#include "Grid.hh"
-#include <fstream.h>
+//#include <fstream.h>
 #include <GL/glu.h>
 
 class Arcball : public Fl_Gl_Arcball_Window 

@@ -80,7 +80,7 @@ Fl_Toggle_Tree::Fl_Toggle_Tree(int x, int y, int w, int h) : Fl_Toggle_Tree_Base
   selection_count_ = 0;
   selection_current_ = 0;
 
-#ifndef FLTK_2
+#ifndef FLEK_FLTK_2
   textfont_ = FL_HELVETICA;
 #endif
   textsize_ = 12;
@@ -88,7 +88,7 @@ Fl_Toggle_Tree::Fl_Toggle_Tree(int x, int y, int w, int h) : Fl_Toggle_Tree_Base
   edit_input_ = new Fl_Input(x, y, 0, 0);
   edit_input_->box(FL_FLAT_BOX);
   edit_input_->color(FL_WHITE);
-#ifndef FLTK_2
+#ifndef FLEK_FLTK_2
   edit_input_->textcolor(FL_BLACK);
   edit_input_->textfont(textfont_);
   edit_input_->textsize(textsize_);
@@ -154,7 +154,7 @@ void Fl_Toggle_Tree::draw_node(int depth, int cy, Fl_Toggle_Node_Base* node) {
       closed_pixmap_->draw(x() + depth*16, cy);
   }
 
-#ifndef FLTK_2
+#ifndef FLEK_FLTK_2
   if (tnode->selected_)
     textcolor(selection_label_color());
   else
@@ -234,7 +234,7 @@ void Fl_Toggle_Tree::draw_label(char* str, int indent, int x, int y, int w, int 
       BREAK:
     */
     fl_font(font, size);
-#ifndef FLTK_2
+#ifndef FLEK_FLTK_2
     if (!active_r()) lcol = inactive (lcol);
 #endif
     //    if (((FL_BLINE*)v)->flags & SELECTED)

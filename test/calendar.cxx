@@ -1,5 +1,5 @@
 /*
-  "$Id: calendar.cxx,v 1.2 2000/04/19 18:19:47 jamespalmer Exp $"
+  "$Id: calendar.cxx,v 1.3 2000/09/29 21:49:35 clip Exp $"
   
   This program tests Fl_Calendar.
 
@@ -28,6 +28,8 @@
 #include <FL/Fl_Window.H>
 
 #include <Flek/Fl_Calendar.H>
+#include <stdio.h>
+#include <stdlib.h>
 
 /*int main (int argc, char **argv) 
 {
@@ -46,7 +48,8 @@
 void calendar_cb (Fl_Calendar *c, void *) {
   for (int i = 0; i < 5; i++) {
     c->set_format (i);
-    cout << *c << endl;
+    printf("%s\n", c->to_string());
+//    cout << *c << endl;
   }
 }
 

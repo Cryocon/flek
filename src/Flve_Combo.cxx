@@ -19,7 +19,7 @@
 #include <string.h>
 #include <stdlib.h>
 
-#ifndef FLTK_2
+#ifndef FLEK_FLTK_2
 #define text_color() FL_BLACK
 #define text_font() FL_HELVETICA
 #define text_size() 12
@@ -270,8 +270,10 @@ Flve_Combo::Flve_Combo(int x, int y, int w, int h, const char *l ) :
 	vlist_only = true;
 	vincremental_search = true;
 	vlist_title=0;
+	Fl_Group *gsave = Fl_Group::current();
+	Fl_Group::current(0);
 	input = new Flvt_Input(x,y,w,h);
-	input->parent(this);
+	Fl_Group::current(gsave);
 	box(input->box());
 	input->box(FL_NO_BOX);
 	resize(x,y,w,h);
@@ -401,7 +403,12 @@ void Flve_Combo::draw(void)
 	H = h() - (Fl::box_dh(box()));
 
 	bx = X + W - BUTTON_WIDTH;
+	
+#ifdef FLEK_FLTK_2	
+	FL_UP_BOX->draw(bx+1, Y, BUTTON_WIDTH, H, (Fl_Color)(FL_GRAY_RAMP+17));
+#else
 	draw_box( FL_UP_BOX, bx+1, Y, BUTTON_WIDTH, H, (Fl_Color)(FL_GRAY_RAMP+17) );
+#endif	
 	fl_draw_symbol("@#2>", bx+3, Y, BUTTON_WIDTH-5, H, FL_BLACK );
 	fl_color( (Fl_Color)(FL_GRAY_RAMP+17) );
 	fl_yxline(bx,Y,Y+H);
@@ -462,7 +469,7 @@ void Flve_Combo::open_list()
 	list->show();
 	while( list->shown() )
 		Fl::wait();
-	Fl::grab(0);
+	Fl::release();
 	take_focus();
   // ****
   //  if (((Flvw_Drop *)list)->key)

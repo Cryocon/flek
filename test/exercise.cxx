@@ -4,7 +4,7 @@
 #include <FL/fl_draw.H>
 #include <string.h>
 #include <stdio.h>
-#ifdef FLTK_2
+#ifdef FLEK_FLTK_2
 #include <FL/Fl_Color_Chooser.H>
 #include <FL/Fl_Font.H>
 #else
@@ -283,7 +283,7 @@ static void cb_Background(Fl_Button*, void*) {
 	Flv_Style *s;
 
 	nc = Background_Style_Value->color();
-#ifndef FLTK_2
+#ifndef FLEK_FLTK_2
 	nc = fl_show_colormap(nc);
 	c = 1;
 #else
@@ -566,7 +566,7 @@ static void cb_Border_Color_Style(Fl_Button*, void*) {
 	Flv_Style *s;
 
 	nc = Border_Color_Style_Value->color();
-#ifndef FLTK_2
+#ifndef FLEK_FLTK_2
 	nc = fl_show_colormap(nc);
 	c = 1;
 #else
@@ -1862,7 +1862,7 @@ void Foreground_callback(Fl_Button *, void *) {
 	Flv_Style *s;
 
 	nc = Foreground_Style_Value->color();
-#ifndef FLTK_2
+#ifndef FLEK_FLTK_2
 	nc = fl_show_colormap(nc);
 	c = 1;
 #else

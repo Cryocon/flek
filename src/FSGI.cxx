@@ -2,7 +2,8 @@
 #include <Flek/FFile.H>
 #include <Flek/FImage.H>
 #include <Flek/FSGI.H>
-#include <iostream.h>
+#include <stdio.h>
+#include <string.h>
 
 /*
  * Reads 8 bit run length encoded data of size width from input.  
@@ -23,7 +24,9 @@ get_rle8 (FFile &input, int width, uchar *row)
       input.get_hi (c);
       if (input.bad ())
 	{
-	  cerr << "ERROR" << endl;
+	  // CET - libstdc++ is evil on Linux
+	  // cerr << "ERROR" << endl;
+	  fprintf(stderr, "ERROR\n");
 	  return -1;
 	}
 
@@ -209,7 +212,9 @@ sgi_put_row (FFile &output, sgiT &img, uchar *row, int y, int channel)
         } 
       else
 	{
-	  cerr << "SGI files larger than 1 byte per channel are not supported." << endl;
+	  // CET - libstdc++ is evil on Linux
+	  //cerr << "SGI files larger than 1 byte per channel are not supported." << endl;
+	  fprintf (stderr, "SGI files larger than 1 byte per channel are not supported.\n");
 	  return -1;
 	}
 
@@ -234,7 +239,10 @@ sgi_put_row (FFile &output, sgiT &img, uchar *row, int y, int channel)
 	x = put_rle8 (output, img.width, row); 
       else 
 	{
-	  cerr << "SGI files larger than 1 byte per channel are not supported." << endl;
+	  // CET - libstdc++ is evil on Linux
+	  //cerr << "SGI files larger than 1 byte per channel are not supported." << endl;
+	  // CET - libstdc++ is evil on Linux
+	  fprintf(stderr, "SGI files larger than 1 byte per channel are not supported.\n"); 
 	  return -1;
 	}
  
@@ -280,7 +288,9 @@ sgi_get_row (FFile &input, sgiT& img, uchar* row, int y, int channel)
 	}
       else
 	{
-	  cerr << "Not supported" << endl;
+	  // CET - libstdc++ is evil on Linux
+	  //cerr << "Not supported" << endl;
+	  fprintf(stderr, "Not supported\n");
 	  return -1;
 	}
       break;
@@ -289,16 +299,22 @@ sgi_get_row (FFile &input, sgiT& img, uchar* row, int y, int channel)
         offset = img.table[channel][y];
         if (offset != (ulong)input.tell ())
 	  input.seek ((long)offset);
-	if (input.bad())
-	  cerr << "ERROR: Bad seek" << endl;
-
-	if (input.bad())
-	  cerr << "ERROR: Bad seek (EOF)" << endl;
-
+	if (input.bad()) {
+	  // CET - libstdc++ is evil on Linux
+	  //cerr << "ERROR: Bad seek" << endl;
+	  fprintf(stderr, "ERROR: Bad seek\n");
+        }
+	if (input.bad()) {
+	  // CET - libstdc++ is evil on Linux
+	  //cerr << "ERROR: Bad seek (EOF)" << endl;
+	  fprintf(stderr, "ERROR: Bad seek (EOF)\n");
+        }
         if (img.bpc == 1)
           return (get_rle8 (input, img.width, row));
 
-	cerr << "SGI files larger than 1 byte per channel are not supported." << endl;
+        // CET - libstdc++ is evil on Linux
+	//cerr << "SGI files larger than 1 byte per channel are not supported." << endl;
+	fprintf(stderr, "SGI files larger than 1 byte per channel are not supported.\n");
 	return -1;
   }
 
@@ -340,9 +356,11 @@ FImage * FSGI::read (char *filename)
 
       input.seek (512);
 
-      if (input.bad ())
-	cerr << "ERROR @sgiReadFile." << endl;
-
+      if (input.bad ()) {
+        // CET - libstdc++ is evil on Linux
+	//cerr << "ERROR @sgiReadFile." << endl;
+	fprintf(stderr, "ERROR @sgiReadFile.\n");
+      }
       img.table = new ulongPtr [img.channels];
       img.table[0] = new ulong [img.height * img.channels];
 

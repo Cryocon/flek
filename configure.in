@@ -289,11 +289,13 @@ AC_ARG_WITH([fltk],
   ])
 
 
-
+FLTK2="no"
 AC_ARG_WITH([fltk2], 
   [  --with-fltk2            Use Fltk 2.0 instead of Fltk 1.0x. ], 
   [ 
-    FLTKFLAGS="-DFLTK_2"
+    FLTKFLAGS="-DFLEK_FLTK_2"
+    FLTK_LIB="$FLTK_LIB -ldl"
+    FLTK2="yes"
   ], [])
 
 AC_SUBST(HAVEGL)
@@ -309,6 +311,7 @@ AC_SUBST(JPEG_INC)
 
 AC_SUBST(FLTK_DIR)
 AC_SUBST(FLTK_LIB)
+AC_SUBST(FLTK2)
 AC_SUBST(FLTK_INC)
 AC_SUBST(FLTKFLAGS)
 
@@ -335,5 +338,5 @@ AC_OUTPUT(makeinclude flek-config)
 chmod +x flek-config
 
 dnl#
-dnl# End of "$Id: configure.in,v 1.15 2000/05/14 05:51:12 jamespalmer Exp $".
+dnl# End of "$Id: configure.in,v 1.16 2000/09/29 21:49:34 clip Exp $".
 dnl#

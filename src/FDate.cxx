@@ -1,13 +1,14 @@
 #include <time.h>
-#include <iostream.h>
+// Evil #include <iostream.h>
 #include <iomanip.h>
 #include <stdio.h>
+#include <string.h>
 #include <Flek/FDate.H>
 
 // This class is based on the date class by Dave Freese
 // <dfreese@intrepid.net>
 
-const int FDate::days[] = 
+const int FDate::days[] =
   { 0, 31, 28, 31, 30,  31,  30,  31,  31,  30,  31,  30, 31 };
 
 const int FDate::julian_days[2][13] = {
@@ -123,10 +124,14 @@ bool FDate::valid (int y, int m, int d) {
   return true;
 }
 
+/* Always link all apps with with libstdc++ for a trivial thing
+   like this?  This should probably be put in a separate flek-stdc++
+   library?
 ostream &operator<< (ostream &output, const FDate &d) {
   output << d.to_string ();
   return output;
 }
+*/
 
 bool FDate::end_of_month (int d) {
   if (Month == 2 && leap_year (Year))

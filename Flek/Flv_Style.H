@@ -43,7 +43,7 @@
 #define FLV_STYLE_H
 
 #include <FL/Fl.H>
-#ifdef FLTK_2
+#ifdef FLEK_FLTK_2
 #include <FL/Fl_Font.H>
 #endif
 

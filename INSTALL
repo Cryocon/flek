@@ -21,7 +21,7 @@ CONFIGURE OPTIONS
 --with-xml=dir          Specify the base libxml prefix if non standard.
 
 --with-fltk2            Use Fltk 2 (cvs) and not Fltk 1.0.7.
-                        This is required to get Flek to compile with FLTK_2.
+                        This is required to get Flek to compile with FLTK2.
 
 --enable-shared         Build shared libraries (DSO).  These are not built by
                         default.

@@ -61,7 +61,6 @@ depend: makeinclude
 
 clean:
 	-@ rm -f core config.cache *.o *.bck
-	-@ rm -rf lib
 	@for dir in $(DIRS); do\
 		echo "=== cleaning $$dir ===";\
 		(cd $$dir;$(MAKE) clean);\
@@ -96,5 +95,5 @@ rpm:
 	rpm -ba --target i386 /tmp/flek-0.1/flek.spec
 
 #
-# End of "$Id: Makefile,v 1.6 2000/05/11 18:55:09 brad Exp $".
+# End of "$Id: Makefile,v 1.7 2000/09/29 21:49:34 clip Exp $".
 #

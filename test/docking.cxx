@@ -11,11 +11,12 @@
 
 Fl_App_Window* application_window;
 
-void print_children(Fl_Group* o) {
-  printf(">> label=\"%s\" xywh=%d,%d,%d,%d\n", o->label(), o->x(), o->y(), o->w(), o->h());
-  Fl_Widget* const* a = o->array();
-  for(int i = o->children(); i--;) {
-    Fl_Widget* o = *a++;
+void print_children(Fl_Group* g) {
+  printf(">> label=\"%s\" xywh=%d,%d,%d,%d\n", g->label(), g->x(), g->y(), g->w(), g->h());
+//  Fl_Widget* const* a = g->array();
+  for(int i = g->children(); i--;) {
+//    Fl_Widget* o = *a++;
+    Fl_Widget* o = g->child(i);
     printf ("   label=\"%s\" xywh=%d,%d,%d,%d\n", o->label(), o->x(), o->y(), o->w(), o->h());
   }
 }

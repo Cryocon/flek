@@ -1,6 +1,6 @@
 /* -*-C++-*- 
 
-   "$Id: FDate.H,v 1.3 2000/04/19 18:30:56 jamespalmer Exp $"
+   "$Id: FDate.H,v 1.4 2000/09/29 21:49:35 clip Exp $"
    
    Copyright 1999-2000 by the Flek development team.
    
@@ -27,7 +27,8 @@
 #define __FDATE_H__
 
 #include <Flek/FBase.H>
-#include <iostream.h>
+// CET - libstdc++ ios evil on Linux
+//#include <iostream.h>
 
 typedef enum {
   SUNDAY,
@@ -227,7 +228,8 @@ class FDate : public FBase
   /**
    * ostream operator.
    */
-  friend ostream& operator << (ostream &, const FDate &);
+  // CET - libstdc++ ios evil on Linux
+  // friend ostream& operator << (ostream &, const FDate &);
 
   /**
    * Gets wether day d is at the end of the month.

@@ -1,6 +1,6 @@
 /* -*-C++-*- 
 
-   "$Id: Fl_App_Window.H,v 1.22 2000/09/13 01:24:45 brad Exp $"
+   "$Id: Fl_App_Window.H,v 1.23 2000/09/29 21:49:35 clip Exp $"
    
    Copyright 1999-2000 by the Flek development team.
    
@@ -31,6 +31,7 @@
 #include <FL/Fl_Pack.H>
 
 #include <Flek/Fl_Dockable_Window.H>
+#include <Flek/export.h>
 
 /** @package libflek_ui
  * Fl_App_Window is a window that can have Fl_Dockable_Windows
@@ -41,7 +42,7 @@
  * "docked" groups.
  * You might think of the contents window as the "client" area of the application.
  */
-class Fl_App_Window : public Fl_Window {
+class FLEK_UI_API Fl_App_Window : public Fl_Window {
 private:
   /**
    * Holds the contents window and any docked windows.
@@ -77,7 +78,7 @@ private:
   void create_app_window(int w, int h, const char* l);
 
 protected:
-  virtual FL_EXPORT void flush();
+  virtual void flush();
 
 public:
   /**
@@ -111,9 +112,9 @@ public:
    */
   void box(Fl_Boxtype b) { _contents->box(b); }
   void color(Fl_Color a) { _contents->color(a); }
-  void color(Fl_Color a, Fl_Color b) { _contents->color(a, b); }
-  void color(uchar a) { _contents->color(a); }
-  void color(uchar a, uchar b) { _contents->color(a, b); }
+// CET - FIXME  void color(Fl_Color a, Fl_Color b) { _contents->color(a); , b); }
+//  void color(uchar a) { _contents->color(a); }
+//  void color(uchar a, uchar b) { _contents->color(a, b); }
 
   /**
    * Adds the widget to the contents window.
@@ -129,6 +130,10 @@ public:
    * Resizes the contents window.
    */
   void resize(int x, int y, int w, int h);
+  
+#ifdef FLEK_FLTK_2
+  void layout();
+#endif  
   
   /**
    * Grants permission for the dockable window to dock to this window.

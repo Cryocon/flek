@@ -12,7 +12,7 @@ Fl_Dockable_Window * Fl_Dockable_Window::current = 0;
 void Fl_Gripper::draw() {
   if(_grippertype & FL_DRAGABLE) {
     // Draw the Gnome style gripper:
-#ifndef FLTK_2
+#ifndef FLEK_FLTK_2
     Fl_Color col = value() ? selection_color() : color();
     draw_box(box(), col);
 #else
@@ -20,7 +20,7 @@ void Fl_Gripper::draw() {
 #endif
     // draw_label();
 
-#ifndef FLTK_2
+#ifndef FLEK_FLTK_2
     fl_push_clip(x()+1, y()+1, w()-3, h()-3);
 #else
     fl_clip(x()+1, y()+1, w()-3, h()-3);

@@ -200,7 +200,8 @@ flek-jpeg: $(LIB_FLEK_JPEG).a $(DSO_FLEK_JPEG)
 
 clean :
 	-@ rm -f *.o *.do *~ ../include/*~ makedepend o
-	-@ rm -rf ../lib
+	-@ rm -f ../lib/*.a
+	-@ if [ -n "$(DSOEXT)" ]; then rm -f ../lib/*$(DSOEXT) ; fi
 
 distclean: clean
 	-@ rm -f config.* makeinclude

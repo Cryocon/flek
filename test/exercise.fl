@@ -12,7 +12,7 @@ decl {\#include <string.h>} {}
 
 decl {\#include <stdio.h>} {} 
 
-declblock {\#ifdef FLTK_2} {after {\#endif}
+declblock {\#ifdef FLEK_FLTK_2} {after {\#endif}
 } {
   decl {\#include <FL/Fl_Color_Chooser.H>} {}
   decl {\#include <FL/Fl_Font.H>} {}
@@ -506,7 +506,7 @@ Function {make_window()} {} {
 	Flv_Style *s;
 
 	nc = Background_Style_Value->color();
-//\#ifndef FLTK_2
+//\#ifndef FLEK_FLTK_2
 	nc = fl_show_colormap(nc);
 	c = 1;
 //\#else
@@ -913,7 +913,7 @@ Function {make_window()} {} {
 	Flv_Style *s;
 
 	nc = Border_Color_Style_Value->color();
-//\#ifndef FLTK_2
+//\#ifndef FLEK_FLTK_2
 	nc = fl_show_colormap(nc);
 	c = 1;
 //\#else
@@ -1681,7 +1681,7 @@ Function {Foreground_callback(Fl_Button *, void *)} {return_type void
 	Flv_Style *s;
 
 	nc = Foreground_Style_Value->color();
-//\#ifndef FLTK_2
+//\#ifndef FLEK_FLTK_2
 	nc = fl_show_colormap(nc);
 	c = 1;
 //\#else

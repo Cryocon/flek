@@ -1,4 +1,8 @@
 #include <Flek/FPNM.H>
+
+// CET - FIXME - this shouldn't use libstdc++ if it can be avoided- libstdc++
+// causes compatibility problems under linux.  Maybe should use the regular
+// stdio.h stuff?
 #include <iostream.h>
 #include <fstream.h>
 

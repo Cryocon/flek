@@ -39,7 +39,7 @@ Fl_Stock_Button::Fl_Stock_Button (int x, int y, int w, int h, const char *l) :
   Fl_Button (x, y, w, h, l)
 {
   // Scheme this :
-#ifdef FLTK_2
+#ifdef FLEK_FLTK_2
   label_size (10);
 #else
   labelsize (10);
@@ -51,7 +51,7 @@ Fl_Stock_Button::Fl_Stock_Button (int x, int y, int w, int h, const char *l) :
 void Fl_Stock_Button::draw()
 {
   if (type() == FL_HIDDEN_BUTTON) {box(FL_NO_BOX); return;}
-#ifdef FLTK_2
+#ifdef FLEK_FLTK_2
   Fl_Color col = draw_button(flags());
 #else
   Fl_Color col = value() ? selection_color() : color();
@@ -73,7 +73,7 @@ Fl_Stock_Button::draw_label (int X, int Y, int W, int H,
   const char* label_ = label ();
 
   if (image_)
-#ifdef FLTK_2
+#ifdef FLEK_FLTK_2
     image_->measure(iw, ih);
 #else
     fl_measure_pixmap(image_->data, iw, ih);
@@ -83,7 +83,7 @@ Fl_Stock_Button::draw_label (int X, int Y, int W, int H,
 
       // Note: should tw be turned into an int so soon?  bdl
       // Anyway, I added the (int) to quiet the compiler.
-#ifdef FLTK_2
+#ifdef FLEK_FLTK_2
       fl_font(label_font(), label_size());
       tw = (int)fl_width(label_);
       th = label_size();
@@ -172,7 +172,7 @@ Fl_Stock_Button::draw_label (int X, int Y, int W, int H,
   int a = 0;
   if (!active_r()) a = FL_INACTIVE;
   if (image_) {
-#ifdef FLTK_2
+#ifdef FLEK_FLTK_2
     fl_color((f&FL_INACTIVE) ? fl_inactive(c) : c);
     image_->draw(idx, idy, iw, ih, 0, 0);
 #else
@@ -182,7 +182,7 @@ Fl_Stock_Button::draw_label (int X, int Y, int W, int H,
   }
 
   if (label_ && *label_) {
-#ifdef FLTK_2
+#ifdef FLEK_FLTK_2
     fl_font(label_font(), label_size());
     //if (flags() & FL_SHORTCUT_LABEL) fl_draw_shortcut = 1;
     //printf ("label = %d, %d, %d, %d\n", tdx, tdy, tw, th);

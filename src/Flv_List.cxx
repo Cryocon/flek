@@ -41,7 +41,7 @@
 #include <stdio.h>
 
 
-#ifndef FLTK_2
+#ifndef FLEK_FLTK_2
 #define text_color() FL_BLACK
 #define text_font() FL_HELVETICA
 #define text_size() 12
@@ -77,6 +77,21 @@ static void hscrollbar_cb(Fl_Widget* o, void*)
 	s->row_offset( ((Fl_Scrollbar *)o)->value() );
 }
 
+#ifdef FLEK_FLTK_2
+//================================================================
+//	Style stuff?
+//================================================================
+static void revert(Fl_Style* s) {
+	s->selection_color = FL_BLUE_SELECTION_COLOR;
+	s->selection_text_color = FL_WHITE;
+  //s->off_color = FL_BLACK;
+	s->box = FL_THIN_DOWN_BOX;
+	s->color = FL_GRAY_RAMP+1;
+}
+
+static Fl_Named_Style* _style = new Fl_Named_Style("flvlist", revert, &_style);
+#endif
+
 Flv_List::Flv_List( int X, int Y, int W, int H, const char *l ) :
 	Fl_Group(X,Y,W,H,l),
 	scrollbar(0,0,0,0,0),
@@ -85,8 +100,8 @@ Flv_List::Flv_List( int X, int Y, int W, int H, const char *l ) :
 	int r, rh;
 
 	edit_row=-1;
-#ifdef FLTK_2
-	style(Fl_Output::default_style);
+#ifdef FLEK_FLTK_2
+// CET - FIXME	style(_style);
 #else
 	box(FL_THIN_DOWN_BOX);
 #endif
@@ -149,6 +164,7 @@ void Flv_List::position_editor( Fl_Widget *e, int x, int y, int w, int h, Flv_St
 	e->resize( x, y, w, h );
 }
 
+#include <FL/Fl_Box.H>
 //	Draw a single row
 void Flv_List::draw_row( int Offset, int &X, int &Y, int &W, int &H, int R )
 {
@@ -168,8 +184,13 @@ void Flv_List::draw_row( int Offset, int &X, int &Y, int &W, int &H, int R )
 
   fl_color( s.background() );
   fl_rectf(X,Y,W,H );
-#ifdef FLTK_2
-	bt->draw(X,Y,W,H,s.background());
+#ifdef FLEK_FLTK_2
+// CET - FIXME - this is completely lame.  Need to fix FLTK2
+        Fl_Box *box = new Fl_Box(X, Y, W, H);
+        box->color(s.background());
+        box->box(bt);
+        ((Fl_Widget*)box)->draw(); // cast to make sure draw is public
+        delete box;
 	bt->inset( X, Y, W, H );
 #else
 	draw_box( bt, X, Y, W, H, s.background() );
@@ -698,7 +719,7 @@ void Flv_List::client_area( int &X, int &Y, int &W, int &H )
 	int th, v, rw;
 
 	X = x(); Y = y(); W = w(); H = h();
-#ifdef FLTK_2
+#ifdef FLEK_FLTK_2
 	box()->inset(X,Y,W,H);
 #else
 	Fl_Boxtype b = box();
@@ -871,7 +892,7 @@ void Flv_List::draw_scrollbars(int &X, int &Y, int &W, int &H )
 	//	Place scrollbars where they should be
 	if (sv>0)
 	{
-#ifdef FLTK_2
+#ifdef FLEK_FLTK_2
 	  scrollbar.resize (X+W, Y,vscrollbar_width,H);
 #else
 	  scrollbar.damage_resize(X+W,Y,vscrollbar_width,H);
@@ -882,7 +903,7 @@ void Flv_List::draw_scrollbars(int &X, int &Y, int &W, int &H )
 		scrollbar.maximum(vrows-1);
 		x = H - (vrows*2) - vscrollbar_width*2;
 		if (x<vscrollbar_width) x = vscrollbar_width;
-#ifdef FLTK_2
+#ifdef FLEK_FLTK_2
 		scrollbar.slider_size(x);
 #else
 		scrollbar.slider_size((double)((double)x/(double)(H-vscrollbar_width*2)));
@@ -903,7 +924,7 @@ void Flv_List::draw_scrollbars(int &X, int &Y, int &W, int &H )
 
 	if (sh>0)
 	{
-#ifdef FLTK_2
+#ifdef FLEK_FLTK_2
 	  hscrollbar.resize(X,Y+H,W,vscrollbar_width);
 #else
 		hscrollbar.damage_resize(X,Y+H,W,vscrollbar_width);
@@ -912,7 +933,7 @@ void Flv_List::draw_scrollbars(int &X, int &Y, int &W, int &H )
 		hscrollbar.linesize( 10 );
 		hscrollbar.minimum(0);
 		hscrollbar.maximum(vrow_width-W);
-#ifdef FLTK_2
+#ifdef FLEK_FLTK_2
 		x = W - vrow_width/10 - vscrollbar_width*2;
 		if (x<vscrollbar_width) x = vscrollbar_width;
 		hscrollbar.slider_size(x);
@@ -1002,8 +1023,8 @@ void Flv_List::start_draw(int &X, int &Y, int &W, int &H, int &trow_width )
 
 	if (damage()&FL_DAMAGE_ALL)
 	{
-#ifdef FLTK_2
-		draw_frame();
+#ifdef FLEK_FLTK_2
+		draw_box(x(), y(), w(), h(), flags()&FL_FRAME_ONLY);
 #else
 		draw_box();
 #endif
@@ -1012,7 +1033,7 @@ void Flv_List::start_draw(int &X, int &Y, int &W, int &H, int &trow_width )
 
 	//	Get dimension inside box
 	X = x(); Y = y(); W = w(); H = h();
-#ifdef FLTK_2
+#ifdef FLEK_FLTK_2
 	box()->inset(X,Y,W,H);
 #else
 	Fl_Boxtype b = box();
@@ -1189,7 +1210,7 @@ void Flv_List::get_default_style( Flv_Style &s )
 
 	//	Make sure EVERY feature is defined
 	s.align(FL_ALIGN_LEFT);
-#ifdef FLTK_2
+#ifdef FLEK_FLTK_2
 	s.background(color());
 #else
 	s.background(FL_WHITE);
@@ -1409,22 +1430,6 @@ void Flv_List::switch_editor( int nr )
 	if (veditor && veditor->parent()!=this)
 		veditor->parent(this);
 }
-
-#ifdef FLTK_2
-//================================================================
-//	Style stuff?
-//================================================================
-static void revert(Fl_Style* s) {
-	s->selection_color = FL_BLUE_SELECTION_COLOR;
-	s->selection_text_color = FL_WHITE;
-  //s->off_color = FL_BLACK;
-	s->box = FL_THIN_DOWN_BOX;
-	s->color = FL_GRAY_RAMP+1;
-}
-
-//Fl_Style* Flv_List::default_style =
-//		new Fl_Named_Style("Browser", revert, &Flv_List::default_style);
-#endif
 
 
 

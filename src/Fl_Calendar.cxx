@@ -36,7 +36,7 @@ Fl_Calendar_Base::Fl_Calendar_Base (int x, int y, int w, int h,
 			     (h/6)*(i/7) + y,
 			     (w/7),
 			     (h/6));
-#ifndef FLTK_2
+#ifndef FLEK_FLTK_2
     days[i]->down_box (FL_THIN_DOWN_BOX);
     days[i]->labelsize (10);
 #else
@@ -137,7 +137,7 @@ Fl_Calendar::Fl_Calendar (int x, int y, int w, int h,
 				   (w/7),
 				   (h/8));
       weekdays[i]->box (FL_THIN_UP_BOX);  
-#ifndef FLTK_2
+#ifndef FLEK_FLTK_2
       weekdays[i]->labelsize (10);
 #else
       weekdays[i]->label_size (10);
@@ -156,7 +156,7 @@ Fl_Calendar::Fl_Calendar (int x, int y, int w, int h,
   
   prv_year = new Fl_Button (x, y, (w/10), (h/8), "@#<<");
   prv_year->box (FL_THIN_UP_BOX);
-#ifndef FLTK_2
+#ifndef FLEK_FLTK_2
   prv_year->labeltype (FL_SYMBOL_LABEL);
   prv_year->labelsize (10);
   prv_year->down_box (FL_THIN_DOWN_BOX);
@@ -168,7 +168,7 @@ Fl_Calendar::Fl_Calendar (int x, int y, int w, int h,
 
   prv_month = new Fl_Button (x + (w/10), y, (w/10), (h/8), "@#<");
   prv_month->box (FL_THIN_UP_BOX);
-#ifndef FLTK_2
+#ifndef FLEK_FLTK_2
   prv_month->labeltype (FL_SYMBOL_LABEL);
   prv_month->labelsize (10);
   prv_month->down_box (FL_THIN_DOWN_BOX);
@@ -180,7 +180,7 @@ Fl_Calendar::Fl_Calendar (int x, int y, int w, int h,
 
   nxt_month = new Fl_Button (x + (w/10)*8, y, (w/10), (h/8), "@#>");
   nxt_month->box (FL_THIN_UP_BOX);
-#ifndef FLTK_2
+#ifndef FLEK_FLTK_2
   nxt_month->labeltype (FL_SYMBOL_LABEL);
   nxt_month->labelsize (10);
   nxt_month->down_box (FL_THIN_DOWN_BOX);
@@ -192,7 +192,7 @@ Fl_Calendar::Fl_Calendar (int x, int y, int w, int h,
   
   nxt_year = new Fl_Button (x + (w/10)*9, y, (w/10), (h/8), "@#>>");
   nxt_year->box (FL_THIN_UP_BOX);
-#ifndef FLTK_2
+#ifndef FLEK_FLTK_2
   nxt_year->labeltype (FL_SYMBOL_LABEL);
   nxt_year->labelsize (10);
   nxt_year->down_box (FL_THIN_DOWN_BOX);
@@ -204,7 +204,7 @@ Fl_Calendar::Fl_Calendar (int x, int y, int w, int h,
 
     caption = new Fl_Button (x + (w/10)*2, y, (w/10)*6, (h/8));
   caption->box (FL_THIN_UP_BOX);
-#ifndef FLTK_2
+#ifndef FLEK_FLTK_2
   caption->labeltype (FL_SYMBOL_LABEL);
   caption->labelfont (3);
   caption->labelsize (10);
@@ -454,13 +454,13 @@ const char *Fl_Date_Input::value()
   return (Input.value ());
 }
 
-#ifndef FLTK_2
+#ifndef FLEK_FLTK_2
 void Fl_Date_Input::text_font (int tf) { Input.textfont (tf); }
 #else
 void Fl_Date_Input::text_font (Fl_Font tf) { Input.text_font (tf); }
 #endif
 
-#ifndef FLTK_2
+#ifndef FLEK_FLTK_2
 void Fl_Date_Input::text_size(int sz) { Input.textsize (sz); }
 #else
 void Fl_Date_Input::text_size(int sz) { Input.text_size (sz); }

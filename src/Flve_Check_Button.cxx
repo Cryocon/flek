@@ -64,7 +64,7 @@ void draw_flve_check_button( int X, int Y, int W, int H, Flve_Check_Button *b, c
 	fl_rectf( X, Y, W, H );
 	if (b)
 	{
-#ifndef FLTK_2
+#ifndef FLEK_FLTK_2
 		if (*v=='1')
 			fl_draw_box( b->down_box(), x, y, w, h, b->selection_color() );
 		else

@@ -1,7 +1,8 @@
 #include <Flek/math.H>
 #include <Flek/FImage.H>
-#include <iostream.h>
-#include <fstream.h>
+#include <string.h>
+//#include <iostream.h>
+//#include <fstream.h>
 
 typedef unsigned long ulong;
 typedef unsigned long * ulongPtr;

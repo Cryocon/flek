@@ -1,13 +1,15 @@
 #include <stdio.h>
+#include <stdlib.h>
 
 #include <FL/Fl.H>
+#include <FL/Fl_Window.H> // needed by FLTK2
 #include <FL/x.H>
 #include <FL/fl_draw.H>
 #include <Flek/Fl_App_Window.H>
 
 // #define FL_APP_WINDOW_DEBUG
 
-Fl_App_Window::Fl_App_Window(int x, int y, int w, int h, const char* l) : 
+Fl_App_Window::Fl_App_Window(int x, int y, int w, int h, const char* l) :
   Fl_Window(x, y, w, h, l) {
   create_app_window(w, h, l);
 }
@@ -93,14 +95,15 @@ int Fl_App_Window::handle(int event) {
     // the pack boundaries.
       
     // This code should probably go into Pack_2's handle:
-    Fl_Widget*const* a = _pack->array();
+//    Fl_Widget*const* a = _pack->array();
     for(int i=0; i <= _pack->children(); i++) {
       int cY;
 	  
       if (i==_pack->children())
         cY = h();
       else {
-        Fl_Widget* o = *a++;
+//        Fl_Widget* o = *a++;
+        Fl_Widget* o = _pack->child(i);
         cY = o->y ();
       }
 	  
@@ -240,3 +243,18 @@ void Fl_App_Window::resize(int X, int Y, int W, int H) {
   Fl_Widget::resize(X, Y, W, H);
   repack();
 }
+
+#ifdef FLEK_FLTK_2
+void Fl_App_Window::layout() {
+printf("layout called\n");
+printf("1AppWin- x:%d y:%d w:%d h:%d\n", x(), y(), w(), h());
+printf("1pack- x:%d y:%d w:%d h:%d\n", _pack->x(), _pack->y(), _pack->w(), _pack->h());
+printf("1contents- x:%d y:%d w:%d h:%d\n", _contents->x(), _contents->y(), _contents->w(), _contents->h());
+
+  repack();
+
+printf("2AppWin- x:%d y:%d w:%d h:%d\n", x(), y(), w(), h());
+printf("2pack- x:%d y:%d w:%d h:%d\n", _pack->x(), _pack->y(), _pack->w(), _pack->h());
+printf("2contents- x:%d y:%d w:%d h:%d\n", _contents->x(), _contents->y(), _contents->w(), _contents->h());
+}
+#endif

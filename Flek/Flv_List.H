@@ -287,7 +287,7 @@ protected:
 	int vrow;														//	Current selected row
 
 private:
-#ifdef FLTK_2
+#ifdef FLEK_FLTK_2
 	static Fl_Style* default_style;
 #endif
 	void check_cursor(void);		//	Check if resizing allowed here
