@@ -4,7 +4,7 @@
 #
 # by James Dean Palmer
 #
-# "$Id: flek-config.in,v 1.2 2000/02/11 19:21:47 jamespalmer Exp $"
+# "$Id: flek-config.in,v 1.3 2000/02/11 19:47:14 jamespalmer Exp $"
 #
 
 MAJOR_VERSION=0
@@ -12,7 +12,7 @@ MINOR_VERSION=0
 PATCH_VERSION=0
 VERSION="$MAJOR_VERSION.$MINOR_VERSION.$PATCH_VERSION"
 
-### BEGIN fltk-config
+### BEGIN flek-config
 
 # Calculate the prefix from the location of *this* file
 prefix=`echo "$0" | sed 's/\/bin\/flek-config//
@@ -148,8 +148,8 @@ if test "$use_gl" = "yes"; then
     LIBS="$LIBS $prefix/lib/libflek_gl.a"
 fi
 if test "$use_ui" = "yes"; then
-    LDLIBS="$LDLIBS -lflek_ui @LDFLAGS@ @LIBS@ @LDLIBS@ @X_EXTRA_LIBS@"
-    LDSTATIC="$LDSTATIC $prefix/lib/libflek_ui.a @LDFLAGS@ @LIBS@ @LDLIBS@ @X_EXTRA_LIBS@"
+    LDLIBS="$LDLIBS @LDFLAGS@ -lflek_ui -lfltk @LIBS@ @LDLIBS@ @X_EXTRA_LIBS@"
+    LDSTATIC="$LDSTATIC @LDFLAGS@ $prefix/lib/libflek_ui.a -lfltk @LIBS@ @LDLIBS@ @X_EXTRA_LIBS@"
     LIBS="$LIBS $prefix/lib/libflek_ui.a"
 fi
 LDLIBS="$LDLIBS -lflek_core -lm"
