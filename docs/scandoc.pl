@@ -6,9 +6,8 @@ require "getopts.pl";
 # Get the current date
 $date = &ctime(time);
 
-# Set the default tab size and output file name
+# Set the default tab size
 $tabSize = 4;
-$destpath = "";
 
 # Set up default templates
 &Getopts( 'i:d:p:t:' );
@@ -17,10 +16,16 @@ if ($#ARGV < 0) {
     die "Usage: -i <doc-template> -p <output-path> -t<tabsize> -d<sym>=<value> [ <input-files> ... ]\n";
 }
 
-&readtemplate( $opt_i || "template.html" );
+# Read the template
+$opt_i = "template.html" if !(defined $opt_i);
+&readtemplate( $opt_i );
 
-$destpath = $opt_p;
-$tabSize = $opt_t if ($opt_t);
+# Set the destination path.
+$destpath = "";
+$destpath = $opt_p if (defined($opt_p));
+
+# Set the tab size.
+$tabSize = $opt_t if (defined($opt_t));
 
 # Handle defines
 if ($opt_d)
@@ -38,6 +43,7 @@ if ($opt_d)
 # For each input filename, parse it
 while ($srcfile = shift(@ARGV)) {
 
+    $linenumber = 0;
     open( FILE, $srcfile ) || die "Can't open file $srcfile\n";
     print STDERR "Reading \"$srcfile\"\n";
 
@@ -93,7 +99,10 @@ exit;
 
 # Read a line of input, and remove blank lines and preprocessor directives.
 sub rdln {
-    while (/^(\s*|#.*)$/ && ($_ = <FILE>)) {}
+  if (defined ($_))
+    {
+      while (/^(\s*|#.*)$/ && ($_ = <FILE>)) {$linenumber++; }
+    }
 }
 
 # Remove comments from current line
@@ -102,25 +111,25 @@ sub removeComment	{
 }
 
 # parsing functions
-sub matchKW		{ &rdln; s/^\s*(@_[0])// && $1; }
-sub matchStruct		{ &rdln; s/^\s*(struct|class)// && $1; }
-sub matchPermission	{ &rdln; s/^\s*(public|private|protected)// && $1; }
-sub matchID		{ &rdln; s/^\s*([A-Za-z_]\w*)//	&& $1; }
-sub matchColon		{ &rdln; s/^\s*\://; }
-sub matchComma		{ &rdln; s/^\s*\,//; }
-sub matchSemi		{ &rdln; s/^\s*\;//; }
-sub matchRBracket	{ &rdln; s/^\s*\{//; }
-sub matchLBracket	{ &rdln; s/^\s*\}//; }
-sub matchRParen		{ &rdln; s/^\s*\(//; }
-sub matchLParen		{ &rdln; s/^\s*\)//; }
-sub matchRAngle		{ &rdln; s/^\s*\<//; }
-sub matchLAngle		{ &rdln; s/^\s*\>//; }
-sub matchDecl		{ &rdln; s/^(\s*[\s\w\*\[\]\~\&\n]+)// && $1; }
-sub matchOper		{ &rdln; s/^\s*([\~\&\^\>\<\=\!\%\*\+\-\/\|\w]*)// && $1; }
-sub matchFuncOper	{ &rdln; s/^\s*(\(\))// && $1; }
-sub matchAny		{ &rdln; s/^\s*(\S+)// && $1; }
-sub matchChar		{ &rdln; s/^(.)// && $1; }
-sub matchString 	{ &rdln; s/^\"(([^\\\"]|(\\.)))*\"// && $1; }
+sub matchKW		{ &rdln; return (s/^\s*($_[0])// && $1) if defined ($_); return 0; }
+sub matchStruct		{ &rdln; return (s/^\s*(struct|class)// && $1) if defined ($_); return 0; }
+sub matchPermission	{ &rdln; return (s/^\s*(public|private|protected)// && $1) if defined ($_); return 0; }
+sub matchID		{ &rdln; return (s/^\s*([A-Za-z_]\w*)//	&& $1) if defined ($_); return 0; }
+sub matchColon		{ &rdln; return (s/^\s*\://) if defined ($_); return 0; }
+sub matchComma		{ &rdln; return (s/^\s*\,//) if defined ($_); return 0; }
+sub matchSemi		{ &rdln; return (s/^\s*\;//) if defined ($_); return 0; }
+sub matchRBracket	{ &rdln; return (s/^\s*\{//) if defined ($_); return 0; }
+sub matchLBracket	{ &rdln; return (s/^\s*\}//) if defined ($_); return 0; }
+sub matchRParen		{ &rdln; return (s/^\s*\(//) if defined ($_); return 0; }
+sub matchLParen		{ &rdln; return (s/^\s*\)//) if defined ($_); return 0; }
+sub matchRAngle		{ &rdln; return (s/^\s*\<//) if defined ($_); return 0; }
+sub matchLAngle		{ &rdln; return (s/^\s*\>//) if defined ($_); return 0; }
+sub matchDecl           { &rdln; return (s/^(\s*[\s\w\*\[\]\~\&\n]+)// && $1) if defined ($_); return 0; }
+sub matchOper		{ &rdln; return (s/^\s*([\~\&\^\>\<\=\!\%\*\+\-\/\|\w]*)// && $1) if defined ($_); return 0; }
+sub matchFuncOper	{ &rdln; return (s/^\s*(\(\))// && $1) if defined ($_); return 0; }
+sub matchAny		{ &rdln; return (s/^\s*(\S+)// && $1) if defined ($_); return 0; }
+sub matchChar		{ &rdln; return (s/^(.)// && $1) if defined ($_); return 0; }
+sub matchString 	{ &rdln; return (s/^\"(([^\\\"]|(\\.)))*\"// && $1) if defined ($_); return 0; }
 
 # Skip to next semicolon
 sub skipToSemi {
@@ -234,9 +243,9 @@ sub handleCommentLine {
 
     # First, expand tabs.
     $_ = &expand_tabs( $_ );
-    
+	
     # Remove gratuitous \s*\s  (james)
-    s/\s*\*\s//g;
+    s/(^|\n)\s*\*\s/$1/g;
 
     # If it's one of the standard tags
     if (s/^\s*\@(see|package|version|author|param|return|result|exception|keywords|deffunc|defvar|heading|todo)\s*//)
@@ -289,7 +298,7 @@ sub handleCommentLine {
 		    $class->{ 'members' }{ $dbname } = $entry;
 		}
 		else {
-		    $packages{ $packageName }{ '.globals' }{ $dbname } = $entry;
+		    $packages{ $packageName }{ 'globals' }{ $dbname } = $entry;
 		}
 		$docTag = 'description';
 		&dumpComments( $entry );
@@ -397,7 +406,7 @@ sub class_record {
     {
 	return $packages{ $pkg }{ 'classes' }{ $className };
     }
-    0;
+    return 0;
 }
 
 # Parse a declaration in the file
@@ -406,10 +415,13 @@ sub parse_declaration {
     local ($context) = @_;
     local ($baseScope) = '';
     local ($decl);
-	
+    my ($token);
+
     if ($context) { $baseScope = $context . "::"; }
 
     &rdln;
+
+    if (!defined ($_)) { return 0; }
 
     if (s|^\s*//\*\s+||) {
 	# Special C++ comment
@@ -429,7 +441,7 @@ sub parse_declaration {
 	$docTag = 'description';
 
 	# Special comment
-	while (!/\*\//) { &handleCommentLine( $_ ); $text .= $_; $_ = <FILE>; }
+	while (!/\*\//) { &handleCommentLine( $_ ); $text .= $_; $_ = <FILE>; $linenumber++; }
 	s/\={3,}|\-{3,}|\*{3,}//;			# Eliminate banner strips
 	/\*\//;
 	&handleCommentLine( $` );
@@ -439,7 +451,7 @@ sub parse_declaration {
 	# Ordinary C comment
 	$text = "";
 
-	while (!/\*\//) { $text .= $_; $_ = <FILE>; }
+	while (!/\*\//) { $text .= $_; $_ = <FILE>; $linenumber++; }
 	/\*\//;
 	$text.= $`; $_ = $';
     }
@@ -448,9 +460,9 @@ sub parse_declaration {
 	$args = &matchAngleArgs;
 	&rdln;
 		
-	$tmplParams = $args;
+	##$tmplParams = $args; JAMES
 	$result = &parse_declaration( $context );
-	$tmplParams = '';
+	##$tmplParams = ''; JAMES
 	return $result;
     }
     elsif ($tag = &matchKW( "class|struct" )) {
@@ -462,12 +474,12 @@ sub parse_declaration {
 	    return 1 if (&matchSemi);		# Only a struct tag
 
 	    # A class instance
-	    if ($varname = &matchID) {
+	    if (&matchID) {
 		&matchSemi;
 		return 1;
 	    }
  
-	    my $fullName = "$baseScope$className$tmplParams";
+	    my $fullName = "$baseScope$className"; ##$tmplParams"; JAMES
 	    # print STDERR "CLASS $fullName\n";
 			
 	    my @bases = ();
@@ -498,7 +510,7 @@ sub parse_declaration {
 		$class = { 'type'    => $tag,
 			   'name'    => $fullName,
 			   'longname'=> "$tag $className",
-			   'fullname'=> "$tag $className$tmplParams",
+			   'fullname'=> "$tag $className", ## JAMES$tmplParams",
 			   'scopename'=> "$tag $fullName",
 			   'uname'   => $fullName,
 			   'bases'   => \@bases,
@@ -531,7 +543,7 @@ sub parse_declaration {
 		    else
 		    {
 			&parse_declaration( $fullName )
-			    || die "Unmatched brace!\n";
+			    || die "Unmatched brace! line = $linenumber\n";
 		    }
 		}
 				
@@ -589,6 +601,7 @@ sub parse_declaration {
 	}
 
 	($type,$mod,$decl) = $decl =~ /([\s\w]*)([\s\*\&]+\s?)(\~?\w+(\[.*\])*)/;
+
 	$type = $tempArgs . $type;
 	$decl .= $oper;
 
@@ -660,7 +673,7 @@ sub parse_declaration {
 			$class->{ 'members' }{ $dbname } = $entry;
 		    }
 		    else {
-			$packages{ $packageName }{ '.globals' }{ $dbname } = $entry;
+			$packages{ $packageName }{ 'globals' }{ $dbname } = $entry;
 		    }
 		    &dumpComments( $entry );
 		}
@@ -734,6 +747,8 @@ sub parse_declaration {
 		if ($docEmpty == 0 && ($decl =~ /\W*(~?\w*).*/))
 		{
 		    $mod  =~ s/\&/\&amp;/g;
+		    if (!defined($name)) { $name = $mod; } ## JAMES print STDERR "PROBLEM::$type$mod$decl\n"; }
+
 		    $dbname = &uniqueName( "$baseScope$1" );
 
 		    my $entry = { 'type'     => 'var',
@@ -753,7 +768,7 @@ sub parse_declaration {
 			$class->{ 'members' }{ $dbname } = $entry;
 		    }
 		    else {
-			$packages{ $packageName }{ '.globals' }{ $dbname } = $entry;
+			$packages{ $packageName }{ 'globals' }{ $dbname } = $entry;
 		    }
 		    &dumpComments( $entry );
 		}
@@ -784,8 +799,8 @@ sub parse_declaration {
     }
     elsif ($token = &matchAny)
     {
-	# Comment in for debugging
-#print STDERR "$token ";
+      # Comment in for debugging
+      #print STDERR "token: $token \n";
     }
     else { return 0; }
 
@@ -801,7 +816,7 @@ sub readfile {
 	while (<FILE>) { $result .= $_; }
 	close( FILE );
     }
-    $result;
+    return $result;
 }
 
 # Read the entire document template and translate into PERL code.
@@ -881,20 +896,24 @@ sub file {
 
 # return list of package objects
 sub packages {
-    my $p, @r = ();
+    my ($p, @r);
+    @r = ();
+
     foreach $p (sort keys %packages) {
 	push @r, $packages{ $p };
     }
-    @r;
+    return @r;
 }
 
 # return list of source files which have to-do lists
 sub todolist_files {
-    my $p, @r = ();
+    my ($p, @r);
+    @r = ();
+
     foreach $p (sort keys %todolist) {
 	push @r, $p;
     }
-    @r;
+    return @r;
 }
 
 # return list of tab-delimited to-do-list texts.
@@ -917,14 +936,17 @@ sub package_url {
     {
 	return $packages{ $p }->url();
     }
-    0;
+    return 0;
 }
 
 # Get the see-also list for an object
 sub get_seealso_list {
     my $self = shift;
-    my $see, $name, $url, $p, @r = (), $_;
+    my ($see, $name, $url, $p, @r);
+    @r = ();
 
+    if (defined ($self->{ 'see' }))
+      {
     foreach $_ (split(/\n/,$self->{ 'see' })) {
        
 	if (/^\<a\s+href/)			# if already an HREF.
@@ -942,15 +964,16 @@ sub get_seealso_list {
 	    $name = $_;
 	    $url = "#$_";
 
+	    # This doesn't appear to do anything - so I commented it.  (james)
 	    # Look up the package in the index and use it to construct the html filename.
-	    if (/^([^\:]*)\:\:(.*)/)
-	    {
-		$className = ($1 eq '') ? '' : $classToPackage{ $1 };
-		$p = $packageToFile{ $className };
-		if ($p ne '' && $p ne $package) {
-		    $url = &package_url( $1 ) . '#' . $_;
-		}
-	    }
+	    #if (/^([^\:]*)\:\:(.*)/)
+#	    {
+#		$className = ($1 eq '') ? '' : $classToPackage{ $1 };
+#		$p = $packageToFile{ $className };
+#		if ($p ne '') {
+#		    $url = &package_url( $1 ) . '#' . $_;
+#		}
+#	    }
 	}
 	    
 	$url =~ s/^\:*//;		# Remove leading colons from name
@@ -963,7 +986,8 @@ sub get_seealso_list {
 
 	push @r, $entry;
     }
-    @r;
+  }
+    return @r;
 }
 
 # Class for parsed package
@@ -977,32 +1001,34 @@ sub classes {
 
 sub globals {
     my $self = shift;
-    my $globals = $self->{ '.globals' };
+    my $globals = $self->{ 'globals' };
     return map $globals->{ $_ }, (sort keys %$globals);
 }
 
 sub globalvars {
     my $self = shift;
-    my $globals = $self->{ '.globals' };
-    my $p, @r;
+    my $globals = $self->{ 'globals' };
+    my ($p, @r);
+    @r = ();
 
     foreach $p (sort keys %$globals) {
 	my $m = $globals->{ $p };
-	if ($m->{ 'type' } != 'func') { push @r, $m; }
+	if ($m->{ 'type' } ne 'func') { push @r, $m; }
     }
-    @r;
+    return @r;
 }
 
 sub globalfuncs {
     my $self = shift;
-    my $globals = $self->{ '.globals' };
+    my $globals = $self->{ 'globals' };
     my ($p, @r);
+    @r = ();
 
     foreach $p (sort keys %$globals) {
-        my $m = $globals->{ $p };
-        if ($m->{ 'type' } == 'func') { push @r, $m; }
+	my $m = $globals->{ $p };
+	if ($m->{ 'type' } eq 'func') { push @r, $m; }
     }
-    @r;
+    return @r;
 }
 
 sub name {
@@ -1019,7 +1045,7 @@ sub url {
 sub anchor {
     my $self = shift;
     my $url = $self->{ 'name' };
-    $url;
+    return $url;
 }
 
 # Class for parsed class
@@ -1043,59 +1069,63 @@ sub url {
     my $pname = ::package_url( $self->{ 'package' } );
     my $url = $self->{ 'uname' };
     $url =~ s/::/-/g;
-    "$pname#$url";
+    return "$pname#$url";
 }
 
 sub anchor {
     my $self = shift;
     my $url = $self->{ 'uname' };
     $url =~ s/::/-/g;
-    $url;
+    return $url;
 }
 
 sub members {
-    my $p, @r = ();
     my $self = shift;
     my $members = $self->{ 'members' };
+    my ($p, @r);
+    @r = ();
 
     foreach $p (sort keys %$members) {
 	push @r, $members->{ $p };
     }
-    @r;
+    return @r;
 }
 
 sub membervars {
-    my $p, @r = ();
     my $self = shift;
     my $members = $self->{ 'members' };
+    my ($p, @r);
+    @r = ();
 
     foreach $p (sort keys %$members) {
 	my $m = $members->{ $p };
-	if ($m->{ 'type' } != 'func') { push @r, $m; }
+	if ($m->{ 'type' } ne 'func') { push @r, $m; }
     }
-    @r;
+    return @r;
 }
 
 sub memberfuncs {
-    my $p, @r = ();
     my $self = shift;
     my $members = $self->{ 'members' };
+    my ($p, @r);
+    @r = ();
 
     foreach $p (sort keys %$members) {
 	my $m = $members->{ $p };
-	if ($m->{ 'type' } == 'func') { push @r, $m; }
+	if ($m->{ 'type' } eq 'func') { push @r, $m; }
     }
-    @r;
+    return @r;
 }
 
 sub baseclasses {
     my $self = shift;
     my $bases = $self->{ 'bases' };
-    my $p, $class, @r = ();
+    my ($p, $class, @r);
+    @r = ();
 
     foreach $p (@$bases) {
 
-	unless ($class = $classList{ $p })
+	unless ($class = $::classList{ $p })
 	{
 	    # It's one we don't know about, so just make something up
 	    $class = { 'name'    => $p,
@@ -1113,19 +1143,23 @@ sub baseclasses {
 	}
 	push @r, $class;
     }
-    @r;
+    return @r;
 }
 
 sub subclasses {
-    my $self = shift;
-    my $subs = $self->{ 'subs' };
-    my $p, $class, @r = ();
-
+  my $self = shift;
+  my $subs;
+  my ($p, $class, @r);
+  @r = ();
+  
+  if (defined ($self->{ 'subs' })) {
+    $subs = $self->{ 'subs' };
     foreach $p (sort @$subs) {
-	$class = $::classList{ $p };
-	push @r, $class;
+      $class = $::classList{ $p };
+      push @r, $class;
     }
-    @r;
+  }
+  return @r;
 }
 
 # Class for parsed class member or global
@@ -1150,7 +1184,7 @@ sub url {
     my $pname = ::package_url( $self->{ 'package' } );
     my $url = $self->{ 'uname' };
     $url =~ s/::/-/g;
-    "$pname#$url";
+    return "$pname#$url";
 }
 
 sub anchor {
@@ -1163,7 +1197,8 @@ sub anchor {
 sub params {
     my $self = shift;
     my $params = $self->{ 'param' };
-    my @r = ();
+    my @r;
+    @r = ();
 
     return 0 unless ($params);
 
@@ -1178,13 +1213,14 @@ sub params {
 
 	push @r, $entry;
     }
-    @r;
+    return @r;
 }
 
 sub exceptions {
     my $self = shift;
     my $params = $self->{ 'exception' };
-    my @r = ();
+    my @r;
+    @r = ();
 
     return 0 unless ($params);
 
@@ -1199,7 +1235,7 @@ sub exceptions {
 
 	push @r, $entry;
     }
-    @r;
+    return @r;
 }
 
 package ArgRecord;

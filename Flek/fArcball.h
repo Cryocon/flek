@@ -1,6 +1,6 @@
 /* -*-C++-*- 
 
-   "$Id: fArcball.h,v 1.6 2000/02/13 01:02:32 jamespalmer Exp $"
+   "$Id: fArcball.h,v 1.7 2000/02/13 04:43:56 jamespalmer Exp $"
    
    Copyright 1999-2000 by the Flek development team.
    
@@ -148,7 +148,7 @@ public:
   AxisSet asAxisSet;
   int iAxisIndex;
   
-private :
+private:
   
   static fVector3 mouseOnSphere (const fVector3& mouse, const fVector3& ballCenter, double ballRadius);
   static fVector3 constrainToAxis (const fVector3& loose, const fVector3& axis);

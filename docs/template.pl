@@ -495,7 +495,7 @@ sub variable {
 	}
 
 	>>
-	<a name="$(f.name)"></a>
+	<a name="$(v.name)"></a>
 	<dl><dt>
 	<h4>$(v.fullname);</h4>
 	<dd>

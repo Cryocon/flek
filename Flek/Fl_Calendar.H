@@ -1,6 +1,6 @@
 /* -*-C++-*- 
 
-   "$Id: Fl_Calendar.H,v 1.3 2000/02/13 01:02:32 jamespalmer Exp $"
+   "$Id: Fl_Calendar.H,v 1.4 2000/02/13 04:43:56 jamespalmer Exp $"
    
    Copyright 1999-2000 by the Flek development team.
    
@@ -71,8 +71,8 @@ public:
   /**
    * The constructor for an empty Fl_Calendar_Base.
    */
-  Fl_Calendar_Base (int x, int y, int w = (7*20), int h = (6*20), 
-  		    const char *l = 0);
+  Fl_Calendar_Base (int x, int y, int w = (7*20), int h = (6*20),   
+		    const char *l = 0);
 
   /**
    * Set the calendar date to y/m/d.
@@ -203,7 +203,7 @@ public:
   int cal_w;
   int cal_h;
 
-  Fl_Button * days[(6*7)];
+  Fl_Button * days[6*7];
 };
 
 /** @package libflek_ui
