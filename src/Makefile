@@ -3,7 +3,6 @@ CORECPPFILES = \
 	fDate.cxx \
 	fDom.cxx \
 	fDomAttr.cxx \
-	fList.cxx \
 	fVector.cxx 
 
 UICPPFILES = \
