@@ -173,5 +173,5 @@ AC_SUBST(LIBCOMMAND)
 AC_OUTPUT(makeinclude)
 
 dnl#
-dnl# End of "$Id: configure.in,v 1.1 2000/01/25 19:40:50 jamespalmer Exp $".
+dnl# End of "$Id: configure.in,v 1.1.1.1 2000/01/25 19:40:50 jamespalmer Exp $".
 dnl#

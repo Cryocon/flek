@@ -73,5 +73,5 @@ configure: configure.in
 
 
 #
-# End of "$Id: Makefile,v 1.1 2000/01/25 19:40:48 jamespalmer Exp $".
+# End of "$Id: Makefile,v 1.1.1.1 2000/01/25 19:40:48 jamespalmer Exp $".
 #
