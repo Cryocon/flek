@@ -191,10 +191,6 @@ void Fl_Dockable_Window::create_dockable_window() {
   begin();
 }
 
-Fl_Dockable_Window::~Fl_Dockable_Window() {
-  delete gripper;
-}
-
 void Fl_Dockable_Window::show() {
   Fl_Window::show();
   gripper->show();

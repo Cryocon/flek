@@ -1,6 +1,6 @@
 /* -*-C++-*- 
 
-   "$Id: Fl_Dockable_Window.H,v 1.7 2000/05/18 04:50:23 jamespalmer Exp $"
+   "$Id: Fl_Dockable_Window.H,v 1.8 2000/05/24 19:28:28 brad Exp $"
    
    Copyright 1999-2000 by the Flek development team.
    
@@ -94,8 +94,6 @@ public:
    */
   Fl_Dockable_Window(int w, int h, const char *l = 0);
   Fl_Dockable_Window(int x, int y, int w, int h, const char *l = 0);
-
-  ~Fl_Dockable_Window();
 
   /**
    * Begin adding new widgets to the contents window.
