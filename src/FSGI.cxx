@@ -332,7 +332,7 @@ FImage * FSGI::read (char *filename)
   input.get_hi (t); // Minimum pixel 
   input.get_hi (t); // Maximum pixel 
 
-  FImage *Nimg = new FImage (img.width, img.height);
+  FImage *Nimg = new FImage (img.width, img.height, img.channels);
   
   if (img.compression)
     {
