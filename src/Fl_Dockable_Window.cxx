@@ -10,8 +10,7 @@ long Fl_Dockable_Window::gripper_width = 10;
 Fl_Dockable_Window * Fl_Dockable_Window::current = 0;
 
 void Fl_Gripper::draw() {
-  Fl_Dockable_Window* group = (Fl_Dockable_Window*)parent();
-  if(group->type() & FL_DRAGABLE) {
+  if(_grippertype & FL_DRAGABLE) {
     // Draw the Gnome style gripper:
 #ifndef FLTK_2
     Fl_Color col = value() ? selection_color() : color();
@@ -33,7 +32,7 @@ void Fl_Gripper::draw() {
 
     fl_pop_clip();
   }
-  else if(group->type() & FL_SHOVABLE)
+  else if(_grippertype & FL_SHOVABLE)
     Fl_Button::draw();
 }
 
@@ -49,7 +48,7 @@ int Fl_Gripper::handle(int event) {
       if (group->window() && (group->window()->modal()))
         return 1;
 
-      if ((group->type()) & FL_DRAGABLE) {
+      if (_grippertype & FL_DRAGABLE) {
         Fl_Dockable_Window::current = (Fl_Dockable_Window*)parent();
         x_down = Fl::event_x_root();
         y_down = Fl::event_y_root();
@@ -66,7 +65,7 @@ int Fl_Gripper::handle(int event) {
       Fl_Pack* parent = (Fl_Pack*)group->parent();
       int content_location = 0;
 
-      if((group->type() & FL_SHOVABLE) && (event & FL_RELEASE)
+      if((_grippertype & FL_SHOVABLE) && (event & FL_RELEASE)
         && (group->parent()) && (x_up <= w() + 2) && (y_up <= h() + 2)) {
         for(int i = 0; i < parent->children(); i++) {
           if (parent->child(i)->type() != FL_WINDOW) {
@@ -81,7 +80,7 @@ int Fl_Gripper::handle(int event) {
         return 1;
       }
 
-      if(!(group->type() & FL_DRAGABLE))
+      if(!(_grippertype & FL_DRAGABLE))
         return 1;
 
       if(group->window() && group->window()->modal())
@@ -149,6 +148,15 @@ int Fl_Gripper::handle(int event) {
   return rval;
 }
 
+void Fl_Gripper::grippertype(unsigned char t) {
+  _grippertype = t;
+}
+
+unsigned char Fl_Gripper::grippertype() { 
+  return _grippertype;
+}
+
+
 Fl_Dockable_Window::Fl_Dockable_Window(int x, int y, int w, int h, const char *l) 
   : Fl_Window(x, y, (w + gripper_width), h, l) {
   create_dockable_window();
@@ -167,7 +175,7 @@ Fl_Dockable_Window::create_dockable_window() {
   docked = 0;
   contents = new Fl_Window(gripper_width, 0, w(), h());
   resizable(contents);
-  type_ = FL_DRAGABLE;
+  grippertype(FL_DRAGABLE);
   begin();
 }
 
@@ -222,9 +230,11 @@ void Fl_Dockable_Window::undock(int x, int y) {
   }
 }
 
-void Fl_Dockable_Window::type(unsigned char t) {
-  type_ = t;
-  if((type_ & FL_DRAGABLE) || (type_ & FL_SHOVABLE)) {
+void Fl_Dockable_Window::grippertype(unsigned char t) {
+  // Set the type of the gripper.
+  gripper->grippertype(t);
+
+  if((t & FL_DRAGABLE) || (t & FL_SHOVABLE)) {
     contents->resize(gripper_width, 0, w(), h());
     gripper->show();
   }
@@ -234,6 +244,6 @@ void Fl_Dockable_Window::type(unsigned char t) {
   }
 }
 
-unsigned char Fl_Dockable_Window::type() { 
-  return type_; 
+unsigned char Fl_Dockable_Window::grippertype() { 
+  return gripper->grippertype();
 }
