@@ -72,15 +72,16 @@ class xmlFile
 {
  public:
 
-  xmlFile () {}
+  xmlFile () { Eof = 0; }
   
   enum 
   {
-    END_OF_PAIRED_TAG,
-    END_OF_UNPAIRED_TAG,
-    BEGIN_TAG,
-    END_TAG,
-    PARSE_ERROR
+    DENADA=0,
+    END_OF_PAIRED_TAG=1,
+    END_OF_UNPAIRED_TAG=2,
+    BEGIN_TAG=3,
+    END_TAG=4,
+    PARSE_ERROR=5
   };
 
   int open (const char *filename, const char *mode)
@@ -98,9 +99,27 @@ class xmlFile
 
   int read ()
     {
-      int rc = fread (&ch, 1, 1, fh);
-      if (ch == '\n') linecnt++;
+      int rc;
+
+      rc = fread (&ch, 1, 1, fh);
+
+      if (rc==0)
+	Eof = 1;
+
+      if (feof (fh))
+	Eof = 1;
+
+      if (ch == '\n') 
+	linecnt++;
+
+      printf ("#: %c\n", ch);
+
       return rc;
+    }
+
+  int eof ()
+    {
+      return Eof;
     }
 
   int isEndl ()
@@ -131,6 +150,7 @@ class xmlFile
       
       if (ch == '/')
 	{
+	  ch = ' ';
 	  // Skip whitespace
 	  while (isSpace () && (rc = read ())) { }
 	  if (ch == '>')
@@ -145,7 +165,7 @@ class xmlFile
       int rc, i = 0;
       key[i] = ch;
       while ((ch != '=') && (!isSpace ()) && (rc = read ())) { i++; key[i] = ch; }
-      key[i+1] = 0;
+      key[i] = 0;
       return (!rc);
     }
 
@@ -157,7 +177,10 @@ class xmlFile
       while ((ch != quote) && (rc = read ())) { value[i] = ch; i++; }
       if (!rc)
 	return (!rc);
-      value[i] = 0;
+      if (i>0) 
+	value[i-1] = 0;
+      else
+	value[0] = 0;
       rc = read ();
       return (!rc);
     }
@@ -167,7 +190,7 @@ class xmlFile
       int rc, i = 0;
       value[i] = ch;
       while ((ch != '>') && (ch != '/') && (!isSpace ()) && (rc = read ())) { i++; value[i] = ch; }
-      value[i+1] = 0;
+      value[i] = 0;
 
       rc = skipSpace ();
       if (!rc)
@@ -194,8 +217,11 @@ class xmlFile
 	return rc;
 
       rc = readKey (key);
+
       if (rc)
 	return rc;
+
+      printf ("KEY=\"%s\"\n", key);
 
       rc = skipSpace ();
       if (rc)
@@ -207,6 +233,8 @@ class xmlFile
       ch = ' '; // Pretend = was just white space.
 
       rc = skipSpace ();
+      printf ("Skipped =..\n");
+
       if (rc)
 	return rc;
 
@@ -215,12 +243,7 @@ class xmlFile
       else
 	rc = readValue (value);
 
-      rc = skipSpace ();
-
-      if (isQuote ())
-	rc = readQuote (value);
-      else
-	rc = readValue (value); // Read an unquoted value.  Not too Kosher?
+      printf ("VALUE=\"%s\"\n", value);
 
       return 0;
     }
@@ -228,12 +251,14 @@ class xmlFile
   int readTag (char *tag)
     {
       int rc = 0;
+      printf ("BEGIN: readTag ();\n");
       rc = skipSpace ();
       if (ch != '<')
 	return PARSE_ERROR;
       
       ch = ' ';
-      rc = skipSpace ();
+      rc = 0;
+      read (); // ch = ' '; skipSpace ();
       if (ch == '/')
 	{
 	  ch = ' ';
@@ -247,9 +272,10 @@ class xmlFile
       else rc = BEGIN_TAG;
 
       int i = 0;
-      while ((ch != '>') && (ch != '/') && (!isSpace ()) && (rc = read ())) 
+      tag[i] = ch;
+      while ((ch != '>') && (ch != '/') && (!isSpace ()) && (read ())) 
 	{ i++; tag[i] = ch; }
-      tag[i+1] = 0;
+      tag[i] = 0;
 
       return rc;
     }
@@ -267,6 +293,7 @@ class xmlFile
   FILE *fh;
   char *name;
   int  linecnt;
+  int Eof;
 };
 
 class fDomNode : public fBase 
@@ -277,6 +304,16 @@ class fDomNode : public fBase
 
   fDomNode ()
     {
+    }
+
+  fDomNode (const fDomNode & n) : fBase (n)
+    {
+      // Add children..
+      Children = n.Children;
+      // Add attributes..
+      Attributes = n.Attributes;
+      // Add listeners..
+      Listeners = n.Listeners;
     }
 
   int type () { return 1; }
@@ -324,6 +361,7 @@ class fDomNode : public fBase
 
       attribute.key = key;
       attribute.value = value;
+      printf ("PUSHING ATTRIBUTES : (%s, %s)\n", key, value);
       Attributes.push_back (&attribute);
     }
     
@@ -334,10 +372,12 @@ class fDomNode : public fBase
       char value[128];
       int rc = 0;
       
+      printf ("!! Beginning of Attributes\n");
       while (!(rc = xml.readAttribute (key, value))) 
 	{
 	  xmlPushAttribute (key, value);
 	}
+      printf ("!! End of Attributes\n");
       return rc;
     }
 
@@ -347,20 +387,39 @@ class fDomNode : public fBase
    */
   virtual int xmlPushText (xmlFile &xml);
   
+  int xmlRead (char *filename)
+    {
+      xmlFile xml;
+      xml.open (filename, "r");
+      return xmlRead (xml);
+    }
+
   int xmlRead (xmlFile &xml)
     {
       int rc = 0;
       char tag[128];
 
-      while (1)
+      xml.ch = ' ';
+      // Reset the current value.
+      while (!(xml.eof ()))
 	{
+	  printf ("WHILE... %c\n", xml.ch);
+
+	  // Clean up after last tag..
+	  if (xml.ch == '>') 
+	    xml.ch = ' ';
+
 	  rc = xml.skipSpace ();
 
 	  if (xml.ch == '<')
 	    {
 	      rc = xml.readTag (tag);
+	      printf ("TAG=\"%s\"\n", tag);
 	      if (rc == xmlFile::END_TAG)
-		return rc;
+		{
+		  printf ("END OF TAG!\n");
+		  return rc;
+		}
 	      xmlPushTag (xml, tag);
 	    }
 	  else
@@ -432,14 +491,7 @@ class fDomNode : public fBase
 
   fBase::Ptr copy (void) const
     {
-      Ptr o = new fDomNode;
-      // Add children..
-      o->Children = Children;
-      // Add attributes..
-      o->Attributes = Attributes;
-      // Add listeners..
-      o->Listeners = Listeners;
-      return o;
+      return (new fDomNode (*this));
     }
 
   // Child functions
@@ -485,9 +537,18 @@ class fDomNode : public fBase
 class fDomTextNode : public fDomNode
 {
  public:
-  fDomTextNode () {}
+  fDomTextNode () { Text = 0; }
+  fDomTextNode (const fDomTextNode & n) : fDomNode (n)
+    {
+      Text = strdup (n.Text);
+    }
   void text (char *t) { if (Text) free (Text); Text = strdup (t); }
   char *text () { return Text; }
+
+  fBase::Ptr copy (void) const
+    {
+      return (new fDomTextNode (*this));
+    }
 
  protected:
   char *Text;
@@ -496,10 +557,18 @@ class fDomTextNode : public fDomNode
 class fDomDynamicNode : public fDomNode
 {
  public:
-
-  fDomDynamicNode () {}
+  fDomDynamicNode () { Name = 0; }
+  fDomDynamicNode (const fDomDynamicNode & n) : fDomNode (n)
+    {
+      Name = strdup (n.Name);
+    }
   char * name () { return Name; }
   void name (char *n) { if (Name) free (Name); Name = strdup (n); }
+
+  fBase::Ptr copy (void) const
+    {
+      return (new fDomDynamicNode (*this));
+    }
 
  protected:
   char *Name;
@@ -523,8 +592,11 @@ int fDomNode::xmlPushTag (xmlFile &xml, char *tag)
   // Use a node with a static tag if available, otherwise use a dynamic tag.
   t.name (tag);
   Children.push_back (&t);
+  printf ("reading attributes\n");
   rc = ((fDomDynamicNode *)(Children.back ()))->xmlReadAttributes (xml);
   if (rc == xmlFile::END_OF_UNPAIRED_TAG)
     return rc;
+  printf ("reading more of file..\n");
   ((fDomDynamicNode *)(Children.back ()))->xmlRead (xml);
+  printf ("read it..\n");
 }

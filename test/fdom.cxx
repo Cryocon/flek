@@ -9,12 +9,16 @@ int listen (fDomNode *node, long event, long message)
     }
 }
 
-fDomNode root, a, b, c;
+fDomNode root, a, b, c, n;
 
 void main ()
 {
   fList documents;
 
+  printf ("sizeof (node) = %d\n", sizeof(fDomNode));
+  printf ("sizeof (dynzmic) = %d\n", sizeof(fDomDynamicNode));
+  printf ("sizeof (fList) = %d\n", sizeof(fList));
+  
   root.setAttribute ("name", "Document");
 
   a.setAttribute ("name", "First field");
@@ -38,6 +42,8 @@ void main ()
   
   documents.push_back (&root);
   ((fDomNode *)(documents.back()))->write ();
+  n.xmlRead ("fdom.xml");
+  n.write ();
 }
 
 

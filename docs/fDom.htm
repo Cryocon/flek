@@ -1,0 +1,71 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML//EN">
+<html>
+  <head>
+    <title>fDom</title>
+  </head>
+  <body bgcolor="white">
+    <center>
+      <img src="flek.gif">
+      <h4>The Fast Light Environment Kit</h4>
+    </center>
+    <hr>
+    
+    <h2>fDom</h2>
+    <p>fDom is the Flek document object model.  fDom provides a logical 
+      structure and API for accessing and manipulating documents.  The term 
+      "document" is used in a very broad sense.  A document may be 
+      comprised of any sort of information or data.
+    <p>fDom attempts to synthesize ideas and features of the W3's 
+      <a href="http://www.w3.org/DOM/">DOM</a> and XML,  Apple's OpenDoc, 
+      and several other document models.  fDom is most similar to DOM, except 
+      that it provides fewer structural primitives and allows the programmer 
+      more freedom in subclassing nodes.  In these respects fDom is more
+      similar to OpenDoc.
+    <p>fDom is also <i>incomplete</i>!  The implementation still lacks a mechanism 
+      to allow for remote method invocation, and Flek / Fltk currently
+      lack the functionality necessary to embed remote parts.  Both of
+      these capabilites are necessary for componentized documents.
+    <h3>Data Structures</h3>
+    <ol>
+      <li>fDomAttribute</li>
+      <li>fDomListener</li>
+      <li>fDomNode
+	<ul>
+	  <li>fDomTextNode</li>
+	  <li>fDomDynamicNode</li>
+	</ul>
+      </li>
+    </ol>
+    <blockquote>
+      <h4>fDomNode</h4>
+      <p>The primary currency of information within fDom is the node.
+	Nodes exist as entities in a hierarchical tree.  A single node
+	may have a parent node, multiple daughter nodes, a set of
+	attributes, and a set of connected listeners.  A node without
+	a parent is the document root.
+      <p>The <b>fDomTextNode</b> subclass is a special node that 
+	represents a block of text.
+      <p>The <b>fDomDynamicNode</b> is a subclass whose name is dynamic.
+	In some applications the programmer may not want to define
+	fDom classes for every element she intends to use.  These abstract
+	elements may be represented by an fDomDynamicNode.  In most
+	applications where a well defined document is desirable, using
+	fDomDynamicNode is <b>not</b> desireable.
+      <h4>fDomAttribute</h4>
+      <p>Certain kinds of information associated with a single node
+	may be expressed in key-value pairs called "attributes".  When
+	stored in XML format these become the attributes for a given
+	tag.
+      <h4>fDomListener</h4>
+      <p>Listeners can be connected to individual nodes and will "listen"
+	for events.  One common use is to notify anything connected to
+	the document that data in the document has been changed.
+    </blockquote>
+    <hr>
+    <address><a href="mailto:jpalmer@agstream.tamu.edu">James Dean Palmer</a></address>
+<!-- Created: Fri Feb 18 12:51:28 CST 2000 -->
+<!-- hhmts start -->
+Last modified: Fri Feb 18 14:30:35 CST 2000
+<!-- hhmts end -->
+  </body>
+</html>
