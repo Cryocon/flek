@@ -3,6 +3,13 @@
   It will be based on libxml, but it's not in a useable state, yet.
 */
 
+typedef Fl_Dom_Char unsigned short;
+
+class Fl_Dom_String
+{
+
+};
+
 class Fl_Dom_Node
 {
 public:
