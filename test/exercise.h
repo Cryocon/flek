@@ -3,7 +3,7 @@
 #ifndef exercise_h
 #define exercise_h
 #include <FL/Fl.H>
-#include <FL/Flv_Table.H>
+#include <Flek/Flv_Table.H>
 
 class Flv_List2 : public Flv_List {
 public:

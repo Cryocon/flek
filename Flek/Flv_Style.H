@@ -108,7 +108,7 @@ private:
 class Flv_Style
 {
 public:
-	friend Flv_Style_List;									//	Hack for value
+	friend class Flv_Style_List;									//	Hack for value
 	Flv_Style();
 	Flv_Style( int value );
 

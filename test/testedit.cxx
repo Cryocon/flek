@@ -23,12 +23,12 @@
 //	** Check if we need to set parent for editor
 //	======================================================================
 
-#include <FL/Flv_Table.H>
-#include <FL/Flve_Input.H>
+#include <Flek/Flv_Table.H>
+#include <Flek/Flve_Input.H>
 #include <FL/Fl_Double_Window.H>
 #include <FL/fl_draw.H>
 #include <FL/Enumerations.H>
-#include <FL/Flve_Check_Button.H>
+#include <Flek/Flve_Check_Button.H>
 #include <stdio.h>
 #include <string.h>
 

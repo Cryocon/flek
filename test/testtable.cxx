@@ -10,7 +10,7 @@
 //	Example of using an Flv_Table
 //	======================================================================
 
-#include <FL/Flv_Table.H>
+#include <Flek/Flv_Table.H>
 #include <FL/Fl_Double_Window.H>
 #include <FL/fl_draw.H>
 #include <stdio.h>

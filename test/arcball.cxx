@@ -1,5 +1,5 @@
 /*
-  "$Id: arcball.cxx,v 1.3 2000/02/06 08:41:52 jamespalmer Exp $"
+  "$Id: arcball.cxx,v 1.4 2000/02/08 20:22:52 jamespalmer Exp $"
   
   This program tests fArcball and Fl_Gl_Arcball_Window.
 
@@ -112,16 +112,33 @@ void arcball_window::draw()
   }
 }
 
+#include <stdio.h>
+
+void test1 (char *test)
+{
+ printf ("test1=%s\n", test); 
+}
+
+void test1 (char test)
+{
+ printf ("test2=%c\n", test); 
+}
+
 int main (int argc, char **argv) 
 {
+  
+  test1 ('c');
+  test1 ("string...");
+  
   Fl_Window window (300, 370);
   
-  arcball_window arcball_window (10, 10, window.w()-20, window.h()-90);
-  window.resizable (&arcball_window);
+  arcball_window awindow (10, 10, window.w()-20, window.h()-90);
+  window.add (awindow);
+  window.resizable (&awindow);
 
   window.end ();
   window.show (argc,argv);
-  arcball_window.show ();
+  awindow.show ();
   
   return Fl::run ();
 }

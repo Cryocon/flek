@@ -18,6 +18,7 @@
 #include <mem.h>
 #else
 #include <memory.h>
+#include <string.h>
 #endif
 
 #define ADDSIZE 10

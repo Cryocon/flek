@@ -11,7 +11,7 @@
 //	This will also demonstrate mixed styling (dynamic and virtual)
 //	======================================================================
 
-#include <FL/Flv_Table.H>
+#include <Flek/Flv_Table.H>
 #include <FL/Fl_Window.H>
 #include <FL/fl_draw.H>
 #include <stdio.h>

@@ -10,7 +10,7 @@
 //	Example of using an Flv_List
 //	======================================================================
 
-#include <FL/Flv_List.H>
+#include <Flek/Flv_List.H>
 #include <FL/Fl_Window.H>
 #include <FL/fl_draw.H>
 #include <stdio.h>

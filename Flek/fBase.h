@@ -1,4 +1,4 @@
-// $Id: fBase.h,v 1.2 2000/02/06 20:40:44 jamespalmer Exp $
+// $Id: fBase.h,v 1.3 2000/02/08 20:22:52 jamespalmer Exp $
 
 #ifndef FBASE_H_
 #define FBASE_H_
@@ -21,7 +21,7 @@ public:
   /**
    * Empty assignment operator.
    */
-  fBase& operator = (const fBase& object)
+  fBase& operator = (const fBase&)
     {
       return *this;
     }
@@ -54,7 +54,7 @@ protected:
   /** 
    * The copy constructor is protected to prevent instantiation.
    */
-  fBase (const fBase& object)
+  fBase (const fBase&)
     {}
 };
 

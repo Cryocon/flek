@@ -1,6 +1,6 @@
 /* -*-C++-*- 
 
-   "$Id: fVector3.h,v 1.5 2000/02/06 20:40:44 jamespalmer Exp $"
+   "$Id: fVector3.h,v 1.6 2000/02/08 20:22:52 jamespalmer Exp $"
    
    Copyright 1999-2000 by the Flek development team.
    
@@ -42,7 +42,7 @@ class fVector3 : public fBase
 {
 public:
 
-  friend fGl;
+  friend class fGl;
   
   typedef fVector3* Ptr;
   

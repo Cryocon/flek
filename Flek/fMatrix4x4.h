@@ -1,6 +1,6 @@
 /* -*-C++-*- 
    
-   "$Id: fMatrix4x4.h,v 1.7 2000/02/06 20:40:44 jamespalmer Exp $"
+   "$Id: fMatrix4x4.h,v 1.8 2000/02/08 20:22:52 jamespalmer Exp $"
    
    Copyright 1999-2000 by the Flek development team.
    
@@ -556,49 +556,5 @@ protected:
 	row[i] = mat3[i];
     }
 };
-
-/*
-  The following functions are defined outside the class so that they use the
-  friend versions of member functions instead of the member functions themselves
-*/
-
-/**
- *  Multiplication of 2 matrices - outer product
- */
-inline fMatrix4x4 operator * (const fMatrix4x4& mat1, const fMatrix4x4& mat2)
-{
-  fMatrix4x4 prod, trans;
-  
-  // Find the transpose of the 2nd matrix
-  trans = transpose (mat2);
-  
-  // The columns of mat2 are now the rows of trans
-  // Multiply appropriate rows and columns to get the product
-  prod.row[0].set (mat1.row[0]*trans.row[0],
-                   mat1.row[0]*trans.row[1],
-                   mat1.row[0]*trans.row[2],
-                   mat1.row[0]*trans.row[3]);
-  prod.row[1].set (mat1.row[1]*trans.row[0],
-                   mat1.row[1]*trans.row[1],
-                   mat1.row[1]*trans.row[2],
-                   mat1.row[1]*trans.row[3]);
-  prod.row[2].set (mat1.row[2]*trans.row[0],
-                   mat1.row[2]*trans.row[1],
-                   mat1.row[2]*trans.row[2],
-                   mat1.row[2]*trans.row[3]);
-  prod.row[3].set (mat1.row[3]*trans.row[0],
-                   mat1.row[3]*trans.row[1],
-                   mat1.row[3]*trans.row[2],
-                   mat1.row[3]*trans.row[3]);
-  return prod;
-}
-
-/**
- * Pre-multiplication by a fVector4. Vector is assumed to be a row vector.
- */
-inline fVector4 operator * (const fVector4& vec, const fMatrix4x4& mat)
-{
-  return (transpose(mat) * vec);
-}
 
 #endif // #ifndef FMATRIX_4x4_H_

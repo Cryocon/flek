@@ -575,7 +575,7 @@ void Flv_Combo_Items::change( int i, long v )
 static int cmp( const void *a, const void *b )
 {
 	int stat;
-	stat = stricmp(C(a)->item(), C(b)->item());
+	stat = strcmp(C(a)->item(), C(b)->item());
 	if (stat)
 		return stat;
 	return C(a)->value() - C(b)->value();
@@ -613,7 +613,7 @@ int Flv_Combo_Items::findi( const char *v )				//	Find text return index (-1 not
 	int t;
 	for (t=0;	t<vcount;	t++ )
 	{
-		if (strncmpi(list[t]->item(),v, strlen(v))==0)
+		if (strncmp(list[t]->item(),v, strlen(v))==0)
 		{
 			vcurrent = t;
 			return t;
@@ -627,7 +627,7 @@ int Flv_Combo_Items::find( const char *v )				//	Find text return index (-1 not 
 	int t;
 	for (t=0;	t<vcount;	t++ )
 	{
-		if (stricmp(list[t]->item(),v)==0)
+		if (strcmp(list[t]->item(),v)==0)
 		{
 			vcurrent = t;
 			return t;
