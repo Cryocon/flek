@@ -109,6 +109,7 @@ int xmlFile::readText (char *text)
   while ((ch != '<') && (ch != '>') && (rc = read ())) 
     { i++; text[i] = ch; }
   text[i] = 0;
+  return rc;
 }
 
 int xmlFile::readAttribute (char *key, char *value)
@@ -400,6 +401,7 @@ int fDomNode::xmlPushText (xmlFile &xml)
       t->text (text);
       Children.push_back (t);
     }
+  return 0;
 }
 
 fDomNode * fDomNode::nodeFromTag (char * tag)
@@ -423,5 +425,6 @@ int fDomNode::xmlPushTag (xmlFile &xml, char *tag)
     return rc;
 
   ((fDomDynamicNode *)(Children.back ()))->xmlRead (xml);
+  return 0;
 }
 
