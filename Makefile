@@ -79,21 +79,37 @@ configure: configure.in
 # Also read flek.spec.  Do a make list-headers in src if stuff has changed..
 
 rpm: 
-	rm -rf /tmp/flek-0.1 /tmp/flek-0.1.tar.gz /tmp/flek.spec
-	cp -R ../flek /tmp/flek-0.1
+	rm -rf /tmp/flek-0.2 /tmp/flek-0.2.tar.gz /tmp/flek.spec
+	cp -R ../flek /tmp/flek-0.2
 	cd /tmp;\
-	rm -rf flek-0.1/CVS;\
-	rm -rf flek-0.1/docs/CVS;\
-	rm -rf flek-0.1/Flek/CVS;\
-	rm -rf flek-0.1/lib/CVS;\
-	rm -rf flek-0.1/src/CVS;\
-	rm -rf flek-0.1/src/pixmaps/CVS;\
-	rm -rf flek-0.1/test/CVS;\
-	tar cv flek-0.1 > flek-0.1.tar;\
-	gzip flek-0.1.tar;\
-	cp flek-0.1.tar.gz /usr/src/RPM/SOURCES/;\
-	rpm -ba --target i386 /tmp/flek-0.1/flek.spec
+	rm -rf flek-0.2/CVS;\
+	rm -rf flek-0.2/docs/CVS;\
+	rm -rf flek-0.2/Flek/CVS;\
+	rm -rf flek-0.2/lib/CVS;\
+	rm -rf flek-0.2/src/CVS;\
+	rm -rf flek-0.2/src/pixmaps/CVS;\
+	rm -rf flek-0.2/test/CVS;\
+	tar cv flek-0.2 > flek-0.2.tar;\
+	gzip flek-0.2.tar;\
+	cp flek-0.2.tar.gz /usr/src/RPM/SOURCES/;\
+	rpm -ba --target i386 /tmp/flek-0.2/flek.spec
+
+rpm-agenda: 
+	rm -rf /tmp/flek-0.2 /tmp/flek-0.2.tar.gz /tmp/flek-agenda.spec
+	cp -R ../flek /tmp/flek-0.2
+	cd /tmp;\
+	rm -rf flek-0.2/CVS;\
+	rm -rf flek-0.2/docs/CVS;\
+	rm -rf flek-0.2/Flek/CVS;\
+	rm -rf flek-0.2/lib/CVS;\
+	rm -rf flek-0.2/src/CVS;\
+	rm -rf flek-0.2/src/pixmaps/CVS;\
+	rm -rf flek-0.2/test/CVS;\
+	tar cv flek-0.2 > flek-0.2.tar;\
+	gzip flek-0.2.tar;\
+	cp flek-0.2.tar.gz /usr/src/RPM/SOURCES/;\
+	rpm -ba --target i386 /tmp/flek-0.2/flek-agenda.spec
 
 #
-# End of "$Id: Makefile,v 1.7 2000/09/29 21:49:34 clip Exp $".
+# End of "$Id: Makefile,v 1.8 2001/05/14 16:50:32 jamespalmer Exp $".
 #

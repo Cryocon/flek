@@ -1,6 +1,6 @@
 # -*- sh -*-
 # Note that this is NOT a relocatable package
-%define ver       1.0.7
+%define ver       1.0.9.agenda
 %define rel       1
 %define prefix    /usr
 %define buildroot /tmp/build
@@ -12,7 +12,7 @@ Release: %rel
 Copyright: LGPL
 Group: Development/Libraries
 BuildRoot: %{buildroot}/flek-root
-Source: ftp://ftp.fltk.org/pub/fltk/1.0.7/fltk-1.0.7.tar.gz
+Source: ftp://ftp.fltk.org/pub/fltk/1.0.9/fltk-1.0.9.agenda.tar.gz
 URL: http://www.fltk.org
 Packager: James Dean Palmer <james@tiger-marmalade.com>
 Docdir: %{prefix}/doc
@@ -28,7 +28,7 @@ the US.
 %changelog
 * Sat Apr 15 2000 James Dean Palmer <james@tiger-marmalade.com>
 
-  - First RPM for fltk
+  - Check Changelog
   
 ### Package: devel
 
@@ -57,7 +57,7 @@ This package contains Fltk developer documentation.
 %setup
 
 %build
-./configure --enable-shared --prefix=$RPM_BUILD_ROOT/%{prefix}
+./configure --enable-shared --disable-gl --prefix=$RPM_BUILD_ROOT/%{prefix}
 cd src
 make
 cd ../fluid
