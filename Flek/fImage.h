@@ -1,6 +1,6 @@
 /* -*-C++-*- 
 
-   "$Id: fImage.h,v 1.4 2000/03/04 01:39:00 jamespalmer Exp $"
+   "$Id: fImage.h,v 1.5 2000/03/05 16:16:35 jamespalmer Exp $"
    
    Copyright 1999-2000 by the Flek development team.
    
@@ -125,7 +125,7 @@ class fImage
     {
       W = w;
       H = h;
-      Data = new uchar[W*H*4];
+      Data = new uchar [W*H*4];
     }
 
   /** 
@@ -133,7 +133,7 @@ class fImage
    */
   ~fImage ()
     {
-      if (Data) delete[] Data;
+      if (Data) delete [] Data;
     }
 
   //void width (int i) { W = i; }

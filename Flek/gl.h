@@ -1,6 +1,6 @@
 /* -*-c++-*- 
 
-   "$Id: gl.h,v 1.5 2000/03/03 01:46:19 jamespalmer Exp $"
+   "$Id: gl.h,v 1.6 2000/03/05 16:16:35 jamespalmer Exp $"
    
    Copyright 1999-2000 by the Flek development team.
    
@@ -216,7 +216,7 @@ inline void glRotate (const double &a, const double &x, const double &y, const d
   glRotated (a, x, y, z);
 }
 
-inline void glTexImage2D (fImageRGBA* img, GLenum target=GL_TEXTURE_2D, GLint level=0)
+inline void glTexImage2D (fImage* img, GLenum target=GL_TEXTURE_2D, GLint level=0)
 {
   glTexImage2D (target,
                 level,

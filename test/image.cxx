@@ -1,5 +1,6 @@
 #include <Flek/fImage.h>
 #include <Flek/fPNM.h>
+#include <Flek/fSGI.h>
 #include <stdio.h>
 
 #define TEST
@@ -9,8 +10,19 @@ void main ()
   fImage *imgA, *imgB; 
 //  uchar *pixel;
 
-  imgA = fPNM::read ("test1.ppm");
-  imgB = fPNM::read ("test2.ppm");
+  //imgB = fPNM::read ("test2.ppm");
+  //imgA = sgiReadFile ("test.rgb");
+  char name[40];
+//  imgA = fPNM::read ("test1.ppm");
+  for (int i=0; i<100; i++)
+    {
+      imgA = fSGI::read ("test1.rgb");
+      if (i==99) 
+	fSGI::write ("pout99.sgi", imgA, fSGI::RLE, 3);
+
+      delete imgA;
+//      sprintf (name, "pout%d.sgi", i);
+    }
 
   int test = 0;
 
@@ -30,10 +42,10 @@ void main ()
     }
 */
 
-  fImage *result;
+  //fImage *result;
   
-  result = add (imgA, imgB, 500, 250, .10);   
-  fPNM::write ("out_add.ppm", result);
+  //result = add (imgA, imgB, 500, 250, .10);   
+  //fPNM::write ("out_add.ppm", imgA);
   //delete result;
 
   /*
@@ -62,7 +74,7 @@ void main ()
   fPNM::writeRGBA ("out_multiply.ppm", result);
   delete result;
   */
-  delete imgA;
-  delete imgB;
+  //delete imgA;
+  //delete imgB;
   
 }

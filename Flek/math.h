@@ -1,5 +1,5 @@
 /* -*-C++-*- 
-   "$Id: math.h,v 1.5 2000/03/03 17:19:32 jamespalmer Exp $"
+   "$Id: math.h,v 1.6 2000/03/05 16:16:35 jamespalmer Exp $"
    
    Copyright 1999-2000 by the Flek development team.
    
@@ -84,6 +84,7 @@ inline double Abs(double x)
 #endif
 
 typedef unsigned int uint;
+typedef unsigned short ushort;
 
 #ifndef _INLINE_ZERO_CHECKS_
 #define _INLINE_ZERO_CHECKS_
@@ -265,6 +266,16 @@ inline uint min (uint x, uint y)
  * Maximum of two numbers.
  */
 inline uint max (uint x, uint y)
+{
+  return ( (x > y) ? x : y );
+}
+
+inline ushort min (ushort x, ushort y)
+{
+  return ( (x < y) ? x : y );
+}
+
+inline ushort max (ushort x, ushort y)
 {
   return ( (x > y) ? x : y );
 }

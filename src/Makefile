@@ -5,6 +5,7 @@ CORECPPFILES = \
 	fDomAttr.cxx \
 	fVector.cxx \
 	fImage.cxx \
+	fSGI.cxx \
 	fPNM.cxx 
 
 UICPPFILES = \
