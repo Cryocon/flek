@@ -1,6 +1,32 @@
+/* -*-C++-*- 
+
+   "$Id: fDom.h,v 1.9 2000/02/26 02:38:36 jamespalmer Exp $"
+   
+   Copyright 1999-2000 by the Flek development team.
+   
+   This library is free software; you can redistribute it and/or
+   modify it under the terms of the GNU Library General Public
+   License as published by the Free Software Foundation; either
+   version 2 of the License, or (at your option) any later version.
+   
+   This library is distributed in the hope that it will be useful,
+   but WITHOUT ANY WARRANTY; without even the implied warranty of
+   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+   Library General Public License for more details.
+   
+   You should have received a copy of the GNU Library General Public
+   License along with this library; if not, write to the Free Software
+   Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307
+   USA.
+   
+   Please report all bugs and problems to "flek-devel@sourceforge.net".
+
+*/
+
 #include <Flek/fBase.h>
-#include <Flek/fList.h>
+//#include <Flek/fList.h>
 #include <Flek/fDomAttr.h>
+#include <list>
 #include <string.h>
 #include <stdlib.h>
 #include <stdio.h>
@@ -171,17 +197,17 @@ class fDomNode : public fBase
    * Attach a listener to this node.
    */
   void addListener (fDomListener *o) { Listeners.push_back (o); }
-  void addListener (fDomListener &o) { Listeners.push_back (o); }
+  void addListener (fDomListener &o) { Listeners.push_back (o.copy ()); }
 
   /** 
    * Remove a listener from this node.
    */
-  void removeListener (fDomListener *o) { Listeners.erase (o); }
+  void removeListener (fDomListener *o) { } //Listeners.erase (o); } FIXME
 
   /** 
    * Clear all listeners.
    */
-  void clearListeners () { Listeners.erase (); }
+  void clearListeners () { Listeners.clear (); }
 
   /**
    * Send a damage message to any listeners with the message,
@@ -229,7 +255,7 @@ class fDomNode : public fBase
 
   int xmlPushTag (xmlFile &xml, char *tag);
   
-  virtual fDomAttr* newAttribute ();
+  virtual fDomAttr* newAttribute (char *key);
 
   virtual void writeAttributes ();
 
@@ -243,7 +269,7 @@ class fDomNode : public fBase
   /** 
    * Get an attribute value from the key.
    */
-  virtual char * getAttribute (char *key);
+  virtual fDomAttr* getAttribute (char *key);
 
   fBase::Ptr copy (void) const
     {
@@ -254,7 +280,7 @@ class fDomNode : public fBase
    * Add a daughter node.
    */
   void add  (fDomNode *child) { Children.push_back (child); }
-  void add  (fDomNode &child) { Children.push_back (child); }
+  void add  (fDomNode &child) { Children.push_back (child.copy ()); }
 
   /**
    * Write this node's children.
@@ -268,9 +294,9 @@ class fDomNode : public fBase
 
  protected:
 
-  fList Children;    // A list of fDomNodes.
-  fList Attributes;  // A list of strings.
-  fList Listeners;   // A list of listener functions.
+  list<fBase*> Children;   //fList Children;    // A list of fDomNodes.
+  list<fBase*> Attributes; //fList Attributes;  // A list of strings.
+  list<fBase*> Listeners;  //fList Listeners;   // A list of listener functions.
 
 };
 

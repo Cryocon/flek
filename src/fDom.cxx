@@ -198,7 +198,7 @@ int xmlFile::readTag (char *tag)
 
 void fDomNode::handleListeners (int event, long argument)
 {
-  fIterator p, last;
+  list<fBase *>::iterator p, last;
   fDomListener *q;
   last = Listeners.end ();
   for (p = Listeners.begin (); p != last; p++)
@@ -270,7 +270,7 @@ int fDomNode::xmlRead (xmlFile &xml)
 
 void fDomNode::writeAttributes () 
 {
-  fIterator p, last;
+  list<fBase *>::iterator p, last;
   fDomAttr *att;
   
   last = Attributes.end ();
@@ -282,14 +282,14 @@ void fDomNode::writeAttributes ()
     }
 }
 
-fDomAttr * fDomNode::newAttribute ()
+fDomAttr * fDomNode::newAttribute (char *)
 {
   return new fDomAttr ();
 }
 
 void fDomNode::setAttribute (char *key, char *value)
 {
-  fIterator p, last;
+  list<fBase *>::iterator p, last;
   fDomAttr *att;
   int set = 0;
   last = Attributes.end ();
@@ -304,7 +304,7 @@ void fDomNode::setAttribute (char *key, char *value)
     }
   if (!set)
     {
-      att = newAttribute ();
+      att = newAttribute (key);
       att->name (key);
       att->value (value);
       Attributes.push_back (att);
@@ -312,9 +312,9 @@ void fDomNode::setAttribute (char *key, char *value)
   damage (0);
 }
 
-char * fDomNode::getAttribute (char *key) 
+fDomAttr * fDomNode::getAttribute (char *key) 
 {
-  fIterator p, last;
+  list<fBase *>::iterator p, last;
   fDomAttr *att;
   last = Attributes.end ();
   for (p = Attributes.begin (); p != last; p++)
@@ -322,7 +322,7 @@ char * fDomNode::getAttribute (char *key)
       att = ((fDomAttr *)(*p));
       if (!strcmp (att->name (), key))
 	{
-	  return att->value ();
+	  return att;
 	}
     }
   return 0;
@@ -330,7 +330,7 @@ char * fDomNode::getAttribute (char *key)
 
 void fDomNode::writeChildren () 
 {
-  fIterator p, last;
+  list<fBase *>::iterator p, last;
   fDomNode *node;
   last = Children.end ();
   for (p = Children.begin (); p != last; p++)

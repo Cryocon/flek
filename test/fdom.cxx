@@ -5,7 +5,8 @@ int listen (fDomNode *node, long event, long message)
 {
   if (event == fDomNode::DAMAGE)
     {
-      printf ("Ahhk.  Data was changed: %s\n", node->getAttribute ("name"));
+      fDomAttr *n = node->getAttribute ("name");
+      printf ("Ahhk.  Data was changed: %s\n", n->value ());
     }
 }
 
@@ -13,14 +14,14 @@ fDomNode root, a, b, c, n;
 
 void main ()
 {
-  fList documents;
+  list<fDomNode*> documents;
 
   printf ("sizeof (fDomAttr) = %d\n", sizeof(fDomAttr));
   printf ("sizeof (fDomAttrNumber) = %d\n", sizeof(fDomAttrNumber));
   printf ("sizeof (fDomAttrInteger) = %d\n", sizeof(fDomAttrInteger));
   printf ("sizeof (fDomNode) = %d\n", sizeof(fDomNode));
   printf ("sizeof (fDomDynamicNode) = %d\n", sizeof(fDomDynamicNode));
-  printf ("sizeof (fList) = %d\n", sizeof(fList));
+  printf ("sizeof (list) = %d\n", sizeof(list<fDomNode*>));
   
   root.setAttribute ("name", "Document");
 
@@ -28,9 +29,9 @@ void main ()
   b.setAttribute ("name", "Second field");
   c.setAttribute ("name", "Third field");
 
-  printf ("1: %s\n", a.getAttribute ("name"));
-  printf ("2: %s\n", b.getAttribute ("name"));
-  printf ("3: %s\n", c.getAttribute ("name"));
+  printf ("1: %s\n", (a.getAttribute ("name"))->value ());
+  printf ("2: %s\n", (b.getAttribute ("name"))->value ());
+  printf ("3: %s\n", (c.getAttribute ("name"))->value ());
 
   fDomListener L (listen);
   a.addListener (&L);
@@ -44,7 +45,7 @@ void main ()
   root.add (&c);
   
   documents.push_back (&root);
-  ((fDomNode *)(documents.back()))->write ();
+  ((fDomNode *)(documents.back ()))->write ();
   n.xmlRead ("fdom.xml");
   n.write ();
 }
