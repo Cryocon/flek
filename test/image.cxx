@@ -8,23 +8,19 @@
 void main ()
 {
   fImage *imgA, *imgB; 
-//  uchar *pixel;
 
-  //imgB = fPNM::read ("test2.ppm");
-  //imgA = sgiReadFile ("test.rgb");
-  char name[40];
-//  imgA = fPNM::read ("test1.ppm");
-  for (int i=0; i<100; i++)
-    {
-      imgA = fSGI::read ("test1.rgb");
-      if (i==99) 
-	fSGI::write ("pout99.sgi", imgA, fSGI::RLE, 3);
+  imgA = fPNM::read ("test.ppm");
+  imgB = fSGI::read ("test.rgb");
 
-      delete imgA;
-//      sprintf (name, "pout%d.sgi", i);
-    }
+  // add (imgA, imgB, 0, 0, 1.0);   
+  // subtract (imgA, imgB, 0, 0, 1.0);   
+  difference (imgA, imgB, 0, 0, 1.0);   
 
-  int test = 0;
+  
+  fSGI::write ("out.sgi", imgA, fSGI::RLE, 3);
+
+  delete imgA;
+  delete imgB;
 
   //fImageRGBA::iterator begin = img->begin ();
   //fImageRGBA::iterator end = img->end ();

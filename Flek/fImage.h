@@ -1,6 +1,6 @@
 /* -*-C++-*- 
 
-   "$Id: fImage.h,v 1.5 2000/03/05 16:16:35 jamespalmer Exp $"
+   "$Id: fImage.h,v 1.6 2000/03/07 15:34:46 jamespalmer Exp $"
    
    Copyright 1999-2000 by the Flek development team.
    
@@ -199,16 +199,16 @@ class fImage
 
 fImage* add (fImage *A, fImage *B, int xo=0, int yo=0, float o=1.0);
 
-fImage* subtract (fImage *A, fImage *B, int xo=0, int yo=0);
+fImage* subtract (fImage *A, fImage *B, int xo=0, int yo=0, float o=1.0);
 
-fImage* difference (fImage *A, fImage *B, int xo=0, int yo=0);
+fImage* difference (fImage *A, fImage *B, int xo=0, int yo=0, float o=1.0);
 
-fImage* lightenOnly (fImage *A, fImage *B, int xo=0, int yo=0);
+fImage* lightenOnly (fImage *A, fImage *B, int xo=0, int yo=0, float o=1.0);
 
-fImage* darkenOnly (fImage *A, fImage *B, int xo=0, int yo=0);
+fImage* darkenOnly (fImage *A, fImage *B, int xo=0, int yo=0, float o=1.0);
 
-fImage* divide (fImage *A, fImage *B, int xo=0, int yo=0);
+fImage* divide (fImage *A, fImage *B, int xo=0, int yo=0, float o=1.0);
 
-fImage* multiply (fImage *A, fImage *B, int xo=0, int yo=0);
+fImage* multiply (fImage *A, fImage *B, int xo=0, int yo=0, float o=1.0);
 
 #endif

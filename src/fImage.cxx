@@ -46,6 +46,69 @@ fImage* add (fImage *A, fImage *B, int xo, int yo, float value=1.0)
   return A;
 }
 
+fImage* subtract (fImage *A, fImage *B, int xo, int yo, float value=1.0)
+{
+  uchar *Apixel;
+  uchar *Bpixel;
+  
+  fImage::iterator Ai;
+  fImage::iterator Bi;
+  
+  int xi = max (xo, 0); // Initial position.
+  int yi = max (yo, 0);    
+  int xf = min (max (xo + B->width (), 0), A->width ()); // Final position.
+  int yf = min (max (yo + B->height (), 0), A->height ());
+  int col;    
+
+  for (int row=yi; row < yf; row++)
+    {
+      for (Ai = (*A)(xi, row), Bi = (*B)(xi-xo, row-yo), col=xi; col < xf; Ai++, Bi++, col++)
+	{
+	  Apixel = *Ai;
+	  Bpixel = *Bi;
+	  float m = Bpixel[3] / 255.;
+	  Apixel[0] = clampLower (Apixel[0] - (int)(value*m*Bpixel[0]), 0);
+	  Apixel[1] = clampLower (Apixel[1] - (int)(value*m*Bpixel[1]), 0);
+	  Apixel[2] = clampLower (Apixel[2] - (int)(value*m*Bpixel[2]), 0);
+	  Apixel[3] = clampUpper (Apixel[3] + (int)(value*m*Apixel[3]), 255);
+	}
+    }
+  return A;
+}
+
+fImage* difference (fImage *A, fImage *B, int xo, int yo, float value=1.0)
+{
+  uchar *Apixel;
+  uchar *Bpixel;
+  
+  fImage::iterator Ai;
+  fImage::iterator Bi;
+  
+  int xi = max (xo, 0); // Initial position.
+  int yi = max (yo, 0);    
+  int xf = min (max (xo + B->width (), 0), A->width ()); // Final position.
+  int yf = min (max (yo + B->height (), 0), A->height ());
+  int col;    
+
+  for (int row=yi; row < yf; row++)
+    {
+      for (Ai = (*A)(xi, row), Bi = (*B)(xi-xo, row-yo), col=xi; col < xf; Ai++, Bi++, col++)
+	{
+	  Apixel = *Ai;
+	  Bpixel = *Bi;
+	  float m = (float)Bpixel[3] / 255.0;
+	  Apixel[0] = max ((int)(Apixel[0]*(1-m*value)), (int)(Bpixel[0]*value*m)) - min ((int)(Apixel[0]*(1-m*value)), (int)(Bpixel[0]*value*m));
+	  Apixel[1] = max ((int)(Apixel[1]*(1-m*value)), (int)(Bpixel[1]*value*m)) - min ((int)(Apixel[1]*(1-m*value)), (int)(Bpixel[1]*value*m));
+	  Apixel[2] = max ((int)(Apixel[2]*(1-m*value)), (int)(Bpixel[2]*value*m)) - min ((int)(Apixel[2]*(1-m*value)), (int)(Bpixel[2]*value*m));
+	  //	  Apixel[1] = (uchar)(Apixel[1]*(1-m*value) + value*m*max ((int)Apixel[1], (int)Bpixel[1]) - min ((int)Apixel[1], (int)Bpixel[1]));
+	  //Apixel[2] = (uchar)(Apixel[2]*(1-m*value) + value*m*max ((int)Apixel[2], (int)Bpixel[2]) - min ((int)Apixel[2], (int)Bpixel[2]));
+	  Apixel[3] = clampUpper (Apixel[3] + (int)(value*m*Apixel[3]), 255);
+	}
+    }
+  return A;
+}
+
+
 /*
 fImage* subtract (fImage *A, fImage *B, int x, int y)
 {
