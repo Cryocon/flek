@@ -1,6 +1,6 @@
 /* -*-C++-*- 
 
-   "$Id: Fl_App_Window.H,v 1.7 2000/04/13 14:56:04 jamespalmer Exp $"
+   "$Id: Fl_App_Window.H,v 1.8 2000/05/11 05:28:25 brad Exp $"
    
    Copyright 1999-2000 by the Flek development team.
    
@@ -35,47 +35,79 @@
 /** @package libflek_ui
  * Fl_App_Window is a window that can have Fl_Dockable_Groups 
  * "docked" either vertically or horizontally to the contents of the window.
+ * An Fl_App_Window starts with a top-level window. Inside the top-level window,
+ * an Fl_Pack group is created, that contains a child "contents" window and any
+ * "docked" groups.
+ * Think of the contents window as the "client" area of the application.
  */
 class Fl_App_Window : public Fl_Window
 {
+private:
+  Fl_Pack* _pack;
+  Fl_Window* _contents;
+
+protected:
+  virtual FL_EXPORT void draw();
+  virtual FL_EXPORT void flush();
+  int handle(int);
+
 public:
+  /**
+   * Construct an empty Fl_App_Window.
+   */
+  Fl_App_Window(int w, int h, const char *l = 0);
+  Fl_App_Window(int x, int y, int w, int h, const char *l = 0);
+
+  /**
+   * Return a pointer to the Fl_Pack group, which contains the contents window
+   * and any docked groups.
+   * From what I can tell, this is only used by the dockable_group sample.
+   */
+  Fl_Pack* tpack() { return _pack; }
+
+  /**
+   * Return a pointer to the contents window.
+   */
+  Fl_Window* contents() { return _contents; }
+
+  /**
+   * Set the box type and color for the contents window.
+   */
+  void box(Fl_Boxtype b) { _contents->box(b); }
+  void color(Fl_Color a, Fl_Color b) { _contents->color(a, b); }
+
+  /**
+   * Add a widget to the contents window.
+   */
+  void add(Fl_Widget *w);
+
+  /**
+   * Resize the contents window.
+   */
+  void resize(int x, int y, int w, int h);
   
   /**
-   * The constructor for an empty Fl_App_Window.
-   */
-  Fl_App_Window (int x, int y, int w, int h, const char *l = 0);
-
-  /**
-   * The constructor for an empty Fl_App_Window.
-   */
-  Fl_App_Window (int w, int h, const char *l = 0);
-
-  int handle (int);
-
-  void add (Fl_Widget *w);
-
-  /**
-   * Dock the Fl_Dockable_Group W to the window.
+   * Dock an Fl_Dockable_Group to the window.
+   * Docking an Fl_Dockable_Group to an Fl_App_Window does not change
+   * the size of the Fl_App_Window.  Rather, the size of the contents
+   * window is adjust to accomodate the Fl_Dockable_Group.
    */
   void add_dockable (Fl_Dockable_Group *W, int position = 0);
 
-  void pack_dock () 
-    { 
-      /// pack->pack(); 
-      if ((pack->w() != w()) || (pack->h() != h()))
-        size (pack->w(), pack->h());
-    }
-  void show ();
-  void begin () { Fl_Group::current (contents); }
-  void end () { Fl_Group::current ((Fl_Group*) parent ()); }
-  Fl_Pack *tpack () {return pack; }
-  
- protected:
-  virtual FL_EXPORT void draw ();
-  virtual FL_EXPORT void flush ();
-  
-  Fl_Pack    *pack;
-  Fl_Window    *contents;
+  void pack_dock() { 
+    // _pack->pack(); 
+    if ((_pack->w() != w()) || (_pack->h() != h()))
+      size (_pack->w(), _pack->h());
+  }
+
+  void show();
+
+  /**
+   * Make the contents child window the current group.
+   */
+  void begin() { Fl_Group::current(_contents); }
+
+  void end() { Fl_Group::current((Fl_Group*)parent()); }
 };
 
 #endif

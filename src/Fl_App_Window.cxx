@@ -8,24 +8,18 @@
 Fl_App_Window::Fl_App_Window (int x, int y, int w, int h, const char *l) : 
   Fl_Window (x, y, w, h, l)
 {
-  pack = new Fl_Pack (0, 0, w, h);
-  pack->type (Fl_Pack::VERTICAL);
-  contents = new Fl_Window (0, 0, w, h);
-  contents->box(FL_BORDER_BOX);
-  contents->color (52);
-  pack->add (contents);
+  _pack = new Fl_Pack (0, 0, w, h);
+  _pack->type(Fl_Pack::VERTICAL);
+  _contents = new Fl_Window(0, 0, w, h, "Fl_App_Window::contents");
   begin ();
 }
 
 Fl_App_Window::Fl_App_Window (int w, int h, const char *l) : 
   Fl_Window (w, h, l)
 {
-  pack = new Fl_Pack (0, 0, w, h);
-  pack->type (Fl_Pack::VERTICAL);
-  contents = new Fl_Window (0, 0, w, h);
-  contents->box(FL_BORDER_BOX);
-  contents->color (52);
-  pack->add (contents);
+  _pack = new Fl_Pack(0, 0, w, h, "Fl_App_Window::pack");
+  _pack->type(Fl_Pack::VERTICAL);
+  _contents = new Fl_Window(0, 0, w, h, "Fl_App_Window::contents");
   begin ();
 }
 
@@ -34,13 +28,14 @@ Fl_App_Window::handle (int event)
 {  
   if (event == FL_UNDOCK)
     {
-      //pack->draw ();
+      //_pack->draw ();
       //redraw();
-      //if ((w() != pack->w()) || (h() != pack->h()))
-      //size (pack->w(), pack->h());
+      //if ((w() != _pack->w()) || (h() != pack->h()))
+      //size (_pack->w(), pack->h());
       //damage (FL_DAMAGE_ALL);
-      size (w(), h() - Fl_Dockable_Group::current->h());
-      //redraw ();
+      //size (w(), h() - Fl_Dockable_Group::current->h());
+      _contents->size(_contents->w(), _contents->h() + Fl_Dockable_Group::current->h());
+      redraw ();
       return 1;
     }
   
@@ -57,12 +52,12 @@ Fl_App_Window::handle (int event)
       // the pack boundaries.
       
       // This code should probably go into Pack_2's handle:
-      Fl_Widget*const* a = pack->array();
-      for (int i=0; i <= pack->children(); i++)
+      Fl_Widget*const* a = _pack->array();
+      for (int i=0; i <= _pack->children(); i++)
 	{
 	  int cY;
 	  
-	  if (i==pack->children())
+	  if (i==_pack->children())
 	    cY = h();
 	  else
 	    {
@@ -90,31 +85,35 @@ Fl_App_Window::handle (int event)
 
 void Fl_App_Window::add (Fl_Widget *w)
 {
-  contents->add (w);
+  w->position(w->x() + x(), w->y() + y());
+  _contents->add (w);
 }
 
 void Fl_App_Window::add_dockable (Fl_Dockable_Group *W, int pos)
 {
   Fl_Dockable_Group::current = W;
   Fl_Dockable_Group::current->hide ();
-  pack->insert (*W, pos);
+  _pack->insert (*W, pos);
   W->set_docked (1);
   
-  if (pack->horizontal ())
-    Fl_Dockable_Group::current->size(Fl_Dockable_Group::current->w(), h());
+  if (_pack->horizontal ())
+    // Fl_Dockable_Group::current->size(Fl_Dockable_Group::current->w(), h());
+    _contents->size(w()-Fl_Dockable_Group::current->w(), h());
   else
-    Fl_Dockable_Group::current->size(w(), Fl_Dockable_Group::current->h());
+    // Fl_Dockable_Group::current->size(w(), Fl_Dockable_Group::current->h());
+    _contents->size(w(), h()-Fl_Dockable_Group::current->h());
   
   Fl_Dockable_Group::current->show ();
+    redraw();
   
   // FLTK BUG???  calling redraw() should call draw(), right??  
   // Not always so we need to pack things here..
   {
-//    pack->draw ();
-//    if ((w() != pack->w()) || (h() != pack->h()))
-//      size (pack->w(), pack->h());
+    //_pack->draw ();
+    //if ((w() != _pack->w()) || (h() != pack->h()))
+    //size (_pack->w(), pack->h());
     //redraw ();
-    size ((w() > W->w()) ? w() : W->w(), h()+W->h());
+    //size ((w() > W->w()) ? w() : W->w(), h()+W->h());
     //flush ();
   }
 }
@@ -122,17 +121,17 @@ void Fl_App_Window::add_dockable (Fl_Dockable_Group *W, int pos)
 void Fl_App_Window::show ()
 {
   Fl_Window::show ();
-  pack->show ();
-  contents->show ();
+  _pack->show ();
+  _contents->show ();
 }
 
 void 
 Fl_App_Window::draw ()
 {
   //printf ("Fl_App_Window::draw()\n");
-  // if pack->w() and pack->h() change...
-  pack->draw ();
-  resize (x(), y(), pack->w(), pack->h());
+  // if _pack->w() and pack->h() change...
+  _pack->draw ();
+  resize(x(), y(), _pack->w(), _pack->h());
   Fl_Window::draw ();
 }
 
@@ -144,4 +143,17 @@ void Fl_App_Window::flush() {
   //if (damage() == FL_DAMAGE_EXPOSE && can_boxcheat(box())) fl_boxcheat = this;
   fl_clip_region(i->region); i->region = 0;
   draw ();
+}
+
+void Fl_App_Window::resize(int X, int Y, int W, int H) {
+	int dw = W - w();
+	int dh = H - h();
+	int dx = X - x();
+	int dy = Y - y();
+
+	_pack->resize(0, 0, _pack->w() + dw, _pack->h());
+	_contents->resize(_contents->x() + dx, _contents->y() + dy,
+		_contents->w() + dw, _contents->h() + dh);
+	Fl_Widget::resize(X, Y, W, H);
+	redraw();
 }
