@@ -1,15 +1,21 @@
 #include <FL/Fl.H>
 #include <Flek/Fl_Gl_Arcball_Window.H>
+#include <GL/gl.h>
 
 int Fl_Gl_Arcball_Window::handle (int event)
 {
   switch (event)
     {
      case FL_PUSH:
-      arcball.begin_drag ();
+      drag.set ((2.0*Fl::event_x ()) / w() - 1.0, (-2.0 * Fl::event_y ()) / h() + 1.0, 0);
+      arcball.mouse (drag);
+      arcball.update ();
+      arcball.beginDrag ();
       break;
      case FL_RELEASE:
-      arcball.end_drag ();
+      drag.set ((2.0*Fl::event_x ()) / w() - 1.0, (-2.0 * Fl::event_y ()) / h() + 1.0, 0);
+      arcball.mouse (drag);
+      arcball.endDrag ();
       break;
      case FL_DRAG:
 	{
@@ -30,8 +36,19 @@ void Fl_Gl_Arcball_Window::arcball_draw ()
   arcball.draw ();  
 }
 
+void fglMultMatrix (const fMatrix4x4 &M)
+{
+  double N[4][4];
+  
+  for (int i=0; i<4; i++)
+    for (int j=0; j<4; j++)
+      N[i][j] = M [i][j];
+  glMultMatrixd ((double *)N);
+}
+
 void Fl_Gl_Arcball_Window::arcball_transform ()
 {
-  glMultMatrixd ((arcball.value ()).value ());
+  //glMultMatrixd ((arcball.value ()).value ());
+  fglMultMatrix (arcball.value ());
 }
 

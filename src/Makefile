@@ -9,9 +9,11 @@ CPPFILES = \
 	Fl_Toggle_Tree.cxx \
 	Fl_Stock.cxx \
 	Fl_Gl_Arcball_Window.cxx \
-	fMatrix4x4.cxx \
-	fQuaternion.cxx \
+	fVector.cxx \
 	fArcball.cxx
+#	fMatrix4x4.cxx \
+#	fQuaternion.cxx \
+
 
 #	Fl_Dir.cxx \
 #	Fl_Frametab.cxx \

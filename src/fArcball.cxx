@@ -1,314 +1,427 @@
-/***** Ball.c *****/
-/* Ken Shoemake, 1993 */
-#include <GL/gl.h>
-#include <GL/glu.h>
-#include <math.h>
+/* -*-C++-*- 
 
+   "$Id: fArcball.cxx,v 1.4 2000/02/06 08:40:51 jamespalmer Exp $"
+   
+   Copyright 1999-2000 by the Flek development team.
+   
+   This library is free software; you can redistribute it and/or
+   modify it under the terms of the GNU Library General Public
+   License as published by the Free Software Foundation; either
+   version 2 of the License, or (at your option) any later version.
+   
+   This library is distributed in the hope that it will be useful,
+   but WITHOUT ANY WARRANTY; without even the implied warranty of
+   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+   Library General Public License for more details.
+   
+   You should have received a copy of the GNU Library General Public
+   License along with this library; if not, write to the Free Software
+   Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307
+   USA.
+  
+   Please report all bugs and problems to "flek-devel@sourceforge.net".
+   
+*/
+
+// The original vector, matrix, and quaternion code was written by
+// Vinod Srinivasan and then adapted for Flek.
+
+#include <GL/gl.h>
 #include <Flek/fArcball.h>
+#include <Flek/fGl.h>
 
 #define LG_NSEGS 4
 #define NSEGS (1<<LG_NSEGS)
-#define RIMCOLOR()    glColor3f(0.0, 1.0, 1.0)
-#define FARCOLOR()    glColor3f(0.8, 0.5, 0.0)
-#define NEARCOLOR()   glColor3f(1.0, 0.8, 0.0)
-#define DRAGCOLOR()   glColor3f(0.0, 1.0, 1.0)
-#define RESCOLOR()    glColor3f(0.8, 0.0, 0.0)
+#define CIRCSEGS 32
+#define HALFCIRCSEGS 16
+#define RIMCOLOR()    glColor3ub (255, 255, 255)
+#define FARCOLOR()    glColor3ub (195, 127, 31)
+#define NEARCOLOR()   glColor3ub (255, 255, 63)
+#define DRAGCOLOR()   glColor3ub (127, 255, 255)
+#define RESCOLOR()    glColor3ub (195, 31, 31)
 
-fMatrix4x4 mId; // = {{1,0,0,0},{0,1,0,0},{0,0,1,0},{0,0,0,1}};
-double otherAxis[][4] = {{-0.48, 0.80, 0.36, 1}};
-
-/* Establish reasonable initial values for controller. */
+/**
+ * Establish reasonable initial values for controller.
+ */
 fArcball::fArcball ()
 {
-  center.set (0, 0, 0);
-  radius = 1.0;
-  vDown.set (0, 0, 0);
-  vNow.set (0, 0, 0); 
-  qDown.set (0, 0, 0, 1);
-  qNow.set (0, 0, 0, 1);
-  mNow.identity ();
-  mDown.identity ();
-  mId.identity ();
-  dragging = 0;
-  ShowResult = 1;
+  dRadius = 1.0;
+  dragging = false;
   axisSet = NoAxes;
-
-  sets[CameraAxes] = mId.get_row_array (0); //&(mId.value ())[0*4]; 
-  setSizes[CameraAxes] = 3;
-
-  sets[BodyAxes] = mDown.get_row_array (0); //&(mDown.value ())[0*4]; 
-  setSizes[BodyAxes] = 3;
   
-  sets[OtherAxes] = otherAxis[0]; 
-  setSizes[OtherAxes] = 1;
+  sets[CameraAxes] = new fVector3[3];
+  sets[BodyAxes] = new fVector3[3];
+  
+  // All matrices are initially identity matrices
+  // Camera axes are simply the X,Y and Z axes. They don't change
+  sets[CameraAxes][0].set (1.0, 0.0, 0.0); // X axis for camera
+  sets[CameraAxes][1].set (0.0, 1.0, 0.0); // Y axis for camera
+  sets[CameraAxes][2].set (0.0, 0.0, 1.0); // Z axis for camera
+  
+  // Body axes are same as camera axes initially. Body axes are the rows of the
+  // Rotation matrix. Uses functions to convert Vector4d to fVector3
+  // Need to use the vector library
+  sets[BodyAxes][0] = mNow[0];
+  sets[BodyAxes][1] = mNow[1];
+  sets[BodyAxes][2] = mNow[2];
 }
 
-/* Set the center and size of the controller. */
-void 
-fArcball::place (fVector3 center_, double radius_)
+fArcball::fArcball (const fArcball& ab)
 {
-  center = center_;
-  radius = radius_;
+  // Copy only the center and radius. initialize to same as new arcball
+  vCenter = ab.vCenter;
+  dRadius = ab.dRadius;
+  
+  dragging = false;
+  axisSet = NoAxes;
+  
+  sets[CameraAxes] = new fVector3[3];
+  sets[BodyAxes] = new fVector3[3];
+  
+  // Camera axes are simply the X,Y and Z axes. They don't change
+  sets[CameraAxes][0].set (1.0, 0.0, 0.0); // X axis for camera
+  sets[CameraAxes][1].set (0.0, 1.0, 0.0); // Y axis for camera
+  sets[CameraAxes][2].set (0.0, 0.0, 1.0); // Z axis for camera
+  
+  // Body axes are same as camera axes initially
+  sets[BodyAxes][0] = mNow[0];
+  sets[BodyAxes][1] = mNow[1];
+  sets[BodyAxes][2] = mNow[2];
 }
 
-/* Incorporate new mouse position. */
-void 
-fArcball::mouse (fVector3 vNow_)
+fArcball::~fArcball ()
 {
-  vNow = vNow_;
+  delete [] sets[CameraAxes];
+  delete [] sets[BodyAxes];
 }
 
-/* Using vDown, vNow, dragging, and axisSet, compute rotation etc. */
-void 
-fArcball::update ()
+fArcball& fArcball::operator = (const fArcball& ab)
 {
-  int setSize = setSizes[axisSet];
-  fVector3 *set = (fVector3 *)(sets[axisSet]);
-  vFrom = mouse_on_sphere (vDown, center, radius);
-  vTo = mouse_on_sphere (vNow, center, radius);
-  if (dragging) {
-    if (axisSet!=NoAxes) {
-      vFrom = constrain_to_axis (vFrom, set[axisIndex]);
-      vTo = constrain_to_axis (vTo, set[axisIndex]);
-    }
-    qDrag = quaternion_from_ball_points (vFrom, vTo);
-    qNow = qDrag * qDown;
-  } else {
-    if (axisSet!=NoAxes) {
-      axisIndex = nearest_constraint_axis (vTo, set, setSize);
-    }
-  }
-  quaternion_to_ball_points (qDown, &vrFrom, &vrTo);
-  //quatToMatrix (qNow.conjugate (), mNow); /* Gives transpose for GL. */
-  mNow = qNow.to_matrix (); //(qNow.conjugate ()).to_matrix ();
+  // Copy only the center and radius. Reset rest to same as new arcball
+  vCenter = ab.vCenter;
+  dRadius = ab.dRadius;
+  
+  dragging = false;
+  axisSet = NoAxes;
+  
+  sets[CameraAxes] = new fVector3[3];
+  sets[BodyAxes] = new fVector3[3];
+  
+  // Camera axes are simply the X,Y and Z axes. They don't change
+  sets[CameraAxes][0].set (1.0, 0.0, 0.0); // X axis for camera
+  sets[CameraAxes][1].set (0.0, 1.0, 0.0); // Y axis for camera
+  sets[CameraAxes][2].set (0.0, 0.0, 1.0); // Z axis for camera
+  
+  // Body axes are same as camera axes initially
+  sets[BodyAxes][0] = mNow[0];
+  sets[BodyAxes][1] = mNow[1];
+  sets[BodyAxes][2] = mNow[2];
+  
+  return (*this);
 }
 
-/* Begin drag sequence. */
-void fArcball::begin_drag ()
+/**
+ * Using vDown, vNow, dragging, and axisSet, compute rotation etc.
+ */
+void fArcball::update (void)
 {
-  dragging = 1;
-  vDown = vNow;
-}
-
-/* Stop drag sequence. */
-void 
-fArcball::end_drag ()
-{
-  dragging = 0;
-  qDown = qNow;
-  mDown = mNow;  
-}
-
-/* Draw the controller with all its arcs. */
-void 
-fArcball::draw ()
-{
-  double r = radius;
-  glMatrixMode (GL_PROJECTION);
-  glPushMatrix ();
-  glLoadIdentity ();
+  vFrom = mouseOnSphere (vDown, vCenter, dRadius);
+  vTo = mouseOnSphere (vNow, vCenter, dRadius);
+  if (dragging)
     {
-      glOrtho (-1.0,1.0,-1.0,1.0,-1.0,1.0);
-      glMatrixMode (GL_MODELVIEW);
-      glPushMatrix ();
-      glLoadIdentity ();
-      glScaled (r, r, r);
+      if ( axisSet != NoAxes)
+	{
+	  vFrom = constrainToAxis (vFrom, sets[axisSet][axisIndex]);
+	  vTo = constrainToAxis (vTo, sets[axisSet][axisIndex]);
+	}
       
-      RIMCOLOR ();
-      glBegin (GL_LINE_LOOP);
-      for (int i=0; i < 36; i++)
-	glVertex3f (cos ((double)i*2.0*M_PI/36.0),
-		    sin ((double)i*2.0*M_PI/36.0),0.0);
-      glEnd ();
-      //glScalef (r, r, r);
-      // FIXME!! 
-      //circ (0.0, 0.0, 0.0);
-      draw_result_arc ();
-      draw_constraints ();
-      draw_drag_arc ();
+      vnFrom[0] = -vFrom[0];
+      vnFrom[1] = -vFrom[1];
+      vnFrom[2] = vFrom[2];
+      vnTo[0] = -vTo[0];
+      vnTo[1] = -vTo[1];
+      vnTo[2] = vTo[2];
+      
+      qDrag = quatFromBallPoints (vnFrom, vnTo);
+      qNow = qDrag * qDown;
     }
+  else
+    {
+      if ( axisSet != NoAxes)
+	axisIndex = nearestConstraintAxis (vTo, sets[axisSet], 3);
+    }
+  mNow = toMatrix4 (conjugate (qNow));
+}
+
+static void unitCircle (void)
+{
+  // Draw a unit circle in the XY plane, centered at the origin
+  float dtheta = 2.0*M_PI/32.0;
+  
+  glBegin (GL_LINE_LOOP);
+  for (int i=0; i < 32; ++i)
+    fGl::vertex (cosf (i*dtheta), sinf (i*dtheta), 0.0);
+  glEnd ();
+}
+
+/**
+ * Draw a circle with the given normal, center and radius 
+ */
+static void drawCircle (const fVector3& center, const fVector3& normal, double radius)
+{
+  // First find the coordinate axis centered at the circle center.
+  // The normal will be the Z axis.
+  fVector3 xaxis, yaxis, zaxis;
+  
+  zaxis = normalized (normal);
+  xaxis = fVector3 (0,1,0) % zaxis;
+  if ( normsqr(xaxis) < 1.0e-5 ) 
+    xaxis.set (1,0,0);
+  yaxis = zaxis % xaxis;
+  
+  // Circle will be on the XY plane, defined by the axis system 
+  // just computed 
+  fVector3 pts[CIRCSEGS+1], temp;
+  double theta = 0.0, dtheta = M_PI/HALFCIRCSEGS;
+  double costheta, sintheta;
+  for (int i=0; i < (HALFCIRCSEGS >> 2); ++i )
+    {
+      costheta = radius*cos (theta); sintheta = radius*sin (theta);
+      pts[0] = center + costheta*xaxis + sintheta*yaxis;
+      pts[HALFCIRCSEGS-i] = center - costheta*xaxis + sintheta*yaxis;
+      pts[HALFCIRCSEGS+i] = center - costheta*xaxis - sintheta*yaxis;
+      pts[CIRCSEGS-i] = center + costheta*xaxis - sintheta*yaxis;
+      theta += dtheta;
+    }
+  
+  glBegin (GL_LINE_LOOP);
+  {
+    for (int i=0; i < CIRCSEGS; ++i)
+      fGl::vertex (pts[i]);
+  }
+  glEnd ();
+}
+
+/**
+ * Draw the controller with all its arcs. Parameter is the vector from 
+ * the eye point to the center of interest. Default is -ve Z axis
+ */
+void fArcball::draw(const fVector3& dir) const
+{
+  glMatrixMode(GL_PROJECTION);
+  glPushMatrix();
+  glLoadIdentity();
+  glOrtho(-1.0,1.0,-1.0,1.0,-1.0,1.0);
+  
+  glMatrixMode(GL_MODELVIEW);
+  glPushMatrix();
+  glLoadIdentity();
+  {
+    RIMCOLOR();
+    glScaled(dRadius,dRadius,dRadius);
+    unitCircle();
+    
+    drawConstraints();
+    drawDragArc();
+  }
   glPopMatrix();
   glMatrixMode(GL_PROJECTION);
   glPopMatrix();
   glMatrixMode(GL_MODELVIEW);
 }
 
-/* Draw an arc defined by its ends. (static) */
-void 
-fArcball::draw_any_arc (fVector3 vFrom, fVector3 vTo)
+/**
+ *  Draw an arc defined by its ends.
+ */
+void fArcball::drawAnyArc(const fVector3& vFrom, const fVector3& vTo)
 {
   int i;
   fVector3 pts[NSEGS+1];
   double dot;
+  
   pts[0] = vFrom;
   pts[1] = pts[NSEGS] = vTo;
-  for (i=0; i<LG_NSEGS; i++) 
-    pts[1] = fVector3::bisect (pts[0], pts[1]);
+  for (i=0; i < LG_NSEGS; ++i) pts[1] = bisect(pts[0], pts[1]);
   
-  dot = 2.0 * (pts[0] * pts[1]); // dot product
-  for (i=2; i<NSEGS; i++)
-    pts[i] = (pts[i-1] * dot) - pts[i-2];
-
+  dot = 2.0*(pts[0]*pts[1]);
+  for (i=2; i < NSEGS; ++i)
+    pts[i] = pts[i-1]*dot - pts[i-2];
+  
   glBegin (GL_LINE_STRIP);
-    {
-      for (i=0; i<=NSEGS; i++)
-	glVertex3dv(pts[i].value ());
-    }
+  for (i=0; i <= NSEGS; ++i)
+    fGl::vertex (pts[i]);
   glEnd ();
 }
 
-/* Draw the arc of a semi-circle defined by its axis. (static) */
-void 
-fArcball::draw_half_arc (fVector3 n)
+/**
+ * Draw the arc of a semi-circle defined by its axis.
+ */
+void fArcball::drawHalfArc(const fVector3& n)
 {
   fVector3 p, m;
-  p[2] = 0;
-  if (n[2] != 1.0) {
-    p[0] = n[1]; p[1] = -n[0];
-    p.normalize();
-  } else {
-    p[0] = 0; p[1] = 1;
-  }
-  m = p % n;
-  draw_any_arc (p, m);
-  draw_any_arc (m, -p);
-}
-
-/* Draw all constraint arcs. */
-void 
-fArcball::draw_constraints ()
-{
-  ConstraintSet set;
-  fVector3 axis;
-  int axisI, setSize = setSizes[axisSet];
-  if (axisSet==NoAxes) return;
-  set = sets[axisSet];
-  for (axisI=0; axisI<setSize; axisI++) {
-    if (axisIndex!=axisI) {
-      if (dragging) continue;
-      FARCOLOR();
-    } else NEARCOLOR();
-    axis = *(fVector3 *)&set[4*axisI];
-    if (axis[2] == 1.0) {
-      glBegin (GL_LINE_LOOP);
-      for (int i=0; i < 36; i++)
-	glVertex3f (cos ((double)i*2.0*M_PI/36.0),
-		    sin ((double)i*2.0*M_PI/36.0),0.0);
-      glEnd ();
-    } else {
-      draw_half_arc (axis);
+  
+  if ( fabs(n[2]-1.0) > 1.0e-5 )
+    {
+      p[0] = n[1]; p[1] = -n[0];
+      normalize(p);
     }
-  }
+  else
+    {
+      p[0] = 0; p[1] = 1;
+    }
+  m = p % n;
+  drawAnyArc(p, m);
+  drawAnyArc(m, -p);
 }
 
-/* Draw "rubber band" arc during dragging. */
-void 
-fArcball::draw_drag_arc ()
+/**
+ * Draw all constraint arcs.
+ */
+void fArcball::drawConstraints (void) const
 {
-  DRAGCOLOR();
-  if (dragging) 
-    draw_any_arc (vFrom, vTo);
+  if ( axisSet == NoAxes ) return;
+  
+  fVector3 axis;
+  int i;
+  
+  for (i=0; i < 3; ++i)
+    {
+      if ( axisIndex != i)
+	{
+	  if (dragging) continue;
+	  FARCOLOR();
+	}
+      else NEARCOLOR();
+      axis = sets[axisSet][i];
+      if ( fabs(axis[2]-1.0) < 1.0e-5 )
+	unitCircle();
+      //drawCircle(0.0, 0.0, 1.0);
+      else
+	drawHalfArc(axis);
+    }
 }
 
-/* Draw arc for result of all drags. */
-void 
-fArcball::draw_result_arc ()
+/**
+ *  Draw "rubber band" arc during dragging.
+ */
+void fArcball::drawDragArc (void) const
 {
-  RESCOLOR();
-  if (ShowResult) 
-    draw_any_arc (vrFrom, vrTo);
+  if ( dragging )
+    {
+      DRAGCOLOR();
+      drawAnyArc (vFrom, vTo);
+    }
 }
 
-
-/**** BallMath.c - Essential routines for fArcball.  ****/
-
-/* Convert window coordinates to sphere coordinates. */
-fVector3 
-fArcball::mouse_on_sphere(fVector3 mouse, fVector3 ballCenter, double ballRadius)
+fVector3 fArcball::mouseOnSphere (const fVector3& mouse, const fVector3& center, double radius)
 {
   fVector3 ballMouse;
-  register double mag;
-  ballMouse[0] = (mouse[0] - ballCenter[0]) / ballRadius;
-  ballMouse[1] = (mouse[1] - ballCenter[1]) / ballRadius;
-  mag = ballMouse[0]*ballMouse[0] + ballMouse[1]*ballMouse[1];
-  if (mag > 1.0) {
-    register double scale = 1.0/sqrt(mag);
-    ballMouse[0] *= scale; ballMouse[1] *= scale;
-    ballMouse[2] = 0.0;
-  } else {
-    ballMouse[2] = sqrt(1 - mag);
-  }
-  //ballMouse[3] = 0.0;
-  return (ballMouse);
+  register double magsqr;
+
+  ballMouse[0] = (mouse[0] - center[0]) / radius;
+  ballMouse[1] = (mouse[1] - center[1]) / radius;
+  magsqr = sqr(ballMouse[0]) + sqr(ballMouse[1]);
+  if (magsqr > 1.0)
+    {
+      register double scale = 1.0/sqrt(magsqr);
+      ballMouse[0] *= scale; 
+      ballMouse[1] *= scale;
+      ballMouse[2] = 0.0;
+    }
+  else
+    {
+      ballMouse[2] = sqrt (1.0 - magsqr);
+    }
+  return ballMouse;
 }
 
-/* Construct a unit quaternion from two points on unit sphere */
-fQuaternion 
-fArcball::quaternion_from_ball_points (fVector3 from, fVector3 to)
+/**
+ * Construct a unit quaternion from two points on unit sphere
+ */
+fQuaternion fArcball::quatFromBallPoints (const fVector3& from, const fVector3& to)
 {
-  fQuaternion qu;
-  qu[0] = from[1]*to[2] - from[2]*to[1];
-  qu[1] = from[2]*to[0] - from[0]*to[2];
-  qu[2] = from[0]*to[1] - from[1]*to[0];
-  qu[3] = from[0]*to[0] + from[1]*to[1] + from[2]*to[2];
-  return (qu);
+  return fQuaternion (from % to, from * to);
 }
 
-/* Convert a unit quaternion to two points on unit sphere */
-void 
-fArcball::quaternion_to_ball_points (fQuaternion q, fVector3 *arcFrom, fVector3 *arcTo)
+/**
+ * Convert a unit quaternion to two points on unit sphere
+ * Assumes that the given quaternion is a unit quaternion
+ */
+void fArcball::quatToBallPoints (const fQuaternion& q, fVector3& arcFrom, fVector3& arcTo)
 {
   double s;
-  s = sqrt(q[0]*q[0] + q[1]*q[1]);
-  if (s == 0.0) {
-    *arcFrom = fVector3 (0.0, 1.0, 0.0);
-  } else {
-    *arcFrom = fVector3 (-q[1]/s, q[0]/s, 0.0);
-  }
-  (*arcTo)[0] = q[3]*(*arcFrom)[0] - q[2]*(*arcFrom)[1];
-  (*arcTo)[1] = q[3]*(*arcFrom)[1] + q[2]*(*arcFrom)[0];
-  (*arcTo)[2] = q[0]*(*arcFrom)[1] - q[1]*(*arcFrom)[0];
-  if (q[3] < 0.0) *arcFrom = fVector3 (-(*arcFrom)[0], -(*arcFrom)[1], 0.0);
+  s = sqrt (sqr (q[0]) + sqr (q[1]));
+
+  if (fabs (s) < 1.0e-5) 
+    arcFrom.set (0.0, 1.0, 0.0);
+  else
+    arcFrom.set (-q[1]/s, q[0]/s, 0.0);
+  
+  arcTo[0] = q[3]*arcFrom[0] - q[2]*arcFrom[1];
+  arcTo[1] = q[3]*arcFrom[1] + q[2]*arcFrom[0];
+  arcTo[2] = q[0]*arcFrom[1] - q[1]*arcFrom[0];
+  if (q[3] < 0.0) arcFrom *= -1.0;
 }
 
-/* Force sphere point to be perpendicular to axis. */
-fVector3 
-fArcball::constrain_to_axis (fVector3 loose, fVector3 axis)
+/**
+ * Force sphere point to be perpendicular to axis.
+ */
+fVector3 fArcball::constrainToAxis (const fVector3& loose, const fVector3& axis)
 {
   fVector3 onPlane;
   register float norm;
-  onPlane = loose - (axis * (axis * loose));
-  norm = onPlane.norm ();
-  if (norm > 0.0) {
-    if (onPlane[2] < 0.0) onPlane = -onPlane;
-    return onPlane * (1/sqrt(norm));
-  }
-  if (axis[2] == 1) {
-    onPlane = fVector3 (1.0, 0.0, 0.0);
-  } else {
-    fVector3 tmp (-axis[1], axis[0], 0.0);
-    tmp.normalize ();
-    onPlane = tmp;
-  }
-  return (onPlane);
+  onPlane = loose - axis * (axis*loose);
+  norm = normsqr(onPlane);
+  if (norm > 0.0)
+    {
+      if (onPlane[2] < 0.0) onPlane *= -1.0;
+      onPlane /= sqrt(norm);
+    }
+  else if ( fabs (axis[2]-1.0) < 1.0e-5 )
+    {
+      onPlane.set (1.0, 0.0, 0.0);
+    }
+  else
+    {
+      onPlane.set (-axis[1], axis[0], 0.0); 
+      normalize (onPlane);
+    }
+  return onPlane;
 }
 
-/* Find the index of nearest arc of axis set. */
-int 
-fArcball::nearest_constraint_axis (fVector3 loose, fVector3 *axes, int nAxes)
+/**
+ * Find the index of nearest arc of axis set.
+ */
+int fArcball::nearestConstraintAxis (const fVector3& loose, fVector3 * axes, int nAxes)
 {
   fVector3 onPlane;
   register float max, dot;
   register int i, nearest;
-  max = -1; 
-  nearest = 0;
-  for (i=0; i<nAxes; i++) {
-    onPlane = constrain_to_axis (loose, axes[i]);
-    dot = onPlane * loose;
-    if (dot > max) {
-      max = dot; 
-      nearest = i;
+  max = -1.0; nearest = 0;
+  for (i=0; i < nAxes; i++)
+    {
+      onPlane = constrainToAxis(loose, axes[i]);
+      dot = onPlane * loose;
+      if ( dot > max )
+	{
+	  max = dot; nearest = i;
+	}
     }
-  }
-  return (nearest);
+  return nearest;
+}
+
+/**
+ * Halve arc between unit vectors v1 and v2.
+ * Assumes that v1 and v3 are unit vectors
+ */
+fVector3 fArcball::bisect (const fVector3& v1, const fVector3& v2)
+{
+  fVector3 v = v1 + v2;
+  float Nv = normsqr (v);
+  
+  if (Nv < 1.0e-5) 
+    v.set (0.0, 0.0, 1.0);
+  else
+    v /= sqrt(Nv);
+  return v;
 }
