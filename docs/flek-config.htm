@@ -1,0 +1,78 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML//EN">
+<html>
+  <head>
+    <title>flek-config</title>
+  </head>
+  <body bgcolor="white">
+<center>
+<img src="flek.gif">
+<h4>The Fast Light Environment Kit</h4>
+</center>
+<hr>
+
+ <h2>flek-config</h2>
+    <p>flek-config is a script designed to make using Flek and Fltk
+      even easier.  One problem with compiling software is knowing
+      what libraries, library paths, include paths and compiler
+      options to in your compile line.  flek-config solves this by 
+      determining what Flek, Fltk and OpenGl need to compile.
+    <p>Just typing flek-config at the shell prompt should give you this:
+<p>
+<font size="-1">
+<blockquote>
+<pre>
+Usage: flek-config [OPTIONS]
+Options:
+	[--prefix[=DIR]]  return/set where FLEK is installed
+	[--exec-prefix[=DIR]]
+	[--version]
+
+options telling what we are doing :
+	[--use-core]      use core library (default)  (libflek_core)
+	[--use-ui]        use user interface library  (libflek_ui)
+	[--use-gl]        use OpenGL library          (libflek_gl)
+
+options telling what information we request
+	[--cflags]        return flags to compile C using Flek
+	[--cxxflags]      return flags to compile C++ using Flek
+	[--ldflags]       return flags to link against Flek
+	[--ldstaticflags] return flags to link against static Flek library
+                            even if there are DSOs installed
+	[--libs]          return Flek libraries full path for dependencies
+</pre>
+</blockquote>
+</font>
+<p>So, if we wanted to compile something to an object file, we could
+type:
+<blockquote>
+<font color="blue">
+<pre>CC <b>'flek-config --cxxflags'</b> -c something.cxx</pre>
+</font>
+</blockquote>
+
+<p>And if we wanted to link the object file, we could
+type :
+<blockquote>
+<font color="blue">
+<pre>CC something.o <b>'flek-config --ldflags'</b> -o something</pre>
+</font>
+</blockquote>
+
+<p>Or combining the two steps :
+<blockquote>
+<font color="blue">
+<pre>CC <b>'flek-config --cxxflags'</b> something.cxx <b>'flek-config --ldflags'</b> -o something</pre>
+</font>
+</blockquote>
+
+
+    <hr>
+<font size="-1">
+    <address><a href="mailto:james@tiger-marmalade.com"></a></address>
+<!-- Created: Fri Feb 11 14:21:55 CST 2000 -->
+<!-- hhmts start -->
+Last modified: Fri Feb 11 14:38:40 CST 2000
+<!-- hhmts end -->
+</font>
+  </body>
+</html>
