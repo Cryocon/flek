@@ -1,6 +1,6 @@
 /* -*-C++-*- 
 
-   "$Id: Fl_App_Window.H,v 1.15 2000/05/12 15:59:48 brad Exp $"
+   "$Id: Fl_App_Window.H,v 1.16 2000/05/13 06:28:04 jamespalmer Exp $"
    
    Copyright 1999-2000 by the Flek development team.
    
@@ -55,17 +55,17 @@ private:
   Fl_Window* _contents;
 
   /**
-   * Specifies the capacity of the dockable_windows list.
-   */
-  static const int dockable_windows_capacity = 32;
-
-  /**
    * Hold a list of pointers to dockable windows that have ever been
    * docked to this application window.  This is mainly used to provide automatic
    * showing and hiding of undocked windows when the application windows is shown/hid.
    * Hack Alert: This list is implemented as a simple fixed-size array.
    */
-  Fl_Dockable_Window* dockable_windows[dockable_windows_capacity];
+  Fl_Dockable_Window** dockable_windows;
+
+  /**
+   * Specifies the capacity of the dockable_windows list.
+   */
+  int dockable_windows_capacity;
 
   /**
    * Tracks the number of elements used in the dockable_windows list.
@@ -94,6 +94,8 @@ public:
    */
   Fl_App_Window(int x, int y, int w, int h, const char *l = 0);
 
+  ~Fl_App_Window();
+  
   /**
    * Returns a pointer to the Fl_Pack group, which contains the contents window
    * and any docked groups.
@@ -134,6 +136,12 @@ public:
    */
   void add_dockable(Fl_Dockable_Window* W, int position = 0);
 
+  /**
+   * Grants permission for the given Fl_Dockable_Window to dock with this
+   * Fl_App_Window.  No actual docking takes place.
+   */  
+  void accept_dockable(Fl_Dockable_Window* W);
+  
   /**
    * Makes the contents window the current group.
    */
