@@ -1,6 +1,6 @@
 /* -*-C++-*- 
 
-   "$Id: fPNM.h,v 1.1 2000/03/02 06:50:10 jamespalmer Exp $"
+   "$Id: fPNM.h,v 1.2 2000/03/02 06:53:32 jamespalmer Exp $"
    
    Copyright 1999-2000 by the Flek development team.
    
@@ -50,7 +50,9 @@ class fPNM {
    */
   static fImageRGBA * readRGBA (char *filename);
 
-  
+  /**
+   * Write a PPM to disk from an fImageRGBA object.
+   */  
   static int writeRGBA (char *filename, fImageRGBA* img);
 
 };
