@@ -179,7 +179,7 @@ Fl_Dockable_Window::Fl_Dockable_Window(int w, int h, const char *l)
   create_dockable_window();
 }
 
-Fl_Dockable_Window::create_dockable_window() {
+void Fl_Dockable_Window::create_dockable_window() {
   clear_border();
   uw_ = w();
   uh_ = h();

@@ -1,6 +1,6 @@
 /* -*-C++-*- 
 
-   "$Id: Fl_Dockable_Window.H,v 1.6 2000/05/17 05:50:27 brad Exp $"
+   "$Id: Fl_Dockable_Window.H,v 1.7 2000/05/18 04:50:23 jamespalmer Exp $"
    
    Copyright 1999-2000 by the Flek development team.
    
@@ -84,7 +84,7 @@ protected:
   short _docked;
   int uw_;
   int uh_;
-  Fl_Dockable_Window::create_dockable_window();
+  void Fl_Dockable_Window::create_dockable_window();
 
 public:
   static Fl_Dockable_Window* current;
