@@ -1,17 +1,19 @@
-#include <FL/Fl.H>
 #include <stdio.h>
 
-#include <Flek/Fl_App_Window.H>
+#include <FL/Fl.H>
 #include <FL/x.H>
 #include <FL/fl_draw.H>
+#include <Flek/Fl_App_Window.H>
+
+// #define FL_APP_WINDOW_DEBUG
 
 Fl_App_Window::Fl_App_Window(int x, int y, int w, int h, const char* l) : 
-  Fl_Window(x, y, w, h, l), dockable_windows_size(0) {
+  Fl_Window(x, y, w, h, l) {
   create_app_window(w, h, l);
 }
 
 Fl_App_Window::Fl_App_Window(int w, int h, const char* l) : 
-  Fl_Window(w, h, l), dockable_windows_size(0) {
+  Fl_Window(w, h, l) {
   create_app_window(w, h, l);
 }
 
@@ -24,6 +26,11 @@ void Fl_App_Window::create_app_window(int w, int h, const char* l) {
   dockable_windows_capacity = 4;
   dockable_windows = (Fl_Dockable_Window**)malloc(
     sizeof(Fl_Dockable_Window*)*dockable_windows_capacity);
+  dockable_windows_size = 0;
+
+  // Contents window and docked windows will complete obscure the
+  // toplevel window, so set it to no box.
+  Fl_Window::box(FL_NO_BOX);
 
   // Create the pack that holds the contents window and docked windows.
   // Contents window and docked windows will complete obscure the
@@ -34,14 +41,12 @@ void Fl_App_Window::create_app_window(int w, int h, const char* l) {
 
   // Create the contents window.
   _contents = new Fl_Window(0, 0, w, h, "Fl_App_Window::contents");
-
-  // Contents window and docked windows will complete obscure the
-  // toplevel window, so set it to no box.
-  Fl_Window::box(FL_NO_BOX);
 }
 
 int Fl_App_Window::handle(int event) {
-  // printf("Fl_App_Window::handle() event %d\n", event);
+#ifdef FL_APP_WINDOW_DEBUG
+  printf("Fl_App_Window::handle() event %d\n", event);
+#endif
  
   if(event == FL_UNDOCK) {
     _contents->size(_contents->w(), _contents->h() + Fl_Dockable_Window::current->h());
@@ -147,8 +152,14 @@ void Fl_App_Window::add_dockable(Fl_Dockable_Window *W, int pos) {
 }
 
 void Fl_App_Window::show() {
-  // printf("Fl_App_Window::show() win %x\n", this);
+#ifdef FL_APP_WINDOW_DEBUG
+  printf("Fl_App_Window::show() win %p\n", this);
+#endif
+
+  // Show ourself.
   Fl_Window::show();
+
+  // Show our dockable windows.
   for(int i=0; i < dockable_windows_size; i++)
     dockable_windows[i]->show();
 }
@@ -160,7 +171,10 @@ void Fl_App_Window::hide() {
 }
 
 void Fl_App_Window::flush() {
-  // printf("Fl_App_Window::flush() win %x\n", this);
+#ifdef FL_APP_WINDOW_DEBUG
+  printf("Fl_App_Window::flush() win %p\n", this);
+#endif
+
   make_current();
   Fl_X *i = Fl_X::i(this);
   fl_clip_region(i->region); i->region = 0;
@@ -169,7 +183,9 @@ void Fl_App_Window::flush() {
 }
 
 void Fl_App_Window::resize(int X, int Y, int W, int H) {
-  // printf("Fl_App_Window::resize() win %x\n", this);
+#ifdef FL_APP_WINDOW_DEBUG
+  printf("Fl_App_Window::resize() win %p\n", this);
+#endif
 
   int dw = W - w();
   int dh = H - h();
