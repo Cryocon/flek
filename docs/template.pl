@@ -123,11 +123,11 @@ file "to-do.html";
   <h3>TODO list for $project_name</h3>
 <<
 
-if (&todolist_files()) {
+if (&todolistFiles()) {
   >><hr><p>
   <<
-  foreach $f (&todolist_files()) {
-    my @m = &todolist_entries( $f );
+  foreach $f (&todolistFiles()) {
+    my @m = &todolistEntries( $f );
     if ($f =~ /([^\/]+)$/) { $f = $1; }
     >><b>$f:</b><ul>
     <<
@@ -360,12 +360,12 @@ sub function {
 	<h4>$jamesname;</h4>
 	<dd>
 	<<print &processDescription( $f->description() );>>
-	<p><dl>
+	<p>
 	<<
 	if ($f->params()) {
 		>>
-		<dt><b>Parameters</b><dd>
-		<table width=85%><tr><td colspan=2><hr></td></tr>
+		<p><font color="red"><b>Parameters</b></font><dd>
+		<table>
 		<<
 		foreach $a ($f->params()) {
 			>><tr valign=top><th align=right>
@@ -374,14 +374,16 @@ sub function {
 			>></td></tr>
 			<<
 		}
-		>><tr><td colspan=2><hr></td></tr></table>
+		>></table>
+		</p>
 		<<
 	}
 	
-	if ($f->returnval()) {
-		>><dt><b>Return Value</b>
-		<dd><<
-		print &processDescription( $f->returnval() );>><p>
+	if ($f->returnValue()) {
+		>><p><font color="red"><b>Return Value</b></font>
+		<br><<
+		print &processDescription( $f->returnValue() );>>
+		</p>
 		<<
 	}
 	
@@ -454,10 +456,10 @@ sub global_function {
 		<<
 	}
 	
-	if ($f->returnval()) {
+	if ($f->returnValue()) {
 		>><dt><b>Return Value</b>
 		<dd><<
-		print &processDescription( $f->returnval() );>><p>
+		print &processDescription( $f->returnValue() );>><p>
 		<<
 	}
 	

@@ -1,6 +1,6 @@
 /* -*-C++-*- 
 
-   "$Id: FArcball.H,v 1.1 2000/04/13 14:10:02 jamespalmer Exp $"
+   "$Id: FArcball.H,v 1.2 2000/04/14 14:30:11 jamespalmer Exp $"
    
    Copyright 1999-2000 by the Flek development team.
    
@@ -45,30 +45,88 @@ class FArcball
 public:
 
   typedef FVector3 * Axes;
-    
-  FArcball ();
-  FArcball (const FArcball& ab);
-  FArcball (const FVector3& cen, double rad);
-  ~FArcball ();
   
+  /**
+   * Default constructor.
+   */
+  FArcball ();
+
+  /**
+   * Copy constructor.  This constructor copies the values from another
+   * FArcball.
+   *
+   * @param ab The FArcball that this FArcball should copy it's values from.
+   */
+  FArcball (const FArcball& ab);
+
+  /**
+   * Two argument constructor.  This constructor sets the initial center
+   * and radius of the arcball.
+   *
+   * @param cen The center for all subsequent rotation, zoom, pan, and 
+   *   dolly operations.
+   * @param radius The radius of the sphere used for determining where
+   *   the user sweeps a rotation arc.  The radius is relative to the
+   *   window, where the value 1.0 would be the size of the window.
+   */
+  FArcball (const FVector3& cen, double rad);
+
+  /**
+   * The destructor.
+   */
+  ~FArcball ();
+
+  /**
+   * The assignment operator.  This method assigns the values contained
+   * in this arcball to that of another.
+   *
+   * @param ab The FArcball that this FArcball should copy it's values from.
+   */
   FArcball& operator = (const FArcball& ab);
   
   /**
-   * Place the center of the ball and set it's radius.
+   * Sets the center of the arcball and it's radius.
+   *
+   * @param cen The center for all subsequent rotation, zoom, pan, and 
+   *   dolly operations.
+   * @param radius The radius of the sphere used for determining where
+   *   the user sweeps a rotation arc.  The radius is relative to the
+   *   window, where the value 1.0 would be the size of the window.
    */
   void place (const FVector3& cen, double rad) {
     vCenter = cen; dRadius = rad;
   }
-  
+
+  /**
+   * Sets the center of the arcball.
+   *
+   * @param cen The center for all subsequent rotation, zoom, pan, and 
+   *   dolly operations.
+   */  
   void center (const FVector3& cen) {
     vCenter = cen;
   }
-  
+
+  /**
+   * Sets the center of the arcball.
+   *
+   * @param x The x coordinate center for all subsequent rotation, zoom,
+   *   pan, and dolly operations.
+   * @param y The y coordinate center for all subsequent rotation, zoom,
+   *   pan, and dolly operations.
+   * @param z The z coordinate center for all subsequent rotation, zoom,
+   *   pan, and dolly operations.
+   */    
   void center (double x, double y, double z) {
     vCenter.set (x, y, z);
   }
-    
-  FVector3 center(void) const {                      // Get the center
+
+  /**
+   * Gets the center of the arcball.
+   *
+   * @return The center of the arcball.
+   */    
+  FVector3 center (void) const {
     return vCenter;
   }
   
