@@ -419,7 +419,8 @@ int Fl_Toggle_Tree_Base::remove (Fl_Toggle_Node_Base * a) {
 }
 
 int Fl_Toggle_Tree_Base::clear() {
-  return remove(first_);
+  while (first_) remove(first_);
+  return 1;
 }
 
 int Fl_Toggle_Tree_Base::close(Fl_Toggle_Node_Base* node) {
