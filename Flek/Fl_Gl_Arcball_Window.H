@@ -1,6 +1,6 @@
 /* -*-C++-*- 
 
-   "$Id: Fl_Gl_Arcball_Window.H,v 1.9 2000/04/14 20:15:38 jamespalmer Exp $"
+   "$Id: Fl_Gl_Arcball_Window.H,v 1.10 2000/08/08 17:40:37 jamespalmer Exp $"
    
    Copyright 1999-2000 by the Flek development team.
    
@@ -317,6 +317,21 @@ public:
   double arcball_radius(void) const {
     return arcball.radius();
   }
+
+  void reset () {
+    transform.reset ();
+  }
+   
+  /**
+   * Get the current FArcball_Control being used for rotation.
+   */
+  FArcball_Control get_arcball () { return arcball; }
+   
+  /**
+   * Set the current FArcball_Control being used for rotation.
+   */
+  void set_arcball (const FArcball_Control& arcball_) { arcball = arcball_; }
+   
 };
 
 #endif

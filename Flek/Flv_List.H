@@ -44,21 +44,6 @@
 #include <FL/Enumerations.H>
 #include <Flek/Flv_Style.H>
 
-#ifndef FLTK_2
-#define text_color() FL_BLACK
-#define text_font() FL_HELVETICA
-#define text_size() 12
-
-#define fl_inactive inactive
-#define fl_contrast(x,y) FL_BLACK
-#define selection_text_color() FL_WHITE
-#define FL_DAMAGE_HIGHLIGHT FL_DAMAGE_CHILD
-#define label_font labelfont
-#define label_size labelsize
-#define label_color labelcolor
-#define label_type labeltype
-#endif
-
 #define FLV_ROW_HEADER -1
 #define FLV_ROW_FOOTER -2
 #define FLV_TITLE -3

@@ -190,7 +190,8 @@ void Flv_Table::draw_cell( int Offset, int &X, int &Y, int &W, int &H, int R, in
 		if (R>-1 && C>-1 && R==row() && C==col() && !select_row() &&
 				(Fl::focus()==this || persist_select()))
 		{
-			fl_color( fl_contrast(text_color(), selection_color()) );
+			//fl_color( fl_contrast(text_color(), selection_color()) );
+		        fl_color (FL_RED);
 			fl_rect( X, Y, W, H);
 		}
 

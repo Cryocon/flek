@@ -1,6 +1,6 @@
 /* -*-C++-*- 
 
-   "$Id: Fl_Calendar.H,v 1.7 2000/05/12 14:15:28 jamespalmer Exp $"
+   "$Id: Fl_Calendar.H,v 1.8 2000/08/08 17:40:37 jamespalmer Exp $"
    
    Copyright 1999-2000 by the Flek development team.
    
@@ -152,6 +152,8 @@ class Fl_Date_Input : public Fl_Group  {
 
 #ifndef FLTK_2  
   void text_font (int);
+  void textfont (int t) { text_font(t); }
+  void textsize (int t) { text_size(t); }
 #else
   void text_font (Fl_Font);
 #endif

@@ -1,9 +1,10 @@
 include ../makeinclude
 
 ALL = calendar stock_buttons docking toggle_tree \
-	testlist testtable testtable2 basiclist exercise testedit testcombo \
+	testlist testtable testtable2 basiclist testedit testcombo \
 	socket
-	
+# excercise
+
 ifdef GL_LIB
 	ALL += arcball image
 endif
