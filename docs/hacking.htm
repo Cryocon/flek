@@ -4,13 +4,22 @@
     <title>flek-config</title>
   </head>
   <body bgcolor="white">
-<center>
-<img src="flek.gif">
-<h4>The Fast Light Environment Kit</h4>
-</center>
-<hr>
+    <center>
+      <img src="flek.gif">
+      <h4>The Fast Light Environment Kit</h4>
+    </center>
+    <hr>
 
-    <h2>Flek Style Guide</h2>
+    <h2>The Flek Hacking Guide</h2>
+    <ol>
+      <li><a href="#FlekZen">Flek Zen</a> - Coding philosophy.</li>
+      <li><a href="#FlekStyle">Flek Style</a> - Coding conventions.</li>
+      <li><a href="#FlekDoc">Flek Doc</a> - Documentation conventions.</li>
+    </ol>
+
+    <hr>
+    <a name="FlekZen">
+    <h2>Flek Zen</h2>
     <p>Flek adopts a minimalist C++ philosophy.  Flek is written 
       in a subset of the ISO C++ standard in order to maximize 
       portability, minimize excessive memory usage and code complexity.  
@@ -29,12 +38,107 @@
       And if you don't use any of the above features Flek won't force 
       them on you.  Flek intends to be usable by as many programmers, and
       in as many programming environments as possible.
+
+    <a name="FlekStyle">
+    <h2>Flek Style</h2>
+
+    <p>Flek attempts to follow the GNU coding guidelines but also 
+      incorporates a javadoc style documentation scheme (flekdoc) and  
+      standard class and method naming conventions.  For more information on
+      the GNU coding guidelines, see the <a href="">online documentation</a>.
+    </p>
+    <blockquote>
+      <h3>Naming Conventions</h3>
+      <p>While Flek builds heavily on Fltk, the Flek developers chose not
+	to use Fltk's class and method naming conventions for non-gui 
+	elements.  Instead non-gui elements use the following conventions:
+      <ol>
+	<li>Method names begin in lower case and continue in mixed case.
+	  For example:
+<blockquote>
+<pre>
+X.size ();
+X.insertNode ();
+X.thisIsALongExample ();
+</pre>
+</blockquote>
+</li>
+<li>Class variables begin in capital letters so that we can have like
+named methods that begin in lower case:
+<blockquote>
+<pre>
+int Size;                    // variables begin in uppercase
+int size () { return Size; } // methods begin in lowercase
+</pre>
+</blockquote>
+</li>
+<li>Class names begin with a lowercase prefix and then continue
+in mixed case.  In particular, non-gui flek classes always begin
+with an "f" prefix:
+<blockquote>
+<pre>
+class fVector2;
+class fVector3;
+class fMatrix4x4;
+class fList;
+</pre>
+</blockquote>
+	</li>
+      </ol>
+      <h3>Naming Conventions from Fltk</h3>
+      <p>Through a convenient set of defines in <tt>&lt;Flek/Flek.h&gt;</tt>,
+	Flek users can use Fltk classes with Flek style class names
+	(See Naming Convention 3).
+	For example,
+      <blockquote>
+<pre>
+flWindow
+flButton
+flGlWindow
+etc..
+</pre>
+      </blockquote>
+      <p>Since Fltk encapsulates (hides) most of it's data in classes, 
+	violations of naming convention number 2 are rarely visible to
+	Flek users.  Unfortunately, you will notice that Fltk classes use 
+	a different method naming scheme from Flek (naming convention 1).  
+	Instead of naming
+	methods <b>likeThis ()</b>, Fltk names methods <b>like_this ()</b>.
+	Fortunately, a good number of Fltk method names are only one 
+	word long and in that case match our first naming convention.
+    </blockquote>
+    <a name="FlekDoc">
+    <h2>FlekDoc (Documentation Conventions)</h2>
+    
+    <p>FlekDoc is an enhanced version of <a href="http://www.sylvantech.com/~talin/">Talin</a>'s <a href="http://www.sylvantech.com/~talin/projects/scandoc/scandoc.html">ScanDoc</a>.
+      ScanDoc comments are a superset of javadoc.  In addition
+      to javadoc comment markup, HTML markup is also allowed.  All Flek
+      documentation is maintained in HTML form and then converted to other
+      convenient formats like PostScript and PDF.
+    </p>
+    <p>Header files (.h | .H) typically represent 
+      the library interface or API and source files (.cxx) typically represent 
+      the library implementation.  Thus, FlekDoc interface documentation 
+      should be maintained in the header files and implementation comments 
+      should be maintained in the source files.  The Flek reference
+      documentation is automatically generated from the embedded FlekDoc
+      comments in the header files.  Here is an example comment,
+    </p>
+    <blockquote>
+      <pre>
+<font color="red">/**
+ * Convert to a rotation matrix. Assumes that the quaternion has 
+ * been normalized
+ */</font>
+<font color="blue">fMatrix3x3</font> toMatrix (<font color="blue">void</font>) const;
+</pre>
+    </blockquote>
     <hr>
 <font size="-1">
     <address><a href="mailto:james@tiger-marmalade.com"></a></address>
 <!-- Created: Mon Feb 21 12:15:24 CST 2000 -->
 <!-- hhmts start -->
-Last modified: Mon Feb 21 12:55:56 CST 2000
+Last modified: Thu Feb 24 09:39:37 CST 2000
 <!-- hhmts end -->
 </font>
   </body>
