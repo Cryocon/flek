@@ -72,7 +72,7 @@ int FJPEG::write (char *filename, FImage *data, int quality) {
   
   if ((outfile = fopen (filename, "wb")) == NULL) {
     fprintf(stderr, "can't open %s\n", filename);
-    exit(1);
+     return -1;
   }
   
   jpeg_stdio_dest (&cinfo, outfile); 
