@@ -32,19 +32,15 @@ Fl_Time::Fl_Time(int x, int y, int w, int h, int look) : Fl_Group(x, y, w, h) {
 
 		button_decrease_hour = new Fl_Repeat_Button(x + w - 4 * button_width, y, button_width, h, "h-");
 		button_decrease_hour->callback(button_cb, this);
-		button_decrease_hour->box(FL_THIN_UP_BOX);
 	
 		button_decrease_minute = new Fl_Repeat_Button(x + w - 2 * button_width, y, button_width, h, "m-");
 		button_decrease_minute->callback(button_cb, this);
-		button_decrease_minute->box(FL_THIN_UP_BOX);
 
 		button_increase_minute = new Fl_Repeat_Button(x + w - button_width, y, button_width, h, "m+");
 		button_increase_minute->callback(button_cb, this);
-		button_increase_minute->box(FL_THIN_UP_BOX);
 
 		button_increase_hour = new Fl_Repeat_Button(x + w - 3 * button_width, y, button_width, h, "h+");
 		button_increase_hour->callback(button_cb, this);
-		button_increase_hour->box(FL_THIN_UP_BOX);
 	}
 	else {
 		button_width = w / 10;

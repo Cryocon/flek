@@ -161,6 +161,10 @@ Fl_Calendar::Fl_Calendar (int x, int y, int w, int h,
 			  const char *l, int title_height, int look) : Fl_Calendar_Base (x, y, w, h, l) 
 {
 
+  if(title_height < 0) {
+    title_height = h / 8;
+  }
+
   int i;
   for (i = 0; i<7; i++)
     {
@@ -186,58 +190,53 @@ Fl_Calendar::Fl_Calendar (int x, int y, int w, int h,
   weekdays[FRIDAY]->label ("F");
   weekdays[SATURDAY]->label ("S");
   
-
-  if(title_height < 0) {
-    title_height = h / 8;
-  }
-
   this->look = look;
   if(look == FL_LOOK_MODERN) {
     prv_year = new Fl_Repeat_Button (x + (int)(w / 7) * 7 - 2 * title_height * 1.2 + 1, y, title_height * 1.2, title_height, "Y-");
-    prv_year->box (FL_THIN_UP_BOX);
+    prv_year->box (FL_UP_BOX);
 #ifndef FLEK_FLTK_2
     prv_year->labelsize (10);
-    prv_year->down_box (FL_THIN_DOWN_BOX);
+    prv_year->down_box (FL_DOWN_BOX);
 #else
     prv_year->label_size (10);
 #endif
     prv_year->callback ((Fl_Callback*)&fl_calendar_prv_year_cb, (void *)this);  
 
     prv_month = new Fl_Repeat_Button (x + (int)(w / 7) * 7- 4 * title_height * 1.2 + 1, y, title_height * 1.2, title_height, "M-");
-    prv_month->box (FL_THIN_UP_BOX);
+    prv_month->box (FL_UP_BOX);
 #ifndef FLEK_FLTK_2
     prv_month->labelsize (10);
-    prv_month->down_box (FL_THIN_DOWN_BOX);
+    prv_month->down_box (FL_DOWN_BOX);
 #else
     prv_month->label_size (10);
 #endif
     prv_month->callback ((Fl_Callback*)&fl_calendar_prv_month_cb, (void *)this);  
 
     nxt_month = new Fl_Repeat_Button (x + (int)(w / 7) * 7 - 3 * title_height * 1.2 + 1, y, title_height * 1.2, title_height, "M+");
-    nxt_month->box (FL_THIN_UP_BOX);
+    nxt_month->box (FL_UP_BOX);
 #ifndef FLEK_FLTK_2
     nxt_month->labelsize (10);
-    nxt_month->down_box (FL_THIN_DOWN_BOX);
+    nxt_month->down_box (FL_DOWN_BOX);
 #else
     nxt_month->label_size (10);
 #endif
     nxt_month->callback ((Fl_Callback*)&fl_calendar_nxt_month_cb, (void *)this);
   
     nxt_year = new Fl_Repeat_Button (x + (int)(w / 7) * 7 - 1 * title_height * 1.2 + 1, y, title_height * 1.2, title_height, "Y+");
-    nxt_year->box (FL_THIN_UP_BOX);
+    nxt_year->box (FL_UP_BOX);
 #ifndef FLEK_FLTK_2
     nxt_year->labelsize (10);
-    nxt_year->down_box (FL_THIN_DOWN_BOX);
+    nxt_year->down_box (FL_DOWN_BOX);
 #else
     nxt_year->label_size (10);
 #endif
     nxt_year->callback ((Fl_Callback*)&fl_calendar_nxt_year_cb, (void *)this);
 
     caption = new Fl_Button (x, y, (int)(w / 7) * 7 - title_height * 1.2 * 4 + 1, title_height);
-    caption->box (FL_THIN_UP_BOX);
+    caption->box (FL_UP_BOX);
 #ifndef FLEK_FLTK_2
     caption->labelsize (10);
-    caption->down_box (FL_THIN_DOWN_BOX);
+    caption->down_box (FL_DOWN_BOX);
     caption->output();
 #else
     caption->label_size (10);
