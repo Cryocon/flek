@@ -1,7 +1,7 @@
 include ../makeinclude
 
 all: arcball calendar stock_buttons dockable_group toggle_tree image \
-	fdom testlist testtable testtable2 basiclist exercise testedit
+	fxml testlist testtable testtable2 basiclist exercise testedit vfs
 
 UICOMPILE=`../flek-config --use-ui --cxxflags` -g3
 UILINK=`../flek-config --use-ui --ldflags` 
@@ -45,8 +45,12 @@ exercise: exercise.cxx
 testedit: testedit.cxx
 	$(CXX) $(UICOMPILE) $@.cxx $(UILINK) -o $@
 
-fdom: fdom.cxx
+fxml: fxml.cxx
 	$(CXX) $(UICOMPILE) $@.cxx $(UILINK) -o $@
+
+vfs: vfs.cxx
+	$(CXX) $(UICOMPILE) $@.cxx $(UILINK) -o $@
+
 
 clean:
 	rm -f core *.o toggle_tree dockable_group bitmaps filedialog \

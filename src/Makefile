@@ -1,6 +1,7 @@
 CORECPPFILES = \
 	fArcball.cxx \
 	fDate.cxx \
+	fXml.cxx \
 	fDom.cxx \
 	fDomAttr.cxx \
 	fFile.cxx \
@@ -18,8 +19,9 @@ UICPPFILES = \
 	Fl_Toggle_Node_Base.cxx \
 	Fl_Toggle_Node.cxx \
 	Fl_Toggle_Tree_Base.cxx \
-	Fl_Toggle_Tree.cxx \
-	Flv_CStyle.cxx \
+	Fl_Toggle_Tree.cxx 
+
+FLVWFILES = Flv_CStyle.cxx \
 	Flv_Style.cxx \
 	Flv_List.cxx \
 	Flv_Table.cxx \
@@ -141,7 +143,7 @@ install: $(CORELIBRARY).a $(UILIBRARY).a $(GLLIBRARY).a $(DSONAME)
 	@-cp ../Flek/*.[Hh]  $(includedir)/Flek
 	@-chmod 755 $(includedir)/Flek
 	@-chmod 644 $(includedir)/Flek/*
-	@-cp ../flek-config $(bindir)
+	cp ../flek-config $(bindir)
 
 ################################################################
 # DO NOT DELETE

@@ -23,6 +23,8 @@ main ()
 					    "App Window!");
   myapp->show ();
 
+  myapp->resizable(myapp);
+  
   Fl_Dockable_Group *mygroup = new Fl_Dockable_Group (0, 0, 100, 30, 
 						      "other");
 
@@ -34,6 +36,8 @@ main ()
   (void) new Fl_Button (5, 5, 100, 100, "Hello World");
   myapp->end ();
 
+  //myapp->layout();
+  
   print_children (myapp);
   print_children (mygroup);
 

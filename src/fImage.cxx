@@ -10,11 +10,65 @@ typedef unsigned short * ushortPtr;
 typedef unsigned char uchar;
 typedef unsigned char * ucharPtr;
 
+#define INT_MULT(a,b,t)  ((t) = (a) * (b) + 0x80, ((((t) >> 8) + (t)) >> 8))
+#define INT_BLEND(a,b,alpha,tmp)  (INT_MULT((a)-(b), alpha, tmp) + (b))
+
+void pixelsOver (const unsigned char* dest,
+		 const unsigned char* src,
+		 int opacity,
+		 int length)
+{
+  int a;
+  register long t1;
+  int end = dest+4*w;
+  for (; dest<end; dest+=4, src+=4)
+    {
+      a = INT_MULT(src[3], opacity, t1);
+      dest[0] = INT_BLEND(dest[0], src[0], a, t1);
+      dest[1] = INT_BLEND(dest[0], src[0], a, t1);
+      dest[2] = INT_BLEND(dest[0], src[0], a, t1);
+      dest[3] = 255; //dest[3]+src[i+3];
+    }
+}
+
 /*
  * All operations are done "in-place" on image A and do not return a 
  * new image for efficiency.  If you want a new image, copy image A
  * and then work on the copy.
  */
+
+fImage* normal (fImage *A, fImage *B, int xo, int yo, float value)
+{
+  uchar *Apixel;
+  uchar *Bpixel;
+  
+  fImage::iterator Ai;
+  fImage::iterator Bi;
+  
+  int xi = max (xo, 0); // Initial position.
+  int yi = max (yo, 0);    
+  int xf = min (max (xo + B->width (), 0), A->width ()); // Final position.
+  int yf = min (max (yo + B->height (), 0), A->height ());
+  int col;    
+
+  for (int row=yi; row < yf; row++)
+    pixelOver ( (*A)(xi, row), (*B)(xi-xo, row-yo), (int)(value*255), xf-xi );
+  /*
+	{
+      for (Ai = (*A)(xi, row), Bi = (*B)(xi-xo, row-yo), col=xi; col < xf; Ai++, Bi++, col++)
+	{
+	  Apixel = *Ai;
+	  Bpixel = *Bi;
+	  float alpha = Bpixel[3] / 255.;
+	  Apixel[0] = clampUpper (Apixel[0] + (int)(value*alpha*Bpixel[0]), 255);
+	  Apixel[1] = clampUpper (Apixel[1] + (int)(value*alpha*Bpixel[1]), 255);
+	  Apixel[2] = clampUpper (Apixel[2] + (int)(value*alpha*Bpixel[2]), 255);
+	  Apixel[3] = clampUpper (Apixel[3] + (int)(value*alpha*Apixel[3]), 255);
+	}
+    }
+   */
+  return A;
+}
 
 fImage* add (fImage *A, fImage *B, int xo, int yo, float value)
 {

@@ -9,8 +9,8 @@ void main ()
 {
   fImage *imgA, *imgB; 
 
-  imgA = fPNM::read ("test.ppm");
-  imgB = fSGI::read ("test.rgb");
+  imgA = fPNM::read ("~/vfs/www.tiger-marmalade.com/test.ppm");
+  imgB = fSGI::read ("./test.rgb");
 
   // add (imgA, imgB, 0, 0, 1.0);   
   // subtract (imgA, imgB, 0, 0, 1.0);   

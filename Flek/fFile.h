@@ -1,6 +1,6 @@
 /* -*-C++-*- 
 
-   "$Id: fFile.h,v 1.3 2000/03/07 18:52:24 jamespalmer Exp $"
+   "$Id: fFile.h,v 1.4 2000/04/07 17:08:33 jamespalmer Exp $"
    
    Copyright 1999-2000 by the Flek development team.
    
@@ -27,6 +27,7 @@
 #define __FFILE_H__
 
 #include <stdio.h>
+#include <Flek/fXml.h>
 
 typedef unsigned long ulong;
 typedef unsigned long * ulongPtr;
@@ -34,6 +35,16 @@ typedef unsigned short ushort;
 typedef unsigned short * ushortPtr;
 typedef unsigned char uchar;
 typedef unsigned char * ucharPtr;
+
+enum fFileMode {
+  fFileNull = 0,
+  fFileRead = 1,
+  fFileReadPlus,
+  fFileWrite,
+  fFileWritePlus,
+  fFileAppend,
+  fFileAppendPlus
+};
 
 /** @package libflek_core
  * fFile provides efficient file io routines in a c++ encapsulation.  On most
@@ -65,10 +76,11 @@ public:
    * the end of the file.</li>
    *</ul>
    */
-  fFile (char *filename=0, char *mode=0)
+  fFile (char *filename=0, fFileMode mode=fFileRead)
     {
       Fd = 0;
       Error = 0;
+      UseVfs = true;
 
       if (filename)
 	open (filename, mode);
@@ -87,18 +99,7 @@ public:
    * Open a file with the given filename, and a mode.  The mode should be 
    * one of the standard fopen modes (see the constructor for a listing).
    */
-  void open (char *filename, char *mode)
-    {
-      if (!mode)
-	mode = "r";
-
-      Fd = fopen (filename, mode);
-
-      if (!Fd)
-	Error = 1;
-      else
-	Error = 0;
-    }
+  void open (char *filename, fFileMode mode);
 
   /**
    * Put a single character into the file stream using Hi (MSB) byte order.
@@ -267,10 +268,27 @@ public:
       return Fd;
     }
 
+  void initializeVFS ()
+    {
+      VfsTable = fXmlDocument::parseFile ("/home/james/.flek/vfs_table.xml");
+      VfsHandlers = fXmlDocument::parseFile ("/home/james/.flek/vfs_handlers.xml");
+    }
+
+  char* expand (char* name);
+
+  bool useVfs () { return UseVfs; }
+  void useVfs (bool t) { UseVfs = t; }
+
 protected:
 
   FILE *Fd;
+  char *realfilename;
+  char *filename;
+  bool UseVfs;
   int Error;
+  static uchar VFS;
+  static fXmlDocument VfsTable;
+  static fXmlDocument VfsHandlers;
 
 };
 

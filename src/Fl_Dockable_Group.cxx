@@ -212,5 +212,6 @@ void Fl_Dockable_Group::undock (int x, int y)
 
       // printf ("show me!!\n");
       show ();
+      //layout ();
     }
 }

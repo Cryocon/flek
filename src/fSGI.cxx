@@ -309,7 +309,7 @@ fImage * fSGI::read (char *filename)
 {
   fFile input;
   sgiT img;
-  input.open (filename, "r");
+  input.open (filename, fFileRead);
   uchar c;
 
   short magic;
@@ -448,7 +448,7 @@ fImage * fSGI::read (char *filename)
 int fSGI::write (char *filename, fImage *data, int compression, int channels)
 {
   fFile output;
-  output.open (filename, "w+");
+  output.open (filename, fFileWritePlus);
 
   sgiT img;
   uchar c;
@@ -633,7 +633,7 @@ int fSGI::write (char *filename, fImage *data, int compression, int channels)
 bool fSGI::isSGI (char *filename)
 {
   fFile input;
-  input.open (filename, "r");
+  input.open (filename, fFileRead);
 
   short magic;
   input.getHi (magic);
