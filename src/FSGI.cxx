@@ -188,7 +188,7 @@ sgi_put_row (FFile &output, sgiT &img, uchar *row, int y, int channel)
         }
       
       // If that didn't match, search the previous rows.
-      output.seek (img.first_row);
+      output.seek ((long)img.first_row);
       
       if (img.bpc == 1) 
         { 
@@ -224,7 +224,9 @@ sgi_put_row (FFile &output, sgiT &img, uchar *row, int y, int channel)
  
     case FSGI::RLE: 
 
-      offset = img.table[channel][y] = img.next_row;
+      img.table[channel][y] = img.next_row;
+      offset = (long)img.next_row;
+       
       if (offset != output.tell ()) 
 	output.seek (offset); 
  
@@ -269,7 +271,7 @@ sgi_get_row (FFile &input, sgiT& img, uchar* row, int y, int channel)
       offset = 512 + (y + channel * img.height) * img.width * img.bpc;
 
       if (offset != (ulong)input.tell ())
-	input.seek (offset);
+	input.seek ((long)offset);
 
       if (img.bpc == 1)
 	{
@@ -286,7 +288,7 @@ sgi_get_row (FFile &input, sgiT& img, uchar* row, int y, int channel)
     case FSGI::RLE:
         offset = img.table[channel][y];
         if (offset != (ulong)input.tell ())
-	  input.seek (offset);
+	  input.seek ((long)offset);
 	if (input.bad())
 	  cerr << "ERROR: Bad seek" << endl;
 
@@ -628,6 +630,7 @@ int FSGI::write (char *filename, FImage *data, int compression, int channels)
   delete [] rows[0];
   delete [] rows;
   delete [] blank;
+  return 0;
 }
 
 bool FSGI::valid (char *filename)
