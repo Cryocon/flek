@@ -1,6 +1,6 @@
 # -*- sh -*-
 # Note that this is NOT a relocatable package
-%define ver       0.2-agenda
+%define ver       0.2.agenda
 %define rel       1
 %define prefix    /usr
 %define buildroot /tmp/build

@@ -95,21 +95,21 @@ rpm:
 	rpm -ba --target i386 /tmp/flek-0.2/flek.spec
 
 rpm-agenda: 
-	rm -rf /tmp/flek-0.2 /tmp/flek-0.2.tar.gz /tmp/flek-agenda.spec
-	cp -R ../flek /tmp/flek-0.2
+	rm -rf /tmp/flek-0.2.agenda /tmp/flek-0.2.agenda.tar.gz /tmp/flek-agenda.spec
+	cp -R ../flek /tmp/flek-0.2.agenda
 	cd /tmp;\
-	rm -rf flek-0.2/CVS;\
-	rm -rf flek-0.2/docs/CVS;\
-	rm -rf flek-0.2/Flek/CVS;\
-	rm -rf flek-0.2/lib/CVS;\
-	rm -rf flek-0.2/src/CVS;\
-	rm -rf flek-0.2/src/pixmaps/CVS;\
-	rm -rf flek-0.2/test/CVS;\
-	tar cv flek-0.2 > flek-0.2.tar;\
-	gzip flek-0.2.tar;\
-	cp flek-0.2.tar.gz /usr/src/RPM/SOURCES/;\
-	rpm -ba --target i386 /tmp/flek-0.2/flek-agenda.spec
+	rm -rf flek-0.2.agenda/CVS;\
+	rm -rf flek-0.2.agenda/docs/CVS;\
+	rm -rf flek-0.2.agenda/Flek/CVS;\
+	rm -rf flek-0.2.agenda/lib/CVS;\
+	rm -rf flek-0.2.agenda/src/CVS;\
+	rm -rf flek-0.2.agenda/src/pixmaps/CVS;\
+	rm -rf flek-0.2.agenda/test/CVS;\
+	tar cv flek-0.2.agenda > flek-0.2.agenda.tar;\
+	gzip flek-0.2.agenda.tar;\
+	cp flek-0.2.agenda.tar.gz /usr/src/RPM/SOURCES/;\
+	rpm -ba --target i386 /tmp/flek-0.2.agenda/flek-agenda.spec
 
 #
-# End of "$Id: Makefile,v 1.8 2001/05/14 16:50:32 jamespalmer Exp $".
+# End of "$Id: Makefile,v 1.9 2001/05/15 17:11:48 jamespalmer Exp $".
 #
