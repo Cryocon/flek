@@ -1,5 +1,5 @@
 /*
-  "$Id: arcball.cxx,v 1.2 2000/02/03 16:57:03 jamespalmer Exp $"
+  "$Id: arcball.cxx,v 1.3 2000/02/06 08:41:52 jamespalmer Exp $"
   
   This program tests fArcball and Fl_Gl_Arcball_Window.
 
@@ -30,15 +30,16 @@
 #include <FL/math.h>
 
 #include <Flek/Fl_Gl_Arcball_Window.H>
+#include <GL/gl.h>
 
 class arcball_window : public Fl_Gl_Arcball_Window 
 {
 public:
-  arcball_window (int x,int y,int w,int h,const char *l=0);  
+  arcball_window (int x, int y, int w, int h, const char *l=0);  
   void draw ();
 };
 
-arcball_window::arcball_window(int x,int y,int w,int h,const char *l) :
+arcball_window::arcball_window (int x, int y, int w, int h, const char *l) :
   Fl_Gl_Arcball_Window(x,y,w,h,l) 
 {
   origin (fVector3 (0,0,0));
@@ -82,8 +83,6 @@ void drawcube (int wire)
 
 void arcball_window::draw() 
 {
-  // the valid() property may be used to avoid reinitializing your
-  // GL transformation for each redraw:
   if (!valid ()) {
     valid (1);
     glLoadIdentity ();
@@ -101,20 +100,16 @@ void arcball_window::draw()
   glMatrixMode (GL_MODELVIEW); 
   glLoadIdentity ();
 
-  glPushMatrix ();
-    {
-      // Multiply by the arcball transformation.
-      arcball_transform ();
-	{ 
-	  // Make the cube a little smaller :
-	  glScalef (0.5, 0.5, 0.5);
-	  // Center the cube :
-	  glTranslatef (-.5, -.5, -.5);
-	  // Draw the cube :
-	  drawcube (0);
-	}
-    }
-  glPopMatrix ();
+  // Multiply by the arcball transformation.
+  arcball_transform ();
+  { 
+    // Make the cube a little smaller :
+    glScalef (0.5, 0.5, 0.5);
+    // Center the cube :
+    glTranslatef (-.5, -.5, -.5);
+    // Draw the cube :
+    drawcube (0);
+  }
 }
 
 int main (int argc, char **argv) 
