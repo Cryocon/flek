@@ -2,7 +2,7 @@
 
 #include <FL/Fl.H>
 #include <Flek/Fl_App_Window.H>
-#include <Flek/Fl_Dockable_Group.H>
+#include <Flek/Fl_Dockable_Window.H>
 
 void print_children(Fl_Group* o) {
   printf(">> label=\"%s\" xywh=%d,%d,%d,%d\n", o->label(), o->x(), o->y(), o->w(), o->h());
@@ -15,7 +15,7 @@ void print_children(Fl_Group* o) {
 
 void main() {
   // Create an application window.
-  Fl_App_Window* application_window = new Fl_App_Window(200, 200, "dockable_group");
+  Fl_App_Window* application_window = new Fl_App_Window(200, 200, "Application Window");
 
   // Make it resizable.
   application_window->resizable(application_window);
@@ -28,7 +28,7 @@ void main() {
   application_window->end();
 
   // Create a dockable window.
-  Fl_Dockable_Group* dockable_window = new Fl_Dockable_Group(0, 0, 200, 30, "group");
+  Fl_Dockable_Window* dockable_window = new Fl_Dockable_Window(0, 0, 200, 30, "Dockable Window");
 
   // Add a couple of buttons to the dockable window.
   new Fl_Button(0, 0, 75, 30, "View");
