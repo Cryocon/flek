@@ -331,6 +331,7 @@ int Fl_Toggle_Tree::handle(int event) {
           if (!tnode->selected_)
             select_range(tnode, tnode, Fl::event_state(FL_CTRL));
           else {
+	    selection_current_ = NULL;
             tnode->selected_ = 0;
             tnode->changed_ = 1;
             tnode = 0;

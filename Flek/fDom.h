@@ -1,13 +1,17 @@
 #include <Flek/fBase.h>
 #include <Flek/fList.h>
+#include <Flek/fDomAttr.h>
 #include <string.h>
 #include <stdlib.h>
 #include <stdio.h>
 #include <ctype.h>
 
+#ifndef _FDOM_H__
+#define _FDOM_H__
+
 class fDomNode;
 
-/** @package libflek_core
+/** @package libflek_dom
  * The listener class is actually just a wrapper around a callback
  * function.  The callback function may be executed by whatever
  * fDomNode it gets connected to.
@@ -50,33 +54,6 @@ class fDomListener : public fBase
  protected:
 
   Function F;
-
-};
-
-/**
- * fDomAttribute provides a class with key-value pairs.
- * Both the key and the value are strings.
- */
-class fDomAttribute : public fBase
-{
- public:
-
-  /**
-   * Default constructor.
-   */
-  fDomAttribute ();
-
-  /**
-   * Copy constructor.
-   */
-  fDomAttribute (char *k, char *v);
-  
-  typedef fDomAttribute * Ptr;
-
-  fBase::Ptr copy (void) const;
-
-  char *key;
-  char *value; 
 
 };
 
@@ -180,7 +157,7 @@ class fDomNode : public fBase
    * Returns the name or "type" of the node.  This is usually
    * defined on a per class level, and not per object instance.
    */
-  virtual char * name () { return "node"; }
+  virtual char * tagName () { return "node"; }
 
   enum {
     DAMAGE = 1,
@@ -222,7 +199,7 @@ class fDomNode : public fBase
    * Attributes are normally stored as strings in the Attributes list.
    * You can override this function to stick attributes wherever you like.
    */
-  virtual void xmlPushAttribute (char *key, char *value);
+  //virtual void xmlPushAttribute (char *key, char *value);
     
   // Attribute functions
   int xmlReadAttributes (xmlFile &xml);
@@ -245,12 +222,21 @@ class fDomNode : public fBase
 
   int xmlRead (xmlFile &xml);
 
+  /** 
+   * Override this function to associate nodes with tags.
+   */
+  virtual fDomNode * nodeFromTag (char * tag);
+
   int xmlPushTag (xmlFile &xml, char *tag);
   
+  virtual fDomAttr* newAttribute ();
+
   virtual void writeAttributes ();
 
   /**
    * Set an attribute key to value.
+   * Attributes are normally stored as strings in the Attributes list.
+   * You can override this function to stick attributes wherever you like.
    */
   virtual void setAttribute (char *key, char *value);
 
@@ -302,7 +288,7 @@ class fDomTextNode : public fDomNode
       Text = strdup (n.Text);
     }
 
-  char * name () { return "__text__"; }
+  char * tagName () { return "__text__"; }
 
   void write ()
     {
@@ -345,12 +331,12 @@ class fDomDynamicNode : public fDomNode
   /**
    * Gets the node name.
    */
-  char * name () { return Name; }
+  char * tagName () { return Name; }
 
   /** 
    * Sets the node name.
    */
-  void name (char *n) { if (Name) free (Name); Name = strdup (n); }
+  void tagName (char *n) { if (Name) free (Name); Name = strdup (n); }
 
   fBase::Ptr copy (void) const
     {
@@ -361,3 +347,4 @@ class fDomDynamicNode : public fDomNode
   char *Name;
 };
 
+#endif

@@ -30,7 +30,7 @@ $project_logo
 </center>
 <hr>
 <h2>Documentation</h2>
-<ul>
+  <ul>
 <li><a href="flek-config.htm">Using flek-config</a></li>
 <li><a href="fDom.htm">fDom: The Flek Document-Component Model</a></li>
 <li><a href="hacking.htm">The Flek Hacking Guide</a>
@@ -40,6 +40,7 @@ $project_logo
   <li><a href="hacking.htm#FlekDoc">Flek Doc</a> - Documentation conventions.</li>
 </ul>
 </li>
+<li><a href="authors.htm">Credits and Acknowledgements</a></li>
 </ul>
 <h2>Class and Function Reference</h2>
 <blockquote>

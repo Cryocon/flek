@@ -1,3 +1,7 @@
+2000-02-24  James Dean Palmer <james@tiger-marmalade.com>
+
+        - Philip Nemec pointed out a null pointer bug in Fl_Toggle_Tree.
+
 2000-02-10  James Dean Palmer <james@tiger-marmalade.com>
 
         - Moved GL arcball code from fArcball to Fl_Gl_Arcball_Window. 

@@ -15,8 +15,11 @@ void main ()
 {
   fList documents;
 
-  printf ("sizeof (node) = %d\n", sizeof(fDomNode));
-  printf ("sizeof (dynzmic) = %d\n", sizeof(fDomDynamicNode));
+  printf ("sizeof (fDomAttr) = %d\n", sizeof(fDomAttr));
+  printf ("sizeof (fDomAttrNumber) = %d\n", sizeof(fDomAttrNumber));
+  printf ("sizeof (fDomAttrInteger) = %d\n", sizeof(fDomAttrInteger));
+  printf ("sizeof (fDomNode) = %d\n", sizeof(fDomNode));
+  printf ("sizeof (fDomDynamicNode) = %d\n", sizeof(fDomDynamicNode));
   printf ("sizeof (fList) = %d\n", sizeof(fList));
   
   root.setAttribute ("name", "Document");

@@ -107,6 +107,7 @@ etc..
 	Fortunately, a good number of Fltk method names are only one 
 	word long and in that case match our first naming convention.
     </blockquote>
+
     <a name="FlekDoc">
     <h2>FlekDoc (Documentation Conventions)</h2>
     
@@ -133,12 +134,30 @@ etc..
 <font color="blue">fMatrix3x3</font> toMatrix (<font color="blue">void</font>) const;
 </pre>
     </blockquote>
+
+    <a name="FlekDesktop"></a>
+    <h2>Flek Application Guidelines</h2>
+    <h3>Desktop Entry</h3>
+    <p>Every Flek Application needs one of these files in order to show
+      up in the Flek menu.  Flek will also create appropriate Gnome and
+      KDE files if either of these environments is detected.
+<pre>
+&lt;flek:application 
+     name        = "Black Ink" 
+     name[sp]    = "Nigra Tinta"
+     description = "Black Ink is a checkbook / financial management application."
+     exec        = "blackink"
+     icon        = "BlackInk.xpm"
+     type        = "Application" /&gt;
+
+</pre>
+
     <hr>
 <font size="-1">
     <address><a href="mailto:james@tiger-marmalade.com"></a></address>
 <!-- Created: Mon Feb 21 12:15:24 CST 2000 -->
 <!-- hhmts start -->
-Last modified: Thu Feb 24 09:39:37 CST 2000
+Last modified: Thu Feb 24 13:09:24 CST 2000
 <!-- hhmts end -->
 </font>
   </body>
