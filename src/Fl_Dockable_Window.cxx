@@ -43,12 +43,12 @@ int Fl_Gripper::handle(int event) {
   Fl_Dockable_Window* group = (Fl_Dockable_Window*)parent();
   Fl_Dockable_Window::current = group;
   
-  switch (event) {
+  switch(event) {
     case FL_PUSH:
       // Set the Fl_Dockable_Window that may eventually get docked.
-      if (group->window() && (group->window()->modal())) {
+      if (group->window() && (group->window()->modal()))
         return 1;
-      }
+
       if ((group->type()) & FL_DRAGABLE) {
         Fl_Dockable_Window::current = (Fl_Dockable_Window*)parent();
         x_down = Fl::event_x_root();
@@ -73,6 +73,7 @@ int Fl_Gripper::handle(int event) {
             content_location = i;    
           }
         }
+
         int group_location = parent->find(group);
         int new_location = content_location + (content_location - group_location) + 1;
         parent->insert(*((Fl_Widget*)group), new_location);	  
@@ -80,23 +81,21 @@ int Fl_Gripper::handle(int event) {
         return 1;
       }
 
-      if (!(group->type() & FL_DRAGABLE)) {
+      if(!(group->type() & FL_DRAGABLE))
         return 1;
-      }
 
-      if (group->window() && group->window()->modal()) {
+      if(group->window() && group->window()->modal())
         return 1;
-      }	
 
       x_drag = Fl::event_x_root();
       y_drag = Fl::event_y_root();
 
       int delta = ((x_drag + y_drag) - (x_down + y_down));
 
-      if (delta < 0)
+      if(delta < 0)
         delta *= -1;
 
-      if (group->parent()) {
+      if(group->parent()) {
         if (delta > (FL_DOCK_DELTA * 2)) {
           x_first = Fl_Dockable_Window::current->x_root();
           y_first = Fl_Dockable_Window::current->y_root();
@@ -123,10 +122,10 @@ int Fl_Gripper::handle(int event) {
             && (cx < (ew + ex)) && (cy < (eh + ey))) {
             // Send the host window a message that we want to dock with it.
             // printf ("Fl_Dockable_Window:: Attempting to dock.\n");
-            if (Fl::handle(FL_DOCK, o)) {
+            if(Fl::handle(FL_DOCK, o)) {
               // printf ("Fl_Dockable_Window:: Docking.\n");
               // redraw();
-              if (event != FL_RELEASE) {
+              if(event != FL_RELEASE) {
                 // I want to send JUST the drag event.  Not push!
                 // Right now it just stops dragging after a successful dock.
                 // take_focus();
@@ -138,13 +137,10 @@ int Fl_Gripper::handle(int event) {
         }
       }	    
 
-      if (group->get_docked()) {
-        // Don't move the Dock_Group around if it is docked.
-      }
-      else {
+      // Isn't it docked?
+      if(!group->get_docked())
         // Move the Dock_Group around the screen.
         group->position((x_first + (x_drag - x_down)), (y_first + (y_drag - y_down)));
-      }
     }
 
     return 1;
@@ -201,9 +197,9 @@ int Fl_Dockable_Window::handle(int event) {
 void Fl_Dockable_Window::undock(int x, int y) {
   docked = 0;
   // printf ("undocking..\n");
-  if (parent()) {
+  if(parent()) {
     Fl_Group *group = (Fl_Group*)parent();
-    hide ();
+    hide();
  
     group->remove((Fl_Widget*)this);
  
@@ -222,13 +218,13 @@ void Fl_Dockable_Window::undock(int x, int y) {
 
     // printf ("show me!!\n");
     show();
-    //layout();
+    // layout();
   }
 }
 
 void Fl_Dockable_Window::type(unsigned char t) {
   type_ = t;
-  if ((type_ & FL_DRAGABLE) || (type_ & FL_SHOVABLE)) {
+  if((type_ & FL_DRAGABLE) || (type_ & FL_SHOVABLE)) {
     contents->resize(gripper_width, 0, w(), h());
     gripper->show();
   }
