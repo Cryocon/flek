@@ -1,6 +1,6 @@
 /* -*-C++-*- 
 
-   "$Id: fFile.h,v 1.1 2000/03/07 16:21:48 jamespalmer Exp $"
+   "$Id: fFile.h,v 1.2 2000/03/07 17:00:51 jamespalmer Exp $"
    
    Copyright 1999-2000 by the Flek development team.
    
@@ -60,7 +60,7 @@ public:
    * file.</li>
    * <li><b>"a"</b> -- Open for writing.  The file is created if  it  does
    * not  exist.  The stream is positioned at the end of the file.</li>
-   * <li><b>"a+"<b> -- Open for reading and writing.  The file is  created
+   * <li><b>"a+"</b> -- Open for reading and writing.  The file is  created
    * if  it does not exist.  The stream is positioned at
    * the end of the file.</li>
    *</ul>
