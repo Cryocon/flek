@@ -1,0 +1,72 @@
+<HTML>
+  <BODY bgcolor="white">
+    <HR break>
+    <H2><A name="Fl_Gl_Arcball_Window">class Fl_Gl_Arcball_Window</A></H2>
+    <HR>
+
+    <H3>Class Hierarchy</H3>
+    <UL>
+<PRE>
+
+<A href="Fl_Gl_Window.html#Fl_Gl_Window">Fl_Gl_Window</A>
+   |
+   +----<B>Fl_Gl_Arcball_Window</B>
+</PRE>
+    </UL>
+    <H3>Include Files</H3>
+    <UL>
+<PRE>
+#include &lt;Flek/Fl_Gl_Arcball_Window.H&gt;
+</PRE>
+    </UL>
+
+    <H3>Description</H3>
+    <blockquote>
+    Fl_Gl_Arcball_Window is a subclass of Fl_Gl_Window that provides an
+      arcball 3d rotation controller.  What is arcball?  From the 
+      comp.graphics.algorithms FAQ:
+      <font size=-1><blockquote>
+	Arcball is a general purpose 3-D rotation controller described by
+	Ken Shoemake in the Graphics Interface '92 Proceedings.  It
+	features good behavior, easy implementation, cheap execution, and
+	optional axis constraints. A Macintosh demo and electronic version
+	of the original paper (Microsoft Word format) may be obtained from
+	ftp::/ftp.cis.upenn.edu/pub/graphics.
+      </blockquote></font>
+      <p>See the arcball demo in the test directory.
+      <p><img src="Fl_Gl_Arcball_Window.png">
+    </blockquote>
+
+        <H3>Methods</H3>
+    <CENTER>
+      <TABLE width="90%">
+	<TR><TD align=left valign=top>
+	    <LI><A href="#Fl_Gl_Arcball_Window.Fl_Gl_Arcball_Window">Fl_Gl_Arcball_Window</A></LI>
+	    <LI><A href="#Fl_Gl_Arcball_Window.arcball_draw">arcball_draw</A></LI>
+	    <LI><A href="#Fl_Gl_Arcball_Window.arcball_transform">arcball_transform</A></LI>
+	    <LI><A href="#Fl_Gl_Arcball_Window.origin">origin</A></LI>
+	    <LI><A href="#Fl_Gl_Arcball_Window.radius">radius</A></LI>
+	  </TD>
+	</TR>
+      </TABLE>
+    </CENTER>
+
+    <H4><A name="Fl_Gl_Arcball_Window.Fl_Gl_Arcball_Window">Fl_Gl_Arcball_Window::Fl_Gl_Arcball_Window(int x, int y, int w, int h, char *title)</A></H4>
+    <blockquote>The constructor for an empty Fl_Gl_Arcball_Window.</blockquote>
+
+    <H4><A name="Fl_Gl_Arcball_Window.arcball_draw">void Fl_Gl_Arcball_Window::arcball_draw ()</A></H4>
+    <blockquote>Draws the arcball controls.</blockquote>
+
+    <H4><A name="Fl_Gl_Arcball_Window.arcball_transform">void Fl_Gl_Arcball_Window::arcball_transform ()</A></H4>
+    <blockquote>Multiplies the current matrix with the arcball matrix..</blockquote>
+
+    <H4><A name="Fl_Gl_Arcball_Window.origin">void Fl_Gl_Arcball_Window::origin (fVector3 v)
+	<br>fVector3 Fl_Gl_Arcball_Window::origin ()</A></H4>
+    <blockquote>Sets or gets the arcball origin..</blockquote>
+
+    <H4><A name="Fl_Gl_Arcball_Window.radius">void Fl_Gl_Arcball_Window::radius (double d)
+	<br>double Fl_Gl_Arcball_Window::radius ()</A></H4>
+    <blockquote>Sets or gets the arcball radius..</blockquote>
+
+  </BODY>
+</HTML>
