@@ -1,6 +1,6 @@
 /* -*-C++-*- 
 
-   "$Id: fArcball.cxx,v 1.5 2000/02/09 22:33:20 jamespalmer Exp $"
+   "$Id: fArcball.cxx,v 1.6 2000/02/10 16:55:35 jamespalmer Exp $"
    
    Copyright 1999-2000 by the Flek development team.
    
@@ -26,19 +26,7 @@
 // The original vector, matrix, and quaternion code was written by
 // Vinod Srinivasan and then adapted for Flek.
 
-#include <GL/gl.h>
 #include <Flek/fArcball.h>
-#include <Flek/fGl.h>
-
-#define LG_NSEGS 4
-#define NSEGS (1<<LG_NSEGS)
-#define CIRCSEGS 32
-#define HALFCIRCSEGS 16
-#define RIMCOLOR()    glColor3ub (255, 255, 255)
-#define FARCOLOR()    glColor3ub (195, 127, 31)
-#define NEARCOLOR()   glColor3ub (255, 255, 63)
-#define DRAGCOLOR()   glColor3ub (127, 255, 255)
-#define RESCOLOR()    glColor3ub (195, 31, 31)
 
 /**
  * Establish reasonable initial values for controller.
@@ -46,8 +34,9 @@
 fArcball::fArcball ()
 {
   dRadius = 1.0;
-  dragging = false;
-  axisSet = NoAxes;
+  vCenter.set (0, 0, 0);
+  bDragging = false;
+  asAxisSet = NoAxes;
   
   sets[CameraAxes] = new fVector3[3];
   sets[BodyAxes] = new fVector3[3];
@@ -72,8 +61,8 @@ fArcball::fArcball (const fArcball& ab)
   vCenter = ab.vCenter;
   dRadius = ab.dRadius;
   
-  dragging = false;
-  axisSet = NoAxes;
+  bDragging = false;
+  asAxisSet = NoAxes;
   
   sets[CameraAxes] = new fVector3[3];
   sets[BodyAxes] = new fVector3[3];
@@ -101,8 +90,8 @@ fArcball& fArcball::operator = (const fArcball& ab)
   vCenter = ab.vCenter;
   dRadius = ab.dRadius;
   
-  dragging = false;
-  axisSet = NoAxes;
+  bDragging = false;
+  asAxisSet = NoAxes;
   
   sets[CameraAxes] = new fVector3[3];
   sets[BodyAxes] = new fVector3[3];
@@ -121,18 +110,18 @@ fArcball& fArcball::operator = (const fArcball& ab)
 }
 
 /**
- * Using vDown, vNow, dragging, and axisSet, compute rotation etc.
+ * Using vDown, vNow, dragging, and asAxisSet, compute rotation etc.
  */
 void fArcball::update (void)
 {
   vFrom = mouseOnSphere (vDown, vCenter, dRadius);
   vTo = mouseOnSphere (vNow, vCenter, dRadius);
-  if (dragging)
+  if (bDragging)
     {
-      if ( axisSet != NoAxes)
+      if ( asAxisSet != NoAxes)
 	{
-	  vFrom = constrainToAxis (vFrom, sets[axisSet][axisIndex]);
-	  vTo = constrainToAxis (vTo, sets[axisSet][axisIndex]);
+	  vFrom = constrainToAxis (vFrom, sets[asAxisSet][iAxisIndex]);
+	  vTo = constrainToAxis (vTo, sets[asAxisSet][iAxisIndex]);
 	}
       
       //vnFrom[0] = -vFrom[0];
@@ -147,170 +136,10 @@ void fArcball::update (void)
     }
   else
     {
-      if ( axisSet != NoAxes)
-	axisIndex = nearestConstraintAxis (vTo, sets[axisSet], 3);
+      if ( asAxisSet != NoAxes)
+	iAxisIndex = nearestConstraintAxis (vTo, sets[asAxisSet], 3);
     }
   mNow = toMatrix4 (conjugate (qNow));
-}
-
-static void unitCircle (void)
-{
-  // Draw a unit circle in the XY plane, centered at the origin
-  float dtheta = 2.0*M_PI/32.0;
-  
-  glBegin (GL_LINE_LOOP);
-  for (int i=0; i < 32; ++i)
-    fGl::vertex (cosf (i*dtheta), sinf (i*dtheta), 0.0);
-  glEnd ();
-}
-
-/**
- * Draw a circle with the given normal, center and radius 
- */
-static void drawCircle (const fVector3& center, const fVector3& normal, double radius)
-{
-  // First find the coordinate axis centered at the circle center.
-  // The normal will be the Z axis.
-  fVector3 xaxis, yaxis, zaxis;
-  
-  zaxis = normalized (normal);
-  xaxis = fVector3 (0,1,0) % zaxis;
-  if ( normsqr(xaxis) < 1.0e-5 ) 
-    xaxis.set (1,0,0);
-  yaxis = zaxis % xaxis;
-  
-  // Circle will be on the XY plane, defined by the axis system 
-  // just computed 
-  fVector3 pts[CIRCSEGS+1];
-  double theta = 0.0, dtheta = M_PI/HALFCIRCSEGS;
-  double costheta, sintheta;
-  for (int i=0; i < (HALFCIRCSEGS >> 2); ++i )
-    {
-      costheta = radius*cos (theta); sintheta = radius*sin (theta);
-      pts[0] = center + costheta*xaxis + sintheta*yaxis;
-      pts[HALFCIRCSEGS-i] = center - costheta*xaxis + sintheta*yaxis;
-      pts[HALFCIRCSEGS+i] = center - costheta*xaxis - sintheta*yaxis;
-      pts[CIRCSEGS-i] = center + costheta*xaxis - sintheta*yaxis;
-      theta += dtheta;
-    }
-  
-  glBegin (GL_LINE_LOOP);
-  {
-    for (int i=0; i < CIRCSEGS; ++i)
-      fGl::vertex (pts[i]);
-  }
-  glEnd ();
-}
-
-/**
- * Draw the controller with all its arcs. Parameter is the vector from 
- * the eye point to the center of interest. Default is -ve Z axis
- */
-void fArcball::draw(const fVector3&) const
-{
-  glMatrixMode(GL_PROJECTION);
-  glPushMatrix();
-  glLoadIdentity();
-  glOrtho(-1.0,1.0,-1.0,1.0,-1.0,1.0);
-  
-  glMatrixMode(GL_MODELVIEW);
-  glPushMatrix();
-  glLoadIdentity();
-  {
-    RIMCOLOR();
-    glScaled(dRadius,dRadius,dRadius);
-    unitCircle();
-    
-    drawConstraints();
-    drawDragArc();
-  }
-  glPopMatrix();
-  glMatrixMode(GL_PROJECTION);
-  glPopMatrix();
-  glMatrixMode(GL_MODELVIEW);
-}
-
-/**
- *  Draw an arc defined by its ends.
- */
-void fArcball::drawAnyArc(const fVector3& vFrom, const fVector3& vTo)
-{
-  int i;
-  fVector3 pts[NSEGS+1];
-  double dot;
-  
-  pts[0] = vFrom;
-  pts[1] = pts[NSEGS] = vTo;
-  for (i=0; i < LG_NSEGS; ++i) pts[1] = bisect(pts[0], pts[1]);
-  
-  dot = 2.0*(pts[0]*pts[1]);
-  for (i=2; i < NSEGS; ++i)
-    pts[i] = pts[i-1]*dot - pts[i-2];
-  
-  glBegin (GL_LINE_STRIP);
-  for (i=0; i <= NSEGS; ++i)
-    fGl::vertex (pts[i]);
-  glEnd ();
-}
-
-/**
- * Draw the arc of a semi-circle defined by its axis.
- */
-void fArcball::drawHalfArc(const fVector3& n)
-{
-  fVector3 p, m;
-  
-  if ( fabs(n[2]-1.0) > 1.0e-5 )
-    {
-      p[0] = n[1]; p[1] = -n[0];
-      normalize(p);
-    }
-  else
-    {
-      p[0] = 0; p[1] = 1;
-    }
-  m = p % n;
-  drawAnyArc(p, m);
-  drawAnyArc(m, -p);
-}
-
-/**
- * Draw all constraint arcs.
- */
-void fArcball::drawConstraints (void) const
-{
-  if ( axisSet == NoAxes ) return;
-  
-  fVector3 axis;
-  int i;
-  
-  for (i=0; i < 3; ++i)
-    {
-      if ( axisIndex != i)
-	{
-	  if (dragging) continue;
-	  FARCOLOR();
-	}
-      else NEARCOLOR();
-      axis = sets[axisSet][i];
-      if ( fabs(axis[2]-1.0) < 1.0e-5 )
-	unitCircle();
-      //drawCircle(0.0, 0.0, 1.0);
-      else
-	drawHalfArc(axis);
-    }
-}
-
-/**
- *  Draw "rubber band" arc during dragging.
- */
-void fArcball::drawDragArc (void) const
-{
-  if ( dragging )
-    {
-      DRAGCOLOR();
-      drawAnyArc (vFrom, vTo);
-    }
 }
 
 fVector3 fArcball::mouseOnSphere (const fVector3& mouse, const fVector3& center, double radius)
@@ -410,18 +239,3 @@ int fArcball::nearestConstraintAxis (const fVector3& loose, fVector3 * axes, int
   return nearest;
 }
 
-/**
- * Halve arc between unit vectors v1 and v2.
- * Assumes that v1 and v3 are unit vectors
- */
-fVector3 fArcball::bisect (const fVector3& v1, const fVector3& v2)
-{
-  fVector3 v = v1 + v2;
-  float Nv = normsqr (v);
-  
-  if (Nv < 1.0e-5) 
-    v.set (0.0, 0.0, 1.0);
-  else
-    v /= sqrt(Nv);
-  return v;
-}

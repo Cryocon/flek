@@ -112,3 +112,4 @@ fVector3 operator * (const fVector3& vec, const fMatrix3x3& mat)
 {
   return (transpose(mat) * vec);
 }
+

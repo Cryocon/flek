@@ -2327,8 +2327,8 @@ else
 		#     MAKEDEPEND="CC -M"
 
         	# -woff 3322 is necessary due to errors in Xlib headers on IRIX
-        	CFLAGS="-fullwarn $CFLAGS"
-        	CXXFLAGS="-fullwarn -woff 3322 $CXXFLAGS"
+        	CFLAGS="-n32 -fullwarn $CFLAGS"
+        	CXXFLAGS="-n32 -fullwarn -woff 3322 $CXXFLAGS"
 	    else
         	CXXFLAGS="+w +pp $CXXFLAGS"
 	    fi

@@ -1,6 +1,6 @@
 /* -*-C++-*- 
 
-   "$Id: Fl_Gl_Arcball_Window.H,v 1.3 2000/02/06 20:40:44 jamespalmer Exp $"
+   "$Id: Fl_Gl_Arcball_Window.H,v 1.4 2000/02/10 16:55:35 jamespalmer Exp $"
    
    Copyright 1999-2000 by the Flek development team.
    
@@ -25,6 +25,7 @@
 
 #include <FL/Fl_Gl_Window.H>
 #include <Flek/fArcball.h>
+#include <Flek/gl.h>
 
 /** @package libflek_ui (The Flek User Interface Library)
  * Fl_Gl_Arcball_Window is a subclass of Fl_Gl_Window that provides an arcball 3d rotation controller. What is arcball? From the
@@ -46,22 +47,31 @@ public:
    * <0, 0, 0> and a radius of 1.0.
    */
   Fl_Gl_Arcball_Window(int x, int y, int w, int h, const char *l=0) :
-     Fl_Gl_Window (x, y, w, h, l) 
-     {
-       arcball.place (origin_, radius_);
-     }
+     Fl_Gl_Window (x, y, w, h, l),
+     rim_color_ (1., 1., 1.),
+     far_color_ (195./255., 127./255., 31./255.),
+     near_color_ (1., 1., 63./255.),
+     drag_color_ (127./255., 1., 1.)
+    {
+      arcball.place (origin_, radius_);
+    }
 
   /**
    * Draw the arcball controls.
    */
   void arcball_draw ();
 
+  void drawDragArc (void) const;
+  void drawConstraints (void) const;
+
+		 
   /**
    * Multiply the current Gl matrix by the arcball transformation
    * matrix.
    */
   void arcball_transform ();
-  int handle(int event);
+  int handle (int event);
+  int handle_rotation (int event);
 
   /**
    * Sets the arcball origin. <0, 0, 0> is default.
@@ -83,11 +93,26 @@ public:
    */
   double radius () { return radius_; }
 
+  fVector3 rim_color () { return rim_color_; }
+  fVector3 far_color () { return far_color_; }
+  fVector3 near_color () { return near_color_; }
+  fVector3 drag_color () { return drag_color_; }
+
+  void rim_color (const fVector3 &v) { rim_color_ = v; }
+  void far_color (const fVector3 &v) { far_color_ = v; }
+  void near_color (const fVector3 &v) { near_color_ = v; }
+  void drag_color (const fVector3 &v) { drag_color_ = v; }
+
 protected:
 
   fArcball arcball;
   fVector3 origin_;
   double radius_;
+
+  fVector3 rim_color_;
+  fVector3 far_color_;
+  fVector3 near_color_;
+  fVector3 drag_color_;
 
 private:
 

@@ -1,5 +1,5 @@
 /*
-  "$Id: arcball.cxx,v 1.5 2000/02/09 22:33:20 jamespalmer Exp $"
+  "$Id: arcball.cxx,v 1.6 2000/02/10 16:55:35 jamespalmer Exp $"
   
   This program tests fArcball and Fl_Gl_Arcball_Window.
 
@@ -30,7 +30,7 @@
 #include <FL/math.h>
 
 #include <Flek/Fl_Gl_Arcball_Window.H>
-#include <GL/gl.h>
+#include <Flek/gl.h>
 #include <GL/glu.h>
 
 class arcball_window : public Fl_Gl_Arcball_Window 
@@ -43,8 +43,8 @@ public:
 arcball_window::arcball_window (int x, int y, int w, int h, const char *l) :
   Fl_Gl_Arcball_Window(x,y,w,h,l) 
 {
-  origin (fVector3 (0,0,0));
-  radius (1);
+  origin (fVector3 (0, 0, 0));
+  radius (0.9);
 }
 
 float v0[3] = {0.0, 0.0, 0.0};
@@ -109,10 +109,9 @@ void arcball_window::draw()
   // Multiply by the arcball transformation.
   arcball_transform ();
   { 
-    // Make the cube a little smaller :
-    //glScalef (0.5, 0.5, 0.5);
     // Center the cube :
     glTranslatef (-.5, -.5, -.5);
+    
     // Draw the cube :
     drawcube (0);
   }
@@ -121,25 +120,11 @@ void arcball_window::draw()
 
 #include <stdio.h>
 
-void test1 (char *test)
-{
- printf ("test1=%s\n", test); 
-}
-
-void test1 (char test)
-{
- printf ("test2=%c\n", test); 
-}
-
 int main (int argc, char **argv) 
-{
+{  
+  Fl_Window window (300, 300);
   
-  test1 ('c');
-  test1 ("string...");
-  
-  Fl_Window window (300, 370);
-  
-  arcball_window awindow (10, 10, window.w()-20, window.h()-90);
+  arcball_window awindow (10, 10, window.w()-20, window.h()-20);
   window.add (awindow);
   window.resizable (&awindow);
 

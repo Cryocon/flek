@@ -1,6 +1,6 @@
 /* -*-C++-*-
  
-   "$Id: fVector4.h,v 1.4 2000/02/08 20:22:52 jamespalmer Exp $"
+   "$Id: fVector4.h,v 1.5 2000/02/10 16:55:35 jamespalmer Exp $"
    
    Copyright 1999-2000 by the Flek development team.
    
@@ -41,8 +41,6 @@ class fVector4 : public fBase
 {
 public:
 
-  friend class fGl;
-  
   typedef fVector4* Ptr;
   
   /**
@@ -120,7 +118,7 @@ public:
    */
   virtual ~fVector4 ()
     {}
-  
+
   /**
    * Assignment operator from another fVector3.
    */

@@ -1,6 +1,6 @@
 /* -*-C++-*- 
 
-   "$Id: fArcball.h,v 1.4 2000/02/06 20:40:44 jamespalmer Exp $"
+   "$Id: fArcball.h,v 1.5 2000/02/10 16:55:35 jamespalmer Exp $"
    
    Copyright 1999-2000 by the Flek development team.
    
@@ -62,7 +62,7 @@ public:
   
   void useSet (AxisSet set)
     {
-      if ( !dragging ) axisSet = set;
+      if ( !bDragging ) asAxisSet = set;
     }
   
   void update (void);
@@ -74,12 +74,12 @@ public:
   
   void beginDrag (void)
     {
-      dragging = true; vDown = vNow;
+      bDragging = true; vDown = vNow;
     }
   
   void endDrag (void)
     {
-      dragging = false; qDown = qNow;
+      bDragging = false; qDown = qNow;
       sets[BodyAxes][0] = mNow[0];
       sets[BodyAxes][1] = mNow[1];
       sets[BodyAxes][2] = mNow[2];
@@ -89,8 +89,22 @@ public:
    * Draw the arcball. Give vector from eye point to center of interest
    */
   void draw (const fVector3& dir = fVector3 (0.0, 0.0, 1.0)) const;
+
+  bool dragging () const { return bDragging; }
   
-protected:
+  AxisSet axisSet () const { return asAxisSet; }
+
+  int axisIndex () const { return iAxisIndex; }
+
+  Axes sets[2];
+
+  fVector3 & from () { return vFrom; }
+  fVector3 & to () { return vTo; }
+  
+  double radius () { return dRadius; }
+  void radius (const double r) { dRadius = r; }
+  
+ protected:
   /** 
    * Center of the ball.
    */
@@ -101,28 +115,20 @@ protected:
    */
   double dRadius;
   fQuaternion qNow, qDown, qDrag;
-  fVector3 vNow, vDown, vFrom, vTo, vnFrom, vnTo;
+  fVector3 vNow, vDown, vFrom, vTo;
   fMatrix4x4 mNow;
-  bool dragging;
-  Axes sets[2];
-  AxisSet axisSet;
-  int axisIndex;
+  bool bDragging;
+  AxisSet asAxisSet;
+  int iAxisIndex;
   
 private :
-  
-  static void drawAnyArc (const fVector3& from, const fVector3& to);
-  static void drawHalfArc (const fVector3& n);
-  
-  void drawConstraints (void) const;
-  void drawDragArc (void) const;
   
   static fVector3 mouseOnSphere (const fVector3& mouse, const fVector3& ballCenter, double ballRadius);
   static fVector3 constrainToAxis (const fVector3& loose, const fVector3& axis);
   static int nearestConstraintAxis (const fVector3& loose, fVector3 * axes, int nAxes);
   static fQuaternion quatFromBallPoints (const fVector3& from, const fVector3& to);
   static void quatToBallPoints (const fQuaternion& q, fVector3& arcFrom, fVector3& arcTo);
-  static fVector3 bisect (const fVector3& v1, const fVector3& v2);
-  
+
 };
 
 #endif // #ifndef FARCBALL_H_

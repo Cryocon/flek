@@ -1,6 +1,7 @@
 CPPFILES = \
 	fArcball.cxx \
 	fVector.cxx \
+	gl.cxx \
 	Fl_App_Window.cxx \
 	Fl_Better_Window.cxx \
 	Fl_Calendar.cxx \
