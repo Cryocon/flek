@@ -16,11 +16,17 @@ void print_children(Fl_Group* o) {
 
 Fl_App_Window* application_window;
 
+Fl_Dockable_Window* new_dockable(const char* label, unsigned char grippertype) {
+  Fl_Dockable_Window* dw = new Fl_Dockable_Window(0, 0, 200, 30, "Dockable Window");
+  dw->grippertype(grippertype);
+  new Fl_Button(0, 0, 100, 30, label);
+  dw->end();
+  return dw;
+}
+
 void new_dockable(Fl_Widget* w, void* d) {
-  Fl_Dockable_Window* dockable_window = new Fl_Dockable_Window(0, 0, 200, 30, "Dockable Window");
-  new Fl_Button(0, 0, 75, 30, "Newer");
-  application_window->accept_dockable(dockable_window);
-  application_window->add_dockable(dockable_window);
+  Fl_Dockable_Window* dw = new_dockable("New Dragable", FL_DRAGABLE);
+  application_window->add_dockable(dw);
 }
 
 void main() {
@@ -38,22 +44,15 @@ void main() {
   // We are done adding widgets to the application window.
   application_window->end();
 
-
-  // Create a dockable window.
-  Fl_Dockable_Window* dockable_window = new Fl_Dockable_Window(0, 0, 200, 30, "Dockable");
-
-  // Add a couple of buttons to the dockable window.
-  new Fl_Button(0, 0, 75, 30, "View");
-  new Fl_Button(75, 0, 75, 30, "About");
-
-  // We are done adding widgets to the dockable window.
-  // We don't need to show this window, since it is docked to the
-  // application window, and the application window will automatically
-  // show all docked windows when it is shown.
-  dockable_window->end();
-
-  // Dock it to the application window.
-  application_window->add_dockable(dockable_window);
+  Fl_Dockable_Window* dw;
+  dw = new_dockable("Dragable", FL_DRAGABLE);
+  application_window->add_dockable(dw);
+  dw = new_dockable("Shovable", FL_SHOVABLE);
+  application_window->add_dockable(dw);
+  dw = new_dockable("Drag/Shov", FL_DRAGABLE | FL_SHOVABLE);
+  application_window->add_dockable(dw);
+  dw = new_dockable("Fixed", 0);
+  application_window->add_dockable(dw);
 
   // Show the application window.
   // This automatically shows any docked windows.
@@ -94,7 +93,6 @@ void main() {
 
   // Print some diagnostics.
   print_children(application_window);
-  print_children(dockable_window);
   print_children(application_window->tpack());
 
   Fl::run();  
