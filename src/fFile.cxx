@@ -11,6 +11,7 @@ fXmlDocument fFile::VfsHandlers;
 
 void LoToHi (ulong *buffer, int len)
 {
+//  return;
   char* cbuffer = (char*)buffer;
   register ulong  value;
   for (register int i=0; i<len; i++, cbuffer+=4)

@@ -11,7 +11,6 @@ void main ()
 
   imgA = fPNM::read ("./test1.ppm");
   imgB = fSGI::read ("./test2.rgb");
-
   printf ("Testing layer operations..\n");
   //normal (imgA, imgB, 0, 0, 0.5);
   //add    (imgA, imgB, 0, 0, 0.5);
@@ -23,9 +22,9 @@ void main ()
   //divide    (imgA, imgB, 0, 0, 0.5);
   //screen    (imgA, imgB, 0, 0, 0.5);
   overlay   (imgA, imgB, 0, 0, 1.0);
-  
-  fSGI::write ("out.sgi", imgA, fSGI::RLE, 3);
 
+  fSGI::write ("out.sgi", imgA, fSGI::RLE, 3);
+   
   delete imgA;
   delete imgB;  
 }

@@ -1,4 +1,5 @@
 #include <Flek/fXml.h>
+#include <string.h>
 
 void main ()
 {
