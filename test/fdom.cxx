@@ -16,9 +16,6 @@ void main ()
   fList documents;
 
   root.setAttribute ("name", "Document");
-  root.add (&a);
-  root.add (&b);
-  root.add (&c);
 
   a.setAttribute ("name", "First field");
   b.setAttribute ("name", "Second field");
@@ -34,6 +31,10 @@ void main ()
   c.addListener (&L);
   b.setAttribute ("name", "Another field");
   b.setAttribute ("name", "Yet Another field");
+
+  root.add (&a);
+  root.add (&b);
+  root.add (&c);
   
   documents.push_back (&root);
   ((fDomNode *)(documents.back()))->write ();
