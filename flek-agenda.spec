@@ -177,6 +177,7 @@ make flek-core-install
 make flek-ui-install
 #make flek-gl-install
 #make flek-xml-install
+make list-headers
 cd ../docs
 make
 

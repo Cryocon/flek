@@ -130,60 +130,65 @@ install: $(INSTALL)
 ################################################################
 
 LIB_FLEK_CORE = ../lib/$(LIB_NAME_FLEK_CORE)
-DSO_FLEK_CORE = ../lib/$(DSO_NAME_FLEK_CORE)$(DSOEXT)
+DSO_FLEK_CORE = $(DSO_NAME_FLEK_CORE)$(DSOEXT)
 OBJ_FLEK_CORE = $(CPP_FLEK_CORE:.cxx=.o) 
 $(LIB_FLEK_CORE).a: $(OBJ_FLEK_CORE)
 	rm -f $@
 	mkdir -p ../lib
 	$(LIB_COMMAND) $@ $(OBJ_FLEK_CORE)
 	$(RANLIB) $@
-../lib/libflek_core.so.1 ../lib/libflek_core.sl.1: $(OBJ_FLEK_CORE)
-	$(DSO_COMMAND) ../lib/$@ $(OBJ_FLEK_CORE)
-
+libflek_core.so.1 libflek_core.sl.1: $(OBJ_FLEK_CORE)
+	$(DSO_COMMAND) $@ $(OBJ_FLEK_CORE)
+	ln -s ../src/$@ ../lib/$@ 
+	
 LIB_FLEK_UI = ../lib/$(LIB_NAME_FLEK_UI)
-DSO_FLEK_UI = ../lib/$(DSO_NAME_FLEK_UI)$(DSOEXT)
+DSO_FLEK_UI = $(DSO_NAME_FLEK_UI)$(DSOEXT)
 OBJ_FLEK_UI = $(CPP_FLEK_UI:.cxx=.o) 
 $(LIB_FLEK_UI).a: $(OBJ_FLEK_UI)
 	rm -f $@
 	mkdir -p ../lib
 	$(LIB_COMMAND) $@ $(OBJ_FLEK_UI)
 	$(RANLIB) $@
-../lib/libflek_ui.so.1 ../lib/libflek_ui.sl.1: $(OBJ_FLEK_UI)
-	$(DSO_COMMAND) ../lib/$@ $(OBJ_FLEK_UI)
-
+libflek_ui.so.1 libflek_ui.sl.1: $(OBJ_FLEK_UI)
+	$(DSO_COMMAND) $@ $(OBJ_FLEK_UI)
+	ln -s ../src/$@ ../lib/$@ 
+	
 LIB_FLEK_GL = ../lib/$(LIB_NAME_FLEK_GL)
-DSO_FLEK_GL = ../lib/$(DSO_NAME_FLEK_GL)$(DSOEXT)
+DSO_FLEK_GL = $(DSO_NAME_FLEK_GL)$(DSOEXT)
 OBJ_FLEK_GL = $(CPP_FLEK_GL:.cxx=.o) 
 $(LIB_FLEK_GL).a: $(OBJ_FLEK_GL)
 	rm -f $@
 	mkdir -p ../lib
 	$(LIB_COMMAND) $@ $(OBJ_FLEK_GL)
 	$(RANLIB) $@
-../lib/libflek_gl.so.1 ../lib/libflek_gl.sl.1: $(OBJ_FLEK_GL)
-	$(DSO_COMMAND) ../lib/$@ $(OBJ_FLEK_GL)
-
+libflek_gl.so.1 libflek_gl.sl.1: $(OBJ_FLEK_GL)
+	$(DSO_COMMAND) $@ $(OBJ_FLEK_GL)
+	ln -s ../src/$@ ../lib/$@ 
+	
 LIB_FLEK_XML = ../lib/$(LIB_NAME_FLEK_XML)
-DSO_FLEK_XML = ../lib/$(DSO_NAME_FLEK_XML)$(DSOEXT)
+DSO_FLEK_XML = $(DSO_NAME_FLEK_XML)$(DSOEXT)
 OBJ_FLEK_XML = $(CPP_FLEK_XML:.cxx=.o) 
 $(LIB_FLEK_XML).a: $(OBJ_FLEK_XML)
 	rm -f $@
 	mkdir -p ../lib
 	$(LIB_COMMAND) ../lib/$@ $(OBJ_FLEK_XML)
 	$(RANLIB) $@
-../lib/libflek_xml.so.1 ../lib/libflek_xml.sl.1: $(OBJ_FLEK_XML)
-	$(DSO_COMMAND) ../lib/$@ $(OBJ_FLEK_XML)
-
+libflek_xml.so.1 libflek_xml.sl.1: $(OBJ_FLEK_XML)
+	$(DSO_COMMAND) $@ $(OBJ_FLEK_XML)
+	ln -s ../src/$@ ../lib/$@ 
+	
 LIB_FLEK_JPEG = ../lib/$(LIB_NAME_FLEK_JPEG)
-DSO_FLEK_JPEG = ../lib/$(DSO_NAME_FLEK_JPEG)$(DSOEXT)
+DSO_FLEK_JPEG = $(DSO_NAME_FLEK_JPEG)$(DSOEXT)
 OBJ_FLEK_JPEG = $(CPP_FLEK_JPEG:.cxx=.o) 
 $(LIB_FLEK_JPEG).a: $(OBJ_FLEK_JPEG)
 	rm -f $@
 	mkdir -p ../lib
 	$(LIB_COMMAND) ../lib/$@ $(OBJ_FLEK_JPEG)
 	$(RANLIB) $@
-../lib/libflek_jpeg.so.1 ../lib/libflek_jpeg.sl.1: $(OBJ_FLEK_JPEG)
-	$(DSO_COMMAND) ../lib/$@ $(OBJ_FLEK_JPEG)
-
+libflek_jpeg.so.1 libflek_jpeg.sl.1: $(OBJ_FLEK_JPEG)
+	$(DSO_COMMAND) $@ $(OBJ_FLEK_JPEG)
+	ln -s ../src/$@ ../lib/$@ 
+	
 flek-core: $(LIB_FLEK_CORE).a $(DSO_FLEK_CORE)
 flek-ui: $(LIB_FLEK_UI).a $(DSO_FLEK_UI)
 flek-gl: $(LIB_FLEK_GL).a $(DSO_FLEK_GL)
@@ -202,7 +207,7 @@ flek-jpeg: $(LIB_FLEK_JPEG).a $(DSO_FLEK_JPEG)
 ################################################################
 
 clean :
-	-@ rm -f *.o *.do *~ ../include/*~ makedepend o
+	-@ rm -f *.a *.so *.so.* *.o *.do *~ ../include/*~ makedepend o
 	-@ rm -f ../lib/*.a
 	-@ if [ -n "$(DSOEXT)" ]; then rm -f ../lib/*$(DSOEXT) ; fi
 
@@ -222,7 +227,7 @@ flek-core-install: $(LIB_FLEK_CORE).a $(DSO_FLEK_CORE)
 	@-chmod 644 $(libdir)/$(LIB_NAME_FLEK_CORE).a
 	@if test -n "$(DSOEXT)"; then \
 		echo "Installing libflek_core DSO library."; \
-		if test $(DSO_FLEK_CORE) = ../lib/$(DSO_NAME_FLEK_CORE).so.1; then ext=.so; else ext=.s1; fi; \
+		if test $(DSO_FLEK_CORE) = $(DSO_NAME_FLEK_CORE).so.1; then ext=.so; else ext=.s1; fi; \
 		rm -f $(libdir)/$(DSO_NAME_FLEK_CORE)$$ext.1;\
 		rm -f $(libdir)/$(DSO_NAME_FLEK_CORE)$$ext;\
 		cp $(DSO_FLEK_CORE) $(libdir); \
@@ -247,7 +252,7 @@ flek-ui-install: $(LIB_FLEK_UI).a $(DSO_FLEK_UI)
 	@-chmod 644 $(libdir)/$(LIB_NAME_FLEK_UI).a
 	@if test -n "$(DSOEXT)"; then \
 		echo "Installing libflek_ui DSO library."; \
-		if test $(DSO_FLEK_UI) = ../lib/$(DSO_NAME_FLEK_UI).so.1; then ext=.so; else ext=.s1; fi; \
+		if test $(DSO_FLEK_UI) = $(DSO_NAME_FLEK_UI).so.1; then ext=.so; else ext=.s1; fi; \
 		rm -f $(libdir)/$(DSO_NAME_FLEK_UI)$$ext.1;\
 		rm -f $(libdir)/$(DSO_NAME_FLEK_UI)$$ext;\
 		cp $(DSO_FLEK_UI) $(libdir); \
@@ -269,7 +274,7 @@ flek-gl-install: $(LIB_FLEK_GL).a $(DSO_FLEK_GL)
 	@-chmod 644 $(libdir)/$(LIB_NAME_FLEK_GL).a
 	@if test -n "$(DSOEXT)"; then \
 		echo "Installing libflek_gl DSO library."; \
-		if test $(DSO_FLEK_GL) = ../lib/$(DSO_NAME_FLEK_GL).so.1; then ext=.so; else ext=.s1; fi; \
+		if test $(DSO_FLEK_GL) = $(DSO_NAME_FLEK_GL).so.1; then ext=.so; else ext=.s1; fi; \
 		rm -f $(libdir)/$(DSO_NAME_FLEK_GL)$$ext.1;\
 		rm -f $(libdir)/$(DSO_NAME_FLEK_GL)$$ext;\
 		cp $(DSO_FLEK_GL) $(libdir); \
@@ -291,7 +296,7 @@ flek-xml-install: $(LIB_FLEK_XML).a $(DSO_FLEK_XML)
 	@-chmod 644 $(libdir)/$(LIB_NAME_FLEK_XML).a
 	@if test -n "$(DSOEXT)"; then \
 		echo "Installing libflek_xml DSO library."; \
-		if test $(DSO_FLEK_XML) = ../lib/$(DSO_NAME_FLEK_XML).so.1; then ext=.so; else ext=.s1; fi; \
+		if test $(DSO_FLEK_XML) = $(DSO_NAME_FLEK_XML).so.1; then ext=.so; else ext=.s1; fi; \
 		rm -f $(libdir)/$(DSO_NAME_FLEK_XML)$$ext.1;\
 		rm -f $(libdir)/$(DSO_NAME_FLEK_XML)$$ext;\
 		cp $(DSO_FLEK_XML) $(libdir); \
@@ -313,7 +318,7 @@ flek-jpeg-install: $(LIB_FLEK_JPEG).a $(DSO_FLEK_JPEG)
 	@-chmod 644 $(libdir)/$(LIB_NAME_FLEK_JPEG).a
 	@if test -n "$(DSOEXT)"; then \
 		echo "Installing libflek_jpeg DSO library."; \
-		if test $(DSO_FLEK_JPEG) = ../lib/$(DSO_NAME_FLEK_JPEG).so.1; then ext=.so; else ext=.s1; fi; \
+		if test $(DSO_FLEK_JPEG) = $(DSO_NAME_FLEK_JPEG).so.1; then ext=.so; else ext=.s1; fi; \
 		rm -f $(libdir)/$(DSO_NAME_FLEK_JPEG)$$ext.1;\
 		rm -f $(libdir)/$(DSO_NAME_FLEK_JPEG)$$ext;\
 		cp $(DSO_FLEK_JPEG) $(libdir); \
