@@ -1,4 +1,4 @@
-// $Id: fList.cxx,v 1.2 2000/02/17 17:13:16 jamespalmer Exp $
+// $Id: fList.cxx,v 1.3 2000/02/17 18:28:02 jamespalmer Exp $
 
 // Source code for the generic fList class
 
@@ -209,6 +209,7 @@ fList::fList (const fList& new_list)
   temp1 = begin ();
   temp2 = new_list.begin ();
   temp3 = new_list.end ();
+  temp3--;
   insert (temp1, temp2, temp3);
 }
 
@@ -228,11 +229,15 @@ fList& fList::operator = (const fList& new_list)
       erase ();
       
       fIterator first1 = begin ();
-      fConstIterator first2 = new_list.begin ();
-      fConstIterator last2 = new_list.end ();
-      //last2--;
-
-      insert (first1, first2, last2);
+      
+      if (new_list.size () > 0) // non empty list.
+	{
+	  fConstIterator first2 = new_list.begin ();
+	  fConstIterator last2 = new_list.end ();
+	  last2--;
+	  
+	  insert (first1, first2, last2);
+	}
     }
 
   return *this;
