@@ -28,6 +28,12 @@ class fMatrix4x4
   fMatrix4x4 transpose ();
   fMatrix4x4 invert ();
   double determinant ();
+  void rotation_x (double value);
+  void rotation_y (double value);
+  void rotation_z (double value);
+  void rotation (double angle, fVector3 v);
+  void rotation (double ax, double ay, double az);
+  void translation (fVector3 v);
   void print ();
 
   inline void set (int i, int j, double value) { data[i][j] = value; }
