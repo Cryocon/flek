@@ -30,7 +30,8 @@ H_FLEK_CORE = \
 	FVector4.H \
 	math.H \
 	iostream.H \
-	types.H      
+	types.H \
+	export.h     
 
 CPP_FLEK_XML = \
 	FXml.cxx \
