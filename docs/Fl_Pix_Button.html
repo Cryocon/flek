@@ -1,0 +1,71 @@
+<HTML>
+  <BODY bgcolor="white">
+    <HR break>
+    <H2><A name="Fl_Pix_Button">class Fl_Pix_Button</A></H2>
+    <HR>
+
+    <H3>Class Hierarchy</H3>
+    <UL>
+<PRE>
+<A href="Fl_Pix_Box.html#Fl_Pix_Box">Fl_Pix_Box</A>
+   |
+   +----<B>Fl_Pix_Button</B>
+</PRE>
+    </UL>
+    <H3>Include Files</H3>
+    <UL>
+<PRE>
+#include &lt;Flek/Fl_Pix_Button.H&gt;
+</PRE>
+    </UL>
+
+    <H3>Description</H3>
+    <blockquote>
+      The main use of the Fl_Pix_Button is to place a PIX in the box,
+      TILING the pix and cropping if the box size is bigger or smaller.
+    </blockquote>
+      
+    <H3>Methods</H3>
+    <CENTER>
+      <TABLE width="90%">
+	<TR><TD align=left valign=top>
+	    <LI><A href="#Fl_Pix_Button.Fl_Pix_Button">Fl_Pix_Button</A></LI>
+	  </TD>
+	</TR>
+      </TABLE>
+    </CENTER>
+
+
+    <H4><A name="Fl_Pix_Button.Fl_Pix_Button">Fl_Pix_Button (int x, int y, int w, int h, const char *l = 0, Fl_Pixmap* bUp=0, Fl_Pixmap* bDown=0, Fl_Pixmap* bHilight=0);</A></H4>
+    <blockquote>The constructor for an empty Fl_Pix_Button.</blockquote>
+
+<h3>Example:</h3>
+<blockquote>
+<pre>
+{
+  Fl_Pix_Button* o = new Fl_Pix_Button (120, 40, 130, 30, "BUTTON1",
+            &amp;pixmap_rustNormal, 
+            &amp;pixmap_rustDown,
+            &amp;pixmap_rustHilight);
+
+  o->color(51); 
+  o->labelfont(4); 
+  o->labelcolor(131); 
+  o->callback(cb2,o); 
+} 
+
+{
+  Fl_Pix_Button* o = new Fl_Pix_Button(120, 90, 130, 30, "BUTTON2",
+            &amp;pixmap_rustNormal,
+            &amp;pixmap_rustDown,
+            &amp;pixmap_rustHilight); 
+  o->color(51); 
+  o->labelfont(4); 
+  o->labelcolor(131); 
+  o->callback(cb2,o); 
+}
+</pre>
+</blockquote>
+
+  </BODY>
+</HTML>
