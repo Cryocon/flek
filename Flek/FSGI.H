@@ -1,6 +1,6 @@
 /* -*-C++-*- 
 
-   "$Id: FSGI.H,v 1.2 2000/05/12 14:15:28 jamespalmer Exp $"
+   "$Id: FSGI.H,v 1.3 2000/05/16 16:51:44 jamespalmer Exp $"
    
    Copyright 1999-2000 by the Flek development team.
    
@@ -28,7 +28,7 @@
 
 #include <Flek/FImage.H>
 
-/** @package libflek_image
+/** @package libflek_core
  * The fSGI class provides static methods that read, write and test SGI images,
  * which are also refered to as "RGB" or "Iris" images.
  */
