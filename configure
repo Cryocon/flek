@@ -2472,7 +2472,7 @@ done
 
 ac_given_srcdir=$srcdir
 
-trap 'rm -fr `echo "makeinclude" | sed "s/:[^ ]*//g"` conftest*; exit 1' 1 2 15
+trap 'rm -fr `echo "makeinclude flek-config" | sed "s/:[^ ]*//g"` conftest*; exit 1' 1 2 15
 EOF
 cat >> $CONFIG_STATUS <<EOF
 
@@ -2564,7 +2564,7 @@ EOF
 
 cat >> $CONFIG_STATUS <<EOF
 
-CONFIG_FILES=\${CONFIG_FILES-"makeinclude"}
+CONFIG_FILES=\${CONFIG_FILES-"makeinclude flek-config"}
 EOF
 cat >> $CONFIG_STATUS <<\EOF
 for ac_file in .. $CONFIG_FILES; do if test "x$ac_file" != x..; then
@@ -2630,4 +2630,6 @@ chmod +x $CONFIG_STATUS
 rm -fr confdefs* $ac_clean_files
 test "$no_create" = yes || $SHELL $CONFIG_STATUS || exit 1
 
+
+chmod +x flek-config
 
