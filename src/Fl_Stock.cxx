@@ -44,7 +44,7 @@ Fl_Stock_Button::Fl_Stock_Button (int x, int y, int w, int h, const char *l) :
 #else
   labelsize (10);
 #endif
-  color (52);
+  //color (52);
   box (FL_FLAT_BOX);
 }
 

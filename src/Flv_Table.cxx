@@ -40,6 +40,20 @@
 #include <FL/fl_draw.H>
 #include <stdio.h>
 
+#ifndef FLTK_2
+#define text_color() FL_BLACK
+#define text_font() FL_HELVETICA
+#define text_size() 12
+#define fl_inactive inactive
+#define fl_contrast(x,y) FL_BLACK
+#define selection_text_color() FL_WHITE
+#define FL_DAMAGE_HIGHLIGHT FL_DAMAGE_CHILD
+#define label_font labelfont
+#define label_size labelsize
+#define label_color labelcolor
+#define label_type labeltype
+#endif
+
 #define DOcb(x) ((callback_when() & (x))==(x))
 
 //	Resizing constants

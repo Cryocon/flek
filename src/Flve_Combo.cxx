@@ -19,6 +19,20 @@
 #include <string.h>
 #include <stdlib.h>
 
+#ifndef FLTK_2
+#define text_color() FL_BLACK
+#define text_font() FL_HELVETICA
+#define text_size() 12
+#define fl_inactive inactive
+#define fl_contrast(x,y) FL_BLACK
+#define selection_text_color() FL_WHITE
+#define FL_DAMAGE_HIGHLIGHT FL_DAMAGE_CHILD
+#define label_font labelfont
+#define label_size labelsize
+#define label_color labelcolor
+#define label_type labeltype
+#endif
+
 #define ADDSIZE 10
 #define BUTTON_WIDTH 17
 
@@ -433,8 +447,16 @@ void Flve_Combo::open_list()
   // end hightlight code
   
   win = window();
+  int nx=win->x();
+  int ny=win->y();
+
+  while (win && win->parent()) {
+    win = win->window ();
+    nx += win->x();
+    ny += win->y();
+  }  
 	if (win)
-		list->position(win->x()+x(),win->y()+y()+h()-3);
+		list->position(nx+x(),ny+y()+h()-3);
 
 	Fl::grab(list);
 	list->show();
