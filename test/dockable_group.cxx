@@ -1,47 +1,50 @@
+#include <stdio.h>
+
 #include <FL/Fl.H>
-#include <FL/Fl_Widget.H>
-#include <FL/Fl_Group.H>
 #include <Flek/Fl_App_Window.H>
 #include <Flek/Fl_Dockable_Group.H>
 
-#include <stdio.h>
-
-void print_children (Fl_Group *o)
-{
-  printf (">> label=\"%s\" xywh=%d,%d,%d,%d\n", o->label(), o->x(), o->y(), o->w(), o->h());
-  Fl_Widget*const* a = o->array();
-  for (int i = o->children(); i--;) {
+void print_children(Fl_Group* o) {
+  printf(">> label=\"%s\" xywh=%d,%d,%d,%d\n", o->label(), o->x(), o->y(), o->w(), o->h());
+  Fl_Widget* const* a = o->array();
+  for(int i = o->children(); i--;) {
     Fl_Widget* o = *a++;
     printf ("   label=\"%s\" xywh=%d,%d,%d,%d\n", o->label(), o->x(), o->y(), o->w(), o->h());
   }
 }
 
-void
-main ()
-{
-  Fl_App_Window *myapp = new Fl_App_Window (50, 50, 200, 200, 
-					    "dockable_group test");
-  myapp->resizable(myapp);
-  myapp->show ();
+void main() {
+  // Create an application window.
+  Fl_App_Window* application_window = new Fl_App_Window(200, 200, "dockable_group");
 
-  Fl_Dockable_Group *mygroup = new Fl_Dockable_Group (0, 0, 100, 30, "mygroup");
+  // Make it resizable.
+  application_window->resizable(application_window);
 
-  mygroup->show ();
+  // Add a button to the application window.
+  // This actually adds the button to the "contents" child window.
+  new Fl_Button(10, 10, 100, 30, "Hello World");
 
-  myapp->add_dockable (mygroup);
+  // We are done adding widgets to the application window.
+  application_window->end();
 
-  myapp->begin ();
-  (void) new Fl_Button (5, 5, 100, 100, "Hello World");
-  myapp->end ();
+  // Create a dockable window.
+  Fl_Dockable_Group* dockable_window = new Fl_Dockable_Group(0, 0, 200, 30, "group");
 
-  //myapp->layout();
-  
-  print_children (myapp);
-  print_children (mygroup);
+  // Add a couple of buttons to the dockable window.
+  new Fl_Button(0, 0, 75, 30, "View");
+  new Fl_Button(75, 0, 75, 30, "About");
 
-  print_children (myapp->tpack());
+  // Dock it to the application window.
+  application_window->add_dockable(dockable_window);
 
-  printf ("Entering Run Loop\n");
+  // Print some diagnostics.
+  print_children(application_window);
+  print_children(dockable_window);
+  print_children(application_window->tpack());
+
+  // Show the application window.
+  // This automatically shows any docked windows.
+  application_window->show();
+
   Fl::run();  
 }
-
