@@ -193,6 +193,7 @@ Fl_Calendar::Fl_Calendar (int x, int y, int w, int h,
   this->look = look;
   if(look == FL_LOOK_MODERN) {
     prv_year = new Fl_Repeat_Button (x + (int)(w / 7) * 7 - 2 * title_height * 1.2 + 1, y, title_height * 1.2, title_height, "Y-");
+//    prv_year->repeat (1000,500);
     prv_year->box (FL_UP_BOX);
 #ifndef FLEK_FLTK_2
     prv_year->labelsize (10);
@@ -203,6 +204,7 @@ Fl_Calendar::Fl_Calendar (int x, int y, int w, int h,
     prv_year->callback ((Fl_Callback*)&fl_calendar_prv_year_cb, (void *)this);  
 
     prv_month = new Fl_Repeat_Button (x + (int)(w / 7) * 7- 4 * title_height * 1.2 + 1, y, title_height * 1.2, title_height, "M-");
+//    prv_month->repeat (1000,500);
     prv_month->box (FL_UP_BOX);
 #ifndef FLEK_FLTK_2
     prv_month->labelsize (10);
@@ -213,6 +215,7 @@ Fl_Calendar::Fl_Calendar (int x, int y, int w, int h,
     prv_month->callback ((Fl_Callback*)&fl_calendar_prv_month_cb, (void *)this);  
 
     nxt_month = new Fl_Repeat_Button (x + (int)(w / 7) * 7 - 3 * title_height * 1.2 + 1, y, title_height * 1.2, title_height, "M+");
+//    nxt_month->repeat (1000,500);
     nxt_month->box (FL_UP_BOX);
 #ifndef FLEK_FLTK_2
     nxt_month->labelsize (10);
@@ -223,6 +226,7 @@ Fl_Calendar::Fl_Calendar (int x, int y, int w, int h,
     nxt_month->callback ((Fl_Callback*)&fl_calendar_nxt_month_cb, (void *)this);
   
     nxt_year = new Fl_Repeat_Button (x + (int)(w / 7) * 7 - 1 * title_height * 1.2 + 1, y, title_height * 1.2, title_height, "Y+");
+//    nxt_year->repeat (1000,500);
     nxt_year->box (FL_UP_BOX);
 #ifndef FLEK_FLTK_2
     nxt_year->labelsize (10);
@@ -243,7 +247,8 @@ Fl_Calendar::Fl_Calendar (int x, int y, int w, int h,
 #endif
   }
   else {
-  prv_year = new Fl_Button (x, y, (w/10), (h/8), "@#<<");
+  prv_year = new Fl_Repeat_Button (x, y, (w/10), (h/8), "@#<<");
+//  prv_year->repeat (1000,500);
   prv_year->box (FL_THIN_UP_BOX);
 #ifndef FLEK_FLTK_2
   prv_year->labeltype (FL_SYMBOL_LABEL);
@@ -255,7 +260,8 @@ Fl_Calendar::Fl_Calendar (int x, int y, int w, int h,
 #endif
   prv_year->callback ((Fl_Callback*)&fl_calendar_prv_year_cb, (void *)this);  
 
-  prv_month = new Fl_Button (x + (w/10), y, (w/10), (h/8), "@#<");
+  prv_month = new Fl_Repeat_Button (x + (w/10), y, (w/10), (h/8), "@#<");
+//  prv_month->repeat (1000,500);
   prv_month->box (FL_THIN_UP_BOX);
 #ifndef FLEK_FLTK_2
   prv_month->labeltype (FL_SYMBOL_LABEL);
@@ -267,7 +273,8 @@ Fl_Calendar::Fl_Calendar (int x, int y, int w, int h,
 #endif
   prv_month->callback ((Fl_Callback*)&fl_calendar_prv_month_cb, (void *)this);  
 
-  nxt_month = new Fl_Button (x + (w/10)*8, y, (w/10), (h/8), "@#>");
+  nxt_month = new Fl_Repeat_Button (x + (w/10)*8, y, (w/10), (h/8), "@#>");
+//  nxt_month->repeat (1000,500);
   nxt_month->box (FL_THIN_UP_BOX);
 #ifndef FLEK_FLTK_2
   nxt_month->labeltype (FL_SYMBOL_LABEL);
@@ -279,7 +286,7 @@ Fl_Calendar::Fl_Calendar (int x, int y, int w, int h,
 #endif
     nxt_month->callback ((Fl_Callback*)&fl_calendar_nxt_month_cb, (void *)this);
   
-  nxt_year = new Fl_Button (x + (w/10)*9, y, (w/10), (h/8), "@#>>");
+  nxt_year = new Fl_Repeat_Button (x + (w/10)*9, y, (w/10), (h/8), "@#>>");
   nxt_year->box (FL_THIN_UP_BOX);
 #ifndef FLEK_FLTK_2
   nxt_year->labeltype (FL_SYMBOL_LABEL);
