@@ -1,6 +1,6 @@
 /* -*-C++-*- 
 
-   "$Id: FArcball.H,v 1.2 2000/04/14 14:30:11 jamespalmer Exp $"
+   "$Id: FArcball.H,v 1.3 2000/04/14 16:39:20 jamespalmer Exp $"
    
    Copyright 1999-2000 by the Flek development team.
    
@@ -126,27 +126,22 @@ public:
    *
    * @return The center of the arcball.
    */    
-  FVector3 center (void) const {
+  FVector3 center () const {
     return vCenter;
   }
   
   /**
    * Register an x-y mouse event.
-   */
-  void mouse (const FVector3& pos)
-    {
-      vNow = pos;
-    }
-
-  void reset (void) {
-    qDown.reset(); qNow.reset(); mNow.reset();
-  }
-  
-  /**
-   * Register an x-y mouse event.
+   *
+   * @param x The new x coordinate of the mouse.
+   * @param y The new y coordinate of the mouse.
    */
   void mouse (double x, double y) {
     vNow.set (x, y, 0);
+  }
+
+  void reset (void) {
+    qDown.reset(); qNow.reset(); mNow.reset();
   }
 
   /**
@@ -160,10 +155,12 @@ public:
   /**
    * Update the arcball transformation matrix.
    */
-  void update (void);
+  void update ();
 
   /**
-   * Return the arcball transformation matrix.
+   * Gets the arcball transformation matrix.
+   *
+   * @return The current arcball transforamtion matrix.
    */  
   FMatrix4x4 value(void) const
     {
@@ -171,7 +168,9 @@ public:
     }
 
   /**
-   * Return the rotation quaternion.
+   * Gets the rotation quaternion.
+   *
+   * @return The current arcball quaternion.
    */  
   FQuaternion quat_value(void) const
     {
@@ -197,29 +196,55 @@ public:
       sets[BodyAxes][2] = mNow[2];
     }
 
-  void draw(void) const;
-
   /**
-   * Returns if we are currently dragging the mouse.
+   * Gets wether or not we are currently dragging the mouse.
+   *
+   * @return True if we are dragging the mouse, else false.
    */
   bool dragging () const { return bDragging; }
-  
+
+  /**
+   * Gets the axis.  
+   * 
+   * @return The current axis.  Possible values include CameraAxes, BodyAxes and NoAxes.
+   */
   AxisSet axisSet () const { return asAxisSet; }
 
+  /**
+   * Gets the axis index.
+   *
+   * @return The axis index.
+   */
   int axisIndex () const { return iAxisIndex; }
 
   Axes sets[2];
 
+  /**
+   * Gets the "from" point.
+   *
+   * @return The point on the arcball we are rotating from (initial click).
+   */
   FVector3 & from () { return vFrom; }
+
+  /**
+   * Gets the "to" point.
+   *
+   * @return The point on the arcball we are rotating to.
+   */
   FVector3 & to () { return vTo; }
 
   /**
-   * Get the arcball radius.
+   * Gets the arcball radius.
+   *
+   * @return The arcball radius relative to the size of the viewport.  
+   *   Where 1.0 equals a diameter equal to the size of the viewport.
    */
   double radius () const { return dRadius; }
 
   /** 
-   * Set the arcball radius.
+   * Sets the arcball radius.
+   *
+   * @param The arcball radius.  Good values are usually less than 1.0.
    */
   void radius (const double r) { dRadius = r; }
   
