@@ -60,7 +60,8 @@ CPP_FLEK_UI = \
 	Flv_Table.cxx \
 	Flve_Check_Button.cxx \
 	Flve_Input.cxx \
-	Flve_Combo.cxx
+	Flve_Combo.cxx \
+	Fl_Time.cxx
 
 H_FLEK_UI = \
 	Fl_App_Window.H \
@@ -78,7 +79,8 @@ H_FLEK_UI = \
 	Flv_Table.H \
 	Flve_Check_Button.H \
 	Flve_Input.H \
-	Flve_Combo.H
+	Flve_Combo.H \
+	Fl_Time.H
 
 CPP_FLEK_GL = \
 	gl.cxx \

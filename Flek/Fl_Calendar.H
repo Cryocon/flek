@@ -1,6 +1,6 @@
 /* -*-C++-*- 
 
-   "$Id: Fl_Calendar.H,v 1.9 2000/09/29 21:49:35 clip Exp $"
+   "$Id: Fl_Calendar.H,v 1.10 2000/10/04 17:03:31 clip Exp $"
    
    Copyright 1999-2000 by the Flek development team.
    
@@ -36,6 +36,13 @@
 #define	DOE_MAX		3652059		/* December 31, 9999 */
 #define	YEAR_MIN	1
 #define	YEAR_MAX	9999
+
+#ifndef FL_LOOK_CLASSIC
+#define FL_LOOK_CLASSIC 0
+#endif
+#ifndef FL_LOOK_MODERN
+#define FL_LOOK_MODERN 1
+#endif
 
 /** @package libflek_ui
  * Fl_Calendar_Base is a widget that allows a user to select a date
@@ -83,7 +90,7 @@ class Fl_Calendar : public Fl_Calendar_Base
    * The constructor for an empty Fl_Calendar.
    */
   Fl_Calendar (int x, int y, int w = (7*20), int h = (8*20), 
-  		    const char *l = 0);
+  		    const char *l = 0, int title_height = -1, int look = FL_LOOK_CLASSIC);
 
   void previous_month ();
   void next_month ();
@@ -94,6 +101,27 @@ class Fl_Calendar : public Fl_Calendar_Base
   void csize (int cx, int cy, int cw, int ch);
   int  handle (int);
 
+  void selection_color(Fl_Color c) {
+	Fl_Widget::selection_color(c);
+	for(int i = 0; i < 6*7; i++) {
+		if(days[i]->color() == days[i]->selection_color()) {
+			days[i]->color(c);
+		}
+		days[i]->selection_color(c);
+	}
+  }
+
+  Fl_Color selection_color() const {
+	return 	Fl_Group::selection_color();
+  }
+
+  int button_value() {return last_button_value;}
+  int last_button_value;
+
+  void normal_callback() { cb_return_value = false; }
+  void calendar_value_callback() { cb_return_value = true; }
+  bool cb_return_value;
+
  protected:
   
   Fl_Button * weekdays[7];
@@ -103,6 +131,9 @@ class Fl_Calendar : public Fl_Calendar_Base
   Fl_Button * nxt_year;
   Fl_Button * prv_year;
   
+ private:
+  int look;
+
 };
 
 /**

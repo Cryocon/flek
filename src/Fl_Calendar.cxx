@@ -6,6 +6,7 @@
 #include <Flek/Fl_Calendar.H>
 #include <FL/Fl_Window.H>
 #include <FL/Fl_Pixmap.H>
+#include <FL/Fl_Repeat_Button.H>
 
 static void fl_calendar_button_cb (Fl_Button *a, void *b)
 {
@@ -23,7 +24,13 @@ static void fl_calendar_button_cb (Fl_Button *a, void *b)
     }
   }
   c->redraw();
-  c->do_callback(c, j);
+  c->last_button_value = j;
+  if(c->cb_return_value) {
+    c->do_callback(c, j);    
+  }
+  else {
+    c->do_callback();
+  }
 }
 
 Fl_Calendar_Base::Fl_Calendar_Base (int x, int y, int w, int h, 
@@ -102,40 +109,65 @@ static void
 fl_calendar_prv_month_cb (Fl_Button *, void *b) {
   Fl_Calendar *c = (Fl_Calendar *)b;
   c->previous_month ();
-  c->do_callback(c, (long)0);
+  c->last_button_value = 0;
+  if(c->cb_return_value) {
+    c->do_callback(c, (long)0);    
+  }
+  else {
+    c->do_callback();
+  }
 }
 
 static void 
 fl_calendar_nxt_month_cb (Fl_Button *, void *b) {
   Fl_Calendar *c = (Fl_Calendar *)b;
   c->next_month ();
-  c->do_callback(c, (long)0);
+  c->last_button_value = 0;
+  if(c->cb_return_value) {
+    c->do_callback(c, (long)0);    
+  }
+  else {
+    c->do_callback();
+  }
 }
 
 static void 
 fl_calendar_prv_year_cb (Fl_Button *, void *b) {
   Fl_Calendar *c = (Fl_Calendar *)b;
   c->previous_year ();
-  c->do_callback(c, (long)0);
+  c->last_button_value = 0;
+  if(c->cb_return_value) {
+    c->do_callback(c, (long)0);    
+  }
+  else {
+    c->do_callback();
+  }
 }
 
 static void 
 fl_calendar_nxt_year_cb (Fl_Button *, void *b) {
   Fl_Calendar *c = (Fl_Calendar *)b;
   c->next_year ();
-  c->do_callback(c, (long)0);
+  c->last_button_value = 0;
+  if(c->cb_return_value) {
+    c->do_callback(c, (long)0);    
+  }
+  else {
+    c->do_callback();
+  }
 }
 
 Fl_Calendar::Fl_Calendar (int x, int y, int w, int h, 
-			  const char *l) : Fl_Calendar_Base (x, y, w, h, l) 
+			  const char *l, int title_height, int look) : Fl_Calendar_Base (x, y, w, h, l) 
 {
+
   int i;
   for (i = 0; i<7; i++)
     {
       weekdays[i] = new Fl_Button ((w/7)*(i%7) + x,
-				   (h/8)*((i/7)+1) + y,
+				   ((h - title_height)/7)*((i/7)) + y + title_height,
 				   (w/7),
-				   (h/8));
+				   ((h - title_height)/7));
       weekdays[i]->box (FL_THIN_UP_BOX);  
 #ifndef FLEK_FLTK_2
       weekdays[i]->labelsize (10);
@@ -154,6 +186,64 @@ Fl_Calendar::Fl_Calendar (int x, int y, int w, int h,
   weekdays[FRIDAY]->label ("F");
   weekdays[SATURDAY]->label ("S");
   
+
+  if(title_height < 0) {
+    title_height = h / 8;
+  }
+
+  this->look = look;
+  if(look == FL_LOOK_MODERN) {
+    prv_year = new Fl_Repeat_Button (x + (int)(w / 7) * 7 - 2 * title_height * 1.2 + 1, y, title_height * 1.2, title_height, "Y-");
+    prv_year->box (FL_THIN_UP_BOX);
+#ifndef FLEK_FLTK_2
+    prv_year->labelsize (10);
+    prv_year->down_box (FL_THIN_DOWN_BOX);
+#else
+    prv_year->label_size (10);
+#endif
+    prv_year->callback ((Fl_Callback*)&fl_calendar_prv_year_cb, (void *)this);  
+
+    prv_month = new Fl_Repeat_Button (x + (int)(w / 7) * 7- 4 * title_height * 1.2 + 1, y, title_height * 1.2, title_height, "M-");
+    prv_month->box (FL_THIN_UP_BOX);
+#ifndef FLEK_FLTK_2
+    prv_month->labelsize (10);
+    prv_month->down_box (FL_THIN_DOWN_BOX);
+#else
+    prv_month->label_size (10);
+#endif
+    prv_month->callback ((Fl_Callback*)&fl_calendar_prv_month_cb, (void *)this);  
+
+    nxt_month = new Fl_Repeat_Button (x + (int)(w / 7) * 7 - 3 * title_height * 1.2 + 1, y, title_height * 1.2, title_height, "M+");
+    nxt_month->box (FL_THIN_UP_BOX);
+#ifndef FLEK_FLTK_2
+    nxt_month->labelsize (10);
+    nxt_month->down_box (FL_THIN_DOWN_BOX);
+#else
+    nxt_month->label_size (10);
+#endif
+    nxt_month->callback ((Fl_Callback*)&fl_calendar_nxt_month_cb, (void *)this);
+  
+    nxt_year = new Fl_Repeat_Button (x + (int)(w / 7) * 7 - 1 * title_height * 1.2 + 1, y, title_height * 1.2, title_height, "Y+");
+    nxt_year->box (FL_THIN_UP_BOX);
+#ifndef FLEK_FLTK_2
+    nxt_year->labelsize (10);
+    nxt_year->down_box (FL_THIN_DOWN_BOX);
+#else
+    nxt_year->label_size (10);
+#endif
+    nxt_year->callback ((Fl_Callback*)&fl_calendar_nxt_year_cb, (void *)this);
+
+    caption = new Fl_Button (x, y, (int)(w / 7) * 7 - title_height * 1.2 * 4 + 1, title_height);
+    caption->box (FL_THIN_UP_BOX);
+#ifndef FLEK_FLTK_2
+    caption->labelsize (10);
+    caption->down_box (FL_THIN_DOWN_BOX);
+    caption->output();
+#else
+    caption->label_size (10);
+#endif
+  }
+  else {
   prv_year = new Fl_Button (x, y, (w/10), (h/8), "@#<<");
   prv_year->box (FL_THIN_UP_BOX);
 #ifndef FLEK_FLTK_2
@@ -185,10 +275,10 @@ Fl_Calendar::Fl_Calendar (int x, int y, int w, int h,
   nxt_month->labelsize (10);
   nxt_month->down_box (FL_THIN_DOWN_BOX);
 #else
-  nxt_month->label_type (FL_SYMBOL_LABEL);
-  nxt_month->label_size (10);
+    nxt_month->label_type (FL_SYMBOL_LABEL);
+    nxt_month->label_size (10);
 #endif
-  nxt_month->callback ((Fl_Callback*)&fl_calendar_nxt_month_cb, (void *)this);
+    nxt_month->callback ((Fl_Callback*)&fl_calendar_nxt_month_cb, (void *)this);
   
   nxt_year = new Fl_Button (x + (w/10)*9, y, (w/10), (h/8), "@#>>");
   nxt_year->box (FL_THIN_UP_BOX);
@@ -210,13 +300,14 @@ Fl_Calendar::Fl_Calendar (int x, int y, int w, int h,
   caption->labelsize (10);
   caption->down_box (FL_THIN_DOWN_BOX);
 #else
-  caption->label_type (FL_SYMBOL_LABEL);
+    caption->label_type (FL_SYMBOL_LABEL);
   // caption->label_font (3);
-  caption->label_size (10);
+    caption->label_size (10);
 #endif
+  }
       
-  Fl_Calendar_Base::csize (x, y + (2*h/8), w, (6*h/8));
-
+  Fl_Calendar_Base::csize (x, y + title_height + (h - title_height) / 7, w, h - title_height - (h - title_height) / 7);
+  calendar_value_callback();
   update ();
 }
 
@@ -255,7 +346,12 @@ Fl_Calendar::update ()
     }
 
   char tmp[32];
-  sprintf (tmp, "%s %d", month_name[month ()-1], year ());
+  if(look == FL_LOOK_MODERN) {
+    sprintf (tmp, "%.3s %d", month_name[month()-1], year());
+  }
+  else {
+    sprintf (tmp, "%s %d", month_name[month ()-1], year ());
+  }
   Fl_Calendar_Base::update ();
   if (caption->label ())
     free ((void *) caption->label ());
@@ -307,7 +403,13 @@ Fl_Calendar::handle (int event)
       switch(Fl::event_key ()) 
 	{ 
   case FL_Enter:
-    do_callback(this, d);
+    last_button_value = d;
+    if(cb_return_value) {
+      do_callback(this, d);    
+    }
+    else {
+      do_callback();
+    }
     break;
 	case FL_Up: 
 	  o = -7; 
