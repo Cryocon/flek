@@ -1,6 +1,6 @@
 /* -*-C++-*- 
 
-   "$Id: Fl_App_Window.H,v 1.14 2000/05/12 14:01:36 brad Exp $"
+   "$Id: Fl_App_Window.H,v 1.15 2000/05/12 15:59:48 brad Exp $"
    
    Copyright 1999-2000 by the Flek development team.
    
@@ -44,20 +44,37 @@
  */
 class Fl_App_Window : public Fl_Window {
 private:
+  /**
+   * Holds the contents window and any docked windows.
+   */
   Fl_Pack* _pack;
+
+  /**
+   * Provides the "client" area of the application window.
+   */
   Fl_Window* _contents;
 
   /**
-   * dockable_windows is a list of pointers to dockable windows that have ever been
-   * docked to this application window.  It is mainly used to provide automatic
-   * showing and hiding of undocked windows when the application windows is shown/hid.
-   * Hack Alert: This list is implemented as a simple fixed size array,
-   * currently sized at 64 elements.
+   * Specifies the capacity of the dockable_windows list.
    */
   static const int dockable_windows_capacity = 32;
+
+  /**
+   * Hold a list of pointers to dockable windows that have ever been
+   * docked to this application window.  This is mainly used to provide automatic
+   * showing and hiding of undocked windows when the application windows is shown/hid.
+   * Hack Alert: This list is implemented as a simple fixed-size array.
+   */
   Fl_Dockable_Window* dockable_windows[dockable_windows_capacity];
+
+  /**
+   * Tracks the number of elements used in the dockable_windows list.
+   */
   int dockable_windows_size;
 
+  /**
+   * Helps the constructors do window creation.
+   */
   void create_app_window(int w, int h, const char* l);
 
 protected:
@@ -67,31 +84,31 @@ protected:
 
 public:
   /**
-   * Construct an Fl_App_Window.
+   * Constructs an Fl_App_Window.
    */
   Fl_App_Window(int w, int h, const char *l = 0);
 
   /**
-   * Construct an Fl_App_Window, forcing a specific position.
+   * Constructs an Fl_App_Window, forcing a specific position.
    * This probably isn't what you want.  Try the other constructor instead.
    */
   Fl_App_Window(int x, int y, int w, int h, const char *l = 0);
 
   /**
-   * Return a pointer to the Fl_Pack group, which contains the contents window
+   * Returns a pointer to the Fl_Pack group, which contains the contents window
    * and any docked groups.
    * From what I can tell, this is only used by the dockable_group sample.
    */
   Fl_Pack* tpack() { return _pack; }
 
   /**
-   * Return a pointer to the contents window.
+   * Returns a pointer to the contents window.
    */
   Fl_Window* contents() { return _contents; }
 
   /**
-   * Set the box type and color for the contents window.
-   * Include uchar signatures that make fluid happy.
+   * Sets the box type and color for the contents window.
+   * Includes uchar signatures to keep fluid happy.
    */
   void box(Fl_Boxtype b) { _contents->box(b); }
   void color(Fl_Color a) { _contents->color(a); }
@@ -100,12 +117,12 @@ public:
   void color(uchar a, uchar b) { _contents->color(a, b); }
 
   /**
-   * Add a widget to the contents window.
+   * Adds the widget to the contents window.
    */
   void add(Fl_Widget *w);
 
   /**
-   * Resize the contents window.
+   * Resizes the contents window.
    */
   void resize(int x, int y, int w, int h);
   
@@ -123,7 +140,7 @@ public:
   void begin() { Fl_Group::current(_contents); }
 
   /**
-   * Show or hide the application window.
+   * Shows or hides the application window.
    */
   void show();
   void hide();
