@@ -1,6 +1,6 @@
 /* -*-C++-*- 
 
-   "$Id: Fl_Dockable_Window.H,v 1.3 2000/05/15 08:31:42 brad Exp $"
+   "$Id: Fl_Dockable_Window.H,v 1.4 2000/05/17 00:36:14 brad Exp $"
    
    Copyright 1999-2000 by the Flek development team.
    
@@ -34,6 +34,9 @@
 #define FL_PACK_DOCK  9999999
 #define FL_DOCK_DELTA 10
 
+#define FL_SHOVABLE 1
+#define FL_DRAGABLE 2
+
 /** @package libflek_ui
  * Fl_Gripper is a little button that looks like you can grab it
  * and drag something around with it.  Used by Fl_Dockable_Window.
@@ -49,6 +52,8 @@ public:
   Fl_Gripper(int x, int y, int w, int h, const char *l = 0) : 
     Fl_Button(x, y, w, h, l) {
       color(FL_LIGHT2);
+      label("@-92<->");
+      labeltype(FL_SYMBOL_LABEL);      
   }
   void draw();
   int handle(int event);
@@ -67,6 +72,7 @@ protected:
   short docked;
   int uw_;
   int uh_;
+  unsigned char type_;
   Fl_Dockable_Window::create_dockable_window();
 
 public:
@@ -94,6 +100,9 @@ public:
   void undock(int x=-1, int y=-1);  
   short get_docked() { return docked; }
   void  set_docked(short r) { docked = r; }  
+  
+  void type(unsigned char t); 
+  unsigned char type();
 };
 
 #endif
