@@ -55,7 +55,7 @@ void Fl_Stock_Button::draw()
   Fl_Color col = draw_button(flags());
 #else
   Fl_Color col = value() ? selection_color() : color();
-  draw_box(value() ? (down_box()?down_box():down(box())) : box(), col);
+  draw_box(value() ? down_box() : box(), col);
 #endif
   draw_label (x(), y(), w(), h(), col, flags()); 
 }
@@ -76,7 +76,7 @@ Fl_Stock_Button::draw_label (int X, int Y, int W, int H,
 #ifdef FLEK_FLTK_2
     image_->measure(iw, ih);
 #else
-    fl_measure_pixmap(image_->data, iw, ih);
+    fl_measure_pixmap(image_->data(), iw, ih);
 #endif
   if (label_)
     {

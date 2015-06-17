@@ -45,7 +45,6 @@
 #define text_color() FL_BLACK
 #define text_font() FL_HELVETICA
 #define text_size() 12
-#define fl_inactive inactive
 #define fl_contrast(x,y) FL_BLACK
 #define selection_text_color() FL_WHITE
 #define FL_DAMAGE_HIGHLIGHT FL_DAMAGE_CHILD

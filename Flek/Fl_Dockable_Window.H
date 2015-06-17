@@ -84,7 +84,7 @@ protected:
   short _docked;
   int uw_;
   int uh_;
-  void Fl_Dockable_Window::create_dockable_window();
+  void create_dockable_window();
 
 public:
   static Fl_Dockable_Window* current;

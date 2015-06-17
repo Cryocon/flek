@@ -189,7 +189,7 @@ dnl# add warnings to compiler switches:
 dnl# do this last so messing with switches does not break tests
 if test -n "$GXX"; then
     CFLAGS="-Wall $CFLAGS"
-    CXXFLAGS="-Wall -Wno-return-type $CXXFLAGS"
+    CXXFLAGS="-Wall -Wno-write-strings -Wno-return-type $CXXFLAGS"
     if test -z "$DEBUGFLAG"; then
         CFLAGS="-fomit-frame-pointer $CFLAGS"
         CXXFLAGS="-fno-exceptions -fomit-frame-pointer $CXXFLAGS"
@@ -289,7 +289,7 @@ AC_ARG_WITH([fltk],
   ], 
   [
     FLTK_LIB=""
-    AC_CHECK_LIB(fltk,numericsort,AC_DEFINE(HAVE_FLTK) FLTK_LIB="-lfltk", "** Fltk not found.  You will not be able to build libflek_ui or libflek_gl.", $GL_LIB -lX11 -lXext $X_EXTRA_LIBS -lm)
+    AC_SEARCH_LIBS("Fl::fl_color",fltk,AC_DEFINE(HAVE_FLTK) FLTK_LIB="-lfltk", "** Fltk not found.  You will not be able to build libflek_ui or libflek_gl.", $GL_LIB -lX11 -lXext $X_EXTRA_LIBS -lm)
   ])
 
   ])

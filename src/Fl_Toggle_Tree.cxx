@@ -235,7 +235,7 @@ void Fl_Toggle_Tree::draw_label(char* str, int indent, int x, int y, int w, int 
     */
     fl_font(font, size);
 #ifndef FLEK_FLTK_2
-    if (!active_r()) lcol = inactive (lcol);
+    if (!active_r()) lcol = fl_inactive (lcol);
 #endif
     //    if (((FL_BLINE*)v)->flags & SELECTED)
     //      lcol = contrast(lcol, selection_color());

@@ -23,7 +23,6 @@
 #define text_color() FL_BLACK
 #define text_font() FL_HELVETICA
 #define text_size() 12
-#define fl_inactive inactive
 #define fl_contrast(x,y) FL_BLACK
 #define selection_text_color() FL_WHITE
 #define FL_DAMAGE_HIGHLIGHT FL_DAMAGE_CHILD
@@ -412,7 +411,7 @@ void Flve_Combo::draw(void)
 	fl_draw_symbol("@#2>", bx+3, Y, BUTTON_WIDTH-5, H, FL_BLACK );
 	fl_color( (Fl_Color)(FL_GRAY_RAMP+17) );
 	fl_yxline(bx,Y,Y+H);
-	input->draw();
+	((Fl_Widget*)input)->draw();
 }
 
 void Flve_Combo::open_list()

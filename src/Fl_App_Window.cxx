@@ -1,9 +1,11 @@
 #include <stdio.h>
 #include <stdlib.h>
 
+#define FL_INTERNALS
+
+#include <FL/x.H>
 #include <FL/Fl.H>
 #include <FL/Fl_Window.H> // needed by FLTK2
-#include <FL/x.H>
 #include <FL/fl_draw.H>
 #include <Flek/Fl_App_Window.H>
 

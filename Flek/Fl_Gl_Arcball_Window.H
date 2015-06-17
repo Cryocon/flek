@@ -43,7 +43,7 @@
 #include <Flek/FDolly_Control.H>
 #include <stdio.h>
 
-enum TransformType { None=0, Pan=1, Rotate=2, Zoom=3, Dolly=4 };
+enum TransformType { TRANSFORM_NONE=0, Pan=1, Rotate=2, Zoom=3, Dolly=4 };
 enum ProjectionType { Orthographic=0, Perspective=1 };
 
 /**
@@ -90,7 +90,7 @@ public:
   Fl_Gl_Arcball_Window(int x, int y, int w, int h, const char * l = NULL)
     : Fl_Gl_Window(x,y,w,h,l),
       arcball(FVector3(0,0,0),1.0), trcontrol(), zoomcontrol(), dollycontrol(10.0),
-      transform(), currenttr(None),
+      transform(), currenttr(TRANSFORM_NONE),
       fovy(45.0), aspect(double(w)/double(h)), near(1.0), far(1000.0),
       umin(-1.0), umax(1.0), vmin(-1.0), vmax(1.0),
       cenx(0), ceny(0), cenz(0), eyex(0), eyey(0), eyez(50.0), upx(0), upy(1), upz(0)
@@ -130,7 +130,7 @@ public:
   // function should be called only when rotation is required
   virtual void handle_rotate(int event) {
     // Don't do anything if we aren't in a neutral state or aren't rotating
-    if ( currenttr != None && currenttr != Rotate ) return;
+    if ( currenttr != TRANSFORM_NONE && currenttr != Rotate ) return;
     
     double x,y;
     
@@ -146,7 +146,7 @@ public:
     else if ( event == FL_RELEASE ) {
       arcball.end_drag();
       transform.rotate(arcball.quaternion_value());  // Update the combined transformation
-      arcball.reset(); currenttr = None;
+      arcball.reset(); currenttr = TRANSFORM_NONE;
     }
   }
   
@@ -156,7 +156,7 @@ public:
   // function should be called only when panning is required
   virtual void handle_pan(int event) {
     // Don't do anything if we aren't in a neutral state or aren't panning
-    if ( currenttr != None && currenttr != Pan ) return;
+    if ( currenttr != TRANSFORM_NONE && currenttr != Pan ) return;
     
     double x, y;
     double tx=0, ty=0;
@@ -185,7 +185,7 @@ public:
     else if ( event == FL_RELEASE ) {
       trcontrol.end_drag();
       transform.translate(trcontrol.trans_value());// Update the combined transformation
-      trcontrol.reset(); currenttr = None;
+      trcontrol.reset(); currenttr = TRANSFORM_NONE;
     }
   }
   
@@ -198,7 +198,7 @@ public:
   // controller which computes the apprpriate transformation matrix
   virtual void handle_zoom(int event) {
     // Don't do anything if we aren't in a neutral state or aren't zooming
-    if ( currenttr != None && currenttr != Zoom ) return;
+    if ( currenttr != TRANSFORM_NONE && currenttr != Zoom ) return;
     
     double z;
     
@@ -224,7 +224,7 @@ public:
       {
 	zoomcontrol.end_drag();
 	transform.scale(zoomcontrol.zoom_value());// Update the combined transformation
-	zoomcontrol.reset(); currenttr = None;
+	zoomcontrol.reset(); currenttr = TRANSFORM_NONE;
       }
   }
   
@@ -239,7 +239,7 @@ public:
   // matrix since this should be done outside of all other transformations
   virtual void handle_dolly(int event) {
     // Don't do anything if we aren't in a neutral state or aren't dollying
-    if ( currenttr != None && currenttr != Dolly ) return;
+    if ( currenttr != TRANSFORM_NONE && currenttr != Dolly ) return;
     
     double z;
     
@@ -255,7 +255,7 @@ public:
       dollycontrol.end_drag();
       // Shouldn't reset since the value is directly used for transformations
       // separate from other transformations
-      currenttr = None;
+      currenttr = TRANSFORM_NONE;
     }
   }
   
