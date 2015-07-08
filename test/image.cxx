@@ -6,7 +6,7 @@
 
 #define TEST
 
-void main ()
+int main ()
 {
   FImage *imgA, *imgB; 
 

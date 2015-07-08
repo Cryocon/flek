@@ -1,7 +1,7 @@
 #include <Flek/FXml.H>
 #include <string.h>
 
-void main () {
+int main () {
   
   FXmlDocument doc = FXmlDocument::parse_file ("fxml.xml");
   FXmlNode node = doc.children ();

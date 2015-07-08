@@ -196,7 +196,7 @@ int Flv_Resize::handle(int event)
 	return Flv_Table::handle(event);
 }
 
-main(int argc, char *argv[])
+int main(int argc, char *argv[])
 {
 	Fl_Window *w = new Fl_Window( 200, 200, "Test resize" );
 	Flv_Resize *l = new Flv_Resize( 10, 10, 180, 180, "Sample Resize View" );

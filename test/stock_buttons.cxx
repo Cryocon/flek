@@ -5,7 +5,7 @@
 
 #include <stdio.h>
 
-void
+int
 main ()
 {
   Fl_Window *W = new Fl_Window (358, 100, "Stock Buttons Demo");

@@ -140,7 +140,7 @@ void cb_sort_random(Fl_Widget*, void* ptr) {
   tree->redraw();
 }
 
-main() {
+int main() {
   Fl_Window win(240, 304, "Tree Example");
   Fl_Button remove_button(10, 200, 100, 22, "Remove");
   Fl_Button add_paper_button(10, 224, 100, 22, "Add Paper");

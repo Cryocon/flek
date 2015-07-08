@@ -34,7 +34,7 @@ void new_dockable(Fl_Widget* w, void* d) {
   application_window->add_dockable(dw);
 }
 
-void main() {
+int main() {
   // Create an application window.
   application_window = new Fl_App_Window(200, 200, "Application Window");
 
