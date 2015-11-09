@@ -52,7 +52,7 @@ public:
   Fl_Calendar_Base (int x, int y, int w = (7*20), int h = (6*20),   
 		    const char *l = 0);
 
-  void update ();
+  virtual void update ();
 
   /**
    * Resize the buttons contained in Fl_Calendar_Base to
@@ -119,7 +119,7 @@ class Fl_Calendar : public Fl_Calendar_Base
   /**
    * Updates the widget after values have been changed.
    */  
-  void update ();
+  virtual void update ();
 
   /**
    * Resize the buttons contained in Fl_Calendar_Base to
