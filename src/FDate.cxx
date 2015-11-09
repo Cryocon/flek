@@ -111,14 +111,11 @@ bool FDate::leap_year (int y) {
 }
 
 bool FDate::valid (int y, int m, int d) {
-  if (y < 1970 || y > 2035) return false;
+  if (y < 1970) return false;
   if (m < 1 || m > 12) return false;
   if (d < 1 ) return false;
-  if (leap_year (y)) {
-    if ((m == 2) && (d > 29))
-      return false;
-    else
-      return true;
+  if (leap_year (y) && (m == 2)) {
+      return (d <= 29);
   }
   if (d > days[m]) return false;
   return true;
